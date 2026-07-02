@@ -78,6 +78,54 @@ def test_pipeline_emits_full_stage_trace():
     assert trace.computed_class == "fact"
 
 
+def _non_factual_unit(uid: str) -> NormalizedUnit:
+    """Non-factual fixture — forces refusal under a fact floor."""
+    return NormalizedUnit(
+        unit_id=uid,
+        provenance=ProvenanceRing(
+            source_ref="test:src", modality=Modality.TEXT,
+            locator={}, speaker_or_author=None, context="test",
+        ),
+        signal=SignalRing(dimensions={}, depth_judged=False),
+        relational=RelationalRing(),
+        reextraction_handle=ReextractionHandleRing(
+            raw_pointer="test:src", model_id="test-model",
+            model_version="v0", extraction_params=ep_v0(Modality.TEXT),
+        ),
+        defensibility=DefensibilityRing(
+            defensibility_class=DefensibilityClass.NON_FACTUAL,
+            score_vector=ScoreVector(),
+            matrix_rule_ref="opinion.editorial",
+            runtime_mode="declaration_baseline",
+        ),
+    )
+
+
+def test_pipeline_threads_refusal_computed_class():
+    """X1 discipline (post-A2): on a refusal, the pipeline reads
+    computed_class from Refusal.computed_class (the boundary's threaded
+    value) rather than recomputing it via conclusion_class(lb). Assert
+    the trace's computed_class equals what the boundary returned.
+    """
+    from services.solva_depth.enforce import enforce, Refusal
+    trace_id = f"trace-{uuid.uuid4().hex[:8]}"
+    run_id = f"run-{uuid.uuid4().hex[:8]}"
+    units = [_non_factual_unit("u-x"), _non_factual_unit("u-y")]
+    floor = FloorSpec(minimum_class=DefensibilityClass.FACT)  # forces refusal
+    trace = run_solva(
+        trace_id=trace_id, run_id=run_id,
+        question="Below-floor question?", units=units, floor=floor,
+    )
+    # Precondition: the boundary MUST refuse under this input.
+    boundary_result = enforce("Below-floor question?", units, floor)
+    assert isinstance(boundary_result, Refusal), (
+        "test precondition: enforce() must refuse for this input"
+    )
+    # X1: threaded value on the refusal object must match the trace's field.
+    assert trace.computed_class == boundary_result.computed_class.value
+    assert trace.computed_class == "non_factual"
+
+
 @pytest.mark.asyncio
 async def test_solva_trace_lands_in_ledger():
     """Ledger.absorb_solva_trace lands exactly one row per pipeline run.

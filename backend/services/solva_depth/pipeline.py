@@ -72,8 +72,19 @@ def run_solva(
     # Boundary — via enforce (applies floor read-only; refuses below floor).
     lb: List[NormalizedUnit] = a_reflection["load_bearing_units"]
     result: Union[Assertion, Refusal] = enforce(a_reflection["conclusion_text"], lb, floor)
+    # X1 discipline (post-A2): thread the boundary-computed class rather than
+    # recomputing when the boundary already returned it. On the Refusal branch
+    # enforce() has computed the class at enforce.py:60 and preserved it on
+    # Refusal.computed_class (enforce.py:41). Reading is single-source; a
+    # second conclusion_class(lb) call would be deterministic-safe but
+    # architecturally a divergence surface ("one governed class, computed
+    # once, read everywhere"). Assertion has no computed_class field today,
+    # so preserve the recompute on that branch.
     from services.solva_depth.assertion import conclusion_class as _cc
-    computed_class = _cc(lb).value
+    if isinstance(result, Refusal):
+        computed_class = result.computed_class.value
+    else:
+        computed_class = _cc(lb).value
     return SolvaTrace(
         trace_id=trace_id,
         run_id=run_id,

@@ -109,6 +109,7 @@ Additionally: `lift_manifest_schema.snapshot.json` (discipline-freeze) + `outer_
 - [ ] **DPO — set Northena Ledger retention window** (currently INDEFINITE default). Deletion invariant re-blessed alongside implementation if window is set.
 - [ ] **DPO — unlock V2 cumulative-disclosure arm** (NEW at G6): set `RMS_G6_K_ANONYMITY_THRESHOLD` + `RMS_G6_L_DIVERSITY_THRESHOLD` + `RMS_G6_DP_EPSILON_BUDGET` env vars (Product v2.1 §21.2 primitives; §29.1 "Until V2 passes"; §32 pattern). Seam built + tested LOAD-BEARING when env set.
 - [ ] **MEA — deliver real source-standing table**. Currently placeholder covering 8 fixture feed_ids.
+- [ ] **Service 2 landing (future track):** when Service 2 (Objective-Extraction with Solva conclusion boundary) is built, seed a run that populates SolvaTrace and verify `/trace/{trace_id}` Consumer Terminal renders the Solva section correctly. Tester's G5b forward-looking suggestion — not blocking, tracked for future.
 - [x] ~~Solva/Targeta/Mtafiti spec re-drop~~ — DONE at Substrate-Drop v1.
 - [x] ~~Interface + UX Architecture spec landing~~ — DONE at Substrate-Drop v1 addendum.
 
