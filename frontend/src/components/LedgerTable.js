@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import StatusBadge from './StatusBadge';
+import ClassBadge from './ClassBadge';
 
 export default function LedgerTable({ rows, showTrace = true }) {
   if (!rows || rows.length === 0) {
@@ -14,6 +15,7 @@ export default function LedgerTable({ rows, showTrace = true }) {
             <th className="py-2 pr-3 font-medium">Stage</th>
             <th className="py-2 pr-3 font-medium">Decision</th>
             <th className="py-2 pr-3 font-medium">Reason</th>
+            <th className="py-2 pr-3 font-medium">Class</th>
             {showTrace && <th className="py-2 pr-3 font-medium">Trace</th>}
             <th className="py-2 pr-3 font-medium">Artifact</th>
             <th className="py-2 font-medium">At</th>
@@ -28,6 +30,9 @@ export default function LedgerTable({ rows, showTrace = true }) {
               </td>
               <td className="py-2.5 pr-3 text-xs text-rms-mute max-w-xs truncate" title={row.reason}>
                 {row.reason}
+              </td>
+              <td className="py-2.5 pr-3">
+                <ClassBadge defensibilityClass={row.defensibility_class || row.computed_class} compact />
               </td>
               {showTrace && (
                 <td className="py-2.5 pr-3">

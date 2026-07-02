@@ -9,6 +9,7 @@
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "concurrently": "8",
     "lucide-react": "^1.23.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -24,8 +25,10 @@
     "tailwindcss": "^3.4.14"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "tailwind:build": "tailwindcss -i src/index.css -o src/tailwind-compiled.css --minify",
+    "tailwind:watch": "tailwindcss -i src/index.css -o src/tailwind-compiled.css --watch",
+    "start": "concurrently \"yarn tailwind:watch\" \"craco start\"",
+    "build": "yarn tailwind:build && craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

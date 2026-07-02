@@ -8,6 +8,7 @@ import RunDetailPage from './pages/RunDetailPage';
 import DisciplinePage from './pages/DisciplinePage';
 import EnginesPage from './pages/EnginesPage';
 import TraceReceiptPage from './pages/TraceReceiptPage';
+import ComposePage from './pages/ComposePage';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="operator/runs/:runId" element={<RunDetailPage />} />
           <Route path="operator/discipline" element={<DisciplinePage />} />
           <Route path="operator/engines" element={<EnginesPage />} />
+          <Route path="operator/compose" element={<ComposePage />} />
           <Route path="trace/:traceId" element={<TraceReceiptPage />} />
         </Route>
       </Routes>

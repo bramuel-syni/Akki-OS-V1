@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import { LayoutDashboard, List, Shield, Eye, Home } from 'lucide-react';
+import { LayoutDashboard, List, Shield, Eye, Home, Send } from 'lucide-react';
 
 const navItems = [
   { to: '/', label: 'Home', icon: Home, end: true },
@@ -8,6 +8,7 @@ const navItems = [
   { to: '/operator/runs', label: 'Runs', icon: List },
   { to: '/operator/discipline', label: 'Discipline', icon: Shield },
   { to: '/operator/engines', label: 'Engines', icon: Eye },
+  { to: '/operator/compose', label: 'Compose', icon: Send },
 ];
 
 function NavItem({ to, label, icon: Icon, end }) {
