@@ -1361,6 +1361,89 @@
       "lift_kind": "mandate-forced-net-new",
       "transitive_chain": [],
       "notes": "A2. Byte-frozen JSON schema for Service1Refusal@v0. Freeze discipline mandate-forced by Operating Protocol \u00a71.7 (contract snapshot invariants). Enforced by test_service_1_refusal_envelope::test_service_1_refusal_schema_frozen. 11th snapshot file (14 frozen contracts; five_rings snapshot covers multiple ring contracts under one file)."
+    },
+    {
+      "module": "frontend/src/apiClient.js",
+      "cousin_citation": null,
+      "shape_signature": "axios client wrapping 14 backend API endpoints",
+      "resolves_by": [
+        "axios",
+        "REACT_APP_BACKEND_URL"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G5b. API ingress layer consuming all 14 registered /api/* routes. Endpoint paths mandate-forced by backend contract surface v1."
+    },
+    {
+      "module": "frontend/src/components/RefusalCard.js",
+      "cousin_citation": null,
+      "shape_signature": "Renders all 7 Service1Refusal@v0 fields with ClassBadge for supported_class",
+      "resolves_by": [
+        "Service1Refusal@v0"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G5b. UI rendering of 14th frozen contract (Service1Refusal@v0). Gate 2 test verifies all 7 fields + validation distinguishability."
+    },
+    {
+      "module": "frontend/src/components/OuterGateReceiptInline.js",
+      "cousin_citation": null,
+      "shape_signature": "Renders OuterGateReceipt@v0 safe fields only (5-field allowlist)",
+      "resolves_by": [
+        "OuterGateReceipt@v0"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G5b. Interface Spec \u00a721.2 mandates safe-field-only rendering. Allowlist: transform_version, mint_window_id, key_fingerprint, applied_transformations, input_identifier_categories."
+    },
+    {
+      "module": "frontend/src/components/TrustReceiptLink.js",
+      "cousin_citation": null,
+      "shape_signature": "Link to /trace/{trace_id} per Interface Spec \u00a716.5",
+      "resolves_by": [
+        "trace_id",
+        "react-router-dom"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G5b. Every intelligence response renders a trust-receipt URL per \u00a716.5 one-thread-throughout mandate."
+    },
+    {
+      "module": "frontend/src/__tests__/gate1_class_inseparable.test.js",
+      "cousin_citation": null,
+      "shape_signature": "Static analysis: every claim-rendering component co-renders defensibility class",
+      "resolves_by": [
+        "fs",
+        "path"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G5b gate test. Enforces UX Arch \u00a714 class-inseparable invariant across 5 engine payload shapes."
+    },
+    {
+      "module": "frontend/src/__tests__/gate2_refusal_firstclass.test.js",
+      "cousin_citation": null,
+      "shape_signature": "Static analysis: RefusalCard renders all 7 fields + validation-422 distinguishability",
+      "resolves_by": [
+        "fs",
+        "path"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G5b gate test. Enforces UX Arch \u00a714 refusal-first-class + Interface Spec \u00a75 validation-vs-refusal distinguishability."
+    },
+    {
+      "module": "frontend/src/__tests__/gate3_single_ingress.test.js",
+      "cousin_citation": null,
+      "shape_signature": "Static analysis: zero raw fetch/axios outside apiClient + trace_id retention in all receiving components",
+      "resolves_by": [
+        "fs",
+        "path",
+        "child_process"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G5b gate test. Enforces Interface Spec \u00a716.5 single-trace-thread + API ingress channeling."
     }
   ]
 }

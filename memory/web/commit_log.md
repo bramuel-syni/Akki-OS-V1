@@ -1,38 +1,36 @@
 # Web Frontend Commit Log
 
-## Iteration 1 — G5b Frontend Operator Console + Consumer Terminal v0
+## Iteration 1 — G5b Initial Build
 - **Commit**: e8208b38384a6e18f188b4c983c86369a30de564
-- **Date**: 2026-07-02T09:45:00Z
+- **Date**: 2026-07-02T09:45Z
 - **Changes**:
-  - Complete frontend build: 6 pages, 6 components, 1 hook, 1 API client
-  - Landing page with hero section and navigation cards
-  - Operator Dashboard (Portfolio): system state, data source, V-gates, frozen contracts
-  - Runs page: open runs list with filter, search, refresh
-  - Run Detail page: ledger table, governing artifact, trace links
-  - Discipline page: lift manifest, spec fingerprints, Rule 2 v2 accounting
-  - Engines page: 5-engine status cards (Northena, Solva, Service 1, V1, V3)
-  - Trace Receipt page (Consumer Terminal v0): envelope summary, ledger rows, solva traces, mining plans, registry records
-  - AppShell with sidebar navigation and header with G6 badge
-  - Fixed Tailwind CSS compilation issue (craco PostCSS not processing directives; used pre-compiled CSS import)
-  - Added lucide-react for icons
+  - Complete frontend build: 7 pages, 6 components, 1 hook, 1 API client
+  - Landing, Portfolio, Runs, Run Detail, Discipline, Engines, Trace Receipt pages
+  - AppShell, StatusBadge, ClassBadge, LedgerTable, RefusalCard, EngineCard components
+  - Tailwind CSS pre-compiled workaround for craco PostCSS pipeline issue
+- **Files modified**: All frontend/src/ files (initial creation)
+
+## Iteration 2 — G5b Acceptance Gate Completion
+- **Commit**: 7ec95207c4b76ea07e13721dff626b7260cdb9cc
+- **Date**: 2026-07-02T10:00Z
+- **Changes**:
+  - ComposePage: objective submission with client-side non-empty validation + Service1RunSummary/Refusal rendering
+  - OuterGateReceiptInline: safe-field-only rendering (5-field allowlist per Interface Spec §21.2)
+  - TrustReceiptLink: trust-receipt URL per Interface Spec §16.5
+  - LedgerTable: added ClassBadge for defensibility class co-rendering (Gate 1 fix)
+  - AppShell: added Compose nav item
+  - 3 gate invariant tests (12/12 passing): class-inseparable, refusal-first-class, single-ingress
+  - Tailwind CSS pipeline fix: concurrently runs tailwindcss --watch alongside craco start
+  - Scope note, conformance audit, BUILD_JOURNAL, ORCHESTRATOR_CONTINUITY, PHASE_STATE updated
 - **Files modified**:
-  - frontend/src/App.js (router config)
-  - frontend/src/index.js (CSS import)
-  - frontend/src/apiClient.js (API client)
-  - frontend/src/hooks/useApi.js
-  - frontend/src/components/AppShell.js
-  - frontend/src/components/StatusBadge.js
-  - frontend/src/components/ClassBadge.js
-  - frontend/src/components/LedgerTable.js
-  - frontend/src/components/RefusalCard.js
-  - frontend/src/components/EngineCard.js
-  - frontend/src/pages/LandingPage.js
-  - frontend/src/pages/OperatorDashboard.js
-  - frontend/src/pages/RunsPage.js
-  - frontend/src/pages/RunDetailPage.js
-  - frontend/src/pages/DisciplinePage.js
-  - frontend/src/pages/EnginesPage.js
-  - frontend/src/pages/TraceReceiptPage.js
-  - frontend/src/tailwind-compiled.css
-- **Backend files referenced**: server.py, routers/*, all API endpoints
-- **Known issue**: Tailwind CSS @tailwind directives not processed by craco PostCSS pipeline; worked around by pre-compiling CSS via tailwindcss CLI and importing compiled output. If new utility classes are added, `npx tailwindcss -i src/index.css -o src/tailwind-compiled.css --minify` must be re-run.
+  - frontend/src/pages/ComposePage.js (new)
+  - frontend/src/components/OuterGateReceiptInline.js (new)
+  - frontend/src/components/TrustReceiptLink.js (new)
+  - frontend/src/components/LedgerTable.js (ClassBadge added)
+  - frontend/src/components/AppShell.js (Compose nav)
+  - frontend/src/App.js (Compose route)
+  - frontend/src/__tests__/gate{1,2,3}_*.test.js (new)
+  - frontend/package.json (concurrently + tailwind scripts)
+  - docs/g5b_prep/g5b_scope_from_source.md (new)
+  - docs/audits/g5b_conformance_v1.md (new)
+  - docs/lift_manifest.json (7 G5b entries)

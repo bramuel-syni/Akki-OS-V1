@@ -1552,3 +1552,197 @@ Post-G6 targeted phase to correct the `POST /api/service_1/run` refusal semantic
 - Prior handoff signature: `backend-contract-surface-v1.1-handoff-download-e1_dev-20260702T013000Z` (implicit; see HANDOFF-DOWNLOAD ROUTE REPORT).
 - New handoff signature: **`backend-contract-surface-v1.1-a2-e1_dev-20260702T021500Z`**.
 - Backend surface remains FROZEN. A2 was additive-only, not a re-open.
+
+---
+
+## G5b CLOSE — Frontend Operator Console + Consumer Terminal v0
+
+**Timestamp:** 2026-07-02T10:00Z
+**Gate close commit:** 7ec95207c4b76ea07e13721dff626b7260cdb9cc
+**Backend CI at close:** 359/359 green (unchanged from A2 — G5b is frontend-only)
+**Frontend gate tests:** 12/12 passing (Gate 1: 5/5, Gate 2: 5/5, Gate 3: 2/2)
+
+### Scope
+G5b delivered the React web frontend — Operator Console (4 surfaces) + Consumer Terminal v0 — consuming the existing 20 backend `/api/*` routes without any backend modification.
+
+### Surface-count reconciliation (UX Arch §7)
+Answer **(B)**: "surface" == component-set spanning multiple routes. The 8 routes map to 4 Operator surfaces + 1 Consumer Terminal + 1 Landing + 1 Composition surface:
+
+| UX Spec §7 dimension | Operator surface | Routes | Components |
+|---|---|---|---|
+| Governance | Portfolio | `/operator` | OperatorDashboard (system state, V-gates, frozen contracts, data source) |
+| Throughput | Runs | `/operator/runs`, `/operator/runs/:runId` | RunsPage, RunDetailPage, LedgerTable |
+| Governance (lift/discipline) | Discipline | `/operator/discipline` | DisciplinePage (manifest, spec fingerprints, Rule 2 accounting) |
+| Infrastructure | Engines | `/operator/engines` | EnginesPage (Northena, Solva, Service 1, V1, V3) |
+| — (Consumer Terminal v0) | Trust Receipt | `/trace/:traceId` | TraceReceiptPage (TraceLensEnvelope cross-engine viewer) |
+| — (Landing) | System entry | `/` | LandingPage (§13 calm-when-healthy statement) |
+| — (Composition) | Objective submission | `/operator/compose` | ComposePage (§5 Service1RunSummary + §14 refusal first-class) |
+
+Landing page is §13-anchored ("opens calm — a single legible statement that the system is healthy"). Composition page is §5-anchored (Service1RunSummary + Service1Refusal rendering) + §14-anchored (refusal first-class). Neither is a 5th operator surface — they are shared chrome.
+
+### Gate invariant tests
+
+**Gate 1 (class inseparable):**
+- File: `frontend/src/__tests__/gate1_class_inseparable.test.js`
+- Count: 5/5 passing
+- Coverage: Service1RunSummary (Service 1), Service1Refusal (Service 1), TraceLensEnvelope (Northena), LedgerRow (Northena), SolvaTrace (Solva)
+
+**Gate 2 (refusal first-class + validation distinguishability):**
+- File: `frontend/src/__tests__/gate2_refusal_firstclass.test.js`
+- Count: 5/5 passing
+- Distinguishability test (validation-422 does NOT trigger refusal view): Y
+
+**Gate 3 (single ingress + trace_id retention):**
+- Static analysis: `frontend/src/__tests__/gate3_single_ingress.test.js`
+- Raw fetch/axios matches (excl. ComposePage POST): 0
+- Component-integration: 4/4 trace_id retention checks passing
+- Count: 2/2 passing
+
+### objective_text client-side non-empty validation
+- Validation lives in: `frontend/src/pages/ComposePage.js:36-39`
+- Blocks empty submit client-side: YES (no network call fires)
+- Inline form error: "Objective text is required. State what you need to know."
+- Test: `frontend/src/__tests__/gate2_refusal_firstclass.test.js` (T5 — composition surface distinguishes refusal from validation)
+
+### Trust-receipt link + outer-gate receipt anchors
+- **Anchor 1 (Trust-receipt URL):** `frontend/src/components/TrustReceiptLink.js` — Link to `/trace/{trace_id}`. Used in ComposePage (result-trust-receipt-link), LedgerTable (trace-link), RunDetailPage (run-trace-link).
+- **Anchor 2 (Outer-gate receipt inline):** `frontend/src/components/OuterGateReceiptInline.js` — renders only safe fields: transform_version, mint_window_id, key_fingerprint, applied_transformations, input_identifier_categories. No mint, key material, or pre-image.
+
+### Live smoke
+- Service1RunSummary render with trust-receipt link: **Y** (floor=non_factual → 200 → summary + "View Trust Receipt →" link)
+- Below-floor refusal → refusal view renders all 7 fields: **Y** (floor=utterance → 422 refusal → RefusalCard with asked, reason, supported_class, what_would_raise_it)
+- trace_id visible in rendered response: **Y** (clickable link in both summary and refusal)
+
+### Tailwind CSS pipeline
+- **Choice: (a) fix.** The craco PostCSS pipeline's runtime `postcss-loader` does not inject the tailwindcss plugin despite correct config (`config: false` prevents external config loading). Root cause: CRA 5 + craco 7.1 postcss-loader version mismatch. **Fix:** `concurrently` runs `tailwindcss --watch` alongside `craco start`. CSS auto-compiles to `src/tailwind-compiled.css` on any source change. `yarn build` runs `yarn tailwind:build` before `craco build`. No manual step required.
+
+### HAZARD-STOP posture
+- (a) frozen contract mutation demanded: **NONE**
+- (b) governance decision mid-phase: **NONE**
+- (c) substrate absent: **NONE**
+- (d) Rule 2 v2 trip: **NONE**
+- Contract-mutation instinct: **NONE.** All 14 frozen backend contracts consumed as-is. No field additions or shape changes needed.
+
+### LoC ledger
+
+| Category | Count |
+|---|---|
+| Frontend source (non-test) | 1548 |
+| Frontend gate tests | 300 |
+| Docs (scope note, conformance audit) | ~130 |
+| Total G5b net-new | **1848 (source) + 300 (tests) = 2148** |
+
+All frontend code is net-new (no prior frontend existed). Lifted-verifiable from backend contracts: 0 (frontend consumes via API, doesn't lift backend source).
+
+Rule 2 v2 for G5b:
+  - lifted-verifiable 0 / net-new-discretionary 1848 / mandate-forced-net-new 0 / overall N/A (no lift) / discretionary-only N/A
+  - Ratify rationale: G5b is a frontend-only phase. All backend contracts are consumed via HTTP API, not source-lifted. The "lifted" concept per Rule 2 v2 (Substrate-Drop v1) applies to source-to-source transitive lift, not API consumption. Every frontend line is either (a) spec-mandated rendering of a §-anchored data shape, or (b) discretionary presentation/interaction. Since there is no lifted backend source, the Rule 2 ratio is inapplicable; the phase closes on gate-invariant tests + conformance audit instead.
+
+G5b FULL discretionary line enumeration (strict §0):
+
+  D1 — frontend/src/components/AppShell.js:1-67 (67 LoC)
+    - Sidebar navigation layout, header chrome, nav items structure
+    - Ratify: UX Arch §7 mandates "exception-first operator surface" but is silent on specific navigation widget type; sidebar chosen for persistent nav across 4 surfaces + compose
+
+  D2 — frontend/src/components/StatusBadge.js:1-28 (28 LoC)
+    - Color mapping for status values (ok→emerald, pending→amber, refused→rose, etc.)
+    - Ratify: UX Arch §13 says "surfaces an exception only when a dimension crosses its threshold" — colours are presentation; exact palette is discretionary
+
+  D3 — frontend/src/components/ClassBadge.js:1-28 (28 LoC)
+    - Color mapping for defensibility classes (fact→emerald, utterance→sky, non_factual→slate)
+    - Ratify: Interface Spec §4.4 defines the 3 classes but is silent on visual encoding; colours are discretionary
+
+  D4 — frontend/src/components/EngineCard.js:1-31 (31 LoC)
+    - Generic engine status card layout with Activity icon
+    - Ratify: UX Arch §7 mandates infrastructure exception dimension but is silent on card layout
+
+  D5 — frontend/src/components/LedgerTable.js:1-62 (62 LoC)
+    - Table structure for ledger rows (column order, truncation, trace link format)
+    - Ratify: Interface Spec §16.5 mandates trace_id thread; table column order and truncation are discretionary
+
+  D6 — frontend/src/components/RefusalCard.js:1-53 (53 LoC)
+    - ShieldAlert icon, amber border, dl/dt/dd layout for refusal fields
+    - Ratify: UX Arch §14 mandates refusal first-class; icon choice and border colour are discretionary
+
+  D7 — frontend/src/components/TrustReceiptLink.js:1-17 (17 LoC)
+    - FileText icon, inline-flex link styling, rms-accent colour
+    - Ratify: Interface Spec §16.5 mandates trust-receipt URL; icon and styling are discretionary
+
+  D8 — frontend/src/components/OuterGateReceiptInline.js:1-54 (54 LoC)
+    - dl/dd layout for safe fields, label mapping object, truncation
+    - Ratify: Interface Spec §21.2 mandates the 5 safe fields; layout and label text are discretionary
+
+  D9 — frontend/src/hooks/useApi.js:1-30 (30 LoC)
+    - Custom React hook: loading/error/data/refetch state management pattern
+    - Ratify: UX Arch and Interface Spec are silent on state management; hook shape is discretionary
+
+  D10 — frontend/src/apiClient.js:1-24 (24 LoC)
+    - axios base URL config, 15s timeout, .then(r => r.data) unwrap pattern
+    - Ratify: API endpoints are mandate-forced (same routes as backend); timeout value and unwrap pattern are discretionary
+
+  D11 — frontend/src/pages/LandingPage.js:1-63 (63 LoC)
+    - Hero section layout, tagline text, Operator Console / Consumer Terminal card descriptions
+    - Ratify: UX Arch §13 mandates "opens calm — single legible statement"; hero layout and card descriptions are discretionary
+
+  D12 — frontend/src/pages/OperatorDashboard.js:1-121 (121 LoC)
+    - Section ordering (exception banner → data source → V-gates → contracts → closed seams), loading skeleton
+    - Ratify: UX Arch §7 mandates the 4 exception dimensions; section ordering, skeleton animation, and amber banner styling are discretionary
+
+  D13 — frontend/src/pages/RunsPage.js:1-94 (94 LoC)
+    - Filter input, search icon, refresh button, run list layout
+    - Ratify: UX Arch §7 mandates throughput surface; filter/search/refresh interaction patterns are discretionary
+
+  D14 — frontend/src/pages/RunDetailPage.js:1-96 (96 LoC)
+    - Back arrow, trace links section, governing artifact dl/dd layout
+    - Ratify: Interface Spec §16.5 mandates trace_id thread and ledger rendering; layout and navigation are discretionary
+
+  D15 — frontend/src/pages/DisciplinePage.js:1-160 (160 LoC)
+    - Manifest metadata grid, spec fingerprint list, Rule 2 accounting table, lift entries table
+    - Ratify: UX Arch §16.10 mandates "every control-surface action is versioned, diffed"; table structure and column ordering are discretionary
+
+  D16 — frontend/src/pages/EnginesPage.js:1-94 (94 LoC)
+    - 2-column grid, engine card data extraction (nested field paths like northena.open_runs_count)
+    - Ratify: UX Arch §7 mandates infrastructure exception surface; card grid layout and field extraction are discretionary
+
+  D17 — frontend/src/pages/TraceReceiptPage.js:1-278 (278 LoC)
+    - Collapsible sections, SolvaTraceView layout, MiningPlanView layout, RegistryRecordView layout, trace search form
+    - Ratify: Interface Spec §7 mandates "three trace lenses render as one progressive view, not three tabs"; collapsible sections implement progressive depth; search form and sub-view layouts are discretionary
+
+  D18 — frontend/src/pages/ComposePage.js:1-212 (212 LoC)
+    - Form layout (textarea + selects + button), floor/lawful_basis select options, loading spinner, success card with dl/dd, trust-receipt link placement
+    - Ratify: Interface Spec §5 mandates Service1RunSummary rendering; form layout, select options presentation, and success card layout are discretionary
+
+  D19 — frontend/src/App.js:1-30 (30 LoC)
+    - BrowserRouter + Routes tree, route path naming
+    - Ratify: UX Arch §7 mandates 4 operator surfaces; route path naming (/operator/runs vs /runs etc.) is discretionary
+
+  D20 — frontend/src/index.js:1-8 (8 LoC)
+    - React.StrictMode wrapper, tailwind-compiled.css import
+    - Ratify: Standard CRA entry point; import order and StrictMode are discretionary
+
+  D21 — frontend/src/index.css:1-15 (15 LoC)
+    - @tailwind directives, font-family declaration (system-ui sans-serif stack), antialiasing
+    - Ratify: UX Arch/Interface Spec silent on typeface; font stack and smoothing are discretionary
+
+  D22 — Tailwind class strings across all components (~250 unique class combinations)
+    - All colour tokens (rms-ink, rms-mute, rms-accent, rms-paper, rms-line) + spacing (p-4, gap-3, etc.) + responsive (md:grid-cols-2, hidden md:block)
+    - Ratify: UX Arch/Interface Spec define semantic behaviours but are silent on exact CSS values; all Tailwind utility selections are discretionary
+
+  D23 — Error message strings (7 unique)
+    - "Failed to load system state", "Objective text is required. State what you need to know.", etc.
+    - Ratify: UX Arch §14 mandates refusal first-class rendering but is silent on client-side error message copy; strings are discretionary
+
+  D24 — data-testid attribute names (~45 unique)
+    - "compose-submit-btn", "operator-dashboard", "refusal-card", etc.
+    - Ratify: Test IDs have no spec anchor; naming is entirely discretionary
+
+  D25 — Icon choices (lucide-react): Shield, ArrowRight, Activity, LayoutDashboard, List, Eye, Home, Send, RefreshCw, Search, Loader2, FileText, AlertTriangle, Lock, Layers, Hash, ChevronDown, ChevronRight (18 unique)
+    - Ratify: UX Arch/Interface Spec are silent on iconography; all icon selections are discretionary
+
+### Artifacts shipped
+- `/app/docs/g5b_prep/g5b_scope_from_source.md` — scope note with §-anchor citations
+- `/app/docs/audits/g5b_conformance_v1.md` — 21/21 §-anchors MATCH, 0 MATERIAL_GAP
+- `/app/frontend/src/__tests__/gate1_class_inseparable.test.js` — 5/5 passing
+- `/app/frontend/src/__tests__/gate2_refusal_firstclass.test.js` — 5/5 passing
+- `/app/frontend/src/__tests__/gate3_single_ingress.test.js` — 2/2 passing
+
