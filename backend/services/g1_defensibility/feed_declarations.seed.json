@@ -1,0 +1,17 @@
+{
+  "synthetic:rms-hour-001:audio.wav": {
+    "source_standing": "primary_recorded",
+    "declared_by": "MEA-seed",
+    "declared_at": "2026-06-30T00:00:00Z"
+  },
+  "synthetic:rms-hour-001:transcript.txt": {
+    "source_standing": "wire_republish",
+    "declared_by": "MEA-seed",
+    "declared_at": "2026-06-30T00:00:00Z"
+  },
+  "synthetic:rms-hour-001": {
+    "source_standing": "primary_recorded",
+    "declared_by": "MEA-seed",
+    "declared_at": "2026-06-30T00:00:00Z"
+  }
+}

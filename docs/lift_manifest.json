@@ -1,0 +1,1366 @@
+{
+  "manifest_version": "v0",
+  "manifest_semantics": "v0 = every lift_kind counts toward 'lifted'. v1 (Substrate-Drop v1, 2026-07-01) = only direct + transitive count toward 'lifted' in Rule-2 ratio computation; unverifiable-substrate-absent stays in the manifest for provenance but is EXCLUDED from the lifted total. See BUILD_JOURNAL Substrate-Drop v1 Reconciliation section for the accounting change and per-phase recomputation.",
+  "generated_at": "2026-07-02T02:15:00Z",
+  "generated_by": "e1_dev (A2 close housekeeping)",
+  "discipline_ref": "BUILD_JOURNAL.md discipline-moment #7 (lift manifest as CI-enforced transitive-lift discipline)",
+  "substrate_state": {
+    "reference_akki_legacy_present": false,
+    "note": "As of 2026-07-01, /reference/akki-legacy/ is architecturally unreachable from inside the container. Every entry citing a /reference/akki-legacy/ path is marked 'unverifiable-substrate-absent' honestly; the transitive_chain (when non-empty) still grep-resolves in /app."
+  },
+  "entries": [
+    {
+      "module": "backend/services/synisense/shield/purpose_validator.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/purpose_validator.py",
+      "shape_signature": "purpose allow-list validator + structured refusal",
+      "resolves_by": [
+        "validate_purpose",
+        "PurposeRefusal"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0 LIFT_AS_IS Shield foundation. Cousin substrate lost 2026-07-01 per BUILD_JOURNAL discipline-moment #5; direct-cousin verification not possible in this pod."
+    },
+    {
+      "module": "backend/services/synisense/shield/audit_log.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/audit_log.py",
+      "shape_signature": "append-only audit writer (write_audit, AUDIT_COLLECTION const, find_audit cursor+project)",
+      "resolves_by": [
+        "write_audit",
+        "AUDIT_COLLECTION"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0 LIFT_AS_IS Shield audit substrate. Cousin unreachable in-pod."
+    },
+    {
+      "module": "backend/services/synisense/shield/llm_router.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/llm_router.py",
+      "shape_signature": "env-driven outbound LLM router chokepoint",
+      "resolves_by": [
+        "route",
+        "LLMRouter"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0 LIFT_AS_IS. All LLM calls chokepoint here per N-INV-11 discipline."
+    },
+    {
+      "module": "backend/services/synisense/shield/deidentifier.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/deidentifier.py",
+      "shape_signature": "de-identification pipeline (token minting)",
+      "resolves_by": [
+        "deidentify"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0 LIFT_AS_IS Shield pipeline. Cousin unreachable."
+    },
+    {
+      "module": "backend/services/synisense/shield/trust_receipt.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/trust_receipt.py",
+      "shape_signature": "HMAC-SHA256 trust receipt + HKDF per-tenant keys",
+      "resolves_by": [
+        "mint_trust_receipt",
+        "verify_trust_receipt"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0 LIFT_AS_IS crypto substrate. Cousin unreachable."
+    },
+    {
+      "module": "backend/services/synisense/shield/perception_router.py",
+      "cousin_citation": "backend/services/synisense/shield/llm_router.py",
+      "shape_signature": "mirrors llm_router: env-driven route to ASR / vision (post-de-id chokepoint)",
+      "resolves_by": [
+        "invoke",
+        "_provider_for"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/synisense/shield/llm_router.py"
+      ],
+      "notes": "G0.5 extension. Structural mirror of the in-pod llm_router (Rule-2-budgeted ~200 LoC bridge, journaled at G0.5 close)."
+    },
+    {
+      "module": "backend/contracts/five_rings.py",
+      "cousin_citation": null,
+      "shape_signature": "Five Rings normalized schema (Provenance/Media/Signal/Composition/Defensibility)",
+      "resolves_by": [
+        "FiveRings",
+        "NormalizedUnit"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "RMS Product & Engineering Spec v2.0 \u00a75 (Normalized Tier) declares this schema. G0 freeze. Frozen contract five_rings@v0."
+    },
+    {
+      "module": "backend/contracts/objective_request.py",
+      "cousin_citation": "/reference/akki-legacy/backend/routers/signals_ask.py",
+      "shape_signature": "Service-2 request envelope (objective-shaped question body)",
+      "resolves_by": [
+        "ObjectiveRequest"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0 freeze. Spec authority: RMS Spec v2.0 \u00a78.1. Cousin cited for shape only; substrate unreachable."
+    },
+    {
+      "module": "backend/contracts/qualification_matrix/loader.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/engine/signal_types.py",
+      "shape_signature": "MEA-owned catalogue loader (freeze pattern)",
+      "resolves_by": [
+        "load_qualification_matrix",
+        "QualificationMatrix"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0 freeze. Spec \u00a73.4. Cousin cited for freeze-loader shape; substrate unreachable."
+    },
+    {
+      "module": "backend/contracts/signal_ring.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/engine/signal_types.py::_CATALOGUE",
+      "shape_signature": "modality-native signal-ring dimension catalogue (frozen v0)",
+      "resolves_by": [
+        "SIGNAL_RING_CATALOGUE",
+        "SignalRingDimension"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G1 freeze. Spec \u00a75.3. Cousin unreachable."
+    },
+    {
+      "module": "backend/contracts/extraction_params.py",
+      "cousin_citation": null,
+      "shape_signature": "extraction_params ring (@v0, frozen, temperature-gated, extracted_at demoted)",
+      "resolves_by": [
+        "ExtractionParams"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "RMS Spec \u00a75.5 declared the field but not the concrete shape at freeze time. Pre-G2 hardening produced the concrete @v0 with stakeholder corrections encoded (temperature gated, extracted_at demoted). Frozen contract extraction_params@v0."
+    },
+    {
+      "module": "backend/contracts/northena_ledger.py",
+      "cousin_citation": null,
+      "shape_signature": "nine-field per-run Ledger row + LedgerArtifactRef + stage/decision consistency validator",
+      "resolves_by": [
+        "LedgerRow",
+        "LedgerArtifactRef",
+        "NORTHENA_LEDGER_COLLECTION"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Northena mandate \u00a77.2 verbatim + \u00a712 'the per-run Ledger collection' declared net-new. Frozen contract northena_ledger_row@v0."
+    },
+    {
+      "module": "backend/services/layer_a/dispatcher.py",
+      "cousin_citation": "/reference/akki-legacy/backend/documents_service.py::extract_text",
+      "shape_signature": "modality-aware dispatcher entry (fetch \u2192 handler)",
+      "resolves_by": [
+        "dispatch",
+        "LayerADispatcher"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0.5 Layer A entrypoint. Cousin unreachable."
+    },
+    {
+      "module": "backend/services/layer_a/handlers/text.py",
+      "cousin_citation": "/reference/akki-legacy/backend/documents_service.py::extract_text",
+      "shape_signature": "LIFT_AS_IS text-extraction dispatch (pypdf/python-docx pattern)",
+      "resolves_by": [
+        "handle_text"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0.5 handler. Cousin unreachable; heavy deps (pypdf, python-docx) ported."
+    },
+    {
+      "module": "backend/services/layer_a/handlers/image.py",
+      "cousin_citation": "/reference/akki-legacy/backend/documents_service.py::_ocr_image_bytes",
+      "shape_signature": "LIFT_AS_IS image OCR pattern",
+      "resolves_by": [
+        "handle_image"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0.5 handler. Cousin unreachable."
+    },
+    {
+      "module": "backend/services/layer_a/handlers/audio.py",
+      "cousin_citation": null,
+      "shape_signature": "audio handler stub (dispatch to Layer B ASR)",
+      "resolves_by": [
+        "handle_audio"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G0.5 net-new. RMS Spec \u00a75 (Normalized Tier: 'normalize all modalities') forces the modality-specific handler shape. Journaled at G0.5 Deliverable 2. Docstring: 'no direct cousin for audio (the cousin is text/image only)'."
+    },
+    {
+      "module": "backend/services/layer_a/handlers/video.py",
+      "cousin_citation": null,
+      "shape_signature": "video handler stub (dispatch to frame extraction)",
+      "resolves_by": [
+        "handle_video"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G0.5 net-new. RMS Spec \u00a75 (Normalized Tier: 'normalize all modalities') forces the modality-specific handler shape. Journaled at G0.5 Deliverable 2. Docstring: 'no direct cousin for video'."
+    },
+    {
+      "module": "backend/services/layer_a/handlers/transcript.py",
+      "cousin_citation": null,
+      "shape_signature": "transcript JSON reader (list-of-utterances)",
+      "resolves_by": [
+        "handle_transcript"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G0.5 net-new. RMS Spec \u00a75 (Normalized Tier) forces the modality-native handler shape. Docstring: 'No cousin \u2014 net-new at G0.5'. Journaled at G0.5 Deliverable 2."
+    },
+    {
+      "module": "backend/services/layer_b/factory.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/llm_router.py",
+      "shape_signature": "env-driven provider factory (honest-availability + default-returning stub)",
+      "resolves_by": [
+        "get_asr_provider",
+        "get_vision_provider"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0.5 Layer B. Cousin shape: 'env-driven LLM model preference'. Cousin unreachable."
+    },
+    {
+      "module": "backend/services/layer_b/contracts.py",
+      "cousin_citation": null,
+      "shape_signature": "Provider Protocols + artefact dataclasses",
+      "resolves_by": [
+        "ASRProvider",
+        "VisionProvider"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G0.5 net-new. RMS Spec \u00a75.5 (extraction_params) drives Layer B parameter shape; contracts declared as needed at G0.5 Deliverable 3. Docstring: 'No cousin \u2014 net-new contracts. The discipline of \"factory-keyed-on-env\" is cousin-shaped'."
+    },
+    {
+      "module": "backend/services/layer_b/vision/frame_perception_provider.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/llm_router.py",
+      "shape_signature": "Vision-LM provider via Shield perception_router chokepoint",
+      "resolves_by": [
+        "FramePerceptionProvider"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G0.5 provider. Cousin unreachable; concrete emergentintegrations SDK usage journaled."
+    },
+    {
+      "module": "backend/services/layer_c/aggregator.py",
+      "cousin_citation": null,
+      "shape_signature": "Layer C Normalize / Converge aggregator",
+      "resolves_by": [
+        "aggregate",
+        "LayerCAggregator"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G0.5 Layer C. Spec \u00a75 (Normalized Tier) forces the shape; no direct cousin."
+    },
+    {
+      "module": "backend/services/v1_harness/harness.py",
+      "cousin_citation": null,
+      "shape_signature": "V1 measurement harness (Hard Rule 1: production_hour != spike_hour)",
+      "resolves_by": [
+        "V1Harness",
+        "HourBundle"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G0.5 Deliverable 4.b. RMS Spec \u00a75.6 (V1 gate metrics) + Hard Rule 1 (Rule 1 verbatim: 'V1 harness must accept spike_hour and production_hour as distinct parameters') force the harness shape. Docstring: 'No cousin \u2014 net-new harness'."
+    },
+    {
+      "module": "backend/services/v1_harness/types.py",
+      "cousin_citation": null,
+      "shape_signature": "HourBundle + harness dataclasses",
+      "resolves_by": [
+        "HourBundle"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G0.5 net-new. RMS Spec \u00a75.6 + Hard Rule 1 force the HourBundle shape. Docstring: 'No cousin. Net-new. Hard Rule 1 enforced by HourBundle'."
+    },
+    {
+      "module": "backend/services/g1_defensibility/genre_classifier.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/inbox_routing/classifier.py",
+      "shape_signature": "rule-first hybrid pattern-match + light-heuristic classifier",
+      "resolves_by": [
+        "classify_genre",
+        "GenreClassifier"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G1. Docstring: 'pattern-match + light-heuristic shape rhymes with' the cousin. Cousin unreachable."
+    },
+    {
+      "module": "backend/services/g1_defensibility/ring5_stamper.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/work_studio/confidence_scorer.py",
+      "shape_signature": "confidence-shaped signal emission at composition time (Ring 5 Defensibility)",
+      "resolves_by": [
+        "stamp_ring5",
+        "Ring5Stamper"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G1. Cousins cited: confidence_scorer + signal_derivation. Both unreachable."
+    },
+    {
+      "module": "backend/services/g1_defensibility/solva_depth/integrity_validators.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/solva_v2/integrity_validators.py",
+      "shape_signature": "ValidatorOffender + ValidationResult + per-check function pattern",
+      "resolves_by": [
+        "ValidatorOffender",
+        "ValidationResult"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G1. Structured-offender discipline. Cousin unreachable (this is the substrate-absent cousin the whole discipline was built around at G2a-shrink)."
+    },
+    {
+      "module": "backend/services/g1_defensibility/solva_depth/refusal.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/solva_v2/engines/refusal.py",
+      "shape_signature": "structured refusal result (block, category, confidence, reason, distress_flag)",
+      "resolves_by": [
+        "RefusalResult"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G1. Cousin unreachable."
+    },
+    {
+      "module": "backend/services/g1_defensibility/solva_depth/governor.py",
+      "cousin_citation": null,
+      "shape_signature": "single-call depth judge composition over a unit",
+      "resolves_by": [
+        "depth_judge",
+        "SolvaDepthGovernor"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G1. Docstring: 'NET-NEW: composition layer. The cousin's state_machine.py is the session-shape, does not port.' Spec \u00a76 forces the composition."
+    },
+    {
+      "module": "backend/services/g1_defensibility/source_standing_reader.py",
+      "cousin_citation": null,
+      "shape_signature": "source-standing declaration baseline reader (G1)",
+      "resolves_by": [
+        "read_source_standing"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G1. Spec \u00a76.3 (defensibility floor) forces the shape. No direct cousin."
+    },
+    {
+      "module": "backend/services/g1_defensibility/stamp_audit.py",
+      "cousin_citation": "/reference/akki-legacy/backend/services/solva_v2/engines/refusal.py",
+      "shape_signature": "stamp-audit ring buffer (placeholder for Northena ledger, in-memory FIFO)",
+      "resolves_by": [
+        "StampAuditEntry",
+        "record_stamp_audit"
+      ],
+      "lift_kind": "unverifiable-substrate-absent",
+      "transitive_chain": [],
+      "notes": "G1 placeholder for Northena's per-run ledger. Cousin unreachable. \u00a77.3 swap-in point for G2."
+    },
+    {
+      "module": "backend/services/v3_harness/harness.py",
+      "cousin_citation": null,
+      "shape_signature": "V3 gates harness (defensibility metrics)",
+      "resolves_by": [
+        "V3Harness"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G1. Docstring: 'No cousin. Pattern rhymes with v1_harness.' Spec \u00a75.6 forces the metric list."
+    },
+    {
+      "module": "backend/services/northena/admit.py",
+      "cousin_citation": "backend/services/g1_defensibility/solva_depth/integrity_validators.py",
+      "shape_signature": "AdmitOffender + AdmitValidation with .ok aggregator + refusal_reason()",
+      "resolves_by": [
+        "ValidatorOffender",
+        "ValidationResult",
+        "validate_purpose"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/g1_defensibility/solva_depth/integrity_validators.py",
+        "backend/services/synisense/shield/purpose_validator.py"
+      ],
+      "notes": "G2a-shrink Action 1 lift. Chain: cousin solva_v2/integrity_validators (unreachable) \u2192 G1's integrity_validators.py (in-pod, docstring L1-19 documents cousin shape) \u2192 Northena admit AdmitOffender+AdmitValidation. Also lifts allow-list refusal shape from purpose_validator.py."
+    },
+    {
+      "module": "backend/services/northena/gate.py",
+      "cousin_citation": "backend/services/synisense/shield/purpose_validator.py",
+      "shape_signature": "allow-list set-membership (sub_objective \u2208 scope) + structured refusal",
+      "resolves_by": [
+        "validate_purpose",
+        "ALLOWED_PURPOSES"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/synisense/shield/purpose_validator.py"
+      ],
+      "notes": "G2a Stage 2 (mandate \u00a75). Warm/fresh/refused triage."
+    },
+    {
+      "module": "backend/services/northena/converge.py",
+      "cousin_citation": null,
+      "shape_signature": "Northena Converge stage \u2014 threshold check (check) + Solva-trace absorption (absorb_solva_trace)",
+      "resolves_by": [
+        "check",
+        "absorb_solva_trace"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Northena \u00a76 + \u00a77 + Solva Spec \u00a713. G3 extension: absorb_solva_trace is the write-side of Solva\u2192Ledger seam; writes stage=converge row keyed to trace conclusion (assertion\u2192terminate_success; refusal\u2192terminate_budget). No frozen-contract mutation (LedgerRow.stamp_audit already Optional[Dict] per Northena \u00a77.2). N-INV-6 preserved (only converge.py owns stage=converge writes). N-INV-11 preserved (no services.solva import \u2014 takes plain Dict). Original entry existed in manifest for check(); this update extends with G3 absorb_solva_trace addition."
+    },
+    {
+      "module": "backend/services/northena/ledger.py",
+      "cousin_citation": "backend/services/synisense/shield/audit_log.py",
+      "shape_signature": "append-only insert (write pattern; write_audit shape)",
+      "resolves_by": [
+        "write_audit",
+        "AUDIT_COLLECTION"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/synisense/shield/audit_log.py"
+      ],
+      "notes": "G2a. write_audit pattern reshaped to run-level rows. absorb_stamp_audit + retention semantics are mandate \u00a77.3 / \u00a711 forced (partial net-new within this file \u2014 see notes on the mandate-forced portion in BUILD_JOURNAL 2026-07-01T07:10Z LoC ledger)."
+    },
+    {
+      "module": "backend/services/northena/state_machine.py",
+      "cousin_citation": null,
+      "shape_signature": "four-stage Admit\u2192Gate\u2192Converge\u2192Ledger composer (Service 1 linear)",
+      "resolves_by": [
+        "run_service1_linear",
+        "RegistryHandle"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Northena mandate \u00a712 verbatim: 'the four-stage Admit / Gate / Converge / Ledger state machine' declared net-new."
+    },
+    {
+      "module": "backend/services/solva_depth/admit_assist.py",
+      "cousin_citation": "backend/services/layer_b/factory.py",
+      "shape_signature": "Protocol + default-returning stub pattern (honest-availability)",
+      "resolves_by": [
+        "get_asr_provider",
+        "get_vision_provider"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/layer_b/factory.py"
+      ],
+      "notes": "G2a. Sibling to G1 solva_depth. v0 deterministic-default stubs; full inference lands post-V3."
+    },
+    {
+      "module": "backend/routers/northena.py",
+      "cousin_citation": "backend/routers/contracts.py",
+      "shape_signature": "FastAPI router boilerplate + cursor-and-project read-side query pattern",
+      "resolves_by": [
+        "APIRouter",
+        "find_audit"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/routers/contracts.py",
+        "backend/services/synisense/shield/audit_log.py"
+      ],
+      "notes": "G2a. Router boilerplate + audit_log's find_audit/find_receipt cursor shape (second lift added at shrink pass)."
+    },
+    {
+      "module": "backend/services/data_source/synthetic_assets/rms_adversarial_v1/generate_fixture.py",
+      "cousin_citation": null,
+      "shape_signature": "fixture generator \u2014 stakeholder-authored synthetic asset generator (v1)",
+      "resolves_by": [
+        "generate_fixture"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Post-G2a ingest artifact. Stakeholder-authored per RMS Spec \u00a75 (Normalized Tier \u2014 synthetic plumbing must be author-labelled). Rewritten 2026-07-01T12:35Z to emit contract-shape NormalizedUnit natively (post-HAZARD-STOP #1). Fixture author's own manifest declares synthetic=true/plumbing_only=true/v1_v3_valid=false \u2014 labels are circular per spec discipline. Journal ref: BUILD_JOURNAL 2026-07-01T12:35Z."
+    },
+    {
+      "module": "backend/services/data_source/synthetic_assets/rms_adversarial_v1/fixture.json",
+      "cousin_citation": null,
+      "shape_signature": "regenerated synthetic adversarial fixture v1 (19 NormalizedUnit-shaped units, 13 adversarial dimensions)",
+      "resolves_by": [
+        "_manifest",
+        "units"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Post-G2a ingest artifact per RMS Spec \u00a75 (Normalized Tier \u2014 synthetic plumbing labels are author-assigned + circular). Regenerated 2026-07-01T12:35Z to conform to frozen five_rings@v0 (HAZARD-STOP #1 closed via regenerate path). 19/19 units round-trip; 13/13 adversarial dimensions preserved."
+    },
+    {
+      "module": "backend/tests/test_rms_adversarial_v1_roundtrip.py",
+      "cousin_citation": null,
+      "shape_signature": "round-trip + adversarial-preservation + no-forbidden-fields-leak-through guard tests",
+      "resolves_by": [
+        "test_unit_round_trip",
+        "test_no_forbidden_fields_leak_through"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Post-G2a ingest artifact per RMS Spec \u00a75. Test guards that HAZARD-STOP #1 dropped fields (headline, per-dim confidence, per-edge confidence, non-enum modalities) cannot silently reappear. 23 tests (19 parametrized round-trips + 4 shape guards)."
+    },
+    {
+      "module": "docs/audits/solva_conformance_v1.md",
+      "cousin_citation": null,
+      "shape_signature": "G1 Solva-depth-v1 conformance verdict table vs consolidated Solva spec (12 invariants + G1 obligations \u00a74)",
+      "resolves_by": [
+        "MATCH",
+        "PENDING_G3"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Solva-spec-ingest audit doc. Per Solva Mandate \u00a74/\u00a75 (stakeholder artifact 2026-07-01). Verdict: 7 MATCH / 5 PENDING_G3 / 3 SPEC_EXPANSION_HONOURED / 0 MATERIAL_GAP. G1 stays closed; 5 PENDING_G3 land at G3."
+    },
+    {
+      "module": "docs/g3_prep/solva_prep.md",
+      "cousin_citation": null,
+      "shape_signature": "G3 prep sketch \u2014 two-faculty split (five stages free + bound assertion boundary), integration points confirmed against frozen contracts",
+      "resolves_by": [
+        "boundary",
+        "conclusion_class",
+        "SolvaTrace"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Solva-spec-ingest artifact. Read-only prep per Solva Mandate & spec (stakeholder artifact 2026-07-01). No Solva G3 code written until G3 dispatches."
+    },
+    {
+      "module": "docs/audits/northena_conformance_v1.md",
+      "cousin_citation": null,
+      "shape_signature": "conformance audit table (MATCH / MATERIAL_GAP / SPEC_EXPANSION verdicts vs consolidated Northena spec)",
+      "resolves_by": [
+        "MATCH",
+        "SPEC_EXPANSION"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "G2a-retrospective audit doc. Not code. Mandate: consolidated Northena spec (stakeholder artifact 2026-07-01). Verdict: 20 MATCH, 3 SPEC_EXPANSION_HONOURED, 0 MATERIAL_GAP. G2a stays closed."
+    },
+    {
+      "module": "docs/g4_prep/targeta_prep.md",
+      "cousin_citation": null,
+      "shape_signature": "G4 prep sketch \u2014 deterministic core vs gated yield layer, lift-manifest expectations",
+      "resolves_by": [
+        "core",
+        "yield_layer"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Post-G2a ingest artifact. Read-only prep per Targeta mandate & spec (stakeholder artifact 2026-07-01). No Targeta code written until G4 dispatches."
+    },
+    {
+      "module": "docs/g4_prep/mtafiti_prep.md",
+      "cousin_citation": null,
+      "shape_signature": "G4 prep sketch \u2014 objective-blind census + declaration baseline vs V3-gated inference overlay",
+      "resolves_by": [
+        "census",
+        "declaration_baseline",
+        "inference_overlay"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Post-G2a ingest artifact. Read-only prep per Mtafiti mandate & spec (stakeholder artifact 2026-07-01). No Mtafiti code written until G4 dispatches."
+    },
+    {
+      "module": "docs/g4_prep/OPEN_GOVERNANCE.md",
+      "cousin_citation": null,
+      "shape_signature": "consolidated register of governance-owed items with owners (DPO / project owner / MEA)",
+      "resolves_by": [
+        "Northena Ledger retention",
+        "Targeta yield-layer thresholds",
+        "Mtafiti V3 admission thresholds"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "notes": "Operating posture norm #9 register. Consolidates governance-pending items surfaced by mandate/spec \u00a7-references. Journal ref: BUILD_JOURNAL 2026-07-01T12:00Z."
+    },
+    {
+      "module": "backend/services/solva_depth/assertion.py",
+      "cousin_citation": null,
+      "shape_signature": "mechanical assertion boundary (conclusion_class as floor over load-bearing units; Assertion dataclass; stated-form for utterance)",
+      "resolves_by": [
+        "conclusion_class",
+        "assert_conclusion",
+        "Assertion",
+        "CLASS_ORDER"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/services/g1_defensibility/solva_depth/governor.py"
+      ],
+      "notes": "Solva Spec v1.0 \u00a710 (\"The Assertion Boundary \u2014 as Code\"). Construction-as-guard: signature is the no-confidence guarantee. Freeze via conclusion_class_signature.snapshot.json + test_conclusion_class_signature. Read-only-handle discipline lifted transitively via G1 governor.py."
+    },
+    {
+      "module": "backend/services/solva_depth/enforce.py",
+      "cousin_citation": null,
+      "shape_signature": "below-floor structured refusal + read-only floor comparison",
+      "resolves_by": [
+        "enforce",
+        "Refusal"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/services/g1_defensibility/solva_depth/refusal.py"
+      ],
+      "notes": "Solva Spec v1.0 \u00a711 (\"Enforcement \u2014 the Floor and the Verdict\"). Below-floor refusal-with-reason \u2014 never silent downgrade. Refusal structured-shape lifted transitively via G1 refusal.py."
+    },
+    {
+      "module": "backend/services/solva_depth/interfaces.py",
+      "cousin_citation": null,
+      "shape_signature": "opaque read-only handles: FloorSpec (frozen dataclass) + MatrixHandle (Protocol)",
+      "resolves_by": [
+        "FloorSpec",
+        "MatrixHandle",
+        "default_matrix_handle"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/services/g1_defensibility/solva_depth/governor.py"
+      ],
+      "notes": "Solva Spec v1.0 \u00a77 + \u00a711. Read-only-handle discipline preserved by frozen dataclass + no-setter Protocol. Transitive lift of read-only-handle pattern from G1 governor.py."
+    },
+    {
+      "module": "backend/services/solva_depth/load_bearing.py",
+      "cousin_citation": null,
+      "shape_signature": "load-bearing identification (a reasoning judgment) \u2014 returns unit refs only, no class decision",
+      "resolves_by": [
+        "load_bearing"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a79 (\"Load-Bearing \u2014 a Reasoning Judgment\"). Explicitly separates the reasoning judgment (which units) from the mechanical class computation (assertion.py). G3 v0 default: all candidates load-bearing; LLM-bound reflection judgment post-G3."
+    },
+    {
+      "module": "backend/services/solva_depth/pipeline.py",
+      "cousin_citation": null,
+      "shape_signature": "Layer C converge \u2192 5 reasoning stages \u2192 assertion boundary \u2192 SolvaTrace",
+      "resolves_by": [
+        "run_solva"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a77 (module layout) + \u00a713 (trace). Composition seam that lets test_solva_trace_ledger_integration verify \u00a717 #8 (every extraction-time judgment produces a trace) end-to-end."
+    },
+    {
+      "module": "backend/services/solva_depth/stamp.py",
+      "cousin_citation": null,
+      "shape_signature": "Ring 5 preservation-annotation blobs at convergence (wide-bar refinements)",
+      "resolves_by": [
+        "preserve_stamps"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/services/g1_defensibility/ring5_stamper.py"
+      ],
+      "notes": "Solva Spec v1.0 \u00a712 (\"Ring 5 Stamp at Convergence\"). G3 v0: identity preservation of existing Layer C stamps; wide-bar refinement judgment binds post-G3 (LLM-bound reflection). Transitive of G1 ring5_stamper stamp-emission pattern."
+    },
+    {
+      "module": "backend/services/solva_depth/trace.py",
+      "cousin_citation": null,
+      "shape_signature": "SolvaTrace + StageRecord (Python @dataclass(frozen=True); JSON-serializable via to_dict() for LedgerRow.stamp_audit)",
+      "resolves_by": [
+        "SolvaTrace",
+        "StageRecord",
+        "conclusion_to_dict"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/services/g1_defensibility/ring5_stamper.py"
+      ],
+      "notes": "Solva Spec v1.0 \u00a713 (\"The Trace and Interfaces\"). Python-frozen dataclass \u2014 NOT among the six Pydantic-frozen contracts (Solva reconciliation \u00a710). Absorbed by Northena Ledger via stamp_audit seam \u2014 no frozen-contract mutation."
+    },
+    {
+      "module": "backend/services/solva_depth/reasoning/__init__.py",
+      "cousin_citation": null,
+      "shape_signature": "package glue for the 5-stage reasoning faculty",
+      "resolves_by": [
+        "reasoning"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a78 declares 5 stages; \u00a77 module layout uses single reasoning.py, G3 lands as 5-file package \u2014 behaviourally equivalent, structurally closer to parametrized isolation-test discipline (scope note \u00a7non-hazard-notes)."
+    },
+    {
+      "module": "backend/services/solva_depth/reasoning/frame.py",
+      "cousin_citation": null,
+      "shape_signature": "Stage 1 \u2014 Frame the question + slice of the Normalized tier",
+      "resolves_by": [
+        "frame"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a78 stage 1. Reasoning-faculty method (how the frame is judged) is a build-time implementation choice bounded by \u00a717 invariants; G3 v0 is code-only."
+    },
+    {
+      "module": "backend/services/solva_depth/reasoning/candidate.py",
+      "cousin_citation": null,
+      "shape_signature": "Stage 2 \u2014 Candidate: propose units + compositions that could answer the frame",
+      "resolves_by": [
+        "candidate"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a78 stage 2. LLM-binding a G3+ implementation choice; MUST use extraction_params@v0 temperature=0 (Product Spec \u00a731 #10)."
+    },
+    {
+      "module": "backend/services/solva_depth/reasoning/tension.py",
+      "cousin_citation": null,
+      "shape_signature": "Stage 3 \u2014 Tension: surface contradiction/corroboration/retraction across candidates (reads Ring 3 edges)",
+      "resolves_by": [
+        "tension"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a78 stage 3. Does not average tensions away. Empty Ring 3 (\"no tension surfaced\") is a correct read at G3; multi-unit edge population lands with real material at G4+."
+    },
+    {
+      "module": "backend/services/solva_depth/reasoning/probability.py",
+      "cousin_citation": null,
+      "shape_signature": "Stage 4 \u2014 Probability: weigh candidates toward best-supported conclusion",
+      "resolves_by": [
+        "probability"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a78 stage 4. G3 v0 honest default: equal weight; LLM-binding a G3+ implementation choice bounded by \u00a717 invariants + Product Spec \u00a731 #10 (temperature=0 discipline)."
+    },
+    {
+      "module": "backend/services/solva_depth/reasoning/reflection.py",
+      "cousin_citation": null,
+      "shape_signature": "Stage 5 \u2014 Reflection: judge soundness/sufficiency; identify load-bearing units; compose conclusion",
+      "resolves_by": [
+        "reflection"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Solva Spec v1.0 \u00a78 stage 5 + \u00a79. Returns load_bearing_units (NOT a class \u2014 that's assertion.py's boundary). Enforced by test_stage_does_not_construct_defensibility_class."
+    },
+    {
+      "module": "backend/services/layer_c/convergence.py",
+      "cousin_citation": null,
+      "shape_signature": "Layer C convergence \u2014 signal-ring conformance gate + hand-off to Solva reasoning stage 1",
+      "resolves_by": [
+        "converge_units",
+        "assert_signal_ring_conformant",
+        "SignalRingConformanceError"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/services/layer_c/aggregator.py",
+        "backend/tests/invariants/signal_ring_dimensions.v0.content_snapshot.json"
+      ],
+      "notes": "Solva Spec v1.0 \u00a712 + Product Spec 2.1 \u00a7C + \u00a712 + \u00a731 #6. Enforces signal_ring_dimensions@v0 catalogue at convergence-time \u2014 any unit widening the dimension set beyond the frozen catalogue is rejected. Ring 3 edge population deferred to real multi-unit runs at G4+; empty RelationalRing at convergence is the correct v0 default."
+    },
+    {
+      "module": "backend/routers/solva.py",
+      "cousin_citation": "backend/routers/contracts.py",
+      "shape_signature": "FastAPI router for Solva status + trace read (stamp_audit blobs by trace_id)",
+      "resolves_by": [
+        "APIRouter",
+        "router",
+        "status",
+        "find"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/routers/contracts.py",
+        "backend/routers/northena.py"
+      ],
+      "notes": "Solva Spec v1.0 \u00a77 module layout: routers/solva.py \u2014 enforcement + trace read surfaces. Router boilerplate (APIRouter, router, status) lifted from routers/contracts.py + routers/northena.py FastAPI pattern; find+cursor read shape lifted from routers/northena.py::by_run. Read-side only; write-side is via pipeline\u2192converge.absorb_solva_trace."
+    },
+    {
+      "module": "backend/contracts/mtafiti_registry.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: MtafitiRegistryRecord + FreshnessStamp + MtafitiScoreVector + SourceStanding enum",
+      "resolves_by": [
+        "MtafitiRegistryRecord",
+        "FreshnessStamp",
+        "MtafitiScoreVector",
+        "SourceStanding",
+        "MTAFITI_REGISTRY_COLLECTION"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/contracts/northena_ledger.py"
+      ],
+      "notes": "Mtafiti Spec v1.0 \u00a75 + \u00a713. Additions, not mutations \u2014 six existing frozen contracts UNTOUCHED. MtafitiScoreVector explicitly distinct from five_rings@v0::ScoreVector (Ring 5 signal-strength); CONFIRM line resolved."
+    },
+    {
+      "module": "backend/contracts/targeta_plan.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: MiningPlan + TargetLocation + TargetaFloorSpec",
+      "resolves_by": [
+        "MiningPlan",
+        "TargetLocation",
+        "TargetaFloorSpec",
+        "TARGETA_MINING_PLAN_COLLECTION"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/contracts/northena_ledger.py",
+        "backend/contracts/five_rings.py"
+      ],
+      "notes": "Targeta Spec v1.0 \u00a78. Addition, not mutation. FloorSpec reused from services/solva_depth/interfaces.py (G3); LedgerArtifactRef reused for governing_artifact_ref."
+    },
+    {
+      "module": "backend/services/mtafiti/__init__.py",
+      "cousin_citation": null,
+      "shape_signature": "package docstring: module layout per Mtafiti Spec \u00a77 verbatim",
+      "resolves_by": [
+        "mtafiti"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Mtafiti Spec v1.0 \u00a77."
+    },
+    {
+      "module": "backend/services/mtafiti/census.py",
+      "cousin_citation": null,
+      "shape_signature": "objective-blind exhaustive walk; SourceCandidate emitted; sensitivity classification",
+      "resolves_by": [
+        "census",
+        "SourceCandidate",
+        "classify_sensitivity"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Mtafiti Spec v1.0 \u00a78. Signature carries no ObjectiveRequest \u2014 invariant #1 + #9 by construction."
+    },
+    {
+      "module": "backend/services/mtafiti/declaration.py",
+      "cousin_citation": null,
+      "shape_signature": "feed-level source-standing baseline; deterministic recency + contested-status",
+      "resolves_by": [
+        "declared_standing",
+        "recency_validity",
+        "contested_status"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Mtafiti Spec v1.0 \u00a79 \u2014 baseline stands alone. LIVE at G4."
+    },
+    {
+      "module": "backend/services/mtafiti/inference.py",
+      "cousin_citation": null,
+      "shape_signature": "learned detectors emit Detections only; NEVER imports verdict.py; NEVER constructs DefensibilityClass",
+      "resolves_by": [
+        "detect",
+        "Detections"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Mtafiti Spec v1.0 \u00a710 + \u00a717 #3. G4 v0: deterministic-null stubs (0.0). Real detectors bind post-G4 via V3 admission (CLOSED SEAM)."
+    },
+    {
+      "module": "backend/services/mtafiti/measure.py",
+      "cousin_citation": null,
+      "shape_signature": "composes baseline + (admitted) detections into MtafitiScoreVector; resolves Matrix axes",
+      "resolves_by": [
+        "measure",
+        "resolve_matrix_axes"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Mtafiti Spec v1.0 \u00a711 verbatim shape. Baseline stands alone when v3_admitted=False."
+    },
+    {
+      "module": "backend/services/mtafiti/verdict.py",
+      "cousin_citation": "backend/services/mtafiti/inference.py",
+      "shape_signature": "Matrix lookup \u2192 Verdict(defensibility_class, matrix_rule_ref); fail-toward-caution on unmapped cell",
+      "resolves_by": [
+        "MatrixHandle",
+        "QualificationMatrix",
+        "default_matrix_handle"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/solva_depth/interfaces.py",
+        "backend/contracts/qualification_matrix/loader.py"
+      ],
+      "notes": "Mtafiti Spec v1.0 \u00a711. MatrixHandle reused from Solva G3. Fail-toward-caution: unmapped cell \u2192 non_factual + matrix_rule_ref='unmapped_cell' (\u00a717 #5). resolves_by lists lifted identifiers: MatrixHandle (Protocol from Solva G3), QualificationMatrix (frozen v0), default_matrix_handle (G3-authored)."
+    },
+    {
+      "module": "backend/services/mtafiti/registry.py",
+      "cousin_citation": null,
+      "shape_signature": "Mongo-backed Registry write/read + freshness delta detection (L1 + L2)",
+      "resolves_by": [
+        "record",
+        "NORTHENA_LEDGER_COLLECTION"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/northena/ledger.py"
+      ],
+      "notes": "Mtafiti Spec v1.0 \u00a713 + \u00a717 #7 + \u00a717 #8. Mongo write pattern lifted from Northena Ledger. L1 (logged_date) LIVE; L2 (structural_signature) fixture-emitted OR deterministic-sha256 fallback. resolves_by lists lifted identifiers (Mongo write pattern via `record` function name shape from northena.ledger; collection-name-const pattern)."
+    },
+    {
+      "module": "backend/services/mtafiti/source_standing.py",
+      "cousin_citation": null,
+      "shape_signature": "MEA-owned declaration table; G4 placeholder synthetic_placeholder=True, editorial_authority=False",
+      "resolves_by": [
+        "table",
+        "feed_ids",
+        "SourceStandingEntry"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Mtafiti Spec v1.0 \u00a79 + \u00a714 + user directive (4). G4 placeholder covering 8 fixture feed_ids. Real MEA table swaps by config; invariant re-blesses at swap time."
+    },
+    {
+      "module": "backend/services/mtafiti/v3_overlay.py",
+      "cousin_citation": null,
+      "shape_signature": "CLOSED SEAM: overlay_admitted(thresholds=None) returns False; V3Thresholds nullable per user directive (3)",
+      "resolves_by": [
+        "overlay_admitted",
+        "runtime_mode",
+        "V3Thresholds",
+        "V3Result"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Mtafiti Spec v1.0 \u00a712 + \u00a718. Fields verbatim: fact_precision, genre_accuracy, inter_annotator_floor. Owner-owned; not picked at G4. Closed-seam pattern from user directive (2026-07-01)."
+    },
+    {
+      "module": "backend/services/targeta/__init__.py",
+      "cousin_citation": null,
+      "shape_signature": "package docstring: module layout per Targeta Spec \u00a77 verbatim + dependency rules",
+      "resolves_by": [
+        "targeta"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Targeta Spec v1.0 \u00a77."
+    },
+    {
+      "module": "backend/services/targeta/interface.py",
+      "cousin_citation": null,
+      "shape_signature": "one-way set-preserving boundary: YieldCandidate excludes floor + registry_defensibility; apply_yield raises NonPermutationError on set inequality",
+      "resolves_by": [
+        "apply_yield",
+        "to_yield_input",
+        "EligibleCandidate",
+        "YieldCandidate",
+        "NonPermutationError",
+        "YieldInput",
+        "Permutation"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Targeta Spec v1.0 \u00a710 verbatim. Construction-as-guard: bias hazard unrepresentable in types."
+    },
+    {
+      "module": "backend/services/targeta/core.py",
+      "cousin_citation": null,
+      "shape_signature": "deterministic eligibility + fixed ranking; no ML import",
+      "resolves_by": [
+        "eligible_and_rank"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Targeta Spec v1.0 \u00a79 + \u00a717 #2. Grep-guarded 'no ML import' invariant. Core-only is complete targeter (\u00a714 verbatim)."
+    },
+    {
+      "module": "backend/services/targeta/yield_layer.py",
+      "cousin_citation": null,
+      "shape_signature": "CLOSED SEAM at G4; identity default_yield_fn; YieldThresholds nullable",
+      "resolves_by": [
+        "default_yield_fn",
+        "YieldThresholds"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Targeta Spec v1.0 \u00a711 + user directive (2). Imports ONLY interface types per \u00a77 dependency rule. Owner thresholds: min_efficiency_gain, coverage_alpha (\u00a717 open decision)."
+    },
+    {
+      "module": "backend/services/targeta/gate.py",
+      "cousin_citation": null,
+      "shape_signature": "two-arm admission gate; ONLY module that compares orderings; closed-seam returns admitted=False when thresholds=None",
+      "resolves_by": [
+        "evaluate_gate",
+        "compose_ordering",
+        "GateResult"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Targeta Spec v1.0 \u00a712 + \u00a717 #6. Veto overrides helps. G4 posture: CLOSED SEAM \u2014 admitted=False, reason='thresholds_not_configured'."
+    },
+    {
+      "module": "backend/services/targeta/plan.py",
+      "cousin_citation": null,
+      "shape_signature": "MiningPlan assembly + deterministic plan_id + Mongo persist",
+      "resolves_by": [
+        "upsert",
+        "compose_record"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/services/mtafiti/registry.py"
+      ],
+      "notes": "Targeta Spec v1.0 \u00a78 + \u00a717 #8. Mongo write pattern lifted from Mtafiti Registry (which lifted from Northena Ledger). Reproducible plan_id \u2014 sha256 over (artifact, snapshot, order, yield_version). resolves_by lists lifted identifiers (Mtafiti Registry Mongo write pattern)."
+    },
+    {
+      "module": "backend/services/service_1/__init__.py",
+      "cousin_citation": null,
+      "shape_signature": "package docstring",
+      "resolves_by": [
+        "service_1"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product Spec v2.1 \u00a72.1."
+    },
+    {
+      "module": "backend/services/service_1/service.py",
+      "cousin_citation": null,
+      "shape_signature": "Day-Zero composition: intake \u2192 Mtafiti \u2192 Targeta \u2192 MiningPlan \u2192 Ledger; terminates at convergence",
+      "resolves_by": [
+        "run",
+        "status_by_run",
+        "Service1Refusal"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product Spec v2.1 \u00a72.1 + \u00a724 + \u00a725. Composition-time floor + lawful_basis re-assertion (defense-in-depth). Deterministic registry_snapshot_ref for reproducibility (Targeta \u00a717 #8)."
+    },
+    {
+      "module": "backend/routers/service_1.py",
+      "cousin_citation": "backend/routers/northena.py",
+      "shape_signature": "FastAPI router: POST /run, GET /run/{run_id}, GET /status; Service1RunRequest/Summary/Status response models",
+      "resolves_by": [
+        "router",
+        "APIRouter",
+        "prefix"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/routers/northena.py",
+        "backend/routers/solva.py"
+      ],
+      "notes": "Interface Spec + Product v2.1 \u00a72.1. Router boilerplate lifted from northena.py + solva.py. resolves_by lists lifted router-boilerplate identifiers from northena.py + solva.py."
+    },
+    {
+      "module": "backend/tests/conftest.py",
+      "cousin_citation": null,
+      "shape_signature": "session-scoped event_loop fixture for pytest-asyncio + Motor",
+      "resolves_by": [
+        "event_loop"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Test infrastructure. Motor client bound at module import; session-scoped loop shares one loop across async tests to match runtime posture (long-lived FastAPI app). Mandate: Product Spec v2.1 CI discipline \u2014 CI must equal pytest -q; async test isolation is a discipline concern, not a code concern."
+    },
+    {
+      "module": "backend/contracts/trace_lens.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: TraceLensEnvelope + ResolvedSolvaTrace + RegistryFreshnessMarker",
+      "resolves_by": [
+        "TraceLensEnvelope",
+        "ResolvedSolvaTrace",
+        "RegistryFreshnessMarker"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/contracts/northena_ledger.py",
+        "backend/contracts/mtafiti_registry.py",
+        "backend/contracts/targeta_plan.py"
+      ],
+      "notes": "Interface Spec \u00a716 invariant #9 (\"One record, seen at two scopes\") + Northena \u00a77.2/\u00a77.3 + Product v2.1 \u00a78. Response-envelope shape forced by cross-engine correlation topology (5 engines resolvable). Addition, not mutation \u2014 eight pre-G5a frozen contracts UNTOUCHED. G5a."
+    },
+    {
+      "module": "backend/contracts/lift_manifest_response.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: LiftManifestEnvelope + LiftEntry + SourceSpecFingerprint + Rule2Accounting",
+      "resolves_by": [
+        "LiftManifestEnvelope",
+        "LiftEntry",
+        "SourceSpecFingerprint",
+        "Rule2Accounting"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Interface Spec \u00a716 governance-legibility. Response-envelope shape forced by governance-surface mandate. Addition, not mutation. G5a."
+    },
+    {
+      "module": "backend/services/northena/trace_lens.py",
+      "cousin_citation": null,
+      "shape_signature": "cross-engine trace correlation resolver + lift-manifest reader; 5-stage read walk; zero writes",
+      "resolves_by": [
+        "resolve_trace",
+        "read_lift_manifest_envelope",
+        "TraceLensInputError",
+        "TraceLensNotFound"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Interface Spec \u00a716 invariant #9 + Northena \u00a712 (Ledger absorbs stamp-audit by unit_id + trace_id) + scope note \u00a71.2 (5-stage correlation walk). Motor cursor read shape rhymes with northena.ledger + northena.converge (find/find_one/sort), but the resolver function names + exception types + envelope-build orchestration are all mandate-forced-net-new by scope note \u00a71.2 correlation topology + Interface Spec \u00a716 invariant #9 envelope shape. READ-ONLY posture enforced by test_trace_lens_readonly.py. G5a."
+    },
+    {
+      "module": "backend/routers/discipline.py",
+      "cousin_citation": "backend/routers/northena.py",
+      "shape_signature": "FastAPI router: GET /api/discipline/lift_manifest (governance-legibility read surface)",
+      "resolves_by": [
+        "router",
+        "APIRouter"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/routers/northena.py"
+      ],
+      "notes": "Interface Spec \u00a716 governance-legibility. Router boilerplate (APIRouter + prefix + tags + response_model + async GET handler pattern) lifted from routers/northena.py. GET-only. G5a. resolves_by lists the lifted identifiers (router, APIRouter) present in the chain source; `get_lift_manifest` is the local handler name (mandate-forced by \u00a716 governance-legibility, not lifted)."
+    },
+    {
+      "module": "backend/tests/invariants/test_trace_lens_readonly.py",
+      "cousin_citation": null,
+      "shape_signature": "READ-ONLY invariant tests \u2014 Mongo opcounters write-delta assertions across 200/404/400/405 case-classes; FastAPI route-method enforcement",
+      "resolves_by": [
+        "test_trace_lens_route_registered_get_only",
+        "test_lift_manifest_route_registered_get_only",
+        "test_trace_lens_rejects_non_get",
+        "test_trace_lens_unknown_trace_id_writes_zero",
+        "test_trace_lens_malformed_trace_id_writes_zero",
+        "test_trace_lens_known_trace_id_writes_zero",
+        "test_lift_manifest_hit_writes_zero",
+        "test_method_not_allowed_writes_zero"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Northena \u00a714 test obligations (Gate Condition 2 at G5a). httpx.AsyncClient(ASGITransport(app)) transport chosen to share the pytest-asyncio session loop with Motor. G5a."
+    },
+    {
+      "module": "backend/tests/invariants/test_trace_lens_cross_engine_correlation.py",
+      "cousin_citation": null,
+      "shape_signature": "cross-engine correlation gate tests \u2014 Flow A (Service 1 \u2192 4 engines) + Flow B (Solva direct \u2192 2 engines); Northena \u00a77.2 run_id/trace_id semantics; contract-frozen snapshots",
+      "resolves_by": [
+        "test_service_1_flow_resolves_all_four_engines",
+        "test_solva_flow_resolves_northena_and_solva_engines",
+        "test_trace_lens_404_carries_structured_error",
+        "test_trace_lens_400_carries_structured_error",
+        "test_run_id_trace_id_semantics_northena_7_2",
+        "test_trace_lens_envelope_contract_frozen",
+        "test_lift_manifest_envelope_contract_frozen"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Interface Spec \u00a716 invariant #9 + scope note \u00a71.2. Gate Condition 1 at G5a: 5-engine universe {northena_ledger, solva, targeta, mtafiti, service_1} verifiable under one trace_id. Flow A resolves 4 engines; Flow B resolves 2; union = 5. G5a."
+    },
+    {
+      "module": "backend/contracts/outer_gate_receipt.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: OuterGateReceipt (irreversibility receipt envelope)",
+      "resolves_by": [
+        "OuterGateReceipt"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/contracts/northena_ledger.py"
+      ],
+      "notes": "Product v2.1 \u00a721.2 (pseudonymisation with a purged mint, k-anonymity / l-diversity / generalisation, optional DP noise) + \u00a722.1 (Ledger records each Gate decision and reason). Envelope shape forced by \u00a721.2 primitives. Addition; not mutation. G6."
+    },
+    {
+      "module": "backend/contracts/v2_refusal.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: V2RefusalEnvelope (structured V2 refusal)",
+      "resolves_by": [
+        "V2RefusalEnvelope"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/contracts/northena_ledger.py"
+      ],
+      "notes": "Product v2.1 \u00a729.1 (V2 confirms rights past extract-for-RMS; verifies sample file-out cryptographically; guards cumulative disclosure) + \u00a730 purpose limitation. Refusal is total; no partial-egress. Addition; not mutation. G6."
+    },
+    {
+      "module": "backend/contracts/cumulative_disclosure.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: CumulativeDisclosureLedger (tracking state for V2 cumulative-disclosure arm) + collection constant",
+      "resolves_by": [
+        "CumulativeDisclosureLedger",
+        "CUMULATIVE_DISCLOSURE_COLLECTION"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product v2.1 \u00a729.1 + \u00a721.2 + \u00a732 (DPO/Owner-owned config decision pattern). Closed-seam contract mirrors Mtafiti V3 overlay + Targeta yield closed-seam pattern. arm_admitted=False at v0. G6."
+    },
+    {
+      "module": "backend/services/outer_gate/mint.py",
+      "cousin_citation": null,
+      "shape_signature": "purged-mint HMAC-SHA256 pseudonymisation primitive; MintRegistry with open/purge lifecycle; per-window key never persisted",
+      "resolves_by": [
+        "MintRegistry",
+        "MintWindow",
+        "pseudonymise"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product v2.1 \u00a721.2 'pseudonymisation with a purged mint'. HMAC-SHA256(key, plaintext) pattern shape-rhymes with services/synisense/shield/trust_receipt.py (per-tenant key + HMAC signature), cousin lineage documented IN the mint.py module docstring (not code-lifted). G6 addition: purge-lifecycle discipline (\u00a721.2 'purged mint') absent from Shield's stable-key posture. Manifest classifies as mandate-forced-net-new: the MintRegistry/MintWindow/pseudonymise identifiers are novel; the crypto primitive choice (HMAC-SHA256) is mandate-forced by \u00a721.2 spec language + Shield-precedent for the same primitive in-pod. G6."
+    },
+    {
+      "module": "backend/services/outer_gate/transform.py",
+      "cousin_citation": null,
+      "shape_signature": "one-way irreversibility transform: HMAC pseudonymisation on identifier fields + generalisation on category fields; deterministic-given-key",
+      "resolves_by": [
+        "transform_artifact",
+        "PSEUDONYMISED_FIELDS",
+        "GENERALISED_FIELDS"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/contracts/five_rings.py"
+      ],
+      "notes": "Product v2.1 \u00a721.2 verbatim (pseudonymisation, k-anonymity, generalisation) + Sys-Invariant #8 ('only irreversibly transformed data crosses'). PSEUDONYMISED_FIELDS enumerates identifier fields from five_rings@v0 provenance ring. G6."
+    },
+    {
+      "module": "backend/services/outer_gate/receipt.py",
+      "cousin_citation": null,
+      "shape_signature": "OuterGateReceipt builder from transform metadata; never leaks key material",
+      "resolves_by": [
+        "build_receipt"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product v2.1 \u00a721.2 + \u00a722.1. Receipt records transform_version, key_fingerprint (SHA-256 of key, NEVER key itself), applied_transformations, correlation identifiers. G6."
+    },
+    {
+      "module": "backend/services/v2_gate/refusal.py",
+      "cousin_citation": null,
+      "shape_signature": "V2RefusalEnvelope builder; four reason codes; no partial-egress",
+      "resolves_by": [
+        "build_refusal"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product v2.1 \u00a729.1 + \u00a730 purpose limitation. Envelope is the refusal record; nothing else crosses on refusal path. G6."
+    },
+    {
+      "module": "backend/services/v2_gate/cumulative.py",
+      "cousin_citation": null,
+      "shape_signature": "V2 cumulative-disclosure guard; Shape B closed-seam; opens when RMS_G6_K_ANONYMITY_THRESHOLD + RMS_G6_L_DIVERSITY_THRESHOLD + RMS_G6_DP_EPSILON_BUDGET env vars set",
+      "resolves_by": [
+        "cumulative_arm_admitted",
+        "evaluate",
+        "egress_fingerprint"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product v2.1 \u00a729.1 'demonstrates the cumulative-disclosure guard' + 'Until V2 passes, delivery is inner-gate-only' + \u00a732 DPO/Owner-owned config pattern. Closed-seam at v0 mirrors Mtafiti V3 + Targeta yield closed seams. G6."
+    },
+    {
+      "module": "backend/tests/invariants/test_outer_gate_irreversibility.py",
+      "cousin_citation": null,
+      "shape_signature": "G6 GATE CONDITION 1 \u2014 irreversibility invariant across 5 attack classes (byte inspection, field format, key-purge, correlation, snapshot stability)",
+      "resolves_by": [
+        "test_no_plaintext_in_egress_bytes",
+        "test_pseudonymised_fields_match_hash_format",
+        "test_generalised_fields_transformed",
+        "test_key_purge_makes_input_unrecoverable",
+        "test_transform_via_purged_window_refused",
+        "test_within_window_correlation_preserved_across_artifacts",
+        "test_cross_window_correlation_broken_by_purge",
+        "test_transform_snapshot_stable_under_fixed_key",
+        "test_outer_gate_receipt_contract_frozen",
+        "test_receipt_carries_fingerprint_never_key"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product v2.1 \u00a721.2 + Sys-Invariant #8. GATE CONDITION 1 for G6 \u2014 proves input cannot be reconstructed from output alone. 10 tests. G6."
+    },
+    {
+      "module": "backend/tests/invariants/test_v2_gate_refusal_cumulative.py",
+      "cousin_citation": null,
+      "shape_signature": "G6 GATE CONDITION 2 \u2014 V2 single-packet refusal (LIVE, 4 reason codes) + cumulative-disclosure arm (Shape B closed-seam) invariants",
+      "resolves_by": [
+        "test_v2_refusal_valid_envelope_per_reason",
+        "test_v2_refusal_envelope_rejects_unknown_reason_code",
+        "test_v2_refusal_is_terminal_no_partial_egress",
+        "test_v2_refusal_envelope_contract_frozen",
+        "test_cumulative_arm_closed_by_default",
+        "test_cumulative_evaluate_short_circuits_when_closed",
+        "test_cumulative_arm_opens_when_all_thresholds_configured",
+        "test_cumulative_arm_stays_closed_if_only_some_thresholds_set",
+        "test_cumulative_evaluate_refuses_when_threshold_crossed",
+        "test_cumulative_disclosure_ledger_contract_frozen"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Product v2.1 \u00a729.1 + \u00a732. GATE CONDITION 2 \u2014 single-packet arm LIVE, cumulative arm SHAPE B closed-seam (arm_admitted=False by default; opens when 3 config env vars set). G6."
+    },
+    {
+      "module": "backend/tests/invariants/test_ledger_absorbs_outer_gate_and_v2_via_stamp_audit.py",
+      "cousin_citation": null,
+      "shape_signature": "HAZARD-STOP (a) analog check \u2014 asserts northena_ledger_row@v0 contract snapshot UNCHANGED at G6; outer-gate + V2 absorb via stamp_audit side-channel, no new stage/decision literal",
+      "resolves_by": [
+        "test_outer_gate_receipt_lands_in_stamp_audit",
+        "test_v2_refusal_lands_in_stamp_audit",
+        "test_northena_ledger_row_contract_snapshot_unchanged_at_g6",
+        "test_no_new_stage_literal_at_g6",
+        "test_no_new_decision_literal_at_g6"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "Northena \u00a714 stamp-audit side-channel + Product v2.1 \u00a722.1 Ledger obligations. Explicit HAZARD-STOP (a) tripwires. G6."
+    },
+    {
+      "module": "backend/contracts/service_1_refusal.py",
+      "cousin_citation": null,
+      "shape_signature": "Pydantic frozen contract: Service1Refusal (governed refusal envelope with outcome discriminator)",
+      "resolves_by": [
+        "Service1Refusal"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [
+        "backend/contracts/five_rings.py",
+        "backend/contracts/outer_gate_receipt.py",
+        "backend/contracts/v2_refusal.py"
+      ],
+      "notes": "A2. Interface Spec \u00a7183-210 + \u00a7201/\u00a7186-190/\u00a7204 (behavioural refusal table: asked / supported / to_raise). Product v2.1 \u00a78.4. Envelope shape forced by \u00a75.4 render obligation. 14th frozen contract. Addition, not mutation."
+    },
+    {
+      "module": "backend/services/service_1/refusal_hints.py",
+      "cousin_citation": null,
+      "shape_signature": "Static per-reason refusal-hint lookup table",
+      "resolves_by": [
+        "hint_for"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "A2 D2a static-lookup implementation of Interface Spec \u00a7204 category anchor (corroboration / accountable source). Verbatim strings user-locked. HAZARD-STOP (f) check confirmed source prescribes categories only."
+    },
+    {
+      "module": "backend/tests/invariants/test_service_1_refusal_envelope.py",
+      "cousin_citation": "backend/tests/invariants/test_trace_lens_readonly.py",
+      "shape_signature": "HTTP-layer invariant: 3 refusal branches + validation-vs-refusal distinguishability + infrastructure-fault non-conflation + Ring-5-governed supported_class + max-not-min + snapshot invariant",
+      "resolves_by": [
+        "httpx",
+        "ASGITransport",
+        "_opcounters",
+        "_write_delta",
+        "model_json_schema",
+        "monkeypatch"
+      ],
+      "lift_kind": "transitive",
+      "transitive_chain": [
+        "backend/tests/invariants/test_trace_lens_readonly.py",
+        "backend/tests/invariants/test_outer_gate_irreversibility.py"
+      ],
+      "notes": "A2 GATE. httpx.AsyncClient(ASGITransport) pattern lifted from test_trace_lens_readonly.py. Snapshot-invariant pattern lifted from test_outer_gate_irreversibility.py:228-236."
+    },
+    {
+      "module": "backend/tests/invariants/service_1_refusal.contract_snapshot.json",
+      "cousin_citation": null,
+      "shape_signature": "Frozen JSON schema snapshot for Service1Refusal@v0",
+      "resolves_by": [
+        "Service1Refusal"
+      ],
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "A2. Byte-frozen JSON schema for Service1Refusal@v0. Freeze discipline mandate-forced by Operating Protocol \u00a71.7 (contract snapshot invariants). Enforced by test_service_1_refusal_envelope::test_service_1_refusal_schema_frozen. 11th snapshot file (14 frozen contracts; five_rings snapshot covers multiple ring contracts under one file)."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "summary": "G2a-post-close FINAL — Lift Manifest lint verification. All P0 and P1 criteria met. 118/118 pytest green, `make ci` prints 'G2a CI gate PASSED', 43/43 lift-manifest lint tests pass, 12/12 invariants (including the 2 new manifest-schema invariants) pass, 11/11 N-INV Northena regression still green, API surface unchanged. Bite-checks executed on the lint itself: mutating a manifest entry's `resolves_by` to a fabricated identifier correctly FAILs the parametrized test on that entry (Condition 1 enforcement live). Mutating an unverifiable entry's `notes` to empty correctly FAILs (Condition 2 enforcement live). Both mutations reverted; 43/43 restored. Source review of `/app/backend/tests/test_lift_manifest.py` confirms both mechanisms present at lines 110/116-120 (_check_direct), 134/139-146 (_check_transitive), 156 (_check_unverifiable), and 186/192 (_check_mandate_forced).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_lift_manifest.py",
+    "/app/backend/tests/invariants/test_lift_manifest_schema.py",
+    "/app/backend/tests/invariants/lift_manifest_schema.snapshot.json",
+    "/app/docs/lift_manifest.json"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Manifest lift_kind distribution is {unverifiable-substrate-absent: 18, transitive: 6, mandate-forced-net-new: 16, direct: 0} — total 40. The PRD/request text stated '6 transitive, 17 unverifiable-substrate-absent, 17 mandate-forced-net-new'. Real distribution differs by ±1 in the last two buckets (18/16 vs 17/17). This is a docs-vs-reality drift ONLY in the human-authored description; the lint is happy, the schema snapshot is happy, and totals still sum to 40. Consider updating BUILD_JOURNAL narrative if precision matters.",
+    "Zero 'direct' entries in the manifest — every claim currently routes through 'transitive' or is honestly labelled substrate-absent / mandate-forced. This is consistent with substrate_state.reference_akki_legacy_present=false (the reference substrate is unreachable from the pod), but it means the `_check_direct` branch of the lint is currently un-exercised by real data. Not a defect — the branch is unit-exercised at code-review time and would activate the moment a direct entry is added. Flag only for awareness.",
+    "test_substrate_state_matches_reality uses REFERENCE_ROOT.exists() and any(REFERENCE_ROOT.iterdir()) — if the directory exists but is empty, `actual` correctly evaluates False. Logic is sound; the pod filesystem confirms /reference/akki-legacy does not exist, matching declared=false."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "N/A (backend-only testing per request)"},
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "G2a-post-close lift-manifest deliverable is fully verified. If a future testing pass revisits this: (1) the lint is at /app/backend/tests/test_lift_manifest.py — the two conditions to preserve are `_check_transitive` grep-of-identifiers-in-combined-chain-source (line 140) and `_check_unverifiable` non-empty-notes (line 156); (2) the schema snapshot at /app/backend/tests/invariants/lift_manifest_schema.snapshot.json is frozen and byte-compared; (3) `make ci` in /app is the canonical gate and prints 'G2a CI gate PASSED' with 118 tests; (4) API surface: gate=G2a, contracts_frozen has 6 entries (note key is `contracts_frozen`, not `frozen_contracts`), g2_components has 5 v0 entries, OpenAPI LedgerRow has 9 fields, /api/northena/ledger/by_run/{unknown_uuid} returns HTTP 200 with [].",
+  "rca of the issue": "N/A — no bugs. Bite-check performed: temp-mutated docs/lift_manifest.json (transitive entry resolves_by -> ['FABRICATED_NONSENSE_IDENT_XYZ_ZZZ']) — pytest reported 1 failed / 42 passed with clear message 'transitive claim: identifier not found anywhere in transitive_chain'. Second bite-check: emptied `notes` on an unverifiable entry — pytest reported 1 failed / 42 passed at line 156. Both mutations were reverted from /tmp backup; final state is 43/43 passed. The lint DOES resolve the claim (not the citation string) and DOES require non-empty notes for honest gaps."
+}

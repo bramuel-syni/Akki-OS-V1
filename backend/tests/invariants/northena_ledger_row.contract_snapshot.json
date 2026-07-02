@@ -1,0 +1,111 @@
+{
+  "$defs": {
+    "LedgerArtifactRef": {
+      "additionalProperties": false,
+      "description": "\u00a77.2: { artifact_type, artifact_id, version }.",
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "artifact_type": {
+          "enum": [
+            "portfolio_mandate",
+            "objective_request"
+          ],
+          "title": "Artifact Type",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "version"
+      ],
+      "title": "LedgerArtifactRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "\u00a77.2 \u2014 the contract-grade Ledger row. Nine fields.",
+  "properties": {
+    "artifact_ref": {
+      "$ref": "#/$defs/LedgerArtifactRef"
+    },
+    "at": {
+      "format": "date-time",
+      "title": "At",
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "admitted",
+        "refused",
+        "warm",
+        "fresh",
+        "terminate_success",
+        "terminate_budget",
+        "continue"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "lawful_basis_ref": {
+      "title": "Lawful Basis Ref",
+      "type": "string"
+    },
+    "reason": {
+      "description": "Deterministic reason string.",
+      "title": "Reason",
+      "type": "string"
+    },
+    "run_id": {
+      "description": "uuid \u2014 one run has one closed Ledger.",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "stage": {
+      "enum": [
+        "admit",
+        "gate",
+        "converge"
+      ],
+      "title": "Stage",
+      "type": "string"
+    },
+    "stamp_audit": {
+      "anyOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Absorbed defensibility stamp-audit entry when present (\u00a77.3): { unit_id, decision, reason, judged_signal_dimensions, floor_violation }.",
+      "title": "Stamp Audit"
+    },
+    "trace_id": {
+      "description": "Joins ledger to unit-level intelligence and trace lenses.",
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "trace_id",
+    "stage",
+    "decision",
+    "reason",
+    "artifact_ref",
+    "lawful_basis_ref",
+    "at"
+  ],
+  "title": "LedgerRow",
+  "type": "object"
+}

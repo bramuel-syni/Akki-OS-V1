@@ -1,0 +1,45 @@
+# Phase → required source specs
+#
+# Substrate-drop gate: a phase does not open until every spec in its list
+# is present at /app/docs/mandates/<filename> AND its SHA-256 matches
+# MANIFEST.md. Enforced by backend/tests/invariants/test_substrate_drop_gate.py.
+#
+# Norm ref: BUILD_JOURNAL Substrate-Drop v1 institutionalisation.
+# ORCHESTRATOR_CONTINUITY §0 — substrate-drop gate rule.
+
+G3:
+  - RMS_Solva_Specification.md
+  - RMS_Product_Engineering_Spec_v2.1.md
+
+G4:
+  - RMS_Targeta_Specification.md
+  - RMS_Mtafiti_Specification.md
+  - RMS_Product_Engineering_Spec_v2.1.md
+
+# G5a: backend routes (/api/discipline/lift_manifest, /api/northena/trace/{trace_id},
+# trace-lens correlation, intelligence-query response contract per Interface Spec §11).
+# Depends on Interface Spec (§11 response contract, §14 trace_id retrieval) +
+# Product Spec 2.1 (parent) + Northena Spec (ledger absorption seam) +
+# Mtafiti Spec (Registry read routes, added at G4 close) +
+# Targeta Spec (MiningPlan read routes, added at G4 close).
+G5a:
+  - RMS_Interface_Specification.md
+  - RMS_Product_Engineering_Spec_v2.1.md
+  - northena.md
+  - RMS_Mtafiti_Specification.md
+  - RMS_Targeta_Specification.md
+
+# G5b: frontend surfaces (Operator Console + Consumer Terminal + trace-lenses render).
+# Depends on UX Architecture Spec (experience model, trust model) +
+# Interface Spec (concrete surfaces + layouts) + Product Spec 2.1 (parent).
+G5b:
+  - RMS_UX_Architecture_Specification.md
+  - RMS_Interface_Specification.md
+  - RMS_Product_Engineering_Spec_v2.1.md
+
+# G6: Outer Gate + V2 gate. Depends on Product Spec 2.1 (parent) +
+# Interface Spec §12 (Data-Buying Path) + Northena Spec (governance ceiling).
+G6:
+  - RMS_Product_Engineering_Spec_v2.1.md
+  - RMS_Interface_Specification.md
+  - northena.md

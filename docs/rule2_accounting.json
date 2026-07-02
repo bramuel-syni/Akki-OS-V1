@@ -1,0 +1,87 @@
+{
+  "_note": "Rule 2 v2 accounting per closed phase — machine-readable mirror of BUILD_JOURNAL narrative. Read by /api/discipline/lift_manifest. Updated at every phase close.",
+  "_counting_standard_by_phase": {
+    "_note": "Post-§0 amendment (2026-07-02T00:45Z at G6 close). Pre-§0 phases counted discretionary LoC under looser standard (test-data literals often under-counted); post-§0 phases count under strict standard (test-data literals, envelope-shape decisions, and observability fields inline). Reported ratios stand as-recorded; no retroactive recount per user decision at freeze-and-handoff time. Endpoint surface: counting_standard marker is also prefixed onto each phase's journal_ref string (permissive-string absorb, no contract mutation).",
+    "G0.5": "pre-§0",
+    "G1": "pre-§0",
+    "Pre-G2": "pre-§0",
+    "G2a": "pre-§0",
+    "Substrate-Drop v1": "pre-§0",
+    "G3": "pre-§0",
+    "G4": "pre-§0",
+    "G5a": "pre-§0",
+    "G6": "post-§0-strict"
+  },
+  "G0.5": {
+    "lifted_verifiable": "UNKNOWN",
+    "net_new_discretionary": "UNKNOWN",
+    "mandate_forced_net_new": "UNKNOWN",
+    "overall_ratio": "UNKNOWN",
+    "discretionary_only_ratio": "UNKNOWN",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL G0.5 close (pre-2026-07-01 baseline)"
+  },
+  "G1": {
+    "lifted_verifiable": "UNKNOWN",
+    "net_new_discretionary": "UNKNOWN",
+    "mandate_forced_net_new": "UNKNOWN",
+    "overall_ratio": "UNKNOWN",
+    "discretionary_only_ratio": "UNKNOWN",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL G1 close (pre-2026-07-01 baseline)"
+  },
+  "Pre-G2": {
+    "lifted_verifiable": "UNKNOWN",
+    "net_new_discretionary": "UNKNOWN",
+    "mandate_forced_net_new": "UNKNOWN",
+    "overall_ratio": "UNKNOWN",
+    "discretionary_only_ratio": "UNKNOWN",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL Pre-G2 close 2026-07-01T00:00Z"
+  },
+  "G2a": {
+    "lifted_verifiable": "127",
+    "net_new_discretionary": "170",
+    "mandate_forced_net_new": "174",
+    "overall_ratio": "2.71x",
+    "discretionary_only_ratio": "1.34x",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL G2a close 2026-07-01T07:10Z (post-shrink follow-ups tracked at T08:30Z)"
+  },
+  "Substrate-Drop v1": {
+    "lifted_verifiable": "0",
+    "net_new_discretionary": "0",
+    "mandate_forced_net_new": "0",
+    "overall_ratio": "N/A",
+    "discretionary_only_ratio": "N/A",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL Substrate-Drop v1 close 2026-07-01T15:39Z (docs+CI phase; no LoC change)"
+  },
+  "G3": {
+    "lifted_verifiable": "98",
+    "net_new_discretionary": "2",
+    "mandate_forced_net_new": "435",
+    "overall_ratio": "4.46x",
+    "discretionary_only_ratio": "0.02x",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL G3 close 2026-07-01T17:15Z"
+  },
+  "G4": {
+    "lifted_verifiable": "268",
+    "net_new_discretionary": "0",
+    "mandate_forced_net_new": "785",
+    "overall_ratio": "2.93x",
+    "discretionary_only_ratio": "0.00x",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL G4 close 2026-07-01T18:55Z"
+  },
+  "G5a": {
+    "lifted_verifiable": "159",
+    "net_new_discretionary": "18",
+    "mandate_forced_net_new": "697",
+    "overall_ratio": "4.50x",
+    "discretionary_only_ratio": "0.11x",
+    "journal_ref": "[counting_standard: pre-§0] BUILD_JOURNAL G5a close 2026-07-02T00:00Z + G5a ledger completion 2026-07-02T00:15Z. Line-by-line audit correction of initial close numbers (30/864/0 → 159/697/18). 18 discretionary LoC enumerated with file:line + ratify rationale in journal entry §Discretionary line enumeration. All 18 have honest rationale; zero stop-and-judge signals."
+  },
+  "G6": {
+    "lifted_verifiable": "80",
+    "net_new_discretionary": "64",
+    "mandate_forced_net_new": "1112",
+    "overall_ratio": "14.70x",
+    "discretionary_only_ratio": "0.80x",
+    "journal_ref": "[counting_standard: post-§0-strict] BUILD_JOURNAL G6 close 2026-07-02T00:45Z. Outer-gate irreversibility + V2 gate (single-packet arm live, cumulative arm Shape B closed-seam) + Ledger absorption via stamp_audit side-channel (no contract mutation). 3 new frozen contracts (OuterGateReceipt@v0, V2RefusalEnvelope@v0, CumulativeDisclosureLedger@v0). Total frozen contracts 10 → 13. 64 discretionary LoC enumerated with file:line + ratify rationale INLINE in the journal entry per new §0 discipline rule. Overall 14.70x ratified: G6 built new crypto primitives (purged-mint HMAC pseudonymisation lifecycle) with modest transitive lift; the shape rhymes with Shield's trust_receipt (cousin cited) but lift lint requires identifier-in-chain so mint counted as mandate-forced. Ratify per Substrate-Drop v1 norm."
+  }
+}

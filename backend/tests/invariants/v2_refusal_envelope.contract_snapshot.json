@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "LedgerArtifactRef": {
+      "additionalProperties": false,
+      "description": "\u00a77.2: { artifact_type, artifact_id, version }.",
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "artifact_type": {
+          "enum": [
+            "portfolio_mandate",
+            "objective_request"
+          ],
+          "title": "Artifact Type",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "version"
+      ],
+      "title": "LedgerArtifactRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "\u00a729.1 \u2014 structured refusal at the outer gate.",
+  "properties": {
+    "artifact_ref": {
+      "$ref": "#/$defs/LedgerArtifactRef"
+    },
+    "detail": {
+      "default": "",
+      "description": "Deterministic reason string with no PII. Human-readable but governance-safe (\u00a730 data-protection posture).",
+      "title": "Detail",
+      "type": "string"
+    },
+    "lawful_basis_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "What was checked (\u00a730 purpose limitation). None if the refusal reason is 'lawful_basis_absent' (nothing to check).",
+      "title": "Lawful Basis Ref"
+    },
+    "reason_code": {
+      "description": "One of the four V2 refusal grounds (\u00a729.1 + \u00a730). 'cumulative_disclosure_risk' is emitted by the cumulative arm (closed-seam at G6 v0 per \u00a729.1 'Until V2 passes').",
+      "enum": [
+        "lawful_basis_absent",
+        "substrate_rights_expired",
+        "sample_file_out_crypto_verify_failed",
+        "cumulative_disclosure_risk"
+      ],
+      "title": "Reason Code",
+      "type": "string"
+    },
+    "refused_at": {
+      "description": "ISO-8601 UTC timestamp of refusal decision.",
+      "title": "Refused At",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "substrate_contract_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "What was resolved against for rights (\u00a729.1). None if refusal reason is 'lawful_basis_absent'.",
+      "title": "Substrate Contract Ref"
+    },
+    "trace_id": {
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reason_code",
+    "refused_at",
+    "run_id",
+    "trace_id",
+    "artifact_ref"
+  ],
+  "title": "V2RefusalEnvelope",
+  "type": "object"
+}

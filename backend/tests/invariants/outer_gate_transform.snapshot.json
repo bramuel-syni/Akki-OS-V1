@@ -1,0 +1,57 @@
+{
+  "canonical_input": {
+    "defensibility_class": "fact",
+    "feed_id": "citizen_tv_news",
+    "load_bearing_unit_ids": [
+      "unit-snap-1",
+      "unit-snap-2"
+    ],
+    "run_id": "run-snap-1",
+    "signal_score": 0.5,
+    "source_ref": "synthetic://snap/fact.raw",
+    "speaker_or_author": "anchor",
+    "structural_signature": "0123456789abcdef",
+    "trace_id": "trace-snap-1",
+    "unit_id": "unit-snap-1"
+  },
+  "egress_artifact": {
+    "_transform_meta": {
+      "applied_transformations": [
+        "pseudonymise:unit_id",
+        "pseudonymise:run_id",
+        "pseudonymise:trace_id",
+        "pseudonymise:source_ref",
+        "pseudonymise:speaker_or_author",
+        "generalise:feed_id",
+        "generalise:structural_signature",
+        "pseudonymise:load_bearing_unit_ids[]"
+      ],
+      "input_identifier_categories": [
+        "feed_id",
+        "load_bearing_unit_ids",
+        "run_id",
+        "source_ref",
+        "speaker_or_author",
+        "structural_signature",
+        "trace_id",
+        "unit_id"
+      ],
+      "key_fingerprint": "d3be5f329bb1008ac50b0854622173b22d6f0d2f1a247a0e978a10185bb417c8",
+      "mint_window_id": "mint-STABILISED-FOR-SNAPSHOT",
+      "transform_version": "hmac-sha256-v1"
+    },
+    "defensibility_class": "fact",
+    "feed_id": "broadcast_news",
+    "load_bearing_unit_ids": [
+      "99ee82d8a771d870bd73df716f9317afc7d71630b6f494f06e7e9a42a1c5a296",
+      "f82f2ba59278207e1c57a7d165007702a48c64d51cd225f22dc5d66e6722de30"
+    ],
+    "run_id": "ff56845121d95b29e83ed44330a969f85b6410c09d2d7c06fb414549632b1da9",
+    "signal_score": 0.5,
+    "source_ref": "fdc793729aa7271bd8b087809a0562bf5a9aa622b7a29fe8efeca370556f32dc",
+    "speaker_or_author": "a20086235df2172a9274085f76bd612279c33a935bffe02c670fc9433fbd40ba",
+    "structural_signature": "0123-generalised",
+    "trace_id": "89e61982208fc14120ef53c0b92cb56d256a9ba86cd10304ae0bd6f1f2cad1b4",
+    "unit_id": "99ee82d8a771d870bd73df716f9317afc7d71630b6f494f06e7e9a42a1c5a296"
+  }
+}

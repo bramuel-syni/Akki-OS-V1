@@ -1,0 +1,41 @@
+# Build artefacts.
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build outputs.
+build/
+dist/
+*.egg-info/
+frontend/build/
+
+# Local dev junk.
+.env.local
+.env.*.local
+.DS_Store
+.idea/
+.vscode/
+
+# Storage / uploads.
+backend/uploads/
+
+# Test output.
+test-results/
+coverage/
+.coverage
+htmlcov/
+
+# Never commit the legacy reference.
+/reference/
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials

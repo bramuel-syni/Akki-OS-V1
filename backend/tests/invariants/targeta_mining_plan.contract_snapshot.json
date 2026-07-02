@@ -1,0 +1,145 @@
+{
+  "$defs": {
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    },
+    "LedgerArtifactRef": {
+      "additionalProperties": false,
+      "description": "\u00a77.2: { artifact_type, artifact_id, version }.",
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "artifact_type": {
+          "enum": [
+            "portfolio_mandate",
+            "objective_request"
+          ],
+          "title": "Artifact Type",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "version"
+      ],
+      "title": "LedgerArtifactRef",
+      "type": "object"
+    },
+    "TargetLocation": {
+      "additionalProperties": false,
+      "description": "Where Layer A retrieval should begin. Mandate \u00a78 sub-shape.",
+      "properties": {
+        "region": {
+          "description": "Estate region key.",
+          "title": "Region",
+          "type": "string"
+        },
+        "source_ref": {
+          "description": "Registry source_ref key.",
+          "title": "Source Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_ref",
+        "region"
+      ],
+      "title": "TargetLocation",
+      "type": "object"
+    },
+    "TargetaFloorSpec": {
+      "additionalProperties": false,
+      "description": "Serialisable floor for the Mining Plan. Wraps the same enum shape\nas `services/solva_depth/interfaces.py::FloorSpec` (frozen dataclass);\nPydantic-serialisable form for the plan contract.",
+      "properties": {
+        "minimum_class": {
+          "$ref": "#/$defs/DefensibilityClass"
+        }
+      },
+      "required": [
+        "minimum_class"
+      ],
+      "title": "TargetaFloorSpec",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Mandate \u00a78 verbatim shape.",
+  "properties": {
+    "core_baseline_ranking": {
+      "description": "Deterministic core ordering, for attribution/audit.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Core Baseline Ranking",
+      "type": "array"
+    },
+    "defensibility_floor": {
+      "$ref": "#/$defs/TargetaFloorSpec"
+    },
+    "generated_at": {
+      "description": "ISO-8601 UTC.",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "governing_artifact_ref": {
+      "$ref": "#/$defs/LedgerArtifactRef"
+    },
+    "mode": {
+      "enum": [
+        "portfolio",
+        "per_run"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "ordered_targets": {
+      "items": {
+        "$ref": "#/$defs/TargetLocation"
+      },
+      "title": "Ordered Targets",
+      "type": "array"
+    },
+    "plan_id": {
+      "description": "Deterministic plan id; reproducible per \u00a717 #8.",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "registry_snapshot_ref": {
+      "description": "Mtafiti Registry snapshot id at plan-build time.",
+      "title": "Registry Snapshot Ref",
+      "type": "string"
+    },
+    "yield_layer_version": {
+      "default": "core-only",
+      "description": "'core-only' when yield closed; version string when admitted (mandate \u00a77 + \u00a717 #7).",
+      "title": "Yield Layer Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan_id",
+    "mode",
+    "governing_artifact_ref",
+    "registry_snapshot_ref",
+    "ordered_targets",
+    "defensibility_floor",
+    "core_baseline_ranking",
+    "generated_at"
+  ],
+  "title": "MiningPlan",
+  "type": "object"
+}

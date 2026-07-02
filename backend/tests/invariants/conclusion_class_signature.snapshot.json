@@ -1,0 +1,11 @@
+{
+  "parameters": [
+    {
+      "name": "load_bearing_units",
+      "kind": "POSITIONAL_OR_KEYWORD",
+      "annotation": "Sequence",
+      "default": "empty"
+    }
+  ],
+  "return_annotation": "DefensibilityClass"
+}

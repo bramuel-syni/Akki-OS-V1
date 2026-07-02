@@ -1,0 +1,127 @@
+{
+  "$defs": {
+    "LedgerArtifactRef": {
+      "additionalProperties": false,
+      "description": "\u00a77.2: { artifact_type, artifact_id, version }.",
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "artifact_type": {
+          "enum": [
+            "portfolio_mandate",
+            "objective_request"
+          ],
+          "title": "Artifact Type",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "version"
+      ],
+      "title": "LedgerArtifactRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "\u00a721.2 \u2014 irreversibility receipt for a successful outer-gate egress.",
+  "properties": {
+    "applied_at": {
+      "description": "ISO-8601 UTC timestamp of transform application.",
+      "title": "Applied At",
+      "type": "string"
+    },
+    "applied_transformations": {
+      "description": "Ordered list of transformation labels applied (e.g. ['pseudonymise:unit_id', 'pseudonymise:source_ref', 'generalise:feed_id', 'pseudonymise:speaker_or_author']). Category labels only; no values.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Applied Transformations",
+      "type": "array"
+    },
+    "artifact_ref": {
+      "$ref": "#/$defs/LedgerArtifactRef"
+    },
+    "differential_privacy_epsilon": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Optional differential-privacy noise epsilon on numerics (\u00a721.2). None at G6 v0 \u2014 closed-seam until DPO config lands.",
+      "title": "Differential Privacy Epsilon"
+    },
+    "input_identifier_categories": {
+      "description": "Categories present in the pre-egress artifact (e.g. ['unit_id', 'source_ref', 'speaker_or_author', 'run_id', 'trace_id']). Category labels only; no values.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Input Identifier Categories",
+      "type": "array"
+    },
+    "k_anonymity_bucket_size": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "k parameter of the k-anonymity generalisation applied (\u00a721.2). None at G6 v0 \u2014 closed-seam until DPO policy config lands.",
+      "title": "K Anonymity Bucket Size"
+    },
+    "key_fingerprint": {
+      "description": "SHA-256 hex of the mint key material. NEVER the key itself. Purged mint means the key is destroyed at end of window; the fingerprint survives so audit can verify key-lineage without recovering the key.",
+      "maxLength": 64,
+      "minLength": 64,
+      "title": "Key Fingerprint",
+      "type": "string"
+    },
+    "mint_window_id": {
+      "description": "uuid of the mint window; the window's key is purged at end (\u00a721.2).",
+      "title": "Mint Window Id",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "trace_id": {
+      "title": "Trace Id",
+      "type": "string"
+    },
+    "transform_version": {
+      "const": "hmac-sha256-v1",
+      "description": "Deterministic label for the transform primitive applied (Product v2.1 \u00a721.2 'pseudonymisation with a purged mint').",
+      "enum": [
+        "hmac-sha256-v1"
+      ],
+      "title": "Transform Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "transform_version",
+    "key_fingerprint",
+    "mint_window_id",
+    "applied_at",
+    "run_id",
+    "trace_id",
+    "artifact_ref"
+  ],
+  "title": "OuterGateReceipt",
+  "type": "object"
+}

@@ -1,0 +1,158 @@
+{
+  "$defs": {
+    "FreshnessStamp": {
+      "additionalProperties": false,
+      "description": "Mandate \u00a713 \u2014 two-level freshness check.\n\nL1 `logged_date` \u2014 LIVE at G4 (ISO-8601 UTC).\nL2 `structural_signature` \u2014 Optional at G4; nullable until on-disk\n    fixture generator is surgically extended (Substrate-Drop v1\n    G4-prep TODO). Absence of L2 is a valid state \u2014 L2 is a delta\n    detector, not a required signature.",
+      "properties": {
+        "logged_date": {
+          "description": "ISO-8601 UTC of last measure write.",
+          "title": "Logged Date",
+          "type": "string"
+        },
+        "structural_signature": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "16-hex sha256 of source content when fixture emits it; nullable at G4.",
+          "title": "Structural Signature"
+        }
+      },
+      "required": [
+        "logged_date"
+      ],
+      "title": "FreshnessStamp",
+      "type": "object"
+    },
+    "MtafitiScoreVector": {
+      "additionalProperties": false,
+      "description": "Mandate \u00a711 \u2014 composed baseline + (admitted) detections.\n\nWhen overlay NOT admitted: attachment=0.0, corroboration=0.0.\nWhen admitted: attachment/corroboration carry the detection values.\n\nDISTINCT from `contracts/five_rings.py::ScoreVector` (Ring 5).",
+      "properties": {
+        "attachment": {
+          "default": 0.0,
+          "description": "Detection: attributed/cited markedness (V3-gated).",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Attachment",
+          "type": "number"
+        },
+        "contested": {
+          "default": false,
+          "description": "Deterministic contested status.",
+          "title": "Contested",
+          "type": "boolean"
+        },
+        "corroboration": {
+          "default": 0.0,
+          "description": "Detection: cross-estate corroboration (V3-gated).",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Corroboration",
+          "type": "number"
+        },
+        "recency_validity": {
+          "default": 0.0,
+          "description": "Deterministic recency.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Recency Validity",
+          "type": "number"
+        },
+        "source_standing": {
+          "$ref": "#/$defs/SourceStanding",
+          "description": "Deterministic per-feed baseline (mandate \u00a79)."
+        }
+      },
+      "required": [
+        "source_standing"
+      ],
+      "title": "MtafitiScoreVector",
+      "type": "object"
+    },
+    "SourceStanding": {
+      "description": "Mandate \u00a79: `accountable | licensed_wire | aggregator | ugc | unknown`.",
+      "enum": [
+        "accountable",
+        "licensed_wire",
+        "aggregator",
+        "ugc",
+        "unknown"
+      ],
+      "title": "SourceStanding",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Mandate \u00a713 \u2014 one record per source. Contract-grade, snapshot + invariant.",
+  "properties": {
+    "defensibility_class": {
+      "description": "Verdict from Matrix lookup (mandate \u00a711 + \u00a717 #4).",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "Defensibility Class",
+      "type": "string"
+    },
+    "defensibility_measure": {
+      "$ref": "#/$defs/MtafitiScoreVector",
+      "description": "Composed measure (mandate \u00a711)."
+    },
+    "defensibility_runtime_mode": {
+      "default": "declaration_baseline",
+      "description": "Which measurement mode produced this record (mandate \u00a712).",
+      "enum": [
+        "declaration_baseline",
+        "overlay"
+      ],
+      "title": "Defensibility Runtime Mode",
+      "type": "string"
+    },
+    "feed_id": {
+      "description": "Keys the declaration baseline.",
+      "title": "Feed Id",
+      "type": "string"
+    },
+    "freshness_stamp": {
+      "$ref": "#/$defs/FreshnessStamp"
+    },
+    "matrix_rule_ref": {
+      "description": "Governed Matrix rule id (mandate \u00a717 #4). Auditable.",
+      "title": "Matrix Rule Ref",
+      "type": "string"
+    },
+    "region": {
+      "description": "Estate region key.",
+      "title": "Region",
+      "type": "string"
+    },
+    "sensitivity": {
+      "description": "DPA sensitivity classification (mandate \u00a78).",
+      "title": "Sensitivity",
+      "type": "string"
+    },
+    "source_ref": {
+      "description": "Stable pointer (matches ProvenanceRing.source_ref).",
+      "title": "Source Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_ref",
+    "region",
+    "feed_id",
+    "sensitivity",
+    "defensibility_measure",
+    "matrix_rule_ref",
+    "defensibility_class",
+    "freshness_stamp"
+  ],
+  "title": "MtafitiRegistryRecord",
+  "type": "object"
+}

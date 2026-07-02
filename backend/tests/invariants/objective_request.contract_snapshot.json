@@ -1,0 +1,134 @@
+{
+  "$defs": {
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    },
+    "DefensibilityFloor": {
+      "additionalProperties": false,
+      "description": "Author-set floor below which Solva refuses to compose an answer.\n\nSpec \u00a78.1 + UX (\"set a defensibility floor\"). Solva will not\nsurface a unit in the answer whose `defensibility` ring fails this\nfloor.",
+      "properties": {
+        "minimum_class": {
+          "$ref": "#/$defs/DefensibilityClass",
+          "default": "utterance",
+          "description": "Lowest acceptable defensibility class. Default: utterance."
+        },
+        "minimum_scores": {
+          "$ref": "#/$defs/ScoreVector",
+          "description": "Per-dimension lower bounds. Units below any dim are excluded."
+        }
+      },
+      "title": "DefensibilityFloor",
+      "type": "object"
+    },
+    "EstateRegionSelector": {
+      "additionalProperties": false,
+      "description": "Spec \u00a78.1: scope selector against the Normalized Tier.\n\nFree-form for G0: a dict of filters interpreted by Layer D against\nthe tier index. Examples a Layer-D resolver will support at G3:\n  * {\"source_refs\": [\"ifeed:sl-2025-q3\"]}\n  * {\"date_range\": {\"from\": \"2025-09-01\", \"to\": \"2025-09-30\"}}\n  * {\"modalities\": [\"audio\", \"video\"]}\nFilters are AND-composed.",
+      "properties": {
+        "filters": {
+          "title": "Filters",
+          "type": "object"
+        }
+      },
+      "title": "EstateRegionSelector",
+      "type": "object"
+    },
+    "ObjectiveMode": {
+      "description": "Spec \u00a78.1: per-run or portfolio.\n\n* per_run   \u2014 one-shot objective, narrow scope, returns answer + trace.\n* portfolio \u2014 long-running standing objective, re-runs as the\n              Normalized Tier evolves.",
+      "enum": [
+        "per_run",
+        "portfolio"
+      ],
+      "title": "ObjectiveMode",
+      "type": "string"
+    },
+    "ScoreVector": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.6: five-dimensional defensibility score.\n\nEach dimension is `float` in [0, 1]. The Solva depth governor (G1)\nwrites these; at G0 they are populated by the synthetic fixture or\nleft at 0.0 default.",
+      "properties": {
+        "contested_status": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Contested Status",
+          "type": "number"
+        },
+        "corroboration": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Corroboration",
+          "type": "number"
+        },
+        "genre_ceiling": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Genre Ceiling",
+          "type": "number"
+        },
+        "recency": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Recency",
+          "type": "number"
+        },
+        "source_standing": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Source Standing",
+          "type": "number"
+        }
+      },
+      "title": "ScoreVector",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The Service-2 request envelope. Spec \u00a78.1.",
+  "properties": {
+    "defensibility_floor": {
+      "$ref": "#/$defs/DefensibilityFloor"
+    },
+    "mode": {
+      "$ref": "#/$defs/ObjectiveMode",
+      "default": "per_run"
+    },
+    "objective_text": {
+      "description": "Author's free-form objective statement.",
+      "minLength": 1,
+      "title": "Objective Text",
+      "type": "string"
+    },
+    "provenance_required": {
+      "default": true,
+      "description": "If true, every cited unit must carry a non-empty Provenance ring.",
+      "title": "Provenance Required",
+      "type": "boolean"
+    },
+    "scope": {
+      "$ref": "#/$defs/EstateRegionSelector"
+    },
+    "tags": {
+      "description": "Optional author tags; surfaced in the Operator Console (G5).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    }
+  },
+  "required": [
+    "objective_text"
+  ],
+  "title": "ObjectiveRequest",
+  "type": "object"
+}

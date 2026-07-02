@@ -1,0 +1,36 @@
+{
+  "summary": "Verification pass for RMS Phase G2a-shrink (post-shrink honesty pass). All 7 P0/P1 verification items GREEN. `make ci` and `pytest -q` both report exactly 73 tests passed and counts match (invariants 10, chokepoint 1, smoke 9, layer_a 5, layer_b 5, layer_c 3, v1 4, perception 2, extraction_params 17, northena 11, g1_stamper 6 = 73). All 11 Northena binding invariants pass, including the updated N-INV-7 (router-side _open_runs helper + /ledger/open_runs route). N-INV-11 grep confirms only admit.py imports from services.solva (services/northena/admit.py:35). services/northena/interfaces.py is DELETED; state_machine.py carries `RegistryHandle = object` inline at line 23. ledger.py exposes only write-side (record, absorb_stamp_audit, retention_mode, retention_window_days) — no by_run_id / open_runs. routers/northena.py owns the read-side (`_open_runs` helper, `/status`, `/ledger/open_runs`, `/ledger/by_run/{run_id}`). admit.py carries AdmitOffender + AdmitValidation (.ok property + refusal_reason()) with the transitive lift chain (cousin solva_v2/integrity_validators.py → G1 integrity_validators → Northena admit) documented in the file header docstring (L14-22). admit_assist.py = 62 lines total (under 70 target). Live API (external https URL): /api/system/state gate=G2a, contracts_frozen=6 including northena_ledger_row@v0, g2_components 5x v0; /api/northena/status HTTP 200 with retention_mode=indefinite; /api/northena/ledger/open_runs HTTP 200 open_runs=[]; /api/northena/ledger/by_run/nonexistent HTTP 404 with structured detail. No regressions.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_northena_invariants.py",
+    "/app/backend/tests/invariants/test_northena_ledger_row_v0.py",
+    "/app/backend/tests/test_g1_stamper_and_v3.py"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "services/northena/admit.py:35 still imports RegistryStub from services.solva_depth — this is the sole whitelisted Solva-import site (mandate §13 invariant #11) and N-INV-11 correctly excludes admit.py from the grep. Preserve this boundary; do not add solva imports to any other services/northena/*.py file.",
+    "services/northena/state_machine.py:23 uses `RegistryHandle = object` as a plain alias (previously in interfaces.py, now folded inline after interfaces.py deletion). Adequate for opaque pass-through; if future stages need structural typing, promote to typing.Protocol.",
+    "routers/northena.py now owns the read-side ledger queries (`_open_runs` helper, `/ledger/by_run/{run_id}`, `/ledger/open_runs`). ledger.py is correctly write-only after fold. Boundary is clean: writes stay in the service (append-only invariant), reads live at the router edge.",
+    "Cousin lift-chain citation in admit.py L8-22 is verbose but honest — it explicitly names the transitive path (solva_v2/integrity_validators → G1 reshape → Northena) and calls out what does NOT port (session-shaped content like citation_lint). This documentation cost is worth it for §13 auditability."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "N/A (skipped per request)"},
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "G2a-shrink pass verified — 73/73 tests green, 11/11 Northena invariants, API surface matches spec exactly. Post-shrink invariants: (1) services/northena/interfaces.py MUST NOT be re-introduced — RegistryHandle=object lives inline in state_machine.py. (2) Read-side ledger queries live in routers/northena.py; do NOT re-add by_run_id/open_runs to services/northena/ledger.py (append-only write-side). (3) Only services/northena/admit.py may `from services.solva*` — N-INV-11 greps every services/northena/*.py file. (4) The count 73 = 10 invariants + 1 chokepoint + 9 smoke + 5 layer_a + 5 layer_b + 3 layer_c + 4 v1 + 2 perception + 17 extraction_params + 11 northena + 6 g1_stamper; if any test count drifts, make ci vs pytest -q comparison will catch it. (5) contracts_frozen list is exactly 6 items (five_rings, objective_request, qualification_matrix, signal_ring_dimensions, extraction_params, northena_ledger_row) — shrink was explicitly not allowed to freeze new contracts.",
+  "rca of the issue": {
+    "type": "verification-only (no defect found)",
+    "actions_verified": "COUSIN RE-LIFT: integrity_validators transitively lifted into admit.py (AdmitOffender+AdmitValidation with .ok + refusal_reason, cited L14-22); audit_log cursor-shape lift into routers/northena.py find_audit/find_receipt helpers; grounding_contract journalled as unattempted (substrate absent). FOLD: interfaces.py deleted (verified test -f exit=1), RegistryHandle=object folded inline into state_machine.py:23, read-side queries migrated ledger.py -> routers/northena.py (grep confirms ledger.py exposes only record/absorb_stamp_audit/retention_mode/retention_window_days), admit_assist.py trimmed to 62 lines (under 70 target). HOUSEKEEPING: make ci chain includes g1_stamper (6 tests) and dedup produces 73-count parity with pytest -q.",
+    "verification_evidence": "pytest tests/test_northena_invariants.py -> 11/11 passed 0.35s. pytest tests/invariants/ -> 10/10 passed 0.10s. pytest -q (backend) -> 73/73 passed 0.57s. make ci -> 73 tests passed, 'G2a CI gate PASSED'. External HTTPS API smoke: /api/system/state gate=G2a contracts_frozen=[five_rings@v0, objective_request@v0, qualification_matrix@v0, signal_ring_dimensions@v0, extraction_params@v0, northena_ledger_row@v0] (6 items), g2_components 5x v0; /api/northena/status HTTP 200 retention_mode=indefinite open_runs_count=0; /api/northena/ledger/open_runs HTTP 200 open_runs=[]; /api/northena/ledger/by_run/nonexistent HTTP 404. Structural: interfaces.py absent, RegistryHandle=object at state_machine.py:23, sole solva import at admit.py:35, admit.py L48-69 carries AdmitOffender+AdmitValidation shape with lift-chain docstring L14-22, admit_assist.py wc -l = 62."
+  }
+}

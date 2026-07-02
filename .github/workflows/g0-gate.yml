@@ -1,0 +1,27 @@
+name: G0 Gate — invariants + chokepoint + smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:  # allow manual trigger from GitHub Actions UI
+
+jobs:
+  g0-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install backend deps
+        run: |
+          cd backend
+          pip install -r requirements.txt --extra-index-url https://d33sy5i8bnduwe.cloudfront.net/simple/
+      - name: Invariants — frozen contract snapshots
+        run: make invariants
+      - name: Chokepoint — no direct LLM provider calls outside Shield
+        run: make chokepoint
+      - name: Smoke — backend boots + /api/openapi.json reachable
+        run: make smoke

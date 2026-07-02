@@ -1,0 +1,526 @@
+{
+  "$defs": {
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    },
+    "FreshnessStamp": {
+      "additionalProperties": false,
+      "description": "Mandate \u00a713 \u2014 two-level freshness check.\n\nL1 `logged_date` \u2014 LIVE at G4 (ISO-8601 UTC).\nL2 `structural_signature` \u2014 Optional at G4; nullable until on-disk\n    fixture generator is surgically extended (Substrate-Drop v1\n    G4-prep TODO). Absence of L2 is a valid state \u2014 L2 is a delta\n    detector, not a required signature.",
+      "properties": {
+        "logged_date": {
+          "description": "ISO-8601 UTC of last measure write.",
+          "title": "Logged Date",
+          "type": "string"
+        },
+        "structural_signature": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "16-hex sha256 of source content when fixture emits it; nullable at G4.",
+          "title": "Structural Signature"
+        }
+      },
+      "required": [
+        "logged_date"
+      ],
+      "title": "FreshnessStamp",
+      "type": "object"
+    },
+    "LedgerArtifactRef": {
+      "additionalProperties": false,
+      "description": "\u00a77.2: { artifact_type, artifact_id, version }.",
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "artifact_type": {
+          "enum": [
+            "portfolio_mandate",
+            "objective_request"
+          ],
+          "title": "Artifact Type",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_type",
+        "artifact_id",
+        "version"
+      ],
+      "title": "LedgerArtifactRef",
+      "type": "object"
+    },
+    "LedgerRow": {
+      "additionalProperties": false,
+      "description": "\u00a77.2 \u2014 the contract-grade Ledger row. Nine fields.",
+      "properties": {
+        "artifact_ref": {
+          "$ref": "#/$defs/LedgerArtifactRef"
+        },
+        "at": {
+          "format": "date-time",
+          "title": "At",
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "admitted",
+            "refused",
+            "warm",
+            "fresh",
+            "terminate_success",
+            "terminate_budget",
+            "continue"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "lawful_basis_ref": {
+          "title": "Lawful Basis Ref",
+          "type": "string"
+        },
+        "reason": {
+          "description": "Deterministic reason string.",
+          "title": "Reason",
+          "type": "string"
+        },
+        "run_id": {
+          "description": "uuid \u2014 one run has one closed Ledger.",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "admit",
+            "gate",
+            "converge"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "stamp_audit": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Absorbed defensibility stamp-audit entry when present (\u00a77.3): { unit_id, decision, reason, judged_signal_dimensions, floor_violation }.",
+          "title": "Stamp Audit"
+        },
+        "trace_id": {
+          "description": "Joins ledger to unit-level intelligence and trace lenses.",
+          "title": "Trace Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "trace_id",
+        "stage",
+        "decision",
+        "reason",
+        "artifact_ref",
+        "lawful_basis_ref",
+        "at"
+      ],
+      "title": "LedgerRow",
+      "type": "object"
+    },
+    "MiningPlan": {
+      "additionalProperties": false,
+      "description": "Mandate \u00a78 verbatim shape.",
+      "properties": {
+        "core_baseline_ranking": {
+          "description": "Deterministic core ordering, for attribution/audit.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Core Baseline Ranking",
+          "type": "array"
+        },
+        "defensibility_floor": {
+          "$ref": "#/$defs/TargetaFloorSpec"
+        },
+        "generated_at": {
+          "description": "ISO-8601 UTC.",
+          "title": "Generated At",
+          "type": "string"
+        },
+        "governing_artifact_ref": {
+          "$ref": "#/$defs/LedgerArtifactRef"
+        },
+        "mode": {
+          "enum": [
+            "portfolio",
+            "per_run"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "ordered_targets": {
+          "items": {
+            "$ref": "#/$defs/TargetLocation"
+          },
+          "title": "Ordered Targets",
+          "type": "array"
+        },
+        "plan_id": {
+          "description": "Deterministic plan id; reproducible per \u00a717 #8.",
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "registry_snapshot_ref": {
+          "description": "Mtafiti Registry snapshot id at plan-build time.",
+          "title": "Registry Snapshot Ref",
+          "type": "string"
+        },
+        "yield_layer_version": {
+          "default": "core-only",
+          "description": "'core-only' when yield closed; version string when admitted (mandate \u00a77 + \u00a717 #7).",
+          "title": "Yield Layer Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "plan_id",
+        "mode",
+        "governing_artifact_ref",
+        "registry_snapshot_ref",
+        "ordered_targets",
+        "defensibility_floor",
+        "core_baseline_ranking",
+        "generated_at"
+      ],
+      "title": "MiningPlan",
+      "type": "object"
+    },
+    "MtafitiRegistryRecord": {
+      "additionalProperties": false,
+      "description": "Mandate \u00a713 \u2014 one record per source. Contract-grade, snapshot + invariant.",
+      "properties": {
+        "defensibility_class": {
+          "description": "Verdict from Matrix lookup (mandate \u00a711 + \u00a717 #4).",
+          "enum": [
+            "fact",
+            "utterance",
+            "non_factual"
+          ],
+          "title": "Defensibility Class",
+          "type": "string"
+        },
+        "defensibility_measure": {
+          "$ref": "#/$defs/MtafitiScoreVector",
+          "description": "Composed measure (mandate \u00a711)."
+        },
+        "defensibility_runtime_mode": {
+          "default": "declaration_baseline",
+          "description": "Which measurement mode produced this record (mandate \u00a712).",
+          "enum": [
+            "declaration_baseline",
+            "overlay"
+          ],
+          "title": "Defensibility Runtime Mode",
+          "type": "string"
+        },
+        "feed_id": {
+          "description": "Keys the declaration baseline.",
+          "title": "Feed Id",
+          "type": "string"
+        },
+        "freshness_stamp": {
+          "$ref": "#/$defs/FreshnessStamp"
+        },
+        "matrix_rule_ref": {
+          "description": "Governed Matrix rule id (mandate \u00a717 #4). Auditable.",
+          "title": "Matrix Rule Ref",
+          "type": "string"
+        },
+        "region": {
+          "description": "Estate region key.",
+          "title": "Region",
+          "type": "string"
+        },
+        "sensitivity": {
+          "description": "DPA sensitivity classification (mandate \u00a78).",
+          "title": "Sensitivity",
+          "type": "string"
+        },
+        "source_ref": {
+          "description": "Stable pointer (matches ProvenanceRing.source_ref).",
+          "title": "Source Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_ref",
+        "region",
+        "feed_id",
+        "sensitivity",
+        "defensibility_measure",
+        "matrix_rule_ref",
+        "defensibility_class",
+        "freshness_stamp"
+      ],
+      "title": "MtafitiRegistryRecord",
+      "type": "object"
+    },
+    "MtafitiScoreVector": {
+      "additionalProperties": false,
+      "description": "Mandate \u00a711 \u2014 composed baseline + (admitted) detections.\n\nWhen overlay NOT admitted: attachment=0.0, corroboration=0.0.\nWhen admitted: attachment/corroboration carry the detection values.\n\nDISTINCT from `contracts/five_rings.py::ScoreVector` (Ring 5).",
+      "properties": {
+        "attachment": {
+          "default": 0.0,
+          "description": "Detection: attributed/cited markedness (V3-gated).",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Attachment",
+          "type": "number"
+        },
+        "contested": {
+          "default": false,
+          "description": "Deterministic contested status.",
+          "title": "Contested",
+          "type": "boolean"
+        },
+        "corroboration": {
+          "default": 0.0,
+          "description": "Detection: cross-estate corroboration (V3-gated).",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Corroboration",
+          "type": "number"
+        },
+        "recency_validity": {
+          "default": 0.0,
+          "description": "Deterministic recency.",
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Recency Validity",
+          "type": "number"
+        },
+        "source_standing": {
+          "$ref": "#/$defs/SourceStanding",
+          "description": "Deterministic per-feed baseline (mandate \u00a79)."
+        }
+      },
+      "required": [
+        "source_standing"
+      ],
+      "title": "MtafitiScoreVector",
+      "type": "object"
+    },
+    "RegistryFreshnessMarker": {
+      "additionalProperties": false,
+      "description": "Whether the resolved Registry records match the plan's snapshot\nref or have drifted since. `snapshot_pinned=False` at G5a because\nthe Registry is a rolling store (planned enrichment post-G5a).",
+      "properties": {
+        "note": {
+          "default": "G5a: Registry records resolved from current-state store; snapshot pinning is a post-G5a enrichment.",
+          "title": "Note",
+          "type": "string"
+        },
+        "snapshot_pinned": {
+          "default": false,
+          "description": "False at G5a \u2014 Registry is a rolling store; records resolved are current-state.",
+          "title": "Snapshot Pinned",
+          "type": "boolean"
+        }
+      },
+      "title": "RegistryFreshnessMarker",
+      "type": "object"
+    },
+    "ResolvedSolvaTrace": {
+      "additionalProperties": true,
+      "description": "Solva trace resolved from a Northena Ledger stamp_audit blob.\n\nMirrors `services/solva_depth/trace.py::SolvaTrace.to_dict()` shape.",
+      "properties": {
+        "computed_class": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Computed Class"
+        },
+        "conclusion": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Conclusion"
+        },
+        "load_bearing_unit_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Load Bearing Unit Ids",
+          "type": "array"
+        },
+        "stages": {
+          "items": {
+            "type": "object"
+          },
+          "title": "Stages",
+          "type": "array"
+        },
+        "trace_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Trace Id"
+        }
+      },
+      "title": "ResolvedSolvaTrace",
+      "type": "object"
+    },
+    "SourceStanding": {
+      "description": "Mandate \u00a79: `accountable | licensed_wire | aggregator | ugc | unknown`.",
+      "enum": [
+        "accountable",
+        "licensed_wire",
+        "aggregator",
+        "ugc",
+        "unknown"
+      ],
+      "title": "SourceStanding",
+      "type": "string"
+    },
+    "TargetLocation": {
+      "additionalProperties": false,
+      "description": "Where Layer A retrieval should begin. Mandate \u00a78 sub-shape.",
+      "properties": {
+        "region": {
+          "description": "Estate region key.",
+          "title": "Region",
+          "type": "string"
+        },
+        "source_ref": {
+          "description": "Registry source_ref key.",
+          "title": "Source Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_ref",
+        "region"
+      ],
+      "title": "TargetLocation",
+      "type": "object"
+    },
+    "TargetaFloorSpec": {
+      "additionalProperties": false,
+      "description": "Serialisable floor for the Mining Plan. Wraps the same enum shape\nas `services/solva_depth/interfaces.py::FloorSpec` (frozen dataclass);\nPydantic-serialisable form for the plan contract.",
+      "properties": {
+        "minimum_class": {
+          "$ref": "#/$defs/DefensibilityClass"
+        }
+      },
+      "required": [
+        "minimum_class"
+      ],
+      "title": "TargetaFloorSpec",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Response envelope for `GET /api/northena/trace/{trace_id}`.\n\nengines_touched reports which engines had records under this trace_id.\nEmpty arrays are correct answers when a particular engine did not\nparticipate \u2014 a Service 1 flow does not touch Solva at G4 shipping\nstate; a Solva pipeline flow may not touch Targeta.",
+  "properties": {
+    "engines_touched": {
+      "description": "Set membership: {northena_ledger, solva, targeta, mtafiti, service_1}.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Engines Touched",
+      "type": "array"
+    },
+    "ledger_rows": {
+      "items": {
+        "$ref": "#/$defs/LedgerRow"
+      },
+      "title": "Ledger Rows",
+      "type": "array"
+    },
+    "mining_plans": {
+      "items": {
+        "$ref": "#/$defs/MiningPlan"
+      },
+      "title": "Mining Plans",
+      "type": "array"
+    },
+    "registry_freshness": {
+      "$ref": "#/$defs/RegistryFreshnessMarker"
+    },
+    "registry_records": {
+      "items": {
+        "$ref": "#/$defs/MtafitiRegistryRecord"
+      },
+      "title": "Registry Records",
+      "type": "array"
+    },
+    "resolved_at": {
+      "description": "ISO-8601 UTC of resolution moment.",
+      "title": "Resolved At",
+      "type": "string"
+    },
+    "run_ids": {
+      "description": "Unique run_ids observed for this trace_id (Northena \u00a77.2).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Run Ids",
+      "type": "array"
+    },
+    "solva_traces": {
+      "items": {
+        "$ref": "#/$defs/ResolvedSolvaTrace"
+      },
+      "title": "Solva Traces",
+      "type": "array"
+    },
+    "trace_id": {
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "trace_id",
+    "resolved_at"
+  ],
+  "title": "TraceLensEnvelope",
+  "type": "object"
+}

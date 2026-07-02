@@ -1,0 +1,76 @@
+{
+  "summary": "G2a-shrink follow-up verification: all three API-surface tightenings are honoured. by_run/{unknown_uuid} returns HTTP 200 with bare []; open_runs returns bare []; OpenAPI components.schemas exposes LedgerRow (9 fields) and LedgerArtifactRef (3 fields). Regression clean: 73/73 pytest, make ci PASSED, 11/11 Northena invariants, 10/10 invariants folder (northena_ledger_row@v0 snapshot byte-identical). /api/system/state shape unchanged (G2a, 6 frozen contracts, 5 g2_components@v0). Deferred `northena_invariants` field intentionally absent per stakeholder — not flagged.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verifications_executed": [
+    {
+      "test": "P0.1 by_run/unknown_uuid returns 200 with bare []",
+      "url": "GET /api/northena/ledger/by_run/00000000-0000-0000-0000-000000000000",
+      "status_code": 200,
+      "body": "[]",
+      "result": "PASS — bare empty list, not 404, not {rows:[]}, not {detail:...}"
+    },
+    {
+      "test": "P0.2 open_runs returns 200 with bare []",
+      "url": "GET /api/northena/ledger/open_runs",
+      "status_code": 200,
+      "body": "[]",
+      "result": "PASS — bare list, not {open_runs:[]}"
+    },
+    {
+      "test": "P0.3 OpenAPI exposes LedgerRow + LedgerArtifactRef",
+      "url": "GET /api/openapi.json",
+      "LedgerRow.properties": ["artifact_ref", "at", "decision", "lawful_basis_ref", "reason", "run_id", "stage", "stamp_audit", "trace_id"],
+      "LedgerArtifactRef.properties": ["artifact_id", "artifact_type", "version"],
+      "result": "PASS — all 9 LedgerRow fields + all 3 LedgerArtifactRef fields present in components.schemas"
+    },
+    {
+      "test": "P0.4 test_northena_invariants.py (11 invariants inc. N-INV-7 router-side)",
+      "command": "pytest tests/test_northena_invariants.py -v",
+      "result": "PASS — 11 passed in 0.36s"
+    },
+    {
+      "test": "P0.5 make ci + full pytest count",
+      "command": "make ci ; pytest -q",
+      "result": "PASS — 73 passed / 73 collected; make ci prints 'G2a CI gate PASSED.'"
+    },
+    {
+      "test": "P0.5b contract snapshot northena_ledger_row@v0 byte-identical",
+      "command": "pytest tests/invariants/test_northena_ledger_row_v0.py",
+      "result": "PASS — schema_frozen assertion holds"
+    },
+    {
+      "test": "P1.1 /api/system/state shape",
+      "url": "GET /api/system/state",
+      "result": "PASS — gate=G2a, contracts_frozen has 6 entries incl. northena_ledger_row@v0, g2_components has 5 items all @v0, `northena_invariants` field ABSENT (per deferred stakeholder note)"
+    },
+    {
+      "test": "P1.2 pytest tests/invariants/ (no snapshot drift)",
+      "result": "PASS — 10 passed"
+    }
+  ],
+  "test_report_links": [
+    "/app/backend/tests/test_northena_invariants.py",
+    "/app/backend/tests/invariants/test_northena_ledger_row_v0.py"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "routers/northena.py is tight (63 lines) — clean separation: read-side in router, write-side in services/northena/ledger.py. Response_model discipline correctly applied to both list routes.",
+    "No _id leakage: both queries project {'_id': 0} — good.",
+    "Deferred /api/system/state.northena_invariants is journaled at /app/BUILD_JOURNAL.md 2026-07-01T09:15Z per stakeholder defer — verified intentional, not a defect."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "n/a (skipped per request)"},
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "G2a-shrink follow-up fully green. All three API-surface tightenings (bare-list open_runs, bare-list by_run with 200 on unknown, LedgerRow+LedgerArtifactRef in openapi components.schemas) verified from external HTTPS URL. Contract snapshot northena_ledger_row@v0 byte-identical. Full suite 73/73, make ci PASSED. `/api/system/state.northena_invariants` is DEFERRED per stakeholder — do not flag its absence."
+}

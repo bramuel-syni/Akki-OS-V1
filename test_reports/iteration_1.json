@@ -1,0 +1,38 @@
+{
+  "summary": "Verification pass for RMS Phase G2a Northena Reshape bug fix (test_N_INV_11_governors_orthogonal). All Northena binding invariants (11/11) pass, ledger contract snapshot passes, full `make ci` suite PASSED (71 tests across invariants + no-direct-llm + smoke + roundtrip + layer_a + layer_b + layer_c + v1 + perception + extraction_params + northena), and API surface smoke on /api/system/state, /api/northena/status, /api/northena/ledger/open_runs matches spec. Behaviour parity verified via source inspection: state_machine.py imports RegistryHandle from services.northena.interfaces (line 16); registry pass-through param is `Optional[RegistryHandle] = None` (line 24); admit.py remains the only Northena module importing from services.solva_depth (lines 21-23). No regressions observed.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "make ci", "issue": "Review request stated 73 tests total; actual `make ci` reports 10+1+9+5+5+3+4+2+20+12 = 71 tests. CI gate still passes ('G2a CI gate PASSED') — likely just a stale count in the request text, but flagging for accuracy."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_northena_invariants.py",
+    "/app/backend/tests/invariants/test_northena_ledger_row_v0.py"
+  ],
+  "action_items": [
+    "OPTIONAL: reconcile the '73 tests' figure documented in BUILD_JOURNAL / review request against the actual 71-test total emitted by `make ci`. This is cosmetic — the CI gate itself is green."
+  ],
+  "critical_code_review_comments": [
+    "services/northena/interfaces.py line 24: `RegistryHandle = object` is a plain alias, not a Protocol. Adequate for the N-INV-11 boundary (opaque pass-through) and correctly documented in the docstring, but if future stages want structural typing on the registry, promote to `Protocol` in a later phase.",
+    "services/northena/admit.py line 54: `registry: Optional[RegistryStub] = None` — the composer (state_machine) now passes an `Optional[RegistryHandle]` (object) into a param typed as `Optional[RegistryStub]`. Runtime is fine (Python duck-typed, admit.py falls back to `RegistryStub()` when None). Static-type-checker (mypy/pyright) would flag if strictness were increased, but at G2a this is acceptable and preserves the mandate §13.11 boundary (only admit.py names the concrete Solva type).",
+    "N-INV-11 test uses substring greps ('from services.solva' / 'import services.solva'). interfaces.py mentions 'services.solva_depth' inside a comment but does NOT contain the two forbidden literals, so the test correctly passes. The comment is the intended documentation of the boundary and should be preserved."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "N/A (skipped per request)"},
+  "test_credentials": "none required",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "The Northena Reshape bug fix is fully green. If future work touches services/northena/state_machine.py or interfaces.py, re-run `cd /app/backend && pytest tests/test_northena_invariants.py -v` (11 tests, ~0.2s). The N-INV-11 test greps raw source for 'from services.solva' / 'import services.solva' in every services/northena/*.py file — only admit.py is whitelisted. Do NOT add such imports to state_machine.py, converge.py, gate.py, ledger.py, or interfaces.py, and do NOT put the literal 'from services.solva' or 'import services.solva' inside any docstring/comment of a non-whitelisted file.",
+  "rca of the issue": {
+    "root_cause": "services/northena/state_machine.py previously imported RegistryStub directly from services.solva_depth.admit_assist to type its optional pass-through param, which violated mandate §13 invariant #11 (governors orthogonal — Solva imports permitted ONLY inside admit.py).",
+    "fix_applied_by_main_agent": "1) Added `RegistryHandle = object` opaque alias to services/northena/interfaces.py with a boundary-explaining comment. 2) Changed state_machine.py to `from services.northena.interfaces import RegistryHandle` and re-typed the pass-through param as `Optional[RegistryHandle] = None`. Byte-identical runtime behaviour: admit.py still resolves the concrete RegistryStub type and instantiates it when caller passes None.",
+    "verification": "pytest tests/test_northena_invariants.py -> 11 passed. pytest tests/invariants/test_northena_ledger_row_v0.py -> 1 passed. make ci -> 71 tests passed, 'G2a CI gate PASSED'. Live API smoke: /api/system/state gate=G2a, 6 frozen contracts including northena_ledger_row@v0, all 5 g2_components at v0; /api/northena/status HTTP 200 gate=G2a retention_mode=indefinite; /api/northena/ledger/open_runs HTTP 200 open_runs=[]."
+  }
+}

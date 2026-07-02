@@ -1,0 +1,69 @@
+{
+  "additionalProperties": false,
+  "description": "\u00a729.1 \u2014 the cumulative-disclosure guard's tracking-state contract.\n\nFingerprints (hashed identifiers) accumulate across egresses within\na mint window; the arm checks whether a new egress combined with\nprior egresses crosses the reconstruction-threshold.",
+  "properties": {
+    "arm_admitted": {
+      "default": false,
+      "description": "Whether the cumulative arm is opened. False at G6 v0 by spec-anchored closed-seam pattern (\u00a729.1 'Until V2 passes'; \u00a732 DPO/Owner-owned thresholds).",
+      "title": "Arm Admitted",
+      "type": "boolean"
+    },
+    "egress_fingerprints": {
+      "description": "SHA-256 hex fingerprints of prior egress artifacts in this window. Empty at G6 v0 \u2014 the arm is closed-seam so no egress accumulates via this arm's path.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Egress Fingerprints",
+      "type": "array"
+    },
+    "epsilon_budget": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Cumulative differential-privacy epsilon budget for the window (\u00a721.2). None at G6 v0.",
+      "title": "Epsilon Budget"
+    },
+    "k_threshold": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "k parameter for k-anonymity (\u00a721.2). None at G6 v0 \u2014 the arm is closed-seam until DPO config lands (\u00a732).",
+      "title": "K Threshold"
+    },
+    "l_threshold": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "l parameter for l-diversity (\u00a721.2). None at G6 v0.",
+      "title": "L Threshold"
+    },
+    "mint_window_id": {
+      "description": "uuid of the mint window; when the window closes, the key is purged (\u00a721.2) and this ledger row is retained but no longer combinable with future windows.",
+      "title": "Mint Window Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mint_window_id"
+  ],
+  "title": "CumulativeDisclosureLedger",
+  "type": "object"
+}

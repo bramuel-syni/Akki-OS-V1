@@ -1,0 +1,33 @@
+{
+  "matrix_rev": "v0",
+  "rules": [
+    {
+      "asserts_what": "fact",
+      "genre": "news_anchor_read",
+      "matrix_rule_id": "news_anchor_read.primary_recorded",
+      "notes": "Anchor reading from station-produced primary footage. Ceiling=fact.",
+      "source_standing": "primary_recorded"
+    },
+    {
+      "asserts_what": "utterance",
+      "genre": "news_anchor_read",
+      "matrix_rule_id": "news_anchor_read.wire_republish",
+      "notes": "Anchor reading wire copy without primary verification. Ceiling=utterance.",
+      "source_standing": "wire_republish"
+    },
+    {
+      "asserts_what": "utterance",
+      "genre": "panel_debate",
+      "matrix_rule_id": "panel_debate.primary_recorded",
+      "notes": "Panellist speaking on-air; we stand by who said it, not the substance. Ceiling=utterance.",
+      "source_standing": "primary_recorded"
+    },
+    {
+      "asserts_what": "utterance",
+      "genre": "panel_debate",
+      "matrix_rule_id": "panel_debate.wire_republish",
+      "notes": "Re-broadcast panel content; defensibility ceiling stays at utterance.",
+      "source_standing": "wire_republish"
+    }
+  ]
+}

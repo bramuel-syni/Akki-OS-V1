@@ -1,0 +1,74 @@
+{
+  "$defs": {
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Flat governed-refusal envelope emitted by `POST /api/service_1/run`.",
+  "properties": {
+    "asked": {
+      "description": "Plain-language objective + required floor. See RMS_Interface_Specification.md \u00a7201.",
+      "title": "Asked",
+      "type": "string"
+    },
+    "outcome": {
+      "const": "refused",
+      "default": "refused",
+      "description": "Discriminator: distinguishes a governed refusal from a validation-422 body (which has detail: list, no outcome). Frontend keys on body.outcome === 'refused'.",
+      "enum": [
+        "refused"
+      ],
+      "title": "Outcome",
+      "type": "string"
+    },
+    "reason": {
+      "description": "Refusal reason code. One of: no_defensibility_floor | no_lawful_basis | composition_below_floor.",
+      "title": "Reason",
+      "type": "string"
+    },
+    "run_id": {
+      "description": "Run correlation ID.",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "supported_class": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DefensibilityClass"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Highest defensibility class the input evidence supports (max over per-unit Ring-5-governed defensibility_class values). None for pre-composition refusals where no aggregate has been computed. See RMS_Interface_Specification.md \u00a7186-190, \u00a7202-203."
+    },
+    "trace_id": {
+      "description": "Trace correlation ID.",
+      "title": "Trace Id",
+      "type": "string"
+    },
+    "what_would_raise_it": {
+      "description": "Actor-appropriate hint on what would raise support to the requested floor. Category anchors: corroboration / accountable source. See RMS_Interface_Specification.md \u00a7204-205, RMS_UX_Architecture_Specification.md \u00a7247.",
+      "title": "What Would Raise It",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reason",
+    "run_id",
+    "trace_id",
+    "asked",
+    "what_would_raise_it"
+  ],
+  "title": "Service1Refusal",
+  "type": "object"
+}

@@ -1,0 +1,103 @@
+{
+  "rev": "v0",
+  "base": {
+    "extracted_at":      {"type": "string",  "reproducibility_anchor": false},
+    "extraction_run_id": {"type": "string",  "reproducibility_anchor": true},
+    "provider_id":       {"type": "string",  "reproducibility_anchor": true},
+    "provider_version":  {"type": "string",  "reproducibility_anchor": true}
+  },
+  "modality": {
+    "audio": {
+      "chunk_ms":              {"type": "integer", "reproducibility_anchor": true},
+      "model_decoding_params": {
+        "type": "object",
+        "reproducibility_anchor": true,
+        "nested": {
+          "beam_size":     {"type": "integer", "reproducibility_anchor": true},
+          "language_hint": {"type": "string?", "reproducibility_anchor": true},
+          "temperature":   {"type": "number",  "reproducibility_anchor": true, "determinism_pin": 0},
+          "vad_threshold": {"type": "number",  "reproducibility_anchor": true}
+        }
+      },
+      "sample_rate_hz":        {"type": "integer", "reproducibility_anchor": true}
+    },
+    "composite": {
+      "aggregation_strategy": {
+        "type": "enum",
+        "reproducibility_anchor": true,
+        "enum": ["union", "weighted_merge", "summary"]
+      },
+      "source_artifact_refs": {"type": "list_of_string", "reproducibility_anchor": true}
+    },
+    "image": {
+      "ocr_engine":             {"type": "string?", "reproducibility_anchor": true},
+      "target_resolution":      {"type": "tuple_int_int", "reproducibility_anchor": true},
+      "vision_decoding_params": {
+        "type": "object",
+        "reproducibility_anchor": true,
+        "nested": {
+          "max_tokens":         {"type": "integer", "reproducibility_anchor": true},
+          "prompt_template_id": {"type": "string",  "reproducibility_anchor": true},
+          "temperature":        {"type": "number",  "reproducibility_anchor": true, "determinism_pin": 0}
+        }
+      }
+    },
+    "text": {
+      "encoding":      {"type": "string",  "reproducibility_anchor": true},
+      "max_chars":     {"type": "integer", "reproducibility_anchor": true},
+      "ocr_engine":    {"type": "string?", "reproducibility_anchor": true},
+      "source_format": {
+        "type": "enum",
+        "reproducibility_anchor": true,
+        "enum": ["pdf", "docx", "pptx", "txt", "md", "rtf", "csv", "xlsx"]
+      }
+    },
+    "transcript": {
+      "gold_transcript_hash": {"type": "string", "reproducibility_anchor": true},
+      "source_format": {
+        "type": "enum",
+        "reproducibility_anchor": true,
+        "enum": ["vtt", "srt", "json"]
+      }
+    },
+    "video": {
+      "audio": {
+        "type": "object?",
+        "reproducibility_anchor": true,
+        "nested": {
+          "chunk_ms":              {"type": "integer", "reproducibility_anchor": true},
+          "model_decoding_params": {
+            "type": "object",
+            "reproducibility_anchor": true,
+            "nested": {
+              "beam_size":     {"type": "integer", "reproducibility_anchor": true},
+              "language_hint": {"type": "string?", "reproducibility_anchor": true},
+              "temperature":   {"type": "number",  "reproducibility_anchor": true, "determinism_pin": 0},
+              "vad_threshold": {"type": "number",  "reproducibility_anchor": true}
+            }
+          },
+          "sample_rate_hz":        {"type": "integer", "reproducibility_anchor": true}
+        }
+      },
+      "keyframe_count":         {"type": "integer?", "reproducibility_anchor": true,
+                                 "required_when_strategy": "uniform_n"},
+      "keyframe_interval_ms":   {"type": "integer?", "reproducibility_anchor": true,
+                                 "required_when_strategy": "every_n_seconds"},
+      "keyframe_strategy": {
+        "type": "enum",
+        "reproducibility_anchor": true,
+        "enum": ["every_n_seconds", "scene_change", "uniform_n"]
+      },
+      "vision_decoding_params": {
+        "type": "object",
+        "reproducibility_anchor": true,
+        "nested": {
+          "max_tokens":         {"type": "integer", "reproducibility_anchor": true},
+          "prompt_template_id": {"type": "string",  "reproducibility_anchor": true},
+          "temperature":        {"type": "number",  "reproducibility_anchor": true, "determinism_pin": 0}
+        }
+      }
+    }
+  },
+  "provider_extras_key": "provider_extras"
+}
