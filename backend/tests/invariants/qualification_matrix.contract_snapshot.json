@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    },
+    "QualificationRule": {
+      "additionalProperties": false,
+      "description": "One row of the matrix.\n\nPer Spec \u00a73.4: `(claim-genre \u00d7 source-standing) \u2192 asserts_what`. The\n`asserts_what` here is the *ceiling* the Solva governor will allow\nwhen stamping the unit's Defensibility ring.",
+      "properties": {
+        "asserts_what": {
+          "$ref": "#/$defs/DefensibilityClass",
+          "description": "Ceiling: highest defensibility class permitted for this cell."
+        },
+        "genre": {
+          "title": "Genre",
+          "type": "string"
+        },
+        "matrix_rule_id": {
+          "description": "Stable ID; quoted by units' DefensibilityRing.matrix_rule_ref.",
+          "title": "Matrix Rule Id",
+          "type": "string"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "source_standing": {
+          "title": "Source Standing",
+          "type": "string"
+        }
+      },
+      "required": [
+        "matrix_rule_id",
+        "genre",
+        "source_standing",
+        "asserts_what"
+      ],
+      "title": "QualificationRule",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The governed matrix.\n\nVersioned by `matrix_rev` (e.g. \"v0\"). Frozen by snapshotting both\nthe schema (via Pydantic) and the *content* (the v0.json file).\nBumping the matrix requires re-blessing both snapshots.",
+  "properties": {
+    "matrix_rev": {
+      "title": "Matrix Rev",
+      "type": "string"
+    },
+    "rules": {
+      "items": {
+        "$ref": "#/$defs/QualificationRule"
+      },
+      "title": "Rules",
+      "type": "array"
+    }
+  },
+  "required": [
+    "matrix_rev",
+    "rules"
+  ],
+  "title": "QualificationMatrix",
+  "type": "object"
+}

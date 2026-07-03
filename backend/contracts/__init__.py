@@ -30,6 +30,20 @@ from contracts.objective_request import (  # noqa: F401
     ObjectiveMode,
     ObjectiveRequest,
 )
+from contracts.objective_request_v2 import (  # noqa: F401
+    BuyerCommercial,
+    Commercial,
+    Envelope,
+    ObjectiveEntry,
+    ObjectiveRequest_v2,
+    OperatorShaping,
+    Output,
+    OutputConsumer,
+    OutputForm,
+    OutputGrain,
+    Reach,
+    Shaping,
+)
 from contracts.qualification_matrix.loader import (  # noqa: F401
     QualificationMatrix,
     QualificationRule,

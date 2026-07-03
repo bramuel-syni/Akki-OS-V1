@@ -1,20 +1,21 @@
 # PHASE_STATE (compact mirror of ORCHESTRATOR_CONTINUITY §2 + §3)
 
-**Last update:** 2026-07-02T03:15Z (Docs-Pass close)
+**Last update:** 2026-07-03 (Substrate-Drop v2 close — Part 1 backfill + Part 2 Phase 0)
 
 > Any duration / credit / turn number referenced below is a **Provisional planning anchor — not a commitment. Relative weight only.**
 
 ## Live State
-- **Current gate:** **DOCS-PASS: Source-Spec Corrections CLOSED** (2026-07-02T03:15Z). G5b remains CLOSED (2026-07-02T10:00Z). All prior phases CLOSED. Docs-pass corrected §10 field shape, §26 contract-count framing, UX Arch §14 refusal remediation, added Interface Spec "Unified Refusal Taxonomy" addendum, northena §8 `stamp_audit` type + intentional-design note, closed-seam Unlock subsections in 4 engine specs, and inverted the authoring direction (`.md` canonical, `.docx` presentation). Backend surface frozen; 14 frozen contracts unchanged.
+- **Current gate:** **SUBSTRATE-DROP v2 CLOSED** (2026-07-03). Part 1 (backfill + parity invariant) + Part 2 (Phase 0 — `ObjectiveRequest v2`) both green. G5b remains CLOSED (2026-07-02T10:00Z). Docs-Pass 2026-07-02 remains CLOSED. All prior phases CLOSED. Backend surface FROZEN except additive-only Phase 0 landing. §6.1 verdict re-marked EXTENDS per Ruling 3 challenge (grep-negative on `grain`, `license_class`, and `standard`-as-admission-filter).
 - **Counting standard:** post-§0-strict from G6 forward.
-- **Awaiting:** user judgment on Item 4 HAZARD_STOP (v1 adversarial fixture NOT superseded — 5 invariant tests still read it, no contract-conformant replacement on disk).
-- **Last green CI:** 367/367 backend at 2026-07-02T03:15Z (+ 12/12 frontend gate tests unchanged from G5b). Substrate-drop gate 9/9 green post-inversion.
+- **Standing Owner Dispositions in force** (see ORCHESTRATOR_CONTINUITY §0.1): Ruling 2 (literal-widening HAZARD), Ruling 4 (§10 uniform disposition), Ruling 5 (§6.3/§6.4 confirmed as written), Elevated Doctrine (validation surface IS contract surface).
+- **Awaiting:** user judgment on Item 4 HAZARD_STOP (v1 adversarial fixture NOT superseded — from Docs-Pass 2026-07-02); user directive on which phase to dispatch next.
+- **Last green CI:** 374/374 backend at 2026-07-03 (+ 12/12 frontend gate tests unchanged from G5b). Substrate-drop gate 9/9 green. Mechanical parity invariant 3/3 green.
 - **Data source posture:** SYNTHETIC (v1 shipping — NOT superseded per Item 4 HAZARD_STOP).
-- **Canonical specs on-disk:** 7/7 CURRENT. Substrate-drop gate CI-enforced against the `.md` files (post-inversion).
-- **Frozen contracts:** 14. G5b consumes, docs-pass documents; no additions.
-- **Closed seams (4):** `mtafiti_v3_overlay`, `targeta_yield_layer`, `northena_ledger_deletion`, `v2_cumulative_disclosure_arm` — now structurally documented in each engine spec.
+- **Canonical specs on-disk:** 7/7 CURRENT — post-v2 slate: Solva, Targeta, Mtafiti, Northena, Product v3, UI v1, UX v2. Three predecessors archived with SUPERSEDED headers.
+- **Frozen contracts:** 15 (14 + 1 Phase 0 addition `ObjectiveRequest v2`). All 15 have canonical `.contract_snapshot.json` files; mechanical parity invariant enforces bijection.
+- **Closed seams (4):** unchanged — `mtafiti_v3_overlay`, `targeta_yield_layer`, `northena_ledger_deletion`, `v2_cumulative_disclosure_arm`.
 - **Rule 2 accounting version:** v2 + §0 discretionary-enumeration-inline discipline.
-- **Discipline observations tracked separately:** X1 — `solva_depth/pipeline.py` code fix is LIVE + test-defended; metadata staleness in this file remains (out-of-scope for docs-pass per user brief; follow-up cycle).
+- **Discipline observations tracked separately:** X1 — `solva_depth/pipeline.py` code fix is LIVE + test-defended.
 - **Open HAZARD-STOP flags:** 1 — Item 4 (fixture-supersede state question).
 
 ## Phase Ledger
@@ -31,20 +32,21 @@
 | G5a | CLOSED | 301 | 159 | 715 | 4.50× overall / 0.11× discretionary |
 | G6 | CLOSED | 340 | 80 | 1176 | 14.70× overall / 0.80× discretionary |
 | Handoff-Download Route | CLOSED | 347 | 12 | 30 | 1.00× discretionary-only |
-| A2 (Service1Refusal envelope) | CLOSED | **355** | 20 | ~50 | ~1.27× discretionary-only |
-| **G5b** | **CLOSED** | **359 backend + 12/12 frontend gate** | 0 (API-consumption) | 1848 (all discretionary) | N/A (no source lift) |
+| A2 (Service1Refusal envelope) | CLOSED | 355 | 20 | ~50 | ~1.27× discretionary-only |
+| **G5b** | **CLOSED** | 359 backend + 12/12 frontend gate | 0 (API-consumption) | 1848 (all discretionary) | N/A (no source lift) |
+| Docs-Pass (Source-Spec Corrections) | CLOSED | 367 | 0 (docs) | 0 | N/A |
+| **Substrate-Drop v2 (Part 1)** | **CLOSED** | **373** (+6 tests: 3 backfill freeze + 3 parity) | 0 (docs+CI phase; backfill by-copy) | 0 (net-new code) | N/A |
+| **Substrate-Drop v2 (Part 2 / Phase 0)** | **CLOSED** | **374** (+1 test: v2 freeze) | 0 (net-new contract) | ~180 (all mandate-forced per v3 §3.2 verbatim; ~15 discretionary flagged as HAZARD-STOP-NOTES for owner narrowing) | ~12× overall / ~0.08× discretionary-only |
 | G2b | BLOCKED (real RMS material) | — | — | — | — |
 
 ## Pending Decisions
-- [x] ~~Open G6?~~ — CLOSED at 2026-07-02T00:45Z.
-- [x] ~~Freeze-and-Handoff artifact?~~ — DONE at 2026-07-02T01:00Z.
-- [x] ~~Handoff-Download Route?~~ — SHIPPED at 2026-07-02T01:30Z.
-- [x] ~~A2 (Service1Refusal envelope)?~~ — CLOSED at 2026-07-02T02:15Z.
-- [x] ~~Open G5b?~~ — CLOSED at 2026-07-02T10:00Z.
+- [x] ~~Substrate-Drop v2 Part 1?~~ — CLOSED at 2026-07-03.
+- [x] ~~Substrate-Drop v2 Part 2 (Phase 0 — `ObjectiveRequest v2`)?~~ — CLOSED at 2026-07-03.
+- [ ] User directive on which post-Phase-0 phase to dispatch (Phase 1 feasibility query, Phase 2 shape-responsive dispatch, or none).
 - [ ] Real RMS material for G2b
 - [ ] Owner thresholds — Targeta yield seam
 - [ ] Owner + DPO thresholds — Mtafiti V3 overlay seam
 - [ ] DPO — Northena Ledger retention window
 - [ ] DPO — V2 cumulative-disclosure arm env vars
 - [ ] MEA — real source-standing table
-- [ ] X1 discipline observation — solva_depth/pipeline.py:75-76 redundant recompute (parked, non-blocking)
+- [ ] Owner narrowing on `ObjectiveRequest_v2` HAZARD-STOP-NOTE fields (`Reach.depth`, `Envelope.budget`, `Envelope.scope_ceiling`) — future frozen-contract additions when owner rules on scalar types

@@ -1,0 +1,28 @@
+{
+  "catalogue": {
+    "audio": [
+      "prosody",
+      "vocal_emphasis",
+      "affect_valence",
+      "affect_arousal",
+      "speech_rate",
+      "pause_density"
+    ],
+    "composite": [],
+    "image": [
+      "visual_emphasis",
+      "composition_markedness"
+    ],
+    "text": [
+      "lexical_intensity",
+      "stance_intensity",
+      "hedging_density"
+    ],
+    "video": [
+      "visual_emphasis",
+      "scene_change_density",
+      "framing_markedness"
+    ]
+  },
+  "rev": "v0"
+}

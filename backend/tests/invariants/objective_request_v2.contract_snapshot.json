@@ -1,0 +1,349 @@
+{
+  "$defs": {
+    "BuyerCommercial": {
+      "additionalProperties": false,
+      "description": "v3 \u00a73.2: `commercial: { quote_ref, price_model_version }`.\n\nOwner ruling: nested under `commercial.buyer` for variant symmetry\nwith `shaping.operator`. Populated only on the buyer path.",
+      "properties": {
+        "price_model_version": {
+          "default": "",
+          "title": "Price Model Version",
+          "type": "string"
+        },
+        "quote_ref": {
+          "default": "",
+          "title": "Quote Ref",
+          "type": "string"
+        }
+      },
+      "title": "BuyerCommercial",
+      "type": "object"
+    },
+    "Commercial": {
+      "additionalProperties": false,
+      "description": "v3 \u00a73.2 commercial block, wrapped per owner ruling.",
+      "properties": {
+        "buyer": {
+          "$ref": "#/$defs/BuyerCommercial"
+        }
+      },
+      "title": "Commercial",
+      "type": "object"
+    },
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    },
+    "DefensibilityFloor": {
+      "additionalProperties": false,
+      "description": "Author-set floor below which Solva refuses to compose an answer.\n\nSpec \u00a78.1 + UX (\"set a defensibility floor\"). Solva will not\nsurface a unit in the answer whose `defensibility` ring fails this\nfloor.",
+      "properties": {
+        "minimum_class": {
+          "$ref": "#/$defs/DefensibilityClass",
+          "default": "utterance",
+          "description": "Lowest acceptable defensibility class. Default: utterance."
+        },
+        "minimum_scores": {
+          "$ref": "#/$defs/ScoreVector",
+          "description": "Per-dimension lower bounds. Units below any dim are excluded."
+        }
+      },
+      "title": "DefensibilityFloor",
+      "type": "object"
+    },
+    "Envelope": {
+      "additionalProperties": false,
+      "description": "v3 \u00a73.2 envelope block. See module HAZARD-STOP-NOTES on scalar-type\nfields (`budget`, `scope_ceiling`) and open-shape fields\n(`availability_snapshot`, `floor_feasibility`).",
+      "properties": {
+        "availability_snapshot": {
+          "title": "Availability Snapshot",
+          "type": "object"
+        },
+        "budget": {
+          "minLength": 1,
+          "title": "Budget",
+          "type": "string"
+        },
+        "commissioner": {
+          "minLength": 1,
+          "title": "Commissioner",
+          "type": "string"
+        },
+        "committed_at": {
+          "description": "ISO-8601 UTC.",
+          "minLength": 1,
+          "title": "Committed At",
+          "type": "string"
+        },
+        "done_condition": {
+          "minLength": 1,
+          "title": "Done Condition",
+          "type": "string"
+        },
+        "floor_feasibility": {
+          "title": "Floor Feasibility",
+          "type": "object"
+        },
+        "lawful_basis": {
+          "minLength": 1,
+          "title": "Lawful Basis",
+          "type": "string"
+        },
+        "scope_ceiling": {
+          "minLength": 1,
+          "title": "Scope Ceiling",
+          "type": "string"
+        }
+      },
+      "required": [
+        "lawful_basis",
+        "done_condition",
+        "budget",
+        "scope_ceiling",
+        "commissioner",
+        "committed_at"
+      ],
+      "title": "Envelope",
+      "type": "object"
+    },
+    "ObjectiveEntry": {
+      "description": "v3 \u00a73.2: entry-point discriminator. Values verbatim from v3.\n\n* `work_order`      \u2014 Day-Zero, wizard-shaped operator objective.\n* `external_request`\u2014 Day-to-Day, arrives complete over the API or\n                      is refused at admission.",
+      "enum": [
+        "work_order",
+        "external_request"
+      ],
+      "title": "ObjectiveEntry",
+      "type": "string"
+    },
+    "OperatorShaping": {
+      "additionalProperties": false,
+      "description": "v3 \u00a73.2: `shaping: { agent_assumed_fields[], transcript_ref }`.\n\nOwner ruling: nested under `shaping.operator` for variant symmetry\nwith `commercial.buyer`. Populated only on `work_order` entry.",
+      "properties": {
+        "agent_assumed_fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Agent Assumed Fields",
+          "type": "array"
+        },
+        "transcript_ref": {
+          "default": "",
+          "title": "Transcript Ref",
+          "type": "string"
+        }
+      },
+      "title": "OperatorShaping",
+      "type": "object"
+    },
+    "Output": {
+      "additionalProperties": false,
+      "description": "v3 \u00a73.2 verbatim shape: `output: { form, consumer, grain, standard }`.\n\n`standard` reuses `DefensibilityFloor` from v0 (same semantic role).",
+      "properties": {
+        "consumer": {
+          "$ref": "#/$defs/OutputConsumer"
+        },
+        "form": {
+          "$ref": "#/$defs/OutputForm"
+        },
+        "grain": {
+          "$ref": "#/$defs/OutputGrain"
+        },
+        "standard": {
+          "$ref": "#/$defs/DefensibilityFloor"
+        }
+      },
+      "required": [
+        "form",
+        "consumer",
+        "grain"
+      ],
+      "title": "Output",
+      "type": "object"
+    },
+    "OutputConsumer": {
+      "description": "v3 \u00a73.1 output.consumer enumeration.",
+      "enum": [
+        "person",
+        "system",
+        "training_pipeline"
+      ],
+      "title": "OutputConsumer",
+      "type": "string"
+    },
+    "OutputForm": {
+      "description": "v3 \u00a73.1 output.form enumeration. All five accepted at contract;\n`model` refusal lives at the shaping wizard (Phase 3, per v3 \u00a76.5).",
+      "enum": [
+        "qualified_data",
+        "knowledge_artifact",
+        "model",
+        "callable_skill",
+        "composed_conclusion"
+      ],
+      "title": "OutputForm",
+      "type": "string"
+    },
+    "OutputGrain": {
+      "description": "v3 \u00a73.1 output.grain enumeration.",
+      "enum": [
+        "per_claim",
+        "aggregated",
+        "synthesized_whole"
+      ],
+      "title": "OutputGrain",
+      "type": "string"
+    },
+    "Reach": {
+      "additionalProperties": false,
+      "description": "v3 \u00a73.2 verbatim shape: `reach: { scope_refs[], exclusions[], depth }`.\n\nSee module HAZARD-STOP-NOTE on `depth` type.",
+      "properties": {
+        "depth": {
+          "description": "Extraction/reasoning depth. v3 \u00a73.1 semantic; scalar type pending owner narrowing per module HAZARD-STOP-NOTE.",
+          "minLength": 1,
+          "title": "Depth",
+          "type": "string"
+        },
+        "exclusions": {
+          "description": "Excluded refs (breadth). v3 \u00a73.1.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Exclusions",
+          "type": "array"
+        },
+        "scope_refs": {
+          "description": "Estate slice refs (breadth). v3 \u00a73.1.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Scope Refs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "depth"
+      ],
+      "title": "Reach",
+      "type": "object"
+    },
+    "ScoreVector": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.6: five-dimensional defensibility score.\n\nEach dimension is `float` in [0, 1]. The Solva depth governor (G1)\nwrites these; at G0 they are populated by the synthetic fixture or\nleft at 0.0 default.",
+      "properties": {
+        "contested_status": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Contested Status",
+          "type": "number"
+        },
+        "corroboration": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Corroboration",
+          "type": "number"
+        },
+        "genre_ceiling": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Genre Ceiling",
+          "type": "number"
+        },
+        "recency": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Recency",
+          "type": "number"
+        },
+        "source_standing": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Source Standing",
+          "type": "number"
+        }
+      },
+      "title": "ScoreVector",
+      "type": "object"
+    },
+    "Shaping": {
+      "additionalProperties": false,
+      "description": "v3 \u00a73.2 shaping block, wrapped per owner ruling.",
+      "properties": {
+        "operator": {
+          "$ref": "#/$defs/OperatorShaping"
+        }
+      },
+      "title": "Shaping",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "v3 \u00a73.2: additive extension of `objective_request@v0`.\n\nAdditive-only relationship: v0 remains byte-identical; v2 is a\nseparate frozen contract. Both may co-exist at runtime; dispatch\nlogic (Phase 2, NOT this phase) chooses which to accept per\nentry-point discriminator.",
+  "properties": {
+    "commercial": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Commercial"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "v3 \u00a73.2: # buyer path only."
+    },
+    "entry": {
+      "$ref": "#/$defs/ObjectiveEntry"
+    },
+    "envelope": {
+      "$ref": "#/$defs/Envelope"
+    },
+    "idempotency_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "v3 \u00a73.2: # external_request. Also see v3 \u00a77 async contract.",
+      "title": "Idempotency Key"
+    },
+    "output": {
+      "$ref": "#/$defs/Output"
+    },
+    "reach": {
+      "$ref": "#/$defs/Reach"
+    },
+    "shaping": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Shaping"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "v3 \u00a73.2: # work_order only."
+    }
+  },
+  "required": [
+    "entry",
+    "reach",
+    "output",
+    "envelope"
+  ],
+  "title": "ObjectiveRequest_v2",
+  "type": "object"
+}
