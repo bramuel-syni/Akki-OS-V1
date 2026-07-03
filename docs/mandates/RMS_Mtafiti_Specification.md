@@ -465,3 +465,37 @@ are the V3 thresholds (shared with the V3 gate) and the MEA-owned feed
 declaration content; neither blocks the census or the baseline. Points
 marked CONFIRM resolve against the real contract; a shape that cannot be
 confirmed is recorded, not inferred.
+
+---
+
+## Closed Seam — Unlock: V3 Overlay Thresholds
+
+The V3 inference overlay is BUILT and GATED. `services/mtafiti/v3_overlay.py::overlay_admitted(thresholds, v3_result) → False` when `thresholds is None`; Registry composition passes `v3_admitted=False` into `measure()` and the declaration_baseline runtime_mode dominates.
+
+- **Owner:** RMS product owner (Owner-signed decision required; V3 held-out set is jointly signed with DPO per Mtafiti Spec §18).
+- **Config keys:** `V3Thresholds` dataclass (`services/mtafiti/v3_overlay.py:25-30`) with three fields — `fact_precision: float`, `genre_accuracy: float`, `inter_annotator_floor: float`. Runtime input `V3Result` carries matching `fact_precision`/`genre_accuracy` + `inter_annotator_kappa`.
+- **Unlock procedure:**
+  1. Owner scores a real held-out V3 evaluation set → produces `V3Result(...)`.
+  2. Owner delivers thresholds → construct `V3Thresholds(fact_precision=..., genre_accuracy=..., inter_annotator_floor=...)`.
+  3. Threshold decision lands as config (surface choice open).
+  4. Pass to `mtafiti_registry.compose_record(unit, v3_thresholds=..., v3_result=..., ...)`.
+- **Behavioral delta when opened:** `overlay_admitted` returns True when the V3 result clears each threshold. `v3_admitted=True` flows into `measure()`; Registry entries gain non-zero `attachment` and `corroboration` signals; `runtime_mode` on `NormalizedUnit.defensibility` shifts from `declaration_baseline` to `v3_admitted` on admitted units. *Observation carried from operator runbook: the current `overlay_admitted` compares `fact_precision` and `genre_accuracy` but not `inter_annotator_kappa` against `inter_annotator_floor`; if the third threshold is intended to gate, extend `overlay_admitted` at unlock time.*
+- **Test that proves it opened:** parameterise the closed-seam invariant to the null-threshold case; add positive tests `test_v3_overlay_admits_when_all_thresholds_met`, `test_v3_overlay_refuses_when_any_threshold_missed`, and `test_registry_reflects_v3_signals_when_admitted`. Consolidated in `/app/docs/handoff/seam_unlock_runbook.md` (Seam 2).
+
+## Closed Seam — Unlock: MEA Source-Standing Table
+
+The per-feed source-standing table at `services/mtafiti/source_standing.py` ships as a synthetic placeholder covering the on-disk fixture's `feed_ids`. Every entry has `synthetic_placeholder=True, editorial_authority=False`, and `test_mtafiti_invariants.py::test_source_standing_placeholder_flags` asserts this.
+
+- **Owner:** Media Editorial Authority (MEA, or equivalent authority).
+- **Config keys:** MEA-owned editorial table with the shape defined by `services/mtafiti/source_standing.py::SourceStandingEntry` — at minimum `feed_id`, `standing`, `synthetic_placeholder: bool`, `editorial_authority: bool`. Additional MEA-decided metadata fields are safe additions (`SourceStandingEntry` is NOT one of the 14 frozen contracts).
+- **Unlock procedure:**
+  1. MEA lands real editorial-authority-signed table.
+  2. Drop-in as config-swap for the placeholder. The synthetic placeholder is REPLACED, not merged.
+  3. **`test_source_standing_placeholder_flags` FAILS LOUDLY on drop-in — that is the correct deployment ceremony.** Alongside the drop-in, replace the invariant with its inverse.
+- **Behavioral delta when opened:** real editorial-standing declarations flow into Mtafiti per-feed governance; `MtafitiRegistryRecord` composition begins reflecting MEA-authority-scored standings rather than synthetic defaults. Unrecognized `feed_id`s at composition time need a decided fallback — probably: refuse with `no_source_standing_for_feed` — extend at unlock time.
+- **Test that proves it opened:** current invariant will fail (expected). Add:
+  - `test_source_standing_editorial_authority_flags` — every entry has `synthetic_placeholder=False, editorial_authority=True` (inverse invariant).
+  - `test_source_standing_covers_current_feed_universe` — every `feed_id` referenced by any live fixture or admitted run has a corresponding entry.
+  - (Optional per MEA posture) `test_source_standing_table_signed` — table load path checks a signed manifest or hash-match against a MEA-signed digest.
+
+Consolidated in `/app/docs/handoff/seam_unlock_runbook.md` (Seam 4).

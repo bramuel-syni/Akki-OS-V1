@@ -462,3 +462,18 @@ bias veto, the deterministic fallback — is settled. Only the yield-gate
 threshold values await sign-off, and they gate the yield layer alone,
 not the core. Points marked CONFIRM resolve against the real contract; a
 shape that cannot be confirmed is recorded, not inferred.
+
+---
+
+## Closed Seam — Unlock: Yield Gate Thresholds
+
+The yield layer is BUILT and GATED. `services/targeta/gate.py::evaluate_gate(thresholds=None, held_out)` returns `GateResult(admitted=False, reason="thresholds_not_configured")` when `thresholds is None`; Targeta runs core-only until the seam opens.
+
+- **Owner:** RMS product owner (Owner-signed decision required).
+- **Config keys:** `YieldThresholds` dataclass (`services/targeta/yield_layer.py:20-24`) with two fields — `min_efficiency_gain: float` (Arm 1 "Helps"), `coverage_alpha: float` (Arm 2 "Coverage"). Runtime input `held_out: Sequence[dict]` is Owner-decided at composition time.
+- **Unlock procedure:**
+  1. Owner delivers threshold values + held-out composition set.
+  2. Land the thresholds as config (env vars, JSON config, or governance registry — choice open) and materialise a `YieldThresholds(min_efficiency_gain=..., coverage_alpha=...)` at Service 1/2 boundary.
+  3. Pass to `evaluate_gate(thresholds=YieldThresholds(...), held_out=<sequence>)` from the composition pipeline.
+- **Behavioral delta when opened:** `evaluate_gate` returns `GateResult(admitted=True|False, reason="passed"|"below_efficiency"|"below_coverage", median_efficiency_gain=...)`. Two-arm composition (`compose_ordering`) begins reflecting yield contribution alongside core. `MiningPlan` ordering blends core-relevance with yield rank when Arm 2 admits.
+- **Test that proves it opened:** the current closed-seam invariant (`test_targeta_invariants.py::test_yield_gate_closed_when_no_thresholds`) parameterises to the null-threshold case; add positive tests `test_yield_gate_admits_at_or_above_min_efficiency_gain`, `test_yield_gate_refuses_below_min_efficiency_gain`, and `test_two_arm_composition_reflects_yield_when_admitted`. Consolidated in `/app/docs/handoff/seam_unlock_runbook.md` (Seam 1) for the operator surface.

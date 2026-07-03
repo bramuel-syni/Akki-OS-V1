@@ -396,3 +396,59 @@ realises the UX Architecture Specification and defers to it on
 experience matters. The build is staged from the entry and routing
 outward; the specification is whole, and each surface is built as it is
 reached.
+
+---
+
+## Unified Refusal Taxonomy
+
+*Load-bearing addendum, post-A2. Documents the five governed refusal paths that ship today, the body-discriminator HTTP semantic (never status code), and the three non-overlapping render paths in the frontend. Sourced from shipped code — no synthetic behaviour.*
+
+### The Five Refusal Paths
+
+Five distinct refusal paths exist in the shipped system. Each has a contract, a service-layer emission site, and a consumer path.
+
+| # | Refusal path | Envelope contract | Emission site | Correlation |
+|---|---|---|---|---|
+| 1 | **V2 governed refusal** (single-packet, terminal) | `V2RefusalEnvelope@v0` — `backend/contracts/v2_refusal.py` (frozen contract #12) | `services/v2_gate/refusal.py` | Absorbed into `LedgerRow.stamp_audit` via the side-channel; surfaces at `GET /api/northena/trace/{trace_id}` |
+| 2 | **Service 1 composition-below-floor refusal** (governed refusal at `POST /api/service_1/run`) | `Service1Refusal@v0` — `backend/contracts/service_1_refusal.py` (frozen contract #14) | `services/service_1/service.py` (three raise sites: `no_defensibility_floor`, `no_lawful_basis`, `composition_below_floor`) | Envelope carries `run_id` + `trace_id` for join |
+| 3 | **Solva assertion-boundary refusal** (below-floor conclusion at the Solva boundary) | `services/solva_depth/enforce.py::Refusal` (frozen `@dataclass`; not a Pydantic contract, threaded on the trace via `SolvaTrace.computed_class` at `services/solva_depth/pipeline.py` per X1 discipline — read once at the boundary, threaded downstream) | `services/solva_depth/enforce.py:37` via `enforce(conclusion_text, load_bearing_units, floor)` — comparison at `enforce.py:_below_floor` | Threaded to `SolvaTrace`; absorbed into ledger via `absorb_solva_trace` in Northena converge |
+| 4 | **Northena Admit refusal** (at admit boundary) | `LedgerRow` with `stage="admit"`, `decision="refused"` | `services/northena/admit.py:156` | Ledger row itself carries `run_id`+`trace_id` |
+| 5 | **Northena Gate refusal** (at gate boundary) | `LedgerRow` with `stage="gate"`, `decision="refused"` | `services/northena/gate.py:32` | Ledger row itself carries `run_id`+`trace_id` |
+
+Refusal paths 1, 2, and 3 emit dedicated envelope contracts; paths 4 and 5 encode the refusal as a decision string on the frozen `LedgerRow` (`northena_ledger_row@v0`) rather than a separate envelope — the ledger row IS the record.
+
+### HTTP Semantics — Body Discriminator, Never Status Code
+
+At the HTTP layer, governed refusals are distinguished from validation errors and infrastructure faults **by BODY FIELD, not by HTTP status code**.
+
+- **Governed refusal:** flat JSON body with `outcome: "refused"` at top level. HTTP status is `422`.
+  - Emission site: `backend/routers/service_1.py:113-127` via `return JSONResponse(status_code=422, content=refusal.model_dump(mode="json"))` (A2 D3a settlement).
+  - OpenAPI documents this: `responses={422: {"model": Service1RefusalContract, "description": "Governed refusal (outcome='refused'). Frontend keys on body.outcome === 'refused'. Distinct from FastAPI's validation-422 which has detail: list and no outcome field."}}`.
+- **Validation error (Pydantic RequestValidationError):** FastAPI-default body with `detail: [<list of field errors>]`. HTTP status is `422`. **No `outcome` field.** Consumers key on `Array.isArray(body.detail)` **as a secondary check**, but the primary discriminator remains the absence of `outcome`.
+- **Infrastructure fault:** any uncaught exception (Mongo outage, Pydantic internal `ValidationError`, etc.). HTTP status is `5xx`. Body is FastAPI-default `{"detail": "Internal Server Error"}` or the specific fault text. **Must never carry `outcome === "refused"`** — the router `except service.Service1Refusal` catch at `routers/service_1.py:120` is intentionally narrow to prevent silent conflation.
+
+**The 422 status code is shared** between governed refusal and validation error. **The 500 status code is unique** to infrastructure fault. The frontend must never infer refusal from status code alone.
+
+### Three Render Paths — No Overlap by Branching Logic
+
+The shipped React frontend distinguishes three render paths in `frontend/src/pages/ComposePage.js:48-58`:
+
+```
+if (resp.ok)                               → success branch  (renders Service1RunSummary)
+else if (data.outcome === 'refused')       → refusal branch  (renders RefusalCard, first-class)
+else if (data.detail && Array.isArray(...))→ validation branch (renders inline error, field-scoped)
+else                                       → infra-fault branch (renders unexpected-error banner)
+catch (err) ...                            → network-fault branch
+```
+
+- **Governed refusal → first-class render.** Consumer contract: `Service1Refusal@v0`. Rendered by `frontend/src/components/RefusalCard.js` as a real product outcome; NOT rendered inside an error banner. Frontend gate tests: `frontend/src/__tests__/gate2_refusal_firstclass.test.js`.
+- **Validation error → input feedback.** Consumer shape: FastAPI-default validation-422 body with `detail: list[<field-error>]`. Rendered as an inline compose-form error citing the failing field(s).
+- **Infrastructure fault → system error.** Consumer shape: any 5xx body OR client-side network exception. Rendered as an unexpected-error banner — never as a refusal card.
+
+**Branching logic is distinct.** The rendering surface for the last two paths (validation + infra) is a shared error banner today in `ComposePage.js`; the branching logic that reaches each is separate. Any consumer implementing these three paths must key on `body.outcome === "refused"` for path 1, `Array.isArray(body.detail)` for path 2, and the else-branch for path 3. HTTP status code is a hint, not a discriminator.
+
+### Cross-Reference
+
+- Backend handoff surface: `/app/docs/handoff/backend_contract_surface_v1.md` §2 route #17 error cell + §2.1 example blocks + §4 refusal semantics table.
+- UX obligation: this specification §14 "Refusal-Below-Floor as a Visible, Explained Event" + UX Architecture Specification §14.
+- Contract snapshot: `service_1_refusal.contract_snapshot.json` under `backend/tests/invariants/`.

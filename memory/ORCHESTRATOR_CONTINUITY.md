@@ -53,20 +53,21 @@
 | G6 | CLOSED | 340 | 80 (transitive: Pydantic contract scaffolding + absorb-function shape rhyme with converge.absorb_solva_trace + test infra transitive from G5a test suites; in-pod) | 1176 (64 discretionary + 1112 mandate-forced per Product v2.1 §21.2 + §22.1 + §29.1 + §30 + §31 Sys-Invariant #8 + §32 + Northena §14 stamp-audit side-channel) | **14.70× overall / 0.80× discretionary-only** (v2 accounting; ratify rationale filed inline per new §0 discretionary-enumeration discipline; ratio high because G6 built new crypto primitives with modest transitive lift — cousin_lineage documented in mint.py docstring though manifest lint keeps mint entry mandate-forced) | BUILD_JOURNAL 2026-07-02T00:45Z — discretionary under strict §0 standard (post-§0-strict) |
 
 ## 3. Current Live State (rewritten by e1_dev at every phase close)
-- Current gate: **G5b CLOSED (2026-07-02T10:00Z)**. React web frontend shipped: Operator Console (4 surfaces — Portfolio, Runs, Discipline, Engines) + Consumer Terminal v0 (trace receipt viewer at `/trace/:traceId`) + Composition surface (objective submission with client-side validation + Service1RunSummary/Service1Refusal rendering). 8 routes, 8 components, 3 gate invariant tests (12/12 passing). Tailwind CSS pipeline fixed via `concurrently` + `tailwindcss --watch`. Backend unchanged — all 14 frozen contracts consumed via API only.
-- Awaiting: user directive on next phase or wrap. G2b still blocked (real RMS material). 4 closed seams still pending governance decisions.
-- Last green CI: **359/359** backend at **2026-07-02T10:00Z** + **12/12** frontend gate tests. Backend CI unchanged from A2 — G5b is frontend-only.
-- Data source posture: **SYNTHETIC** (Layer A/B/C pipeline + adversarial fixture v1). Incoming fixture v2 REJECTED.
-- Canonical specs on-disk: 7/7 CURRENT. Substrate-drop gate CI-enforced.
-- Frozen contracts: **14** (G5b consumes, doesn't add). No frozen contracts mutated across G0..G5b.
-- Frontend surface count: 4 Operator surfaces + 1 Consumer Terminal + 1 Landing + 1 Composition = 7 pages across 8 routes (answer B — "surface" spans multiple routes per UX Arch §7).
-- **Closed seams (four)** — unchanged:
+- Current gate: **DOCS-PASS: Source-Spec Corrections CLOSED (2026-07-02T03:15Z)**. G5b remains CLOSED (2026-07-02T10:00Z). All prior phases (G0..A2..G5b) CLOSED. Backend surface remains FROZEN; docs-pass touched only spec markdown + MANIFEST + one mechanical mirror in `test_substrate_drop_gate.py` for the authoring-direction inversion. 14 frozen contracts unchanged.
+- Docs-pass deliverables (2026-07-02): (i) parent §10 flattened to `NormalizedUnit` shape (ring-prefixed → flat); (ii) §26 six-frozen closed-count reframed as extensible registry; (iii) UX Arch §14 refusal remediation framing aligned to shipped actor-appropriate strings; (iv) **HAZARD_STOP surfaced on Item 4** — v1 adversarial fixture is NOT superseded, 5 invariant tests still read it, no contract-conformant replacement on disk (NO edit made); (v) Interface Spec gained "Unified Refusal Taxonomy" addendum documenting 5 refusal paths + body-discriminator HTTP semantic + 3 render paths; (vi) northena §8 `stamp_audit` typed as `Optional[Dict]` with intentional-design paragraph; (vii) closed-seam Unlock subsections structurally folded into 4 engine specs; (viii) authoring-direction inverted — `.md` canonical, `.docx` generated presentation; MANIFEST re-baselined; substrate-drop gate mechanically mirrored.
+- Awaiting: user judgment on Item 4 HAZARD_STOP (fixture supersede posture); user directive on next phase or wrap. G2b still BLOCKED (real RMS material). 4 closed seams still pending governance decisions.
+- Last green CI: **367/367** backend at **2026-07-02T03:15Z** + **12/12** frontend gate tests (G5b unchanged). Substrate-drop gate 9/9 green post-inversion.
+- Data source posture: **SYNTHETIC (v1 shipping — NOT superseded per Item 4 HAZARD_STOP)**.
+- Canonical specs on-disk: 7/7 CURRENT. Substrate-drop gate CI-enforced **against the `.md` files** (post-inversion).
+- Frozen contracts: **14** (docs-pass consumes; no additions). No frozen contracts mutated across G0..G5b..Docs-Pass.
+- Frontend surface count: unchanged from G5b — 7 pages across 8 routes.
+- **Closed seams (four)** — unchanged; now documented structurally in each engine spec (Item 7) alongside the operator-facing `seam_unlock_runbook.md`:
   * `mtafiti_v3_overlay` — awaits Owner thresholds.
   * `targeta_yield_layer` — awaits Owner thresholds.
   * `northena_ledger_deletion` — awaits DPO retention window.
   * `v2_cumulative_disclosure_arm` — awaits DPO env-var thresholds.
-- Discipline observation carried forward (X1): `pipeline.py:75-76` solva_depth redundant recompute — parked, non-blocking.
-- Open HAZARD-STOP flags: **NONE.**
+- Discipline observation carried forward (X1): `pipeline.py:75-76` solva_depth — code fix is live (`services/solva_depth/pipeline.py:74-89` + `test_pipeline_threads_refusal_computed_class`), continuity metadata still says "parked" (X1 metadata cleanup declared out-of-scope for THIS docs-pass by user brief; follow-up housekeeping cycle).
+- Open HAZARD-STOP flags: **1** — Item 4 (fixture-supersede state question).
 
 ## 4. Frozen Contracts (do not mutate without explicit re-bless)
 

@@ -211,11 +211,13 @@ owned)</strong></p>
 <p>reason: str # deterministic reason string</p>
 <p>artifact_ref: ArtifactRef # {type, id, version}</p>
 <p>lawful_basis_ref: str</p>
-<p>stamp_audit: Optional[StampAudit] # absorbed; else None</p>
+<p>stamp_audit: Optional[Dict] # absorbed side-channel; else None</p>
 <p>at: str # ISO 8601</p></td>
 </tr>
 </tbody>
 </table>
+
+**`stamp_audit: Optional[Dict]` — permissive by design.** The untyped `Dict` shape is intentional, not a lapse: it is the load-bearing reason engine artifacts from later phases (G3 Solva boundary emissions, G4 Mtafiti/Targeta stamps, G5a trace correlation, G6 outer-gate receipts, A2 refusal envelopes) can be absorbed into a Ledger row without mutating the frozen `northena_ledger_row@v0` contract. Every engine that emits a stamp landed downstream via this side-channel, allowing 14 frozen contracts to remain byte-identical across G3–G6 while the ledger's semantic reach grew. Any future proposal to type `stamp_audit` (e.g. `Optional[StampAudit]`) would harden it into a mutation surface and lose this property; the permissive contract is a deliberate design decision guarded by `test_ledger_absorbs_outer_gate_and_v2_via_stamp_audit.py::test_northena_ledger_row_contract_snapshot_unchanged_at_g6`.
 
 9\. Admit — Compile, Validate, Freeze
 
@@ -480,3 +482,22 @@ settled. Only ledger retention awaits DPO confirmation, and it is not a
 construction blocker. Points marked CONFIRM are resolved against the
 real contract; a shape that cannot be confirmed is recorded, not
 inferred.
+
+---
+
+## Closed Seam — Unlock: Ledger Retention Window
+
+The Northena Ledger currently defaults to INDEFINITE retention. `services/northena/ledger.py:38-48` documents `retention_policy` as INDEFINITE. **No deletion code path exists** in `services/northena/` and this is guarded by `tests/invariants/test_northena_ledger_retention.py::test_no_deletion_path_in_northena_services`, which grep-guards forbidden tokens `("delete_", "purge_", "expire_")` across the northena services directory and asserts none exist.
+
+- **Owner:** Data Protection Officer (DPO-signed decision required).
+- **Config keys:** DPO defines exact shape. Likely surface:
+  - Retention window: bounded duration (days or ISO-8601) OR a bounded-interval schedule.
+  - Deletion mechanism choice: application-level sweep, scheduled job, or MongoDB TTL index on a datetime field of `northena_ledger_rows`.
+  - Deletion audit posture: DPO decides whether deletion events are themselves ledger-recorded. **Recommended: yes, via `stamp_audit` side-channel;** preserves the G6 doctrine and the append-only guarantee (deletion is recorded as an entry, not a mutation).
+- **Unlock procedure:**
+  1. DPO decides retention window + deletion mechanism.
+  2. **`test_no_deletion_path_in_northena_services` WILL fail on unlock — that is the correct deployment ceremony.** Re-bless alongside the deletion implementation. Options: delete the invariant, or re-scope to `test_no_unauthorized_deletion_path` — assert only paths matching an `authorized_deletion_` prefix exist.
+  3. Implement deletion (application-level function OR Mongo TTL index migration).
+  4. Add authenticated audit trail for every deletion event.
+- **Behavioral delta when opened:** `LedgerRow` history becomes bounded rather than indefinite. Rows outside the retention window are deleted/expired according to policy. Deletion events (per recommended posture) land as `stamp_audit`-decorated ledger rows.
+- **Test that proves it opened:** current no-deletion-path test will fail (expected). Add: `test_deletion_respects_retention_window`, `test_deletion_preserves_within_window_rows`, `test_deletion_is_ledger_recorded`. Consolidated in `/app/docs/handoff/seam_unlock_runbook.md` (Seam 3).

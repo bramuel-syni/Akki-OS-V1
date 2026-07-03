@@ -1383,7 +1383,7 @@
       ],
       "lift_kind": "mandate-forced-net-new",
       "transitive_chain": [],
-      "notes": "G5b. UI rendering of 14th frozen contract (Service1Refusal@v0). Gate 2 test verifies all 7 fields + validation distinguishability."
+      "notes": "G5b. UI rendering of 14th frozen contract (Service1Refusal@v0). Gate 2 test verifies all 7 fields + validation distinguishability. Anchors: RMS_Interface_Specification.md \u00a714 + \u00a75.4 refusal render obligation; RMS_UX_Architecture_Specification.md \u00a714; parent RMS_Product_Engineering_Spec_v2.1.md \u00a726 (frozen contract registry). Post-2026-07-02 docs-pass Item 5 formalised the Unified Refusal Taxonomy in the Interface Spec addendum."
     },
     {
       "module": "frontend/src/components/OuterGateReceiptInline.js",

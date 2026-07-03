@@ -21,7 +21,7 @@ This is the binding master specification. It states the system as it is
 designed to be — a forward specification from which the system is built,
 not a description of an implementation. Where it states a rule, that
 rule binds. Findings settled to date appear here as settled design
-decisions: the six frozen contracts, the ring refinements, the two-layer
+decisions: the founding six frozen contracts (extensible by addition; see §26), the ring refinements, the two-layer
 measures, the unit-versus-audit separation, and the common structural
 guard (§3). Nothing in this document assumes a build has occurred; it
 specifies what must be true of any correct build.
@@ -336,15 +336,17 @@ behavioural)</strong></p>
 <p>Unit:</p>
 <p>unit_id # stable identity</p>
 <p>content # the modality-neutral assertion</p>
-<p>ring1_provenance # where it came from (deterministic)</p>
-<p>ring2_signal # modality-native descriptors, depth-judged</p>
-<p>ring3_relational # typed edges to other units</p>
-<p>ring4_reextraction # deterministic means to reproduce the unit</p>
-<p>ring5_defensibility # how defensibly it may be asserted (always
+<p>provenance # where it came from (deterministic)</p>
+<p>signal # modality-native descriptors, depth-judged</p>
+<p>relational # typed edges to other units</p>
+<p>reextraction_handle # deterministic means to reproduce the unit</p>
+<p>defensibility # how defensibly it may be asserted (always
 present)</p></td>
 </tr>
 </tbody>
 </table>
+
+**Where an illustrative block differs from the frozen contract, the contract prevails.** The frozen `NormalizedUnit` (backend/contracts/five_rings.py) uses these flat field names — `provenance`, `signal`, `relational`, `reextraction_handle`, `defensibility` — not ring-prefixed variants. Any older ring-numbered rendering in prose is illustrative-only and defers to the contract.
 
 11\. Ring 1 — Provenance
 
@@ -842,13 +844,7 @@ owner-signed (Part VII / §30).
 
 26\. The Frozen Contract Set
 
-Six contracts are frozen. Each is a schema, a JSON snapshot, and an
-invariant test; drift fails CI. Everything downstream binds to them, and
-they change only by an explicit, versioned re-bless — never to
-accommodate a fixture, a prep sketch, or a convenience. A change that
-looks additive and free, such as an optional field, is still a contract
-mutation and is held to the same bar, because everything bound to the
-contract must be able to trust its shape.
+The founding set of frozen contracts numbered six; the set is extensible by addition (never mutation). The canonical registry is the CI-checked contract manifest under `/app/backend/contracts/` with corresponding invariant snapshots under `/app/backend/tests/invariants/`. Each contract is a schema, a JSON snapshot, and an invariant test; drift fails CI. Everything downstream binds to the contracts, and they change only by an explicit, versioned re-bless — never to accommodate a fixture, a prep sketch, or a convenience. A change that looks additive and free, such as an optional field on an existing contract, is still a mutation and is held to the same bar, because everything bound to the contract must be able to trust its shape. Adding a *new* frozen contract to the registry is not a mutation of any existing one and is governed by the same freeze discipline (schema + snapshot + invariant test) applied to the addition.
 
 |                           |                                                                                                                                                       |
 |---------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -981,9 +977,19 @@ incorrect regardless of behaviour.
 5.  The three governors operate on orthogonal axes and are never
     collapsed; no governor performs another’s function.
 
-6.  The six frozen contracts are the source of truth. Fixtures and
-    convenience shapes conform to them; a contract changes only by
-    explicit versioned re-bless.
+6.  The frozen contract registry is the source of truth. Fixtures and
+    convenience shapes conform to it; any contract in the registry
+    changes only by explicit versioned re-bless; the registry itself
+    is extended by addition (see §26).
+
+    **Authoring-direction convention (post-2026-07-02):** the canonical
+    source for every filed mandate is the markdown at
+    `/app/docs/mandates/*.md`. The `.docx` at `/app/docs/mandates/source/`
+    are generated presentation artefacts, retained for provenance only.
+    `MANIFEST.md` SHA-256s hash the `.md`; the substrate-drop gate
+    reads and re-hashes the `.md`. Citable anchors going forward are
+    markdown `§`-anchors, not `.docx` page/paragraph references. See
+    `MANIFEST.md` preamble for the load-bearing statement.
 
 7.  The unit (output) and its audit (trace) are separate envelopes with
     separate lifecycles; the Defensibility ring stays byte-identical
@@ -1036,3 +1042,28 @@ obligations, consistent with this document. Where a build meets a case
 this document does not resolve, it attempts a defensible reading
 consistent with the invariants (§31), records it, and surfaces it; it
 does not freeze an unconfirmed rule.
+
+---
+
+## Closed Seam — Unlock: V2 Cumulative-Disclosure Arm
+
+The V2 single-packet refusal arm is LIVE; the cumulative-disclosure arm (repeated file-outs) is BUILT and GATED. `services/v2_gate/cumulative.py::cumulative_arm_admitted()` returns `False` when any of the three env vars is unset or unparseable (`cumulative.py:27-50`), holding the arm closed. Per §21.2 (k-anonymity / l-diversity / DP-noise primitives) + §29.1 ("Until V2 passes") + §32 (DPO-owned).
+
+- **Owner:** Data Protection Officer (DPO-signed decision required).
+- **Config keys (env vars, verbatim from `services/v2_gate/cumulative.py:40-42`):**
+  - `RMS_G6_K_ANONYMITY_THRESHOLD` — integer, minimum group size (k in k-anonymity, §21.2).
+  - `RMS_G6_L_DIVERSITY_THRESHOLD` — integer, minimum distinct-value count within a group (l in l-diversity, §21.2).
+  - `RMS_G6_DP_EPSILON_BUDGET` — float, cumulative DP epsilon budget (§21.2).
+  All three must parse and cross zero-value guards for `cumulative_arm_admitted()` to return True.
+- **Unlock procedure:**
+  1. DPO decides threshold values.
+  2. Set env vars at container/deployment layer:
+     ```
+     RMS_G6_K_ANONYMITY_THRESHOLD=5
+     RMS_G6_L_DIVERSITY_THRESHOLD=3
+     RMS_G6_DP_EPSILON_BUDGET=1.0
+     ```
+  3. Restart backend for cache coherence (env is read at request time; no restart strictly required).
+  4. `cumulative_arm_admitted()` returns True; the load-bearing arm becomes live.
+- **Behavioral delta when opened:** V2 refusal envelope gains a new reason code path — `cumulative_disclosure_risk` — defined at G6 for exactly this unlock. Individually-clean egresses that re-combine to reconstruct identities get refused when the k-anonymity or l-diversity threshold is crossed, or when the DP epsilon budget is exhausted. The V2 tracking store begins persisting egress fingerprints across sessions.
+- **Test that proves it opened:** the closed-seam invariant at `test_v2_gate_refusal_cumulative.py` (region ~L105-137) asserts `cumulative_arm_admitted() is False` when env vars unset. A LOAD-BEARING unlock-simulation test at the same file (region ~L144+) monkey-patches all three env vars and asserts `True` — already green in closed-state and becomes an end-to-end guarantee at real unlock. Optional additions: `test_cumulative_arm_refuses_at_k_threshold`, `test_cumulative_arm_epsilon_budget_exhaustion_refuses`. Consolidated in `/app/docs/handoff/seam_unlock_runbook.md` (Seam 5).

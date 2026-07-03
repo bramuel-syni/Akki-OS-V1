@@ -244,7 +244,16 @@ intelligence cannot meet, the system refuses — and the refusal is a
 first-class, explained experience, not an empty result or a silent
 downgrade. The user is told that the answer would fall below the floor
 they required, what class the available evidence actually supports, and
-what would raise it (corroboration, an accountable source). A refusal is
+what would raise it — expressed as actor-appropriate actions the
+decision-maker can take: lower the defensibility floor, or narrow the
+objective to better-sourced material. (Anchor: shipped `Service1Refusal@v0`
+contract; the frontend Refusal Card renders `asked` / `supported_class` /
+`what_would_raise_it` as the visible surface, and the backend hint table
+at `services/service_1/refusal_hints.py` supplies the actor-appropriate
+strings. Category anchors from earlier drafts — "corroboration, an
+accountable source" — remain the taxonomy of *what* would raise it; the
+render frames that taxonomy as *actions* to the decision-maker.) A
+refusal is
 the system keeping its promise, and the experience presents it as such:
 the honest ‘not to this standard, and here is why’ that makes the
 affirmative answers trustworthy.

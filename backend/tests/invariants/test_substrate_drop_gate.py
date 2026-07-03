@@ -6,8 +6,9 @@ Substrate-Drop v1 institutionalisation (2026-07-01):
   1. Every required spec listed in `docs/mandates/phase_source_requirements.yaml`
      exists at `docs/mandates/<filename>`.
   2. Every spec present has its SHA-256 recorded in `docs/mandates/MANIFEST.md`
-     via its raw `.docx` source at `docs/mandates/source/<basename>.docx`, and
-     the recorded hash matches the actual file.
+     and the recorded hash matches the actual `.md` file. (Post-2026-07-02
+     authoring-direction inversion: canonical hash target is the `.md`, not
+     the `.docx`; see MANIFEST preamble.)
   3. Machine-readable `phase_source_requirements.yaml` and `MANIFEST.md` are
      both parseable.
 
@@ -56,7 +57,11 @@ def _load_yaml_phase_reqs(path: Path) -> Dict[str, List[str]]:
 
 
 def _load_manifest_hashes(path: Path) -> Dict[str, str]:
-    """Parse `MANIFEST.md` and return {filename.md: sha256_of_source_docx}.
+    """Parse `MANIFEST.md` and return {filename.md: sha256_of_canonical_md}.
+
+    Post-2026-07-02 authoring-direction inversion: the manifest hash is
+    over the `.md` file itself (canonical), not the `.docx` (generated
+    presentation). See MANIFEST.md preamble.
 
     Expects a markdown table row per spec of the form
     `| \`filename.md\` | \`sha256_hex\` | ... |`.
@@ -126,20 +131,26 @@ def test_all_phase_required_specs_are_present():
     )
 
 
-def test_manifest_hashes_match_source_docx():
-    """Every manifest entry must have a source .docx file that hashes to the recorded SHA-256."""
+def test_manifest_hashes_match_canonical_md():
+    """Every manifest entry must hash to the canonical `.md` file at MANDATES_DIR.
+
+    Post-2026-07-02 authoring-direction inversion: the manifest records
+    the SHA-256 of the canonical `.md` under `docs/mandates/`, not the
+    `.docx` source. The `.docx` files under `source/` are presentation
+    artefacts retained for provenance only.
+    """
     manifest_hashes = _load_manifest_hashes(MANIFEST)
     mismatches: Dict[str, str] = {}
-    missing_sources: List[str] = []
+    missing_specs: List[str] = []
     for md_name, recorded_hash in manifest_hashes.items():
-        docx_path = _md_to_source_docx(md_name)
-        if not docx_path.exists():
-            missing_sources.append(f"{md_name} -> {docx_path.name}")
+        md_path = MANDATES_DIR / md_name
+        if not md_path.exists():
+            missing_specs.append(f"{md_name} at {md_path}")
             continue
-        actual = _sha256_of(docx_path)
+        actual = _sha256_of(md_path)
         if actual.lower() != recorded_hash.lower():
             mismatches[md_name] = f"expected {recorded_hash}, got {actual}"
-    assert not missing_sources, f"Manifest references source .docx that are missing: {missing_sources}"
+    assert not missing_specs, f"Manifest references canonical .md files that are missing: {missing_specs}"
     assert not mismatches, f"Manifest SHA-256 tamper-detection FAIL: {mismatches}"
 
 
@@ -157,7 +168,10 @@ def test_all_phase_required_specs_have_manifest_entries():
 
 @pytest.mark.parametrize("phase", ["G3", "G4", "G5a", "G5b", "G6"])
 def test_phase_gate_ready(phase: str):
-    """Fine-grained per-phase readiness — each phase asserts its full spec set is present + hash-matches."""
+    """Fine-grained per-phase readiness — each phase asserts its full spec set is present + hash-matches.
+
+    Post-2026-07-02: hash target is the canonical `.md`, not the `.docx`.
+    """
     phase_reqs = _load_yaml_phase_reqs(PHASE_REQS)
     manifest_hashes = _load_manifest_hashes(MANIFEST)
     if phase not in phase_reqs:
@@ -166,9 +180,7 @@ def test_phase_gate_ready(phase: str):
         spec_path = MANDATES_DIR / md_name
         assert spec_path.exists(), f"{phase} blocked: {md_name} missing at {spec_path}"
         assert md_name in manifest_hashes, f"{phase} blocked: {md_name} not in MANIFEST.md"
-        docx = _md_to_source_docx(md_name)
-        assert docx.exists(), f"{phase} blocked: source .docx missing for {md_name}"
-        actual = _sha256_of(docx)
+        actual = _sha256_of(spec_path)
         assert actual.lower() == manifest_hashes[md_name].lower(), (
             f"{phase} blocked: SHA-256 mismatch on {md_name} "
             f"(manifest {manifest_hashes[md_name]}, actual {actual})"

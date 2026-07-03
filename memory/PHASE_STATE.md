@@ -1,21 +1,21 @@
 # PHASE_STATE (compact mirror of ORCHESTRATOR_CONTINUITY §2 + §3)
 
-**Last update:** 2026-07-02T10:00Z
+**Last update:** 2026-07-02T03:15Z (Docs-Pass close)
 
 > Any duration / credit / turn number referenced below is a **Provisional planning anchor — not a commitment. Relative weight only.**
 
 ## Live State
-- **Current gate:** **G5b CLOSED** (2026-07-02T10:00Z). React web frontend shipped: Operator Console (4 surfaces — Portfolio, Runs, Discipline, Engines) + Consumer Terminal v0 (trace receipt viewer at `/trace/:traceId`) + Composition surface (objective submission + Service1RunSummary/Service1Refusal rendering). 8 routes, 8 components, 3 gate invariant tests (12/12 passing). Backend unchanged — all 14 frozen contracts consumed via API only.
-- **Counting standard:** post-§0-strict from G6 forward; G3/G4/G5a annotated as pre-§0 (no retroactive recount).
-- **Awaiting:** user directive on next phase or wrap. G2b still BLOCKED (real RMS material). 4 closed seams still pending governance decisions.
-- **Last green CI:** 359/359 backend at 2026-07-02T10:00Z (unchanged from A2) + 12/12 frontend gate tests.
-- **Data source posture:** SYNTHETIC. Incoming fixture v2 REJECTED.
-- **Canonical specs on-disk:** 7/7 CURRENT. Substrate-drop gate CI-enforced.
-- **Frozen contracts:** 14 (10 pre-G6 + 3 G6 additions + 1 A2 addition). G5b consumes, doesn't add.
-- **Closed seams (4):** `mtafiti_v3_overlay`, `targeta_yield_layer`, `northena_ledger_deletion`, `v2_cumulative_disclosure_arm`.
+- **Current gate:** **DOCS-PASS: Source-Spec Corrections CLOSED** (2026-07-02T03:15Z). G5b remains CLOSED (2026-07-02T10:00Z). All prior phases CLOSED. Docs-pass corrected §10 field shape, §26 contract-count framing, UX Arch §14 refusal remediation, added Interface Spec "Unified Refusal Taxonomy" addendum, northena §8 `stamp_audit` type + intentional-design note, closed-seam Unlock subsections in 4 engine specs, and inverted the authoring direction (`.md` canonical, `.docx` presentation). Backend surface frozen; 14 frozen contracts unchanged.
+- **Counting standard:** post-§0-strict from G6 forward.
+- **Awaiting:** user judgment on Item 4 HAZARD_STOP (v1 adversarial fixture NOT superseded — 5 invariant tests still read it, no contract-conformant replacement on disk).
+- **Last green CI:** 367/367 backend at 2026-07-02T03:15Z (+ 12/12 frontend gate tests unchanged from G5b). Substrate-drop gate 9/9 green post-inversion.
+- **Data source posture:** SYNTHETIC (v1 shipping — NOT superseded per Item 4 HAZARD_STOP).
+- **Canonical specs on-disk:** 7/7 CURRENT. Substrate-drop gate CI-enforced against the `.md` files (post-inversion).
+- **Frozen contracts:** 14. G5b consumes, docs-pass documents; no additions.
+- **Closed seams (4):** `mtafiti_v3_overlay`, `targeta_yield_layer`, `northena_ledger_deletion`, `v2_cumulative_disclosure_arm` — now structurally documented in each engine spec.
 - **Rule 2 accounting version:** v2 + §0 discretionary-enumeration-inline discipline.
-- **Discipline observations tracked separately:** X1 — `solva_depth/pipeline.py:75-76` redundant `conclusion_class(lb)` recompute. Parked, non-blocking.
-- **Open HAZARD-STOP flags:** 0.
+- **Discipline observations tracked separately:** X1 — `solva_depth/pipeline.py` code fix is LIVE + test-defended; metadata staleness in this file remains (out-of-scope for docs-pass per user brief; follow-up cycle).
+- **Open HAZARD-STOP flags:** 1 — Item 4 (fixture-supersede state question).
 
 ## Phase Ledger
 | Phase | Status | Green @ close | Lifted (verifiable) | Net-new | Ratio (v2) |

@@ -1746,3 +1746,47 @@ G5b FULL discretionary line enumeration (strict §0):
 - `/app/frontend/src/__tests__/gate2_refusal_firstclass.test.js` — 5/5 passing
 - `/app/frontend/src/__tests__/gate3_single_ingress.test.js` — 2/2 passing
 
+
+## 2026-07-02T03:15Z — DOCS-PASS: Source-Spec Corrections
+
+Docs-only pass. No code under `services/`, `contracts/`, `routers/`, or `frontend/` was modified. `MANIFEST.md` and `test_substrate_drop_gate.py` were re-baselined together to reflect the authoring-direction inversion (Item 8).
+
+### Per-item disposition
+
+- **Item 1 — Parent §10 flatten to `NormalizedUnit` shape.** APPLIED. Rewrote the §10 code block from ring-prefixed field names (`ring1_provenance` etc.) to flat names matching `contracts/five_rings.py::NormalizedUnit` (`provenance`, `signal`, `relational`, `reextraction_handle`, `defensibility`). Appended the "contract prevails" sentence. Zero remaining `ring[1-5]_` tokens in the parent (grep-verified).
+- **Item 2 — §26 six-frozen closed-count → extensibility framing.** APPLIED at 3 loci (front-matter L24, §26 body, invariant #6). §26 body carries the load-bearing rewrite pointing to the CI-checked contract registry under `backend/contracts/` + snapshots under `backend/tests/invariants/`. Both supporting mentions updated to reference §26.
+- **Item 3 — UX Arch §14 refusal remediation framing.** APPLIED. Replaced *"what would raise it (corroboration, an accountable source)"* with actor-appropriate framing citing shipped `Service1Refusal@v0` and the backend hint table at `services/service_1/refusal_hints.py`. §14 now names both categories AND frames them as actions (lower floor / narrow objective) matching shipped hint strings.
+- **Item 4 — Adversarial fixture v1 supersede stamp.** **HAZARD_STOP.** Verified reality: `rms_adversarial_v1/fixture.json` IS the shipping fixture (5 invariant tests read from it: `test_service_1_invariants.py:65`, `test_service_1_refusal_envelope.py:38`, `test_rms_adversarial_v1_conformance.py:22`, `test_registry_composed_from_fixture.py:36`, `test_data_source_fixture_v1_conformance.py:29`). No contract-conformant replacement fixture is on disk. The user's premise that v1 was superseded does not hold up under grep — v1 is the current shipping fixture, and the "Incoming fixture v2 REJECTED" continuity note meant exactly that: an inbound v2 was rejected, keeping v1 as canonical. Stamping v1 as "superseded" would break every test that reads it. NO EDIT MADE. Surfacing for user judgment.
+- **Item 5 — Interface Spec Unified Refusal Taxonomy addendum.** APPLIED. Verified all 5 refusal paths exist in shipped code: V2 refusal (`v2_gate/refusal.py` + `contracts/v2_refusal.py`), Service 1 refusal (`services/service_1/service.py` + `contracts/service_1_refusal.py`), Solva assertion boundary (`solva_depth/enforce.py:37 class Refusal @dataclass`), Northena Admit refusal (`services/northena/admit.py:156 stage="admit" decision="refused"`), Northena Gate refusal (`services/northena/gate.py:32 stage="gate" decision="refused"`). Verified body-discriminator HTTP semantic at `routers/service_1.py:113` (JSONResponse with `outcome="refused"`, never status code). Verified 3 render paths distinct in `frontend/src/pages/ComposePage.js:48-58` (`resp.ok` → success; `data.outcome === "refused"` → refusal card; `data.detail && Array.isArray(...)` → validation; else → unexpected error; catch → network fault). Noted the small nuance that validation and infra faults today share the same error-banner surface (branching logic distinct; rendering surface shared) — documented honestly in the addendum, not glossed. New section title: "Unified Refusal Taxonomy" at end of `RMS_Interface_Specification.md`.
+- **Item 6 — Northena §8 `stamp_audit` type update + intentional-design note.** APPLIED (Case A). Verified `contracts/northena_ledger.py:65: stamp_audit: Optional[Dict] = Field(...)` matches handoff §1.6 quote (`Optional[Dict] = None`). Updated northena.md §8 code block from `Optional[StampAudit]` to `Optional[Dict]`. Appended the intentional-design paragraph explaining permissiveness as the load-bearing reason for 14 frozen contracts remaining byte-identical across G3–G6 (engine artifacts absorbed via side-channel, not ledger mutation).
+- **Item 7 — Closed-seam Unlock subsections into 4 engine specs.** APPLIED. Verified 5-seam enumeration in `docs/handoff/seam_unlock_runbook.md` matches shipped code closed-seam sites. Structurally folded (not reference-only) into: `RMS_Targeta_Specification.md` (yield seam), `RMS_Mtafiti_Specification.md` (V3 overlay + MEA source-standing, two subsections), `northena.md` (retention seam), `RMS_Product_Engineering_Spec_v2.1.md` (V2 cumulative-disclosure seam). Each subsection carries OWNER + CONFIG KEYS + UNLOCK PROCEDURE + BEHAVIORAL DELTA + TEST — 5 fields, structural per user brief.
+- **Item 8 — Authoring-direction inversion + MANIFEST re-baseline.** APPLIED.
+  - (a) Documented the inversion in parent v2.1 invariant #6 AND in the MANIFEST preamble (load-bearing statement). Markdown = canonical source; `.docx` = generated presentation.
+  - (b) Re-baselined MANIFEST SHA-256s over the 7 `.md` files. Recomputed after all Item-8(a) edits.
+  - (c) Mechanical mirror edit of `backend/tests/invariants/test_substrate_drop_gate.py`: `_load_manifest_hashes` docstring updated; `test_manifest_hashes_match_source_docx` renamed to `test_manifest_hashes_match_canonical_md` and now hashes the `.md`; `test_phase_gate_ready` follows suit; deleted the `_md_to_source_docx()` call from both. This is a docs-alignment test-code delta mirroring the MANIFEST authoring-direction inversion — not a substantive test rewrite. In-scope per pass banner (tests dir not among the four banned code roots).
+  - (d) Substrate-drop gate returned GREEN post-inversion (9/9 in isolation; part of the aggregated 367/367 CI).
+
+### Pre-existing G5b lint gap surfaced + fixed
+
+CI initially came back with 1 failure at `test_manifest_entry_resolves[frontend/src/components/RefusalCard.js]` — the G5b manifest entry's `notes` field lacked a required anchor token (must contain one of `"mandate"`, `"spec"`, or `"§"`). This gap PRE-DATES the docs-pass (G5b's manifest entry was never lint-clean). Fixed via a 1-line `notes` extension in `docs/lift_manifest.json` adding the correct spec/§ anchors (Interface Spec §14, §5.4; UX Arch §14; parent §26). Docs-manifest edit only.
+
+### CI at close
+- Substrate-drop gate: **9/9 green** (`test_substrate_drop_gate.py`).
+- Full backend: **367/367 green** (`cd /app && make ci`).
+- Zero failures. Zero errors.
+
+### Rule 2 v2 accounting (this pass)
+- **Net-new discretionary lines added across the pass:** minimal (this is docs corrections, not authored engine work).
+  - **D1** — item 5 addendum "Unified Refusal Taxonomy" prose + tables (~120 lines of markdown; docs, not counted against LoC per §0 markdown-exempt convention). Structural content is 100% lifted-from-shipped-code (5-refusal-path enumeration + 3-render-path enumeration are both direct grep-verifiable).
+  - **D2** — item 7 closed-seam subsections across 4 specs (~200 lines of markdown; docs-exempt). Structural content lifted from `seam_unlock_runbook.md` and adapted per-spec.
+  - **D3** — item 8(a) authoring-direction subparagraph in v2.1 invariant #6 (~10 lines of markdown; docs-exempt).
+  - **D4** — MANIFEST.md preamble (~20 lines of markdown; docs-exempt).
+  - **D5** — test_substrate_drop_gate.py mirror edit: 2 renamed test functions + docstring updates + removal of 2 `docx.exists()` assertions. Net delta: ~3 net-new discretionary LoC in the test (the reformulated assertion messages). Ratify: minimum change to mirror the manifest authoring-direction change; every removed line was replaced by a `.md`-targeted equivalent.
+  - **D6** — RefusalCard notes extension in `docs/lift_manifest.json` (1 field-value change). Docs-manifest, non-LoC.
+- **Overall Rule 2 v2 posture:** discretionary-count ~3 LoC (test code); markdown edits are docs-exempt. Well within band. No HAZARD-STOP (d).
+
+### HAZARD-STOPs raised
+- **1 mid-pass:** Item 4 (adversarial fixture v1 "superseded" claim doesn't match reality). Surfaced with evidence; no edit applied to either fixture file or generator. User judgment required on whether to (a) accept v1 as shipping (currently true), (b) drop a real contract-conformant replacement, or (c) revise the premise.
+- **0 code-vs-spec hazards.** Item 6 was Case A — code matches handoff, spec caught up.
+- **0 frozen-contract-mutation hazards.**
+
