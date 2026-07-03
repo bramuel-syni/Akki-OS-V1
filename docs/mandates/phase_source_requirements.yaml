@@ -6,40 +6,43 @@
 #
 # Norm ref: BUILD_JOURNAL Substrate-Drop v1 institutionalisation.
 # ORCHESTRATOR_CONTINUITY §0 — substrate-drop gate rule.
+#
+# Substrate-Drop v2 (2026-07-03): v2.1 → v3, Interface Spec → UI Spec v1,
+# UX Architecture Spec → UX Architecture v2. Old filenames moved to archive/.
 
 G3:
   - RMS_Solva_Specification.md
-  - RMS_Product_Engineering_Spec_v2.1.md
+  - RMS_Product_Engineering_Spec_v3.md
 
 G4:
   - RMS_Targeta_Specification.md
   - RMS_Mtafiti_Specification.md
-  - RMS_Product_Engineering_Spec_v2.1.md
+  - RMS_Product_Engineering_Spec_v3.md
 
 # G5a: backend routes (/api/discipline/lift_manifest, /api/northena/trace/{trace_id},
-# trace-lens correlation, intelligence-query response contract per Interface Spec §11).
-# Depends on Interface Spec (§11 response contract, §14 trace_id retrieval) +
-# Product Spec 2.1 (parent) + Northena Spec (ledger absorption seam) +
+# trace-lens correlation, intelligence-query response contract per UI Spec §11).
+# Depends on UI Spec v1 (§11 response contract, §14 trace_id retrieval) +
+# Product Spec v3 (parent) + Northena Spec (ledger absorption seam) +
 # Mtafiti Spec (Registry read routes, added at G4 close) +
 # Targeta Spec (MiningPlan read routes, added at G4 close).
 G5a:
-  - RMS_Interface_Specification.md
-  - RMS_Product_Engineering_Spec_v2.1.md
+  - RMS_UI_Specification_v1.md
+  - RMS_Product_Engineering_Spec_v3.md
   - northena.md
   - RMS_Mtafiti_Specification.md
   - RMS_Targeta_Specification.md
 
 # G5b: frontend surfaces (Operator Console + Consumer Terminal + trace-lenses render).
-# Depends on UX Architecture Spec (experience model, trust model) +
-# Interface Spec (concrete surfaces + layouts) + Product Spec 2.1 (parent).
+# Depends on UX Architecture v2 (experience model, trust model) +
+# UI Spec v1 (concrete surfaces + layouts) + Product Spec v3 (parent).
 G5b:
-  - RMS_UX_Architecture_Specification.md
-  - RMS_Interface_Specification.md
-  - RMS_Product_Engineering_Spec_v2.1.md
+  - RMS_UX_Architecture_v2.md
+  - RMS_UI_Specification_v1.md
+  - RMS_Product_Engineering_Spec_v3.md
 
-# G6: Outer Gate + V2 gate. Depends on Product Spec 2.1 (parent) +
-# Interface Spec §12 (Data-Buying Path) + Northena Spec (governance ceiling).
+# G6: Outer Gate + V2 gate. Depends on Product Spec v3 (parent) +
+# UI Spec v1 §12 (Data-Buying Path) + Northena Spec (governance ceiling).
 G6:
-  - RMS_Product_Engineering_Spec_v2.1.md
-  - RMS_Interface_Specification.md
+  - RMS_Product_Engineering_Spec_v3.md
+  - RMS_UI_Specification_v1.md
   - northena.md

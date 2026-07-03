@@ -1,3 +1,5 @@
+> **SUPERSEDED** by `RMS_UI_Specification_v1.md` on 2026-07-03. Retained for lineage only; consult the successor for binding rules.
+
 **RMS Intelligence System**
 
 Interface Specification
