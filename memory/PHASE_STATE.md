@@ -41,7 +41,8 @@
 | Substrate-Drop v2 (Part 2 / Phase 0) | CLOSED | 374 (+1) | 0 (net-new contract) | ~180 | ~12× overall / ~0.08× discretionary-only |
 | Phase 1 — Estate Feasibility Query | CLOSED | 387 (+13) | ~30 | ~490 | ~5.7× overall / ~0.30× discretionary-only |
 | Phase 2 — Shape-Responsive Execution Scaffold | CLOSED | 402 (+15) | ~40 | ~460 | ~4.2× overall / ~0.24× discretionary-only |
-| **Phase 3 — Admission-Refusal Envelope (unified §6.5 + future admission reasons via registry)** | **CLOSED** | **413 (+11)** | ~35 (Service1Refusal family pattern from A2; registry pattern from qualification_matrix + feasibility_config; ASGITransport pattern from Phase 2) | ~470 (17th frozen contract + registry JSON + service module + dispatch integration + 2 Phase-2-test migrations + 1 invariant + 1 gate-tests file; ~85 discretionary framing enumerated inline in close report) | ~13.4× overall / ~0.19× discretionary-only |
+| Phase 3 — Admission-Refusal Envelope (unified §6.5 + future admission reasons via registry) | CLOSED | 413 (+11) | ~35 | ~470 | ~13.4× overall / ~0.19× discretionary-only |
+| **Phase 4 Stage A — Transform Layer design proposals (design-only)** | **CLOSED** | **413** (unchanged; docs-only) | N/A | N/A (Stage B does LoC accounting) | N/A |
 | G2b | BLOCKED (real RMS material) | — | — | — | — |
 
 ## Pending Decisions
