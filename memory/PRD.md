@@ -3,24 +3,29 @@
 ## Original problem statement
 Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence System on top of the `Akki-Executive-New-Arch` legacy substrate (now `/reference/akki-legacy/`). Phases G0 → G6 with strict doctrine: frozen contracts via Pydantic + JSON snapshots, all LLM calls through the SyniSense Shield chokepoint, spike vs production hours kept distinct, Rule-2 STOP if net-new code outgrows lifted-substrate lines.
 
-## Current gate status (2026-07-02)
+## Current gate status (2026-07-03)
 - **G0 — Foundation & Contracts**: CLOSED.
 - **G0.5 — V1 Spike Harness Construction**: CLOSED.
 - **G1 — Defensibility Detection Substrate**: CLOSED.
 - **Pre-G2 hardening**: CLOSED.
 - **G2a — Northena Reshape**: CLOSED (2026-07-01).
-- **Substrate-Drop v1** (2026-07-01T15:39Z): CLOSED. 7 canonical specs on-disk; substrate-drop gate CI-enforced.
+- **Substrate-Drop v1** (2026-07-01T15:39Z): CLOSED.
 - **G3 — Solva Reshape + Layer C** (2026-07-01T17:15Z): CLOSED.
 - **G4 — Mtafiti + Targeta + Service 1 v1 (Day-Zero composed)** (2026-07-01T18:55Z): CLOSED.
 - **G5a — Backend routes + Trace-lens** (2026-07-02T00:00Z): CLOSED.
 - **G6 — Outer Gate + V2 gate** (2026-07-02T00:45Z): CLOSED.
-- **Freeze-and-Handoff artifact** (2026-07-02T01:00Z): SHIPPED. `docs/handoff/backend_contract_surface_v1.md`.
-- **Handoff-Download Route** (2026-07-02T01:30Z): SHIPPED. `GET /api/handoff/backend_contract_surface_v1` (route #20).
-- **A2 — Service1Refusal envelope + composition_below_floor branch** (2026-07-02T02:15Z): **CLOSED**. `Service1Refusal@v0` shipped as 14th frozen contract; `POST /api/service_1/run` returns flat JSONResponse-based governed refusal envelope at HTTP 422 with three reason codes (`no_defensibility_floor`, `no_lawful_basis`, `composition_below_floor`). D6a Ring-5 upstream boundary + D7a max reduction verified by dedicated invariant tests. `.github/workflows/g0-gate.yml` gained `workflow_dispatch`. **`make ci` = 355/355 green.**
+- **Freeze-and-Handoff artifact** (2026-07-02T01:00Z): SHIPPED.
+- **Handoff-Download Route** (2026-07-02T01:30Z): SHIPPED.
+- **A2 — Service1Refusal envelope + composition_below_floor branch** (2026-07-02T02:15Z): CLOSED.
+- **G5b — Frontend Operator Console + Consumer Terminal** (2026-07-02T10:00Z): CLOSED.
+- **Docs-Pass (Source-Spec Corrections)** (2026-07-02): CLOSED.
+- **Substrate-Drop v2 (Part 1 — backfill + parity invariant + Part 2 Phase 0 `ObjectiveRequest_v2`)** (2026-07-03): CLOSED.
+- **Phase 1 — Estate Feasibility Query** (2026-07-03): CLOSED. `FeasibilityResult_v0` 16th frozen contract; `POST /api/mtafiti/feasibility` live.
+- **Phase 2 — Shape-Responsive Execution Scaffold** (2026-07-03): CLOSED. `services/service_1/dispatch.py` + `POST /api/service_1/v2/dispatch` (501 + placeholder) live. No new frozen contracts (DispatchResult UNFROZEN per Ruling 3).
+- **Item 4 HAZARD-STOP (fixture-supersede posture)**: RESOLVED at 2026-07-03 per Ruling 1 — SYNTHETIC v1 = standing test substrate; real material = operational/benchmark input; no supersede semantics.
 - **G2b — Convergence Quality on Real Hour**: UNBLOCKED but parked on real RMS material.
-- **G5b — Frontend Operator Console + Consumer Terminal**: NOT STARTED. Awaits explicit user directive; handoff artifact (now A2-amended) still awaiting user validation.
 
-## Frozen contracts (14)
+## Frozen contracts (16)
 1. `five_rings@v0`
 2. `objective_request@v0`
 3. `qualification_matrix@v0`
@@ -34,7 +39,11 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 11. `outer_gate_receipt@v0` (G6)
 12. `v2_refusal_envelope@v0` (G6)
 13. `cumulative_disclosure_ledger@v0` (G6)
-14. **`service_1_refusal@v0` (A2)** — governed refusal envelope with `outcome` discriminator; 7 fields; snapshot invariant at `backend/tests/invariants/service_1_refusal.contract_snapshot.json`.
+14. `service_1_refusal@v0` (A2)
+15. `objective_request_v2@v0` (Substrate-Drop v2, Part 2 / Phase 0)
+16. **`feasibility_result@v0` (Phase 1)** — Estate Feasibility Query response envelope; honesty-under-absence contract; feeds `ObjectiveRequest_v2.Envelope.availability_snapshot`.
+
+All 16 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; bijection enforced by `test_frozen_contract_snapshot_parity.py`.
 
 ## Backlog (prioritised)
 - **P0 — G5b Frontend Operator Console + Consumer Terminal** (awaits user go): 4 operator surfaces (Portfolio, Runs, Sources, Discipline) + Consumer Terminal v0. Backend routes shipped at G5a + G6 + A2; G5b is the surface that renders them.
@@ -69,7 +78,7 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - LLM: Emergent Universal Key via `emergentintegrations` — all calls through Shield chokepoint.
 - Test transport: `httpx.AsyncClient(ASGITransport(app))`.
 
-## Key endpoints (20 registered `/api/*`)
+## Key endpoints (21 registered `/api/*`)
 - `GET /api/health`
 - `GET /api/system/state`
 - `GET /api/contracts/{five_rings,objective_request,qualification_matrix}`
@@ -77,9 +86,11 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - `GET /api/discipline/lift_manifest`
 - `GET /api/handoff/backend_contract_surface_v1` (post-G6)
 - `POST /api/service_1/run` (200 → `Service1RunSummary`; 422 → `Service1Refusal@v0` with `outcome="refused"`) / `GET /api/service_1/run/{run_id}`
+- **`POST /api/service_1/v2/dispatch`** (Phase 2, 501 + dispatch envelope + governed placeholder) — accepts `ObjectiveRequest_v2`, returns `DispatchResult` (unfrozen)
+- `POST /api/mtafiti/feasibility` (Phase 1) — accepts `Reach`, returns `FeasibilityResult_v0`
 - `GET /api/solva/status`
 - `GET /api/v1/status` / `GET /api/v3/status`
 - `GET /api/openapi.json`, `/api/docs`, `/api/redoc`
 
 ## CI
-`make ci` = **355/355** green at 2026-07-02T02:15Z. Delta from G6 close (340): +7 handoff-download route invariants + +7 A2 refusal envelope tests + +1 A2 snapshot invariant = +15.
+`make ci` = **402/402** green at 2026-07-03 (Phase 2 close). Delta from Phase 1 (387): +15 Phase 2 tests (4 named gates + 5 positive-path + 2 wire-shape + 3 v0-untouched + 1 malformed-body).

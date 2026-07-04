@@ -26,7 +26,9 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from contracts.five_rings import DefensibilityClass, NormalizedUnit
+from contracts.objective_request_v2 import ObjectiveRequest_v2
 from contracts.service_1_refusal import Service1Refusal as Service1RefusalContract
+from services.service_1 import dispatch as dispatch_module
 from services.service_1 import service
 
 
@@ -132,3 +134,48 @@ async def run_endpoint(req: Service1RunRequest):
 async def run_status(run_id: str) -> Service1RunStatus:
     result = await service.status_by_run(run_id)
     return Service1RunStatus(**result)
+
+
+# ---------------------------------------------------------------------------
+# Phase 2 additive-only landing — shape-responsive execution dispatch (v2).
+#
+# v0 route (`POST /run` above) remains byte-identical. This v2 route accepts
+# `ObjectiveRequest_v2` and returns a Phase-2-scaffold `DispatchResult` per
+# owner ruling. Response envelope is UNFROZEN at Phase 2 (Ruling 3 pattern
+# — mechanism, not values).
+#
+# Every Phase 2 response carries a governed `placeholder_body` (outcome =
+# `not_yet_implemented`) because no downstream receiver is built yet. Status
+# is 501 — "known route, receiver not built" — per owner scope declaration.
+# Rendering separation from `Service1Refusal@v0` (outcome=refused) is
+# enforced by `test_dispatch_placeholder_never_leaks_into_governed_refusal`.
+# ---------------------------------------------------------------------------
+
+
+@router.post(
+    "/v2/dispatch",
+    responses={
+        501: {
+            "model": dispatch_module.DispatchResult,
+            "description": (
+                "Phase 2 scaffold: dispatch decided + placeholder emitted. "
+                "Downstream receiver (Phase 3/4/5) not built yet. Distinct "
+                "from Service1Refusal@v0 (outcome=refused, composition "
+                "boundary governed refusal) — this response carries "
+                "outcome=not_yet_implemented in placeholder_body."
+            ),
+        },
+    },
+)
+async def v2_dispatch_endpoint(request: ObjectiveRequest_v2) -> JSONResponse:
+    """v3 §4 shape-responsive dispatch — Phase 2 scaffold.
+
+    Decides route + fork per `entry`/`reach`/`output`, returns a
+    `DispatchResult` carrying the decision + a governed placeholder
+    pointing at the phase-debt receiver. Does NOT execute downstream.
+    """
+    result = await dispatch_module.dispatch(request)
+    return JSONResponse(
+        status_code=501,
+        content=result.model_dump(mode="json"),
+    )
