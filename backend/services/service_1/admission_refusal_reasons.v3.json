@@ -1,0 +1,53 @@
+{
+  "version": "v3",
+  "landed_at": "2026-07-04",
+  "supersedes": "v2",
+  "extension_note": "Additive over v2. All v2 codes preserved byte-identical. Phase 6 Stage B (Owner ruling Axis 6, 2026-07-04) added three governance-refusal codes for the economics surface — all pass the unwilling-not-unable test (Master Admin set apportionment/tier/expiry to a state that refuses this shape). Struck codes preserved from v2: `caller_cancelled` (cancellation-is-a-state-not-a-refusal), `async_queue_saturated` (infra-not-refusal).",
+  "valid_reasons": [
+    {
+      "reason": "form_not_offerable",
+      "landed_at_version": "v0",
+      "spec_anchor": "v3 §6.5 (Model form off the offerable menu)."
+    },
+    {
+      "reason": "grain_form_incompatible",
+      "landed_at_version": "v1",
+      "spec_anchor": "v3 §6.1.4/§6.2.4/§6.3.4/§6.4.4 grain × form matrix."
+    },
+    {
+      "reason": "standard_below_admission_floor",
+      "landed_at_version": "v1",
+      "spec_anchor": "v3 §6.1.6 standard hard input filter."
+    },
+    {
+      "reason": "license_class_unavailable",
+      "landed_at_version": "v1",
+      "spec_anchor": "v3 §6.1.2 license-class axis of three-way selection."
+    },
+    {
+      "reason": "idempotency_key_reused_with_different_body",
+      "landed_at_version": "v2",
+      "spec_anchor": "v3 §7 bullet 6 (idempotency key; retried POST must not double-commission)."
+    },
+    {
+      "reason": "idempotency_key_missing",
+      "landed_at_version": "v2",
+      "spec_anchor": "v3 §7 bullet 6 (idempotency key required on external_request)."
+    },
+    {
+      "reason": "fleet_policy_reserved_zero_capacity",
+      "landed_at_version": "v3",
+      "spec_anchor": "v3 §8 bullet 5 (fleet apportionment set by Master Admin; capacity-class zero-reserved is a governance decision, NOT infra saturation)."
+    },
+    {
+      "reason": "pricing_tier_frozen_by_control_surface",
+      "landed_at_version": "v3",
+      "spec_anchor": "v3 §8 bullet 2 (Master Admin control surface swaps price-model versions; tier lock is a governance decision)."
+    },
+    {
+      "reason": "exploratory_tier_expired",
+      "landed_at_version": "v3",
+      "spec_anchor": "v3 §8 bullet 2 (Learning-phase quotes structurally non-precedent; time-boxed; lapsed model refuses per honest-not-silent principle)."
+    }
+  ]
+}

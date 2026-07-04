@@ -1,0 +1,16 @@
+{
+  "version": "v0",
+  "landed_at": "2026-07-04",
+  "spec_ref": "v3 §8 bullet 2 (structurally non-precedent time-boxed exploratory tier)",
+  "extension_note": "Additive-only via vN bump per Ruling 3 config-as-versioned-not-frozen. Adding a new tier = new pricing_tiers.v1.json; NEVER Literal-widening on QuoteEnvelope_v0.pricing_tier (constrained-str per Ruling 5).",
+  "owner_ruling_axis_2": "Phase 6 Stage A close, 2026-07-04 — 'Spec names one tier; the rest is speculative taxonomy. Registry bump when reality mints a second tier.'",
+  "valid_tiers": [
+    {
+      "tier": "exploratory",
+      "structurally_non_precedent": true,
+      "time_boxed": true,
+      "default_expiry_iso_duration": "P90D",
+      "spec_anchor": "v3 §8 bullet 2: 'Learning-phase quotes are structurally non-precedent; price-model@v0-exploratory; time-boxed'"
+    }
+  ]
+}

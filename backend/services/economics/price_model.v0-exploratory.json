@@ -1,0 +1,50 @@
+{
+  "version": "price-model@v0-exploratory",
+  "tier": "exploratory",
+  "expires_at": "2026-10-04T00:00:00+00:00",
+  "landed_at": "2026-07-04",
+  "owner_ruling_axis_6": "Phase 6 Stage A close, 2026-07-04 — 'The time-boxed thing is the model version itself per §8's own wording; expiry attaches to what expires.' Config-level `expires_at` (not registry-level).",
+  "levers": {
+    "reach_cardinality_bands": [
+      {"band": "narrow", "max_scope_refs": 3, "multiplier": 1.0},
+      {"band": "moderate", "max_scope_refs": 20, "multiplier": 1.5},
+      {"band": "broad", "max_scope_refs": 100, "multiplier": 2.5},
+      {"band": "unbounded", "max_scope_refs": null, "multiplier": 4.0}
+    ],
+    "output_form_multipliers": {
+      "qualified_data": 1.0,
+      "composed_conclusion": 1.4,
+      "callable_skill": null,
+      "knowledge_artifact": null
+    },
+    "output_grain_multipliers": {
+      "per_claim": 1.0,
+      "aggregated": 0.9,
+      "synthesized_whole": 1.2
+    },
+    "standard_multipliers": {
+      "utterance": 1.0,
+      "non_factual": 1.1,
+      "fact": 1.4,
+      "qualified_utterance": 1.6
+    },
+    "warm_fresh_multipliers": {"warm": 1.0, "fresh": 2.2},
+    "delivery_class_multipliers": {
+      "warm_qualified": 1.0,
+      "fresh_extraction": 1.8
+    },
+    "base_figure_currency": "USD",
+    "base_figure_illustrative": "10.00"
+  },
+  "compute_signature": "figure = base * reach * form * grain * standard * warm_fresh * delivery_class",
+  "delivery_estimate_defaults": {
+    "warm_qualified": "PT30S",
+    "fresh_extraction": "PT30M"
+  },
+  "hazard_stop_notes": [
+    "All multipliers ILLUSTRATIVE. Real values BLOCKED on G2b per v3 §12 invariant #9.",
+    "callable_skill and knowledge_artifact multipliers null — refuses to quote these forms until §6.3/§6.4 lands.",
+    "Delivery estimate defaults ILLUSTRATIVE per Owner ruling Axis 4 (TWO bands only; no sub-banding until measured data defines cut points).",
+    "delivery_class Literal at QuoteEnvelope_v0.delivery_class = ['warm_qualified', 'fresh_extraction'] — TWO values only per Owner ruling Axis 4."
+  ]
+}

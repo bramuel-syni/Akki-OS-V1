@@ -1,0 +1,157 @@
+{
+  "$defs": {
+    "QuoteInstrumentationSeed_v0": {
+      "additionalProperties": false,
+      "description": "Inner frozen shape \u2014 5 keys per v3 \u00a78 bullet 3.\n\nInstrumentation surface carried INSIDE the quote envelope so late-\nrefused/rejected/negotiated-to quotes can be reconstructed from the\nwire object alone (no dead-reference risk). A separate Northena\nLedger row records outcome/stall/first-lever events as they occur\n(Return 4 / stamp_audit sidecar per Standing Disposition\nfrozen-field-changes-as-new-versions \u00a77.3 note).",
+      "properties": {
+        "first_lever_pulled": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "First axis the buyer moved. None until they move.",
+          "title": "First Lever Pulled"
+        },
+        "outcome": {
+          "default": "pending",
+          "description": "Buyer disposition at capture-time. `pending` at mint; updates via instrumentation sidecar.",
+          "enum": [
+            "accepted",
+            "rejected",
+            "negotiated_to",
+            "pending"
+          ],
+          "title": "Outcome",
+          "type": "string"
+        },
+        "price_model_version": {
+          "description": "Belt-and-suspenders with outer envelope. Same value; both places.",
+          "maxLength": 64,
+          "minLength": 1,
+          "pattern": "^price-model@v[0-9]+(-[a-z0-9_-]+)?$",
+          "title": "Price Model Version",
+          "type": "string"
+        },
+        "shape_ref": {
+          "description": "Reference to shape signature \u2014 reach + output + envelope hash.",
+          "minLength": 1,
+          "title": "Shape Ref",
+          "type": "string"
+        },
+        "stall_dimension": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Which shape axis the negotiation stalled on. None if not stalled.",
+          "title": "Stall Dimension"
+        }
+      },
+      "required": [
+        "shape_ref",
+        "price_model_version"
+      ],
+      "title": "QuoteInstrumentationSeed_v0",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "v3 \u00a78 quote envelope \u2014 21st frozen contract.\n\nFreeze posture: FROZEN (Owner ruling Axis 1, Phase 6 Stage A close,\n2026-07-04). Buyer-surface integrators + late-refusal-first-class\n(\u00a77) + governance-carrying strings (price_model_version, pricing_tier)\nall bind on this shape.\n\nDelivery_class Literal (TWO values only per Axis 4 override):\n  - `warm_qualified`      \u2192 served from qualified estate; fast band.\n  - `fresh_extraction`    \u2192 requires fresh extraction; queued/priced-higher.\nSub-banding by measured duration arrives post-G2b as REGISTRY bump.",
+  "properties": {
+    "delivery_class": {
+      "description": "\u00a78 bullet 4 two-cost-class discriminator. TWO bands only per Owner ruling Axis 4 (Phase 6 Stage A close, 2026-07-04). Sub-banding post-G2b via registry bump.",
+      "enum": [
+        "warm_qualified",
+        "fresh_extraction"
+      ],
+      "title": "Delivery Class",
+      "type": "string"
+    },
+    "delivery_estimate": {
+      "description": "ISO-8601 duration or human string per \u00a78 bullet 4. Loose-as-frozen.",
+      "minLength": 1,
+      "title": "Delivery Estimate",
+      "type": "string"
+    },
+    "feasible_and_offerable": {
+      "description": "UI Spec \u00a75.1 'feasible-and-offerable line' \u2014 carries as bool at the wire.",
+      "title": "Feasible And Offerable",
+      "type": "boolean"
+    },
+    "figure": {
+      "description": "Free-form price figure. Loose-as-frozen; narrow at v1 post-G2b.",
+      "minLength": 1,
+      "title": "Figure",
+      "type": "string"
+    },
+    "instrumentation_seed": {
+      "$ref": "#/$defs/QuoteInstrumentationSeed_v0",
+      "description": "Inner frozen 5-key shape per \u00a78 bullet 3."
+    },
+    "price_model_version": {
+      "description": "Refs price-model@vN.json version. Constrained-str, NOT Literal (Ruling 5). Pattern: `price-model@v<N>[-<tag>]`.",
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^price-model@v[0-9]+(-[a-z0-9_-]+)?$",
+      "title": "Price Model Version",
+      "type": "string"
+    },
+    "pricing_tier": {
+      "description": "Refs pricing_tiers.vN.json registry. Constrained-str, NOT Literal (Ruling 5). Extension via registry-bump; unknown tiers rejected by validator at issuance.",
+      "maxLength": 32,
+      "minLength": 1,
+      "pattern": "^[a-z][a-z0-9_]{0,31}$",
+      "title": "Pricing Tier",
+      "type": "string"
+    },
+    "qualifying_volume": {
+      "description": "Free-form volume estimate. Loose-as-frozen.",
+      "minLength": 1,
+      "title": "Qualifying Volume",
+      "type": "string"
+    },
+    "quote_id": {
+      "description": "uuid-like \u2014 one quote, one id.",
+      "minLength": 1,
+      "title": "Quote Id",
+      "type": "string"
+    },
+    "quoted_at": {
+      "description": "ISO-8601 UTC timestamp of mint.",
+      "minLength": 1,
+      "title": "Quoted At",
+      "type": "string"
+    },
+    "trace_id": {
+      "description": "Northena/Solva trace correlator.",
+      "minLength": 1,
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "quote_id",
+    "trace_id",
+    "quoted_at",
+    "price_model_version",
+    "pricing_tier",
+    "figure",
+    "qualifying_volume",
+    "delivery_estimate",
+    "delivery_class",
+    "feasible_and_offerable",
+    "instrumentation_seed"
+  ],
+  "title": "QuoteEnvelope_v0",
+  "type": "object"
+}
