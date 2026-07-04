@@ -24,6 +24,11 @@ from contracts.five_rings import (  # noqa: F401
     ScoreVector,
     SignalRing,
 )
+from contracts.feasibility_result import (  # noqa: F401
+    ClassDistribution,
+    FeasibilityResult_v0,
+    Freshness,
+)
 from contracts.objective_request import (  # noqa: F401
     DefensibilityFloor,
     EstateRegionSelector,

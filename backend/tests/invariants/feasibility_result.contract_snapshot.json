@@ -1,0 +1,109 @@
+{
+  "$defs": {
+    "ClassDistribution": {
+      "additionalProperties": false,
+      "description": "Per-DefensibilityClass unit count over the qualifying reach.\n\nValues sourced from `contracts.five_rings.DefensibilityClass` \u2014 the\ncanonical Ring-5 taxonomy (fact | utterance | non_factual). Sum of\ncounts equals `FeasibilityResult_v0.qualifying_volume` when\nfreshness != UNKNOWN.",
+      "properties": {
+        "fact": {
+          "default": 0,
+          "description": "Count of units at DefensibilityClass.FACT.",
+          "minimum": 0,
+          "title": "Fact",
+          "type": "integer"
+        },
+        "non_factual": {
+          "default": 0,
+          "description": "Count of units at DefensibilityClass.NON_FACTUAL.",
+          "minimum": 0,
+          "title": "Non Factual",
+          "type": "integer"
+        },
+        "utterance": {
+          "default": 0,
+          "description": "Count of units at DefensibilityClass.UTTERANCE.",
+          "minimum": 0,
+          "title": "Utterance",
+          "type": "integer"
+        }
+      },
+      "title": "ClassDistribution",
+      "type": "object"
+    },
+    "Freshness": {
+      "description": "v3 \u00a75 three-value freshness signal. Load-bearing for\nhonesty-under-absence.\n\n* `fresh`   \u2014 censused; freshness_stamp within the configured\n              threshold. Real qualifying_volume + class_distribution.\n* `stale`   \u2014 censused; freshness_stamp past the configured threshold.\n              Real qualifying_volume + class_distribution + snapshot_ref\n              still surfaced (staleness is not un-known \u2014 the numbers\n              are real, just old).\n* `unknown` \u2014 un-censused (no Registry rows match the reach).\n              qualifying_volume, class_distribution, snapshot_ref all\n              NULL. v3 \u00a75 verbatim: \"never a fabricated distribution\".",
+      "enum": [
+        "fresh",
+        "stale",
+        "unknown"
+      ],
+      "title": "Freshness",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "v3 \u00a75 Estate Feasibility Query response envelope.\n\nConsumed by:\n  * Shaping wizard variants \u2014 per-turn feasibility grounding\n    (v3 \u00a73.3 guard 3).\n  * Admission \u2014 warm/fresh fork determination (v3 \u00a74 + \u00a771).\n\nFeeds `ObjectiveRequest_v2.Envelope.availability_snapshot` at\nshaping-time freeze.\n\nHonesty-under-absence: an un-censused reach returns\n`freshness=UNKNOWN` with `qualifying_volume=None` and\n`class_distribution=None`. Never fabricates a distribution.",
+  "properties": {
+    "class_distribution": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ClassDistribution"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Ring-5 DefensibilityClass \u2192 count over the qualifying set. NULL iff freshness==UNKNOWN."
+    },
+    "computed_at": {
+      "description": "ISO-8601 UTC. When the response was computed.",
+      "minLength": 1,
+      "title": "Computed At",
+      "type": "string"
+    },
+    "freshness": {
+      "$ref": "#/$defs/Freshness",
+      "description": "v3 \u00a75 three-value freshness signal. Load-bearing for honesty-under-absence."
+    },
+    "qualifying_volume": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Unit count matching the reach. NULL iff freshness==UNKNOWN.",
+      "title": "Qualifying Volume"
+    },
+    "reach_ref": {
+      "description": "Deterministic hash of the input Reach (scope_refs, exclusions, depth). Correlates response to the query that produced it. Enables idempotent replay and envelope-level provenance so the DPO's prove-one-run can independently bind snapshot\u2194reach.",
+      "minLength": 1,
+      "title": "Reach Ref",
+      "type": "string"
+    },
+    "snapshot_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Deterministic pointer to the Registry state that produced this response (aggregate hash over qualifying rows' freshness stamps). NULL iff freshness==UNKNOWN. Enables reproducibility + audit correlation.",
+      "title": "Snapshot Ref"
+    }
+  },
+  "required": [
+    "reach_ref",
+    "freshness",
+    "computed_at"
+  ],
+  "title": "FeasibilityResult_v0",
+  "type": "object"
+}

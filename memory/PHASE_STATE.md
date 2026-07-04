@@ -7,8 +7,9 @@
 ## Live State
 - **Current gate:** **SUBSTRATE-DROP v2 CLOSED** (2026-07-03). Part 1 (backfill + parity invariant) + Part 2 (Phase 0 — `ObjectiveRequest v2`) both green. G5b remains CLOSED (2026-07-02T10:00Z). Docs-Pass 2026-07-02 remains CLOSED. All prior phases CLOSED. Backend surface FROZEN except additive-only Phase 0 landing. §6.1 verdict re-marked EXTENDS per Ruling 3 challenge (grep-negative on `grain`, `license_class`, and `standard`-as-admission-filter).
 - **Counting standard:** post-§0-strict from G6 forward.
-- **Standing Owner Dispositions in force** (see ORCHESTRATOR_CONTINUITY §0.1): Ruling 2 (literal-widening HAZARD), Ruling 4 (§10 uniform disposition), Ruling 5 (§6.3/§6.4 confirmed as written), Elevated Doctrine (validation surface IS contract surface), Loose-as-frozen (deliberate under-determination is not a HAZARD; hardening lands as new contract version).
+- **Standing Owner Dispositions in force** (see ORCHESTRATOR_CONTINUITY §0.1): Ruling 2 (literal-widening HAZARD), Ruling 4 (§10 uniform disposition), Ruling 5 (§6.3/§6.4 confirmed as written), Elevated Doctrine (validation surface IS contract surface), Loose-as-frozen (deliberate under-determination is not a HAZARD; hardening lands as new contract version), **Ruling 4 shared-derivation (floor_feasibility one function two consumers)**, **Ruling 3 config-as-versioned-not-frozen (feasibility-config@vN control-surface pattern)**.
 - **Plan Debts (see ORCHESTRATOR_CONTINUITY §0.2):** §6.1 downgrade plan-debt — whichever phase consumes §6.1 restates LoC band + gate at its own dispatch (recorded 2026-07-03).
+- **Phase 1 CLOSED (2026-07-03):** 16th frozen contract `FeasibilityResult v0`; `POST /api/mtafiti/feasibility` route live; honesty-under-absence gate (v3 §5 verbatim) enforced by 4 tests; shared derivation `derive_floor_feasibility` guarded by 4 tests; readonly invariant + dual-consumer schema parity landed. Full CI: 374 → 387 (+13). Snapshot count 15 → 16.
 - **Awaiting:** user judgment on Item 4 HAZARD_STOP (v1 adversarial fixture NOT superseded — from Docs-Pass 2026-07-02); user directive on which phase to dispatch next.
 - **Last green CI:** 374/374 backend at 2026-07-03 (+ 12/12 frontend gate tests unchanged from G5b). Substrate-drop gate 9/9 green. Mechanical parity invariant 3/3 green.
 - **Data source posture:** SYNTHETIC (v1 shipping — NOT superseded per Item 4 HAZARD_STOP).
@@ -38,6 +39,7 @@
 | Docs-Pass (Source-Spec Corrections) | CLOSED | 367 | 0 (docs) | 0 | N/A |
 | **Substrate-Drop v2 (Part 1)** | **CLOSED** | **373** (+6 tests: 3 backfill freeze + 3 parity) | 0 (docs+CI phase; backfill by-copy) | 0 (net-new code) | N/A |
 | **Substrate-Drop v2 (Part 2 / Phase 0)** | **CLOSED** | **374** (+1 test: v2 freeze) | 0 (net-new contract) | ~180 (all mandate-forced per v3 §3.2 verbatim; ~15 discretionary flagged as HAZARD-STOP-NOTES for owner narrowing) | ~12× overall / ~0.08× discretionary-only |
+| **Phase 1 — Estate Feasibility Query** | **CLOSED** | **387** (+13 tests: 4 honesty + 1 schema-freeze + 1 readonly + 3 dual-consumer + 4 shared-derivation) | ~30 (opcounters pattern, ledger-shape) | ~490 (16th frozen `FeasibilityResult v0` + compute + shared derivation + endpoint + 5 tests; ~85 discretionary framing) | ~5.7× overall / ~0.30× discretionary-only |
 | G2b | BLOCKED (real RMS material) | — | — | — | — |
 
 ## Pending Decisions

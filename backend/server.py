@@ -90,6 +90,8 @@ app.include_router(solva_router.router, prefix="/api")
 app.include_router(service_1_router.router, prefix="/api")
 app.include_router(discipline_router.router, prefix="/api")
 app.include_router(handoff_router.router, prefix="/api")
+from routers import mtafiti as mtafiti_router  # noqa: E402
+app.include_router(mtafiti_router.router, prefix="/api")
 
 
 @app.on_event("startup")

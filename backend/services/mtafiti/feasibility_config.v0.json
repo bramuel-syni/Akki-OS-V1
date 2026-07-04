@@ -1,0 +1,5 @@
+{
+  "config_version": "v0-provisional",
+  "freshness_threshold_days": 7,
+  "notes": "Master Admin config per Ruling 3 (Substrate-Drop v2 → Phase 1 dispatch, 2026-07-03). Bumps to v1.json on threshold update; never in-place mutated. Not snapshotted per Term 2 (values version, do not freeze). Governance for config is the control-surface pattern: versioned, recorded, reversible."
+}

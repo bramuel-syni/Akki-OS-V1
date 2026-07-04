@@ -37,6 +37,7 @@ INVARIANTS_DIR = REPO_ROOT / "backend" / "tests" / "invariants"
 CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "cumulative_disclosure.py":       "cumulative_disclosure_ledger.contract_snapshot.json",
     "extraction_params.py":           "extraction_params.contract_snapshot.json",
+    "feasibility_result.py":          "feasibility_result.contract_snapshot.json",
     "five_rings.py":                  "five_rings.contract_snapshot.json",
     "lift_manifest_response.py":      "lift_manifest_envelope.contract_snapshot.json",
     "mtafiti_registry.py":            "mtafiti_registry_record.contract_snapshot.json",
