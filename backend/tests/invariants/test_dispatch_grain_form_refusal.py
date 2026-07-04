@@ -17,7 +17,7 @@ from contracts.admission_refusal import AdmissionRefusal_v0
 from server import app
 
 
-def _base_body(*, form: str, grain: str, scope_refs=None) -> dict:
+def _base_body(*, form: str, grain: str, scope_refs=None, idempotency_key: str = "idem-grain-test") -> dict:
     return {
         "entry": "external_request",
         "reach": {
@@ -39,6 +39,7 @@ def _base_body(*, form: str, grain: str, scope_refs=None) -> dict:
             "commissioner": "operator_internal",
             "committed_at": "2026-07-03T12:00:00+00:00",
         },
+        "idempotency_key": idempotency_key,
     }
 
 
@@ -110,41 +111,44 @@ async def test_grain_compat_per_claim_and_aggregated_pass_at_qualified_data():
     """Compatible (qualified_data, per_claim) and
     (qualified_data, aggregated) pairs do NOT emit grain_form_incompatible.
 
-    With empty reach (un-censused), the feasibility fork returns fresh
-    (per Gate 1 in test_dispatch_shape_responsive.py). Response
-    status is 501 (fresh-fork placeholder), NOT 422 grain refusal.
+    Phase 5 Stage B migration (2026-07-04): With empty reach
+    (un-censused), the feasibility fork returns fresh. Fresh-fork now
+    ships an AsyncDeliveryAccepted_v0 (§7 §7.1) at HTTP 202; NOT 501
+    placeholder. This test verifies the grain gate did NOT fire (no
+    422 grain refusal) — the terminal is a governed acceptance.
     """
     transport = ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
-        for grain in ("per_claim", "aggregated"):
+        for i, grain in enumerate(("per_claim", "aggregated")):
             resp = await client.post(
                 "/api/service_1/v2/dispatch",
                 json=_base_body(
                     form="qualified_data",
                     grain=grain,
                     scope_refs=["nowhere_grain_positive"],
+                    idempotency_key=f"idem-grain-positive-{i}-{grain}",
                 ),
             )
-            assert resp.status_code == 501, (
-                f"({grain}) — expected 501 fresh-fork placeholder for "
+            assert resp.status_code == 202, (
+                f"({grain}) — expected 202 async-accepted fresh-fork for "
                 f"un-censused reach; got {resp.status_code}\n"
                 f"body: {resp.text}"
             )
             body = resp.json()
             # Not a grain refusal — reason field must NOT appear at top level.
             assert "reason" not in body, (
-                f"({grain}) — 501 placeholder body must not carry top-level "
+                f"({grain}) — 202 accepted body must not carry top-level "
                 f"'reason' field (would signal a grain refusal leaked); got: {body}"
             )
-            assert body["placeholder_body"]["outcome"] == "not_yet_implemented"
+            assert body["status"] == "accepted"
 
 
 @pytest.mark.asyncio
 async def test_grain_compat_composed_conclusion_synthesized_whole_bypasses_grain_gate():
     """(composed_conclusion, synthesized_whole) is compatible — bypasses
     grain refusal. Falls through to admission fork; un-censused reach →
-    501 fresh-fork placeholder with Phase-4 debt (composed_conclusion is
-    Phase 4b, not 4a).
+    Phase 5 Stage B fresh-fork async acceptance (202) with
+    AsyncDeliveryAccepted_v0.
     """
     transport = ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
@@ -154,10 +158,13 @@ async def test_grain_compat_composed_conclusion_synthesized_whole_bypasses_grain
                 form="composed_conclusion",
                 grain="synthesized_whole",
                 scope_refs=["nowhere_composed"],
+                idempotency_key="idem-cc-sw-bypass",
             ),
         )
-    assert resp.status_code == 501
+    assert resp.status_code == 202, (
+        f"Phase 5 Stage B fresh-fork MUST return 202; got {resp.status_code}: {resp.text}"
+    )
     body = resp.json()
-    assert body["placeholder_body"]["outcome"] == "not_yet_implemented"
+    assert body["status"] == "accepted"
     # Not a grain refusal — no 'reason' top-level.
     assert "reason" not in body

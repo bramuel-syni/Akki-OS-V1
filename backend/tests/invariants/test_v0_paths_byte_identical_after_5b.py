@@ -1,0 +1,124 @@
+"""Byte-identity regression — 18 prior frozen contract source files
+MUST remain byte-identical after Phase 5 Stage B landing.
+
+Owner Q4.b (2026-07-04): "The 5b regression test guards 18 PRIOR
+frozen contract files byte-identical post-5b, not '20 v0 files'.
+Contracts 19 + 20 are NET-NEW at 5b; they cannot be 'prior
+byte-identical'."
+
+Owner Q4.c (2026-07-04): "composed_conclusion.py:316-321 explicitly
+in the 18-file protected set per Verdict A ratification. Include as
+contract 18 SHA row in the byte-identity attest table. `answer_text`
+synthesis lines untouched at Stage B — Owner ratified the scaffold
+as truthful metadata; no remediation."
+
+Regression rationale — the four Phase-4-close protected files
+(post-4a: 6 files + 1 solva_boundary; post-4b: 7 files) expand at
+Stage B to the FULL 18 pre-Stage-B frozen contracts. Any modification
+to any of these files is a HAZARD-STOP; the two new v1 files
+(`northena_ledger_v1.py`, `async_delivery_accepted.py`) are net-new
+and NOT included in this file's assertion — they are guarded by the
+mechanical parity invariant.
+"""
+from __future__ import annotations
+
+import hashlib
+from pathlib import Path
+
+import pytest
+
+
+CONTRACTS_DIR = Path(__file__).resolve().parent.parent.parent / "contracts"
+
+
+# ---------------------------------------------------------------------------
+# The 18 prior frozen contract source SHAs, captured at Phase 5 Stage B
+# open (pre-implementation), 2026-07-04. Any change to these files is a
+# HAZARD-STOP requiring escalation.
+# ---------------------------------------------------------------------------
+PRIOR_18_SHAS = {
+    "admission_refusal.py":           "e68a1e383042835c8104d140e39469615c5f4a81461defaa7d13f098f68acf6f",
+    "composed_conclusion.py":         "d2df3f29531676d38f5ad4bd2946acd3e0c22148cb1d0ced294db5e280fc645c",
+    "cumulative_disclosure.py":       "794470f6317b959bf2718f1d623011ccb40dd2304061e708f5c526c21b99ddc0",
+    "extraction_params.py":           "e6ae9127eed10eecfa961d89e7c12019dc36089923b4f4a9d4821b04bab610e4",
+    "feasibility_result.py":          "a64a6faf2afe9bb6674399a097f90906ecce4675217fe2ad33dc0efea683a9f5",
+    "five_rings.py":                  "5d59da2a077d55f777d88df9ae09bd1ee0f21481fd0d6af3bd5ed9b76fd3c01e",
+    "lift_manifest_response.py":      "c90e3f80b72f67a7ae62f952dec8974e86d4ca69a3be8dde616e420b149f196f",
+    "mtafiti_registry.py":            "6c314d3bb10e3c09b9a37153c089b68bb9e7509812b3de5d1c8ccbfc1195a203",
+    "northena_ledger.py":             "68349bb01971f174341e1a367cc218a3ff1814826ee4cfc866ab5d9e57ec3215",
+    "objective_request.py":           "2588c735356fd096f10726b5a052b8af54172fec0c46f75a62767040aeca1ef1",
+    "objective_request_v2.py":        "e20956c5c3751180e9b69fed08a8738c0cdeed3d86aaa0db604f3ef932f2e994",
+    "outer_gate_receipt.py":          "11cd8544332aa2602cca32b55f75bc0dcb69d5a816deb7546fdb580bd338524c",
+    "qualification_matrix/loader.py": "eef3135e4fc2dcfac8c430e5f13f11d7ac40d5cb627ec75a33ef9264eaf0ab83",
+    "service_1_refusal.py":           "4fe38c214dc592603ceeffaf07732d33e374bae825fc7556d8684f667e41b022",
+    "signal_ring.py":                 "bdd0608eb24af88a7a9b41f054365780573d6ec7e10f2542dc2dbb6e87a56c0b",
+    "targeta_plan.py":                "013979c39dee561cf598dd30868b18faf70fc912094f906dc74ec0ec5272fe4f",
+    "trace_lens.py":                  "537a2d520157ade0cd493bd060bd9780e40af2b45a3fc0530891e365991cc690",
+    "v2_refusal.py":                  "0e6f3288e83dec558d83fdffedbb79fbae6af78b5d239512248e38f75eeddaaf",
+}
+
+
+def test_prior_18_contracts_count_at_18():
+    """Sanity: the protected-set enumeration is exactly 18 (per Q4.b)."""
+    assert len(PRIOR_18_SHAS) == 18, (
+        f"Protected-set MUST enumerate exactly 18 prior frozen contract "
+        f"files; got {len(PRIOR_18_SHAS)}. HAZARD-STOP — reconcile."
+    )
+
+
+@pytest.mark.parametrize("rel_path,expected_sha", sorted(PRIOR_18_SHAS.items()))
+def test_prior_contract_file_byte_identical_after_5b(rel_path: str, expected_sha: str):
+    """Each of the 18 prior frozen contract sources MUST hash to the
+    exact SHA-256 captured at Phase 5 Stage B open. Any drift is a
+    HAZARD-STOP under `frozen-field-changes-as-new-versions` — the
+    prior file MUST be preserved and any change lands as a new
+    version file (e.g. `northena_ledger_v1.py`).
+    """
+    p = CONTRACTS_DIR / rel_path
+    assert p.exists(), f"Frozen contract source missing: {p}"
+    actual_sha = hashlib.sha256(p.read_bytes()).hexdigest()
+    assert actual_sha == expected_sha, (
+        f"HAZARD-STOP — file {rel_path!r} SHA drifted post-Phase-5-Stage-B.\n"
+        f"  Expected: {expected_sha}\n"
+        f"  Actual  : {actual_sha}\n"
+        f"Standing Owner Disposition `frozen-field-changes-as-new-versions` "
+        f"requires the prior file be preserved and any change land as a NEW "
+        f"contract version (e.g. `<name>_v1.py`)."
+    )
+
+
+def test_composed_conclusion_synthesis_lines_untouched():
+    """Q4.c ratification (2026-07-04) — Owner ratified the
+    `services/service_1/composed_conclusion.py` scaffold (`answer_text`
+    synthesis lines 316-321) as truthful metadata; no remediation.
+
+    This test pins those 6 lines by SHA of their exact byte slice, so
+    any drift in the answer_text-synthesis paragraph is a HAZARD-STOP
+    (requires a new fresh Verdict, not silent modification).
+
+    Note the FILE PATH: `services/service_1/composed_conclusion.py` (the
+    service scaffold), NOT `contracts/composed_conclusion.py` (the
+    frozen envelope contract). The synthesis lines live in the service
+    layer; the contract file is separately guarded by the SHA row above.
+    """
+    backend_root = Path(__file__).resolve().parent.parent.parent
+    p = backend_root / "services" / "service_1" / "composed_conclusion.py"
+    lines = p.read_text().splitlines(keepends=True)
+    # 1-indexed lines 316-321 inclusive; ensure the file has enough lines.
+    assert len(lines) >= 321, (
+        f"services/service_1/composed_conclusion.py truncated below 321 lines: {len(lines)}"
+    )
+    slice_bytes = "".join(lines[315:321]).encode("utf-8")
+    slice_sha = hashlib.sha256(slice_bytes).hexdigest()
+    # SHA captured at Phase 5 Stage B open (2026-07-04). If any Owner-
+    # ratified change to the answer_text synthesis is required, update
+    # this constant AS PART OF the Verdict close-report.
+    EXPECTED = "d2e72653f84c4772796a6fb71b61fb70345f057cfd3451d60bbfb15bc2d58159"
+    assert slice_sha == EXPECTED, (
+        f"HAZARD-STOP — services/service_1/composed_conclusion.py:316-321 "
+        f"answer_text synthesis lines drifted post-Phase-5-Stage-B.\n"
+        f"  Expected: {EXPECTED}\n"
+        f"  Actual  : {slice_sha}\n"
+        f"Owner Q4.c ratification requires these lines untouched; any change "
+        f"needs a fresh Verdict, not silent edit."
+    )

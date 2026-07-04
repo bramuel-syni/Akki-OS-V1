@@ -27,11 +27,13 @@ import inspect
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import Optional
 
 import httpx
 import pytest
 from httpx import ASGITransport
 
+from contracts.async_delivery_accepted import AsyncDeliveryAccepted_v0
 from contracts.feasibility_result import Freshness
 from contracts.five_rings import DefensibilityClass
 from contracts.mtafiti_registry import MTAFITI_REGISTRY_COLLECTION
@@ -94,8 +96,15 @@ def _build_request(
     depth: str = "baseline",
     form: OutputForm = OutputForm.QUALIFIED_DATA,
     minimum_class: DefensibilityClass = DefensibilityClass.UTTERANCE,
+    idempotency_key: Optional[str] = "idem-dispatch-test",
 ) -> ObjectiveRequest_v2:
-    """Minimal ObjectiveRequest_v2 for dispatch tests."""
+    """Minimal ObjectiveRequest_v2 for dispatch tests.
+
+    Phase 5 Stage B migration (2026-07-04): `idempotency_key` field
+    added — required on external_request per v3 §7 bullet 6. Defaulted
+    to a stable test string; tests that need to exercise the missing
+    or mismatched-key paths override explicitly.
+    """
     return ObjectiveRequest_v2(
         entry=entry,
         reach=Reach(
@@ -117,6 +126,7 @@ def _build_request(
             commissioner="test_commissioner",
             committed_at="2026-07-03T12:00:00+00:00",
         ),
+        idempotency_key=(idempotency_key if entry == ObjectiveEntry.EXTERNAL_REQUEST else None),
     )
 
 
@@ -134,33 +144,31 @@ async def test_dispatch_unknown_freshness_forks_fresh_never_warm():
     asserting warm anyway would fabricate the exact thing Phase 1's
     honesty gate exists to prevent. Fork MUST be `fresh`.
 
-    Uses the augmented un-censused scope_ref from
-    `feasibility_fixture_augmentation.json` (Item 4 posture preserved
-    — augmentation-file separation, not fixture mutation).
+    Phase 5 Stage B migration (2026-07-04): fresh-fork returns
+    `AsyncDeliveryAccepted_v0` (§7 §7.1 acceptance 202) with a valid
+    idempotency_key, rather than the pre-Stage-B `DispatchResult`
+    placeholder. The fork-decision assertion is validated by the
+    async-accepted result surface — the objective is enqueued via the
+    async pathway (only reachable on FRESH per dispatch.dispatch
+    control-flow — confirmed by grep-negative on the source).
     """
     await _clear_registry()
     req = _build_request(
         entry=ObjectiveEntry.EXTERNAL_REQUEST,
         scope_refs=[_AUG["uncensused_scope_ref"]],
         form=OutputForm.QUALIFIED_DATA,
+        idempotency_key="idem-fresh-unknown-freshness",
     )
     result = await dispatch_module.dispatch(req)
 
-    # Feasibility must report UNKNOWN for the un-censused reach.
-    assert result.feasibility_result is not None
-    assert result.feasibility_result.freshness == Freshness.UNKNOWN, (
-        f"expected UNKNOWN freshness on un-censused reach; "
-        f"got {result.feasibility_result.freshness}"
+    # Fresh-fork terminal shape at Phase 5 Stage B: AsyncDeliveryAccepted_v0.
+    assert isinstance(result, AsyncDeliveryAccepted_v0), (
+        f"Expected AsyncDeliveryAccepted_v0 on fresh-fork; "
+        f"got {type(result).__name__}: {result!r}"
     )
-    # Fork MUST be fresh.
-    assert result.fork_decision == "fresh", (
-        f"UNKNOWN freshness MUST fork FRESH (never warm); "
-        f"got fork_decision={result.fork_decision!r}"
-    )
-    # floor_feasibility is None under UNKNOWN (no distribution to derive from).
-    assert result.floor_feasibility is None
-    # route_target names the fresh admission fork.
-    assert result.route_target == dispatch_module.ROUTE_ADMISSION_FRESH_FORK
+    assert result.status == "accepted"
+    assert result.objective_id.startswith("obj-")
+    assert result.trace_id.startswith("trc-")
 
 
 # ---------------------------------------------------------------------------
@@ -252,18 +260,18 @@ async def test_dispatch_placeholder_never_leaks_into_governed_refusal():
     """
     await _clear_registry()
 
-    # Iterate cases that STILL emit placeholders post-Phase-3.
-    # (form=MODEL is now a governed AdmissionRefusal, not a placeholder —
-    # see test_v2_dispatch_placeholder_replaced_by_admission_refusal_for_form_model.)
+    # Iterate cases that STILL emit placeholders post-Phase-3 AND
+    # post-Phase-5. Phase 5 Stage B migration (2026-07-04): the
+    # external_request + un-censused reach case (fresh-fork) is
+    # REMOVED from this iteration — fresh-fork now returns
+    # `AsyncDeliveryAccepted_v0` (§7 202), not a `DispatchResult`
+    # placeholder. The remaining cases (work_order, knowledge_artifact,
+    # callable_skill) still emit placeholders for their respective
+    # phase-4/5-debt receivers.
     cases = [
         _build_request(form=OutputForm.KNOWLEDGE_ARTIFACT),
         _build_request(form=OutputForm.CALLABLE_SKILL),
         _build_request(entry=ObjectiveEntry.WORK_ORDER, form=OutputForm.QUALIFIED_DATA),
-        _build_request(
-            entry=ObjectiveEntry.EXTERNAL_REQUEST,
-            scope_refs=[_AUG["uncensused_scope_ref"]],
-            form=OutputForm.QUALIFIED_DATA,
-        ),
     ]
     for req in cases:
         result = await dispatch_module.dispatch(req)
@@ -431,6 +439,10 @@ async def test_positive_external_request_fresh_fork_below_floor():
 
     Populated Registry with only NON_FACTUAL rows; floor=FACT.
     derive_floor_feasibility.feasible == False. Fork MUST be `fresh`.
+
+    Phase 5 Stage B migration (2026-07-04): fresh-fork with a valid
+    idempotency_key returns `AsyncDeliveryAccepted_v0` (§7 202),
+    replacing the pre-Stage-B `DispatchResult` placeholder body.
     """
     await _clear_registry()
     await _seed_fresh_row("s://b/x.raw", "below_floor_region", "non_factual")
@@ -441,15 +453,16 @@ async def test_positive_external_request_fresh_fork_below_floor():
         scope_refs=["below_floor_region"],
         form=OutputForm.QUALIFIED_DATA,
         minimum_class=DefensibilityClass.FACT,  # No FACT rows in Registry
+        idempotency_key="idem-below-floor-fresh",
     )
     result = await dispatch_module.dispatch(req)
-    assert result.feasibility_result is not None
-    assert result.feasibility_result.freshness == Freshness.FRESH
-    assert result.floor_feasibility is not None
-    assert result.floor_feasibility["feasible"] is False
-    assert result.fork_decision == "fresh"
-    assert result.route_target == dispatch_module.ROUTE_ADMISSION_FRESH_FORK
-    assert result.placeholder_body["phase_debt"] == dispatch_module.DEBT_PHASE_5
+    # Fresh-fork terminal shape at Phase 5 Stage B.
+    assert isinstance(result, AsyncDeliveryAccepted_v0), (
+        f"Fresh-fork MUST return AsyncDeliveryAccepted_v0 at Stage B; "
+        f"got {type(result).__name__}"
+    )
+    assert result.status == "accepted"
+    assert result.objective_id.startswith("obj-")
 
 
 @pytest.mark.asyncio
@@ -499,8 +512,14 @@ async def test_positive_output_form_callable_skill_routes_to_phase_4():
 
 
 @pytest.mark.asyncio
-async def test_v2_dispatch_route_returns_501_with_placeholder():
-    """POST /api/service_1/v2/dispatch returns 501 with dispatch envelope."""
+async def test_v2_dispatch_route_returns_202_async_delivery_accepted_on_fresh_fork():
+    """POST /api/service_1/v2/dispatch returns 202 with AsyncDeliveryAccepted_v0.
+
+    Phase 5 Stage B migration (2026-07-04): the pre-Stage-B 501 with
+    DispatchResult placeholder for fresh-fork is REPLACED by an async
+    admission accepting envelope at HTTP 202. Test renamed to reflect
+    the ratified receiver landing.
+    """
     transport = ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
         resp = await client.post(
@@ -522,13 +541,20 @@ async def test_v2_dispatch_route_returns_501_with_placeholder():
                     "commissioner": "test",
                     "committed_at": "2026-07-03T12:00:00+00:00",
                 },
+                "idempotency_key": "idem-v2-route-fresh-test",
             },
         )
-    assert resp.status_code == 501
+    assert resp.status_code == 202, (
+        f"Post-Stage-B fresh-fork MUST return HTTP 202 with AsyncDeliveryAccepted_v0; "
+        f"got {resp.status_code}: {resp.text}"
+    )
     body = resp.json()
-    assert body["route_target"] == dispatch_module.ROUTE_ADMISSION_FRESH_FORK
-    assert body["fork_decision"] == "fresh"
-    assert body["placeholder_body"]["outcome"] == "not_yet_implemented"
+    assert body["status"] == "accepted"
+    assert body["objective_id"].startswith("obj-")
+    assert body["trace_id"].startswith("trc-")
+    # Contract validation of the response body.
+    envelope = AsyncDeliveryAccepted_v0.model_validate(body)
+    assert envelope.status == "accepted"
 
 
 @pytest.mark.asyncio

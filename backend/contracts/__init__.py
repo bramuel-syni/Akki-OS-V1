@@ -27,6 +27,9 @@ from contracts.five_rings import (  # noqa: F401
 from contracts.admission_refusal import (  # noqa: F401
     AdmissionRefusal_v0,
 )
+from contracts.async_delivery_accepted import (  # noqa: F401
+    AsyncDeliveryAccepted_v0,
+)
 from contracts.composed_conclusion import (  # noqa: F401
     ComposedConclusion_v0,
 )

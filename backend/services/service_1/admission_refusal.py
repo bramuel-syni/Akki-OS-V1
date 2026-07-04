@@ -273,3 +273,94 @@ def emit_license_class_unavailable(
         what_you_can_do=what_you_can_do,
         computed_at=datetime.now(timezone.utc).isoformat(),
     )
+
+
+# ---------------------------------------------------------------------------
+# Phase 5 Stage B emit helpers — two §7 idempotency admission-time refusals.
+#
+# Registry-bump v1→v2 additive: idempotency_key_reused_with_different_body +
+# idempotency_key_missing. NO `caller_cancelled` (Standing Disposition
+# cancellation-is-a-state-not-a-refusal). NO `async_queue_saturated`
+# (Standing Disposition infra-not-refusal → HTTP 503).
+# ---------------------------------------------------------------------------
+
+
+def emit_idempotency_key_reused_with_different_body(
+    request: ObjectiveRequest_v2,
+    trace_id: str,
+) -> AdmissionRefusal_v0:
+    """v3 §7 bullet 6: retried POST with same key + different body.
+
+    Fires when `POST /api/objectives` receives an idempotency_key that
+    matches an existing objectives_async_state document but whose
+    request-body canonical hash differs from the stored hash.
+
+    Actor-appropriate content: explicitly names the semantic (the key
+    is a retry axis, not a request-mint) + suggests two callable moves
+    (mint a fresh key for the different body, or resubmit the original
+    body byte-identical).
+    """
+    reason = "idempotency_key_reused_with_different_body"
+    if not is_valid_reason(reason):
+        raise RuntimeError(
+            f"admission_refusal_reasons.vN.json registry does not list "
+            f"reason={reason!r} — construction blocked."
+        )
+    off_menu_fact = (
+        "The submitted idempotency_key matches a prior objective but the "
+        "request body differs. Per v3 §7 bullet 6, idempotency keys are "
+        "retry-detection axes for the ORIGINAL body — not a mint key for a "
+        "new objective. Same key + different body is a client-side error."
+    )
+    what_you_can_do = (
+        "Mint a fresh idempotency_key for the new output form / reach / "
+        "envelope, or resubmit the original request body byte-identical "
+        "under the existing key to receive the original 202."
+    )
+    return AdmissionRefusal_v0(
+        reason=reason,
+        trace_id=trace_id,
+        requested_output_form=request.output.form.value,
+        off_menu_fact=off_menu_fact,
+        what_you_can_do=what_you_can_do,
+        computed_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+def emit_idempotency_key_missing(
+    request: ObjectiveRequest_v2,
+    trace_id: str,
+) -> AdmissionRefusal_v0:
+    """v3 §7 bullet 6: external_request submission without idempotency_key.
+
+    Fires when `entry == external_request` and `idempotency_key` is
+    absent. `ObjectiveRequest_v2.idempotency_key` is Optional at the
+    contract level (loose-as-frozen), so the presence-check for
+    external_request happens here at the service layer per Phase 5
+    Stage B ruling.
+    """
+    reason = "idempotency_key_missing"
+    if not is_valid_reason(reason):
+        raise RuntimeError(
+            f"admission_refusal_reasons.vN.json registry does not list "
+            f"reason={reason!r} — construction blocked."
+        )
+    off_menu_fact = (
+        "The submitted external_request lacks an idempotency_key. "
+        "Per v3 §7 bullet 6, idempotency keys are REQUIRED on "
+        "external_request submissions so retried POSTs do not "
+        "double-commission a fresh-fork async delivery."
+    )
+    what_you_can_do = (
+        "Include an `idempotency_key` field on the request body — a "
+        "client-generated unique string (uuid recommended) stable across "
+        "retries of the same output form / reach / envelope."
+    )
+    return AdmissionRefusal_v0(
+        reason=reason,
+        trace_id=trace_id,
+        requested_output_form=request.output.form.value,
+        off_menu_fact=off_menu_fact,
+        what_you_can_do=what_you_can_do,
+        computed_at=datetime.now(timezone.utc).isoformat(),
+    )

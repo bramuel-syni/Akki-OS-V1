@@ -69,6 +69,7 @@ governed refusal). Enforced by
 from __future__ import annotations
 
 import uuid
+from datetime import datetime, timezone
 from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -109,6 +110,15 @@ from services.service_1.composed_conclusion import (
     Service1Refusal as ComposedConclusionRefusal,
     package_composed_conclusion,
 )
+
+# Phase 5 Stage B — async delivery: fresh-fork admission ships an
+# AsyncDeliveryAccepted_v0 (@202) at v2 dispatch, replacing the Phase-2
+# scaffold-placeholder 501 that named phase_5_async_delivery.
+from contracts.async_delivery_accepted import AsyncDeliveryAccepted_v0
+from services.service_1 import async_state as _async_state
+from services.service_1 import async_worker as _async_worker
+from services.service_1 import idempotency as _idempotency
+from services.service_1.admission_refusal import emit_idempotency_key_missing
 
 
 # Route-target constants — named string constants surfaced in responses.
@@ -218,9 +228,9 @@ async def dispatch(
     request: ObjectiveRequest_v2,
 ) -> Union[
     DispatchResult, AdmissionRefusal_v0, QualifiedDataPayload,
-    ComposedConclusion_v0,
+    ComposedConclusion_v0, AsyncDeliveryAccepted_v0,
 ]:
-    """Shape-responsive dispatch — the single Phase 2/3/4a/4b entrypoint.
+    """Shape-responsive dispatch — the single Phase 2/3/4a/4b/5b entrypoint.
 
     Reads `entry`, `reach`, `output.form`, `output.grain`,
     `output.standard`. Calls `compute_feasibility` and
@@ -228,25 +238,29 @@ async def dispatch(
     admission warm/fresh fork applies. Fires grain-compat admission
     refusal (Phase 4a) UPSTREAM of the fork. Fires §6.1 qualified-data
     packaging (Phase 4a) on WARM + `output.form==qualified_data`.
+    Fires §6.2 composed-conclusion packaging (Phase 4b) on WARM +
+    `output.form==composed_conclusion`. Fires §7 async admission
+    (Phase 5) on FRESH → AsyncDeliveryAccepted_v0 (202).
 
-    Return type union — three arms:
-      * `DispatchResult` for the six placeholder-emitting code paths.
+    Return type union — five arms:
+      * `DispatchResult` for the four remaining placeholder-emitting
+        paths (work_order entry, knowledge_artifact, callable_skill,
+        and warm-fork placeholders when qualified/composed paths do
+        NOT apply).
       * `AdmissionRefusal_v0` for `form_not_offerable` (§6.5),
-        `grain_form_incompatible` (§6.1.4/§6.2.4/etc), or the two
-        §6.1 packaging-time refusals (`standard_below_admission_floor`,
-        `license_class_unavailable`) surfaced through
-        `package_qualified_data`.
-      * `QualifiedDataPayload` for §6.1 warm success (Section 7
-        Candidate 2 UNFROZEN plain payload).
+        `grain_form_incompatible` (§6.1.4/§6.2.4/etc), the two
+        §6.1 packaging-time refusals, or the two §7 idempotency
+        refusals.
+      * `QualifiedDataPayload` for §6.1 warm success (Phase 4a).
+      * `ComposedConclusion_v0` for §6.2 warm success (Phase 4b).
+      * `AsyncDeliveryAccepted_v0` for §7 fresh-fork async accept
+        (Phase 5 Stage B); the caller (v2 route) serialises this at
+        HTTP 202.
 
-    The v2 route branches on isinstance and returns different HTTP
-    statuses (200 for qualified-data success, 422 for governed refusal,
-    501 for scaffold placeholder).
-
-    Does NOT invoke `services.service_1.service.run`. Does NOT write to
-    any Mongo collection (`compute_feasibility` and the qualified-data
-    packaging path are both read-only per
-    `test_feasibility_readonly.py` + Condition B3).
+    Standing Owner Disposition (infra-not-refusal): queue saturation
+    during async enqueue raises `async_worker.QueueSaturatedError`
+    (unhandled here — surfaces at the router as HTTP 503, NEVER a
+    governed refusal envelope).
     """
     trace_id = f"disp-{uuid.uuid4().hex[:12]}"
 
@@ -383,6 +397,74 @@ async def dispatch(
         ROUTE_ADMISSION_WARM_FORK if fork == "warm"
         else ROUTE_ADMISSION_FRESH_FORK
     )
+
+    # Phase 5 Stage B fresh-fork async admission — v3 §7 bullet 1.
+    # Fresh → 202 with AsyncDeliveryAccepted_v0. Warm still emits the
+    # Phase-4-debt placeholder (form-specific handlers already returned
+    # above; this fork_target 'warm' fall-through remains for the two
+    # deferred warm forms — knowledge_artifact/callable_skill — even
+    # though they are caught earlier by the output-form routing block.
+    # Safety-in-depth: unreachable in practice at Stage B for warm).
+    if fork == "fresh":
+        # v3 §7 bullet 6: idempotency_key REQUIRED on external_request.
+        if not request.idempotency_key:
+            return emit_idempotency_key_missing(request, trace_id)
+
+        request_body_hash = _idempotency.canonical_request_hash(request)
+        existing = await _async_state.find_by_idempotency_key(request.idempotency_key)
+        if existing is not None:
+            if existing["request_body_hash"] == request_body_hash:
+                # Idempotent replay — byte-identical 202.
+                return AsyncDeliveryAccepted_v0(
+                    objective_id=existing["objective_id"],
+                    delivery_estimate=existing.get("delivery_estimate", "PT5M"),
+                    trace_id=existing["trace_id"],
+                    accepted_at=existing["accepted_at"],
+                )
+            # Same key + different body → governed refusal.
+            from services.service_1.admission_refusal import (
+                emit_idempotency_key_reused_with_different_body,
+            )
+            return emit_idempotency_key_reused_with_different_body(request, trace_id)
+
+        # New objective — allocate ids + persist accepted state + enqueue.
+        objective_id = _async_state.new_id("obj")
+        async_trace_id = _async_state.new_id("trc")
+        accepted_at = _async_state.now_iso()
+        delivery_estimate = "PT5M"
+        doc = {
+            "objective_id": objective_id,
+            "status": "accepted",
+            "state_transitions": [
+                {"state": "accepted", "at": accepted_at,
+                 "worker_generation_id": None, "reason": None}
+            ],
+            "enqueue_time": datetime.now(timezone.utc),
+            "last_worker_touch": None,
+            "worker_generation_id": None,
+            "idempotency_key": request.idempotency_key,
+            "request_body_hash": request_body_hash,
+            "request_body": request.model_dump(mode="python"),
+            "trace_id": async_trace_id,
+            "webhook_url": None,
+            "webhook_secret_hex": None,
+            "sandbox_mode": False,
+            "delivery_estimate": delivery_estimate,
+            "accepted_at": accepted_at,
+            "terminal_envelope": None,
+            "webhook_undelivered": False,
+        }
+        await _async_state.db[_async_state.ASYNC_STATE_COLLECTION].insert_one(doc)
+        # Standing Disposition infra-not-refusal: queue saturation raises
+        # QueueSaturatedError, unhandled here → router returns HTTP 503.
+        await _async_worker.enqueue_objective(objective_id)
+        return AsyncDeliveryAccepted_v0(
+            objective_id=objective_id,
+            delivery_estimate=delivery_estimate,
+            trace_id=async_trace_id,
+            accepted_at=accepted_at,
+        )
+
     # The receiver-side (transform layer §6.2 composed_conclusion for warm;
     # async delivery §7 for fresh) is Phase 4b/5 territory. Placeholder
     # marks the phase-debt appropriately.

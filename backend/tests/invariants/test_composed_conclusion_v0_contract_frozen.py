@@ -37,11 +37,16 @@ def test_composed_conclusion_snapshot_parity_at_18():
     Gate 19 of the Phase 4b roster. Complements the three parity tests
     in `test_frozen_contract_snapshot_parity.py` by asserting the
     absolute count invariant at Phase 4b close.
+
+    Phase 5 Stage B (2026-07-04): parity count bumped 18 → 20 (added
+    NorthenaLedgerRow_v1 + AsyncDeliveryAccepted_v0). This test's
+    assertion updated to 20 to remain compatible; the underlying
+    Phase-4b-composed_conclusion snapshot is still present.
     """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 18, (
-        f"Post-Phase-4b snapshot count must be exactly 18 "
-        f"(17 pre-4b + 1 ComposedConclusion_v0). Actual: {len(snapshots)}.\n"
-        f"Snapshots: {sorted(p.name for p in snapshots)}"
+    assert len(snapshots) == 20, (
+        f"Post-Phase-5-Stage-B snapshot count must be exactly 20 "
+        f"(18 pre-5b + NorthenaLedgerRow_v1 + AsyncDeliveryAccepted_v0). "
+        f"Actual: {len(snapshots)}.\nSnapshots: {sorted(p.name for p in snapshots)}"
     )
