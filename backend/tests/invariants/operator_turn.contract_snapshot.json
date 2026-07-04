@@ -1,0 +1,43 @@
+{
+  "additionalProperties": false,
+  "description": "One turn cycle record (append-only).",
+  "properties": {
+    "turn_ref": {
+      "description": "uuid; identifies this turn across the wizard trace.",
+      "minLength": 1,
+      "title": "Turn Ref",
+      "type": "string"
+    },
+    "at": {
+      "description": "ISO-8601 UTC.",
+      "minLength": 1,
+      "title": "At",
+      "type": "string"
+    },
+    "user_content": {
+      "default": "",
+      "description": "Empty on agent-first ask turns before the user replies.",
+      "title": "User Content",
+      "type": "string"
+    },
+    "agent_content": {
+      "default": "",
+      "description": "Empty on user-first turns before the agent replies.",
+      "title": "Agent Content",
+      "type": "string"
+    },
+    "feasibility_snapshot_ref": {
+      "description": "Reference to WizardCommitState_v0.feasibility_history[] entry (Guard 3 enforcement point).",
+      "minLength": 1,
+      "title": "Feasibility Snapshot Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "turn_ref",
+    "at",
+    "feasibility_snapshot_ref"
+  ],
+  "title": "OperatorTurn_v0",
+  "type": "object"
+}

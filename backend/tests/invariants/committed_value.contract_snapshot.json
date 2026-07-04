@@ -1,0 +1,58 @@
+{
+  "additionalProperties": false,
+  "description": "Per-field source-tagged committed value on WizardCommitState_v0.\n\nStructural invariant (enforced at construction time):\n  exactly one of `operator_turn_ref` / `agent_assumption_id` is set;\n  the other is None. Never both, never neither.\n\nThe `source` field mirrors that split:\n  * `operator_supplied` \u2192 operator_turn_ref set, agent_assumption_id None\n  * `agent_assumed`     \u2192 agent_assumption_id set, operator_turn_ref None",
+  "properties": {
+    "value": {
+      "description": "Loose-as-frozen; type narrows at v1 post-G2b.",
+      "title": "Value"
+    },
+    "source": {
+      "description": "Anti-laundering seam per Owner E3 ruling; MUST be consistent with the XOR ref pair below.",
+      "enum": [
+        "operator_supplied",
+        "agent_assumed"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "operator_turn_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "uuid pointing to a WizardCommitState_v0.turns[] entry. Set iff source='operator_supplied'.",
+      "title": "Operator Turn Ref"
+    },
+    "agent_assumption_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "uuid pointing to a WizardCommitState_v0.agent_assumptions[] entry. Set iff source='agent_assumed'.",
+      "title": "Agent Assumption Id"
+    },
+    "committed_at": {
+      "description": "ISO-8601 UTC.",
+      "minLength": 1,
+      "title": "Committed At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "value",
+    "source",
+    "committed_at"
+  ],
+  "title": "CommittedValue_v0",
+  "type": "object"
+}

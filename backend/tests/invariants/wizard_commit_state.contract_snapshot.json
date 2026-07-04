@@ -1,0 +1,257 @@
+{
+  "$defs": {
+    "AgentAssumption_v0": {
+      "additionalProperties": false,
+      "description": "One agent-supplied value record (append-only).",
+      "properties": {
+        "assumption_id": {
+          "description": "uuid; referenced by CommittedValue_v0.agent_assumption_id.",
+          "minLength": 1,
+          "title": "Assumption Id",
+          "type": "string"
+        },
+        "at": {
+          "description": "ISO-8601 UTC.",
+          "minLength": 1,
+          "title": "At",
+          "type": "string"
+        },
+        "field": {
+          "description": "Dotted-path field name (e.g. 'output.grain').",
+          "minLength": 1,
+          "title": "Field",
+          "type": "string"
+        },
+        "inferred_value": {
+          "description": "Loose-as-frozen; type narrows at v1 post-G2b if lever types narrow.",
+          "title": "Inferred Value"
+        },
+        "evidence_ref": {
+          "default": "",
+          "description": "Optional trace pointer to the inference evidence. Loose-as-frozen; empty when not applicable.",
+          "title": "Evidence Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "assumption_id",
+        "at",
+        "field",
+        "inferred_value"
+      ],
+      "title": "AgentAssumption_v0",
+      "type": "object"
+    },
+    "CommittedValue_v0": {
+      "additionalProperties": false,
+      "description": "Per-field source-tagged committed value on WizardCommitState_v0.\n\nStructural invariant (enforced at construction time):\n  exactly one of `operator_turn_ref` / `agent_assumption_id` is set;\n  the other is None. Never both, never neither.\n\nThe `source` field mirrors that split:\n  * `operator_supplied` \u2192 operator_turn_ref set, agent_assumption_id None\n  * `agent_assumed`     \u2192 agent_assumption_id set, operator_turn_ref None",
+      "properties": {
+        "value": {
+          "description": "Loose-as-frozen; type narrows at v1 post-G2b.",
+          "title": "Value"
+        },
+        "source": {
+          "description": "Anti-laundering seam per Owner E3 ruling; MUST be consistent with the XOR ref pair below.",
+          "enum": [
+            "operator_supplied",
+            "agent_assumed"
+          ],
+          "title": "Source",
+          "type": "string"
+        },
+        "operator_turn_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "uuid pointing to a WizardCommitState_v0.turns[] entry. Set iff source='operator_supplied'.",
+          "title": "Operator Turn Ref"
+        },
+        "agent_assumption_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "uuid pointing to a WizardCommitState_v0.agent_assumptions[] entry. Set iff source='agent_assumed'.",
+          "title": "Agent Assumption Id"
+        },
+        "committed_at": {
+          "description": "ISO-8601 UTC.",
+          "minLength": 1,
+          "title": "Committed At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "source",
+        "committed_at"
+      ],
+      "title": "CommittedValue_v0",
+      "type": "object"
+    },
+    "OperatorTurn_v0": {
+      "additionalProperties": false,
+      "description": "One turn cycle record (append-only).",
+      "properties": {
+        "turn_ref": {
+          "description": "uuid; identifies this turn across the wizard trace.",
+          "minLength": 1,
+          "title": "Turn Ref",
+          "type": "string"
+        },
+        "at": {
+          "description": "ISO-8601 UTC.",
+          "minLength": 1,
+          "title": "At",
+          "type": "string"
+        },
+        "user_content": {
+          "default": "",
+          "description": "Empty on agent-first ask turns before the user replies.",
+          "title": "User Content",
+          "type": "string"
+        },
+        "agent_content": {
+          "default": "",
+          "description": "Empty on user-first turns before the agent replies.",
+          "title": "Agent Content",
+          "type": "string"
+        },
+        "feasibility_snapshot_ref": {
+          "description": "Reference to WizardCommitState_v0.feasibility_history[] entry (Guard 3 enforcement point).",
+          "minLength": 1,
+          "title": "Feasibility Snapshot Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "turn_ref",
+        "at",
+        "feasibility_snapshot_ref"
+      ],
+      "title": "OperatorTurn_v0",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Outer boundary of the shaping wizard. See module docstring for\nGuard 1/2/3 discipline and Standing Owner Dispositions binding this\nshape.\n\nNOTE: `variant: Literal[\"operator\", \"buyer\"]` is declared at v0 for\nforward-compatibility with the B-2 buyer variant landing. B-1 code\npaths only emit `variant=\"operator\"`; the buyer branch's state\nmachine + offerability check land at B-2.",
+  "properties": {
+    "session_id": {
+      "description": "uuid-like; unique per wizard session.",
+      "minLength": 1,
+      "title": "Session Id",
+      "type": "string"
+    },
+    "trace_id": {
+      "description": "Northena/Solva correlator; shared with downstream admission.",
+      "minLength": 1,
+      "title": "Trace Id",
+      "type": "string"
+    },
+    "variant": {
+      "description": "Discriminator; immutable within session (enforced at persistence layer, not contract).",
+      "enum": [
+        "operator",
+        "buyer"
+      ],
+      "title": "Variant",
+      "type": "string"
+    },
+    "initiated_at": {
+      "description": "ISO-8601 UTC.",
+      "minLength": 1,
+      "title": "Initiated At",
+      "type": "string"
+    },
+    "committed_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ISO-8601 UTC. Set at freeze; None while session is open.",
+      "title": "Committed At"
+    },
+    "turns": {
+      "description": "Append-only turn ledger.",
+      "items": {
+        "$ref": "#/$defs/OperatorTurn_v0"
+      },
+      "title": "Turns",
+      "type": "array"
+    },
+    "agent_assumptions": {
+      "description": "Append-only agent-inference ledger.",
+      "items": {
+        "$ref": "#/$defs/AgentAssumption_v0"
+      },
+      "title": "Agent Assumptions",
+      "type": "array"
+    },
+    "committed_values": {
+      "additionalProperties": {
+        "$ref": "#/$defs/CommittedValue_v0"
+      },
+      "description": "Keyed by dotted-path field name; each value carries the source-tag anti-laundering seam.",
+      "title": "Committed Values",
+      "type": "object"
+    },
+    "feasibility_history": {
+      "description": "Per-turn feasibility_snapshot_ref pointers. Guard 3 enforcement point (structural via OperatorTurn_v0 min_length).",
+      "items": {
+        "type": "string"
+      },
+      "title": "Feasibility History",
+      "type": "array"
+    },
+    "license_class": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "E1 Option C primary-arm value. Populated at commit-review; only read post-freeze by derive_license_class.",
+      "title": "License Class"
+    },
+    "frozen_objective_ref": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Set at freeze; refs the minted ObjectiveRequest_v2's objective_id.",
+      "title": "Frozen Objective Ref"
+    }
+  },
+  "required": [
+    "session_id",
+    "trace_id",
+    "variant",
+    "initiated_at"
+  ],
+  "title": "WizardCommitState_v0",
+  "type": "object"
+}

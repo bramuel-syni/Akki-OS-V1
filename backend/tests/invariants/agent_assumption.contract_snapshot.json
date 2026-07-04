@@ -1,0 +1,42 @@
+{
+  "additionalProperties": false,
+  "description": "One agent-supplied value record (append-only).",
+  "properties": {
+    "assumption_id": {
+      "description": "uuid; referenced by CommittedValue_v0.agent_assumption_id.",
+      "minLength": 1,
+      "title": "Assumption Id",
+      "type": "string"
+    },
+    "at": {
+      "description": "ISO-8601 UTC.",
+      "minLength": 1,
+      "title": "At",
+      "type": "string"
+    },
+    "field": {
+      "description": "Dotted-path field name (e.g. 'output.grain').",
+      "minLength": 1,
+      "title": "Field",
+      "type": "string"
+    },
+    "inferred_value": {
+      "description": "Loose-as-frozen; type narrows at v1 post-G2b if lever types narrow.",
+      "title": "Inferred Value"
+    },
+    "evidence_ref": {
+      "default": "",
+      "description": "Optional trace pointer to the inference evidence. Loose-as-frozen; empty when not applicable.",
+      "title": "Evidence Ref",
+      "type": "string"
+    }
+  },
+  "required": [
+    "assumption_id",
+    "at",
+    "field",
+    "inferred_value"
+  ],
+  "title": "AgentAssumption_v0",
+  "type": "object"
+}

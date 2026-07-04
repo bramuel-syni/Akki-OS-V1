@@ -43,14 +43,14 @@ def test_composed_conclusion_snapshot_parity_at_18():
     assertion updated to 20 to remain compatible; the underlying
     Phase-4b-composed_conclusion snapshot is still present.
 
-    Phase 6 Stage B (2026-07-04): parity count bumped 20 → 22 (added
-    QuoteEnvelope_v0 + AsyncDeliveryAccepted_v1). Same additive
-    pattern; underlying Phase-4b-composed_conclusion snapshot present.
+    Phase 7 Stage B-1 (2026-07-04): parity count bumped 22 → 26 (added
+    4 wizard contracts: WizardCommitState_v0 + OperatorTurn_v0 +
+    AgentAssumption_v0 + CommittedValue_v0). Same additive pattern.
     """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 22, (
-        f"Post-Phase-6-Stage-B snapshot count must be exactly 22 "
-        f"(20 pre-6b + QuoteEnvelope_v0 + AsyncDeliveryAccepted_v1). "
+    assert len(snapshots) == 26, (
+        f"Post-Phase-7-Stage-B-1 snapshot count must be exactly 26 "
+        f"(22 pre-7b-1 + 4 wizard contracts). "
         f"Actual: {len(snapshots)}.\nSnapshots: {sorted(p.name for p in snapshots)}"
     )
