@@ -45,7 +45,7 @@ from contracts.admission_refusal import AdmissionRefusal_v0
 from contracts.objective_request_v2 import ObjectiveRequest_v2
 
 
-_REGISTRY_PATH = Path(__file__).parent / "admission_refusal_reasons.v1.json"
+_REGISTRY_PATH = Path(__file__).parent / "admission_refusal_reasons.v2.json"
 
 
 def _load_registry() -> Dict:

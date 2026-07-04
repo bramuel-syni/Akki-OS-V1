@@ -1,0 +1,59 @@
+{
+  "additionalProperties": false,
+  "description": "202-accepted body \u2014 issued at fresh-fork admission per v3 \u00a77.",
+  "properties": {
+    "accepted_at": {
+      "description": "ISO-8601 UTC.",
+      "minLength": 1,
+      "title": "Accepted At",
+      "type": "string"
+    },
+    "delivery_estimate": {
+      "description": "Free-form ISO-8601 duration or human string. Loose-as-frozen per Standing Owner Disposition; narrow at Phase 6.",
+      "minLength": 1,
+      "title": "Delivery Estimate",
+      "type": "string"
+    },
+    "objective_id": {
+      "description": "uuid-like identifier.",
+      "minLength": 1,
+      "title": "Objective Id",
+      "type": "string"
+    },
+    "quote": {
+      "anyOf": [
+        {},
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Phase 6 seam. Will re-type to Optional[QuoteEnvelope] via superset-validating v1 at Phase 6 landing.",
+      "title": "Quote"
+    },
+    "status": {
+      "const": "accepted",
+      "default": "accepted",
+      "description": "Terminal Literal \u2014 this envelope carries ONLY the accepted state.",
+      "enum": [
+        "accepted"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "trace_id": {
+      "description": "Northena/Solva trace correlator.",
+      "minLength": 1,
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "objective_id",
+    "delivery_estimate",
+    "trace_id",
+    "accepted_at"
+  ],
+  "title": "AsyncDeliveryAccepted_v0",
+  "type": "object"
+}

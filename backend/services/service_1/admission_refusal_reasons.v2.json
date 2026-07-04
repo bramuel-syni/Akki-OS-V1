@@ -1,0 +1,38 @@
+{
+  "version": "v2",
+  "landed_at": "2026-07-04",
+  "supersedes": "v1",
+  "extension_note": "Additive over v1. All v1 codes preserved byte-identical. Phase 5 Stage B (Owner ruling, 2026-07-04) added `idempotency_key_reused_with_different_body` + `idempotency_key_missing` for async admission-refusal on §7 bullet 6. Struck at ruling: `caller_cancelled` (Standing Disposition cancellation-is-a-state-not-a-refusal), `async_queue_saturated` (Standing Disposition infra-not-refusal).",
+  "valid_reasons": [
+    {
+      "reason": "form_not_offerable",
+      "landed_at_version": "v0",
+      "spec_anchor": "v3 §6.5 (Model form off the offerable menu)."
+    },
+    {
+      "reason": "grain_form_incompatible",
+      "landed_at_version": "v1",
+      "spec_anchor": "v3 §6.1.4/§6.2.4/§6.3.4/§6.4.4 grain × form matrix."
+    },
+    {
+      "reason": "standard_below_admission_floor",
+      "landed_at_version": "v1",
+      "spec_anchor": "v3 §6.1.6 standard hard input filter."
+    },
+    {
+      "reason": "license_class_unavailable",
+      "landed_at_version": "v1",
+      "spec_anchor": "v3 §6.1.2 license-class axis of three-way selection."
+    },
+    {
+      "reason": "idempotency_key_reused_with_different_body",
+      "landed_at_version": "v2",
+      "spec_anchor": "v3 §7 bullet 6 (idempotency key; retried POST must not double-commission)."
+    },
+    {
+      "reason": "idempotency_key_missing",
+      "landed_at_version": "v2",
+      "spec_anchor": "v3 §7 bullet 6 (idempotency key required on external_request)."
+    }
+  ]
+}

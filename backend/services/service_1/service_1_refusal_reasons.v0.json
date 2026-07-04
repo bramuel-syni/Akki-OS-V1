@@ -1,0 +1,19 @@
+{
+  "version": "v0",
+  "landed_at": "2026-07-04",
+  "governance_note": "Sibling registry to admission_refusal_reasons.vN.json. Houses ONLY the reasons Service1Refusal_v0 has today via docstring (contracts/service_1_refusal.py:63-69). Phase 5 Stage B (Owner ruling, 2026-07-04) migrates docstring-listed reasons to registry-governed. NO `caller_cancelled` — Standing Disposition cancellation-is-a-state-not-a-refusal.",
+  "valid_reasons": [
+    {
+      "reason": "no_defensibility_floor",
+      "spec_anchor": "A2 D2a — pre-composition refusal (defensibility floor not specified)."
+    },
+    {
+      "reason": "no_lawful_basis",
+      "spec_anchor": "A2 D2a — pre-composition refusal (lawful basis absent)."
+    },
+    {
+      "reason": "composition_below_floor",
+      "spec_anchor": "v3 §6.2.6 — conclusion class below requested standard."
+    }
+  ]
+}
