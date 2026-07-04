@@ -1,5 +1,10 @@
 """ObjectiveRequest v2 — RMS Service-2 request envelope (Phase 0 freeze).
 
+OWNER RULING (Substrate-Drop v2 close, 2026-07-03): loose-as-frozen is
+deliberate. Ranges are learned, not invented. Hardening lands as a NEW
+contract version; in-place narrowing is mutation → HAZARD-STOP. The
+HAZARD-STOP-NOTES below are RESOLVED, not pending.
+
 Spec authority: RMS Product & Engineering Spec v3 §3.2.
 
 **Additive extension of `objective_request@v0`.** The v0 contract at

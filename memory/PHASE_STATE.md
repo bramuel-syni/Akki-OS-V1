@@ -7,7 +7,8 @@
 ## Live State
 - **Current gate:** **SUBSTRATE-DROP v2 CLOSED** (2026-07-03). Part 1 (backfill + parity invariant) + Part 2 (Phase 0 — `ObjectiveRequest v2`) both green. G5b remains CLOSED (2026-07-02T10:00Z). Docs-Pass 2026-07-02 remains CLOSED. All prior phases CLOSED. Backend surface FROZEN except additive-only Phase 0 landing. §6.1 verdict re-marked EXTENDS per Ruling 3 challenge (grep-negative on `grain`, `license_class`, and `standard`-as-admission-filter).
 - **Counting standard:** post-§0-strict from G6 forward.
-- **Standing Owner Dispositions in force** (see ORCHESTRATOR_CONTINUITY §0.1): Ruling 2 (literal-widening HAZARD), Ruling 4 (§10 uniform disposition), Ruling 5 (§6.3/§6.4 confirmed as written), Elevated Doctrine (validation surface IS contract surface).
+- **Standing Owner Dispositions in force** (see ORCHESTRATOR_CONTINUITY §0.1): Ruling 2 (literal-widening HAZARD), Ruling 4 (§10 uniform disposition), Ruling 5 (§6.3/§6.4 confirmed as written), Elevated Doctrine (validation surface IS contract surface), Loose-as-frozen (deliberate under-determination is not a HAZARD; hardening lands as new contract version).
+- **Plan Debts (see ORCHESTRATOR_CONTINUITY §0.2):** §6.1 downgrade plan-debt — whichever phase consumes §6.1 restates LoC band + gate at its own dispatch (recorded 2026-07-03).
 - **Awaiting:** user judgment on Item 4 HAZARD_STOP (v1 adversarial fixture NOT superseded — from Docs-Pass 2026-07-02); user directive on which phase to dispatch next.
 - **Last green CI:** 374/374 backend at 2026-07-03 (+ 12/12 frontend gate tests unchanged from G5b). Substrate-drop gate 9/9 green. Mechanical parity invariant 3/3 green.
 - **Data source posture:** SYNTHETIC (v1 shipping — NOT superseded per Item 4 HAZARD_STOP).
