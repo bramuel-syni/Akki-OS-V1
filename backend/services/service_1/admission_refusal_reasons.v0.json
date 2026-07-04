@@ -1,0 +1,11 @@
+{
+  "config_version": "v0",
+  "valid_reasons": [
+    {
+      "reason": "form_not_offerable",
+      "since_version": "v0",
+      "notes": "v3 §6.5 — off-menu output form (e.g. 'model' training-weights variant). First firing reason at Phase 3."
+    }
+  ],
+  "notes": "Master Admin config. Adding a new admission-refusal reason = bumping this file (v0 -> v1) or appending an entry per the append-only config policy. Never modifies AdmissionRefusal@v0 contract file or its .contract_snapshot.json. Extension precedent anchors: qualification_matrix.v0.json + feasibility_config.v0.json. See contracts/admission_refusal.py module docstring 'Reason extension path'."
+}

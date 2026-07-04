@@ -35,6 +35,7 @@ INVARIANTS_DIR = REPO_ROOT / "backend" / "tests" / "invariants"
 # `.contract_snapshot.json` on disk. Adding a new frozen contract is a
 # two-side edit: add the source AND the snapshot AND an entry here.
 CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
+    "admission_refusal.py":           "admission_refusal.contract_snapshot.json",
     "cumulative_disclosure.py":       "cumulative_disclosure_ledger.contract_snapshot.json",
     "extraction_params.py":           "extraction_params.contract_snapshot.json",
     "feasibility_result.py":          "feasibility_result.contract_snapshot.json",

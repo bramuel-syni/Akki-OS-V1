@@ -226,26 +226,36 @@ def test_dispatch_uses_shared_feasibility_and_floor_feasibility():
 @pytest.mark.asyncio
 async def test_dispatch_placeholder_never_leaks_into_governed_refusal():
     """Phase-2 placeholder is engineering scaffolding, NOT a product
-    outcome. The wire shape must be distinct from Service1Refusal@v0.
+    outcome. The wire shape must be distinct from Service1Refusal@v0
+    AND from AdmissionRefusal@v0 (Phase 3 landing).
 
     Service1Refusal@v0 canonical shape (contracts/service_1_refusal.py):
       { outcome: 'refused', reason, run_id, trace_id, asked,
         supported_class, what_would_raise_it }
+
+    AdmissionRefusal@v0 canonical shape (contracts/admission_refusal.py,
+    landed Phase 3, 2026-07-03):
+      { outcome: 'refused', reason, trace_id, requested_output_form,
+        off_menu_fact, what_you_can_do, computed_at }
 
     Phase-2 placeholder canonical shape (dispatch._make_placeholder):
       { outcome: 'not_yet_implemented', reason:
         'phase_2_scaffold_downstream_deferred', route, phase_debt,
         trace_id }
 
-    Two disjoint discriminators (`outcome`), two disjoint field-sets.
+    Disjoint outcome discriminators; disjoint field-sets.
+
+    Phase 3 migration (Condition 5): `form == "model"` is REMOVED from
+    the placeholder-iteration list because it now emits an actual
+    governed refusal (AdmissionRefusal@v0). The remaining cases still
+    emit scaffold placeholders (their receivers stay Phase-4/5-debt).
     """
     await _clear_registry()
 
-    # Drive dispatch across every entry × output.form combination that
-    # can produce a placeholder — MODEL, KNOWLEDGE_ARTIFACT,
-    # CALLABLE_SKILL, and QUALIFIED_DATA (with UNKNOWN freshness).
+    # Iterate cases that STILL emit placeholders post-Phase-3.
+    # (form=MODEL is now a governed AdmissionRefusal, not a placeholder —
+    # see test_v2_dispatch_placeholder_replaced_by_admission_refusal_for_form_model.)
     cases = [
-        _build_request(form=OutputForm.MODEL),
         _build_request(form=OutputForm.KNOWLEDGE_ARTIFACT),
         _build_request(form=OutputForm.CALLABLE_SKILL),
         _build_request(entry=ObjectiveEntry.WORK_ORDER, form=OutputForm.QUALIFIED_DATA),
@@ -257,6 +267,11 @@ async def test_dispatch_placeholder_never_leaks_into_governed_refusal():
     ]
     for req in cases:
         result = await dispatch_module.dispatch(req)
+        # Every placeholder case returns a DispatchResult (NOT an
+        # AdmissionRefusal — the union collapses to DispatchResult here).
+        assert isinstance(result, dispatch_module.DispatchResult), (
+            f"Case {req.output.form} expected DispatchResult; got {type(result).__name__}"
+        )
         assert result.placeholder_body is not None
         pb = result.placeholder_body
         assert pb["outcome"] == "not_yet_implemented", (
@@ -270,6 +285,12 @@ async def test_dispatch_placeholder_never_leaks_into_governed_refusal():
             assert refusal_field not in pb, (
                 f"Phase-2 placeholder MUST NOT carry Service1Refusal field "
                 f"{refusal_field!r} — rendering separation violated."
+            )
+        # AdmissionRefusal fields must ALSO not appear at top level of placeholder.
+        for ar_field in ("off_menu_fact", "what_you_can_do", "requested_output_form"):
+            assert ar_field not in pb, (
+                f"Phase-2 placeholder MUST NOT carry AdmissionRefusal field "
+                f"{ar_field!r} — Phase-2/Phase-3 rendering separation violated."
             )
         assert pb["outcome"] != "refused", "Phase-2 placeholder outcome MUST NOT be 'refused'"
 
@@ -419,20 +440,28 @@ async def test_positive_external_request_fresh_fork_below_floor():
 
 
 @pytest.mark.asyncio
-async def test_positive_output_form_model_routes_to_phase_3():
-    """output.form == 'model' → Phase 3 refusal envelope debt.
+async def test_positive_output_form_model_routes_to_admission_refusal():
+    """`output.form == 'model'` → AdmissionRefusal_v0 (Phase 3 landing).
 
-    Distinct from Service1Refusal — the model-refusal envelope is a
-    NEW frozen contract (§6.5) that Phase 3 will land. Phase 2 emits
-    the routing placeholder pointing at that debt.
+    Post-Phase-3 (2026-07-03): the scaffold 501 placeholder that
+    previously represented this route is REPLACED by an actual
+    governed refusal envelope emission (AdmissionRefusal@v0, 17th
+    frozen contract). Direct-dispatch test — the isinstance return is
+    now `AdmissionRefusal_v0`, not `DispatchResult`.
+
+    Historical name in this test file was `test_positive_output_form_model_routes_to_phase_3`;
+    renamed post-Phase-3 to reflect the actual receiver landing.
     """
+    from contracts.admission_refusal import AdmissionRefusal_v0
     req = _build_request(form=OutputForm.MODEL)
     result = await dispatch_module.dispatch(req)
-    assert result.route_target == dispatch_module.ROUTE_PHASE_3_MODEL_REFUSAL
-    assert result.placeholder_body["phase_debt"] == dispatch_module.DEBT_PHASE_3
-    # No feasibility computed for model form — output-form refusal bypasses fork.
-    assert result.feasibility_result is None
-    assert result.fork_decision is None
+    assert isinstance(result, AdmissionRefusal_v0), (
+        f"form == 'model' MUST now return AdmissionRefusal_v0 (Phase 3); "
+        f"got {type(result).__name__}"
+    )
+    assert result.outcome == "refused"
+    assert result.reason == "form_not_offerable"
+    assert result.requested_output_form == "model"
 
 
 @pytest.mark.asyncio

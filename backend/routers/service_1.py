@@ -25,6 +25,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
+from contracts.admission_refusal import AdmissionRefusal_v0
 from contracts.five_rings import DefensibilityClass, NormalizedUnit
 from contracts.objective_request_v2 import ObjectiveRequest_v2
 from contracts.service_1_refusal import Service1Refusal as Service1RefusalContract
@@ -155,26 +156,46 @@ async def run_status(run_id: str) -> Service1RunStatus:
 @router.post(
     "/v2/dispatch",
     responses={
+        422: {
+            "model": AdmissionRefusal_v0,
+            "description": (
+                "Governed admission-time refusal (Phase 3). "
+                "outcome='refused'. Family with Service1Refusal@v0. "
+                "Fires when output.form == 'model' (§6.5 form_not_offerable). "
+                "Frontend keys on body.outcome === 'refused'."
+            ),
+        },
         501: {
             "model": dispatch_module.DispatchResult,
             "description": (
                 "Phase 2 scaffold: dispatch decided + placeholder emitted. "
-                "Downstream receiver (Phase 3/4/5) not built yet. Distinct "
-                "from Service1Refusal@v0 (outcome=refused, composition "
-                "boundary governed refusal) — this response carries "
-                "outcome=not_yet_implemented in placeholder_body."
+                "Downstream receiver (Phase 4/5) not built yet. Distinct "
+                "from AdmissionRefusal@v0 by outcome discriminator "
+                "(placeholder_body.outcome == 'not_yet_implemented' vs "
+                "top-level outcome == 'refused')."
             ),
         },
     },
 )
 async def v2_dispatch_endpoint(request: ObjectiveRequest_v2) -> JSONResponse:
-    """v3 §4 shape-responsive dispatch — Phase 2 scaffold.
+    """v3 §4 shape-responsive dispatch — Phase 2/3.
 
-    Decides route + fork per `entry`/`reach`/`output`, returns a
-    `DispatchResult` carrying the decision + a governed placeholder
-    pointing at the phase-debt receiver. Does NOT execute downstream.
+    Return path fork:
+      * `AdmissionRefusal_v0` (governed admission refusal) → HTTP 422,
+        flat JSON body per A2 family pattern. Fires for `output.form
+        == "model"` (Phase 3, form_not_offerable).
+      * `DispatchResult` (scaffold placeholder) → HTTP 501, envelope
+        body with placeholder_body naming the phase-debt receiver.
     """
     result = await dispatch_module.dispatch(request)
+    # Isinstance branch — family status settlement: 422 for governed
+    # refusal (mirrors Service1Refusal@v0 at A2); 501 for scaffold
+    # placeholder (Phase 2 receiver-not-built).
+    if isinstance(result, AdmissionRefusal_v0):
+        return JSONResponse(
+            status_code=422,
+            content=result.model_dump(mode="json"),
+        )
     return JSONResponse(
         status_code=501,
         content=result.model_dump(mode="json"),

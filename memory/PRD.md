@@ -22,10 +22,11 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - **Substrate-Drop v2 (Part 1 — backfill + parity invariant + Part 2 Phase 0 `ObjectiveRequest_v2`)** (2026-07-03): CLOSED.
 - **Phase 1 — Estate Feasibility Query** (2026-07-03): CLOSED. `FeasibilityResult_v0` 16th frozen contract; `POST /api/mtafiti/feasibility` live.
 - **Phase 2 — Shape-Responsive Execution Scaffold** (2026-07-03): CLOSED. `services/service_1/dispatch.py` + `POST /api/service_1/v2/dispatch` (501 + placeholder) live. No new frozen contracts (DispatchResult UNFROZEN per Ruling 3).
+- **Phase 3 — Admission-Refusal Envelope (unified §6.5 + future admission reasons via registry)** (2026-07-03): CLOSED. 17th frozen contract `AdmissionRefusal_v0` + versioned reason registry `admission_refusal_reasons.v0.json` (Ruling 3 pattern, NOT snapshotted) + `services/service_1/admission_refusal.py` service module + dispatch integration (Union return type). Phase 2 `form=model` scaffold 501 placeholder REPLACED by `AdmissionRefusal_v0` @422 (Condition 5 migration). Family-consistent with `Service1Refusal@v0` (outcome=refused + trace_id + reason). Doctrinal-tension resolution: `reason` is constrained `str` (not `Literal`); adding a reason = registry bump, never contract modification.
 - **Item 4 HAZARD-STOP (fixture-supersede posture)**: RESOLVED at 2026-07-03 per Ruling 1 — SYNTHETIC v1 = standing test substrate; real material = operational/benchmark input; no supersede semantics.
 - **G2b — Convergence Quality on Real Hour**: UNBLOCKED but parked on real RMS material.
 
-## Frozen contracts (16)
+## Frozen contracts (17)
 1. `five_rings@v0`
 2. `objective_request@v0`
 3. `qualification_matrix@v0`
@@ -41,9 +42,10 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 13. `cumulative_disclosure_ledger@v0` (G6)
 14. `service_1_refusal@v0` (A2)
 15. `objective_request_v2@v0` (Substrate-Drop v2, Part 2 / Phase 0)
-16. **`feasibility_result@v0` (Phase 1)** — Estate Feasibility Query response envelope; honesty-under-absence contract; feeds `ObjectiveRequest_v2.Envelope.availability_snapshot`.
+16. `feasibility_result@v0` (Phase 1)
+17. **`admission_refusal@v0` (Phase 3)** — unified admission-time refusal envelope; `form_not_offerable` (§6.5) is first firing reason; future admission reasons extend via `admission_refusal_reasons.vN.json` registry (never Literal-widening, never new contract).
 
-All 16 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; bijection enforced by `test_frozen_contract_snapshot_parity.py`.
+All 17 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; bijection enforced by `test_frozen_contract_snapshot_parity.py`.
 
 ## Backlog (prioritised)
 - **P0 — G5b Frontend Operator Console + Consumer Terminal** (awaits user go): 4 operator surfaces (Portfolio, Runs, Sources, Discipline) + Consumer Terminal v0. Backend routes shipped at G5a + G6 + A2; G5b is the surface that renders them.

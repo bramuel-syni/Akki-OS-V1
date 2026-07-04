@@ -69,10 +69,11 @@ governed refusal). Enforced by
 from __future__ import annotations
 
 import uuid
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from contracts.admission_refusal import AdmissionRefusal_v0
 from contracts.feasibility_result import FeasibilityResult_v0, Freshness
 from contracts.objective_request_v2 import (
     ObjectiveEntry,
@@ -85,6 +86,10 @@ from contracts.objective_request_v2 import (
 # `test_dispatch_uses_shared_feasibility_and_floor_feasibility`.
 from services.mtafiti.feasibility import compute_feasibility
 from services.mtafiti.floor_feasibility import derive_floor_feasibility
+
+# Phase 3 admission-refusal emission — replaces the scaffold placeholder
+# for `output.form == "model"` (Condition 5 migration).
+from services.service_1.admission_refusal import emit_form_not_offerable
 
 
 # Route-target constants — named string constants surfaced in responses.
@@ -190,14 +195,19 @@ def _make_placeholder(route: str, phase_debt: str, trace_id: str) -> Dict[str, A
     }
 
 
-async def dispatch(request: ObjectiveRequest_v2) -> DispatchResult:
-    """Shape-responsive dispatch — the single Phase 2 entrypoint.
+async def dispatch(
+    request: ObjectiveRequest_v2,
+) -> Union[DispatchResult, AdmissionRefusal_v0]:
+    """Shape-responsive dispatch — the single Phase 2/3 entrypoint.
 
     Reads `entry`, `reach`, `output.form`, `output.standard`. Calls
     `compute_feasibility` and `derive_floor_feasibility` from the
     shared services when the admission warm/fresh fork applies. Emits
     a `DispatchResult` carrying the routing decision + a governed
-    placeholder pointing at the phase-debt receiver.
+    placeholder pointing at the phase-debt receiver — EXCEPT for
+    `output.form == "model"` which now (Phase 3, Condition 5) emits
+    the `AdmissionRefusal_v0` governed refusal envelope instead of the
+    scaffold placeholder.
 
     Does NOT execute the receiver. Does NOT invoke
     `services.service_1.service.run`. Does NOT write to any Mongo
@@ -207,30 +217,29 @@ async def dispatch(request: ObjectiveRequest_v2) -> DispatchResult:
     Reach passthrough: `reach.scope_refs`, `reach.exclusions`,
     `reach.depth` are threaded into the shared feasibility call
     UNCHANGED. `depth` is not branched on (Gate 4).
+
+    Return type union: `DispatchResult` for the six placeholder-emitting
+    code paths; `AdmissionRefusal_v0` for the form_not_offerable path.
+    The v2 route branches on isinstance and returns different HTTP
+    statuses (501 for scaffold, 422 for governed refusal — matching
+    A2 family status).
     """
     trace_id = f"disp-{uuid.uuid4().hex[:12]}"
 
     # ------------------------------------------------------------------
     # Output-form routing — check refusal / deferred variants FIRST.
     # These bypass the admission fork because there is no receiver to
-    # dispatch to at Phase 2 regardless of feasibility.
+    # dispatch to at Phase 2/3 regardless of feasibility.
     # ------------------------------------------------------------------
     form = request.output.form
     if form == OutputForm.MODEL:
-        # v3 §6.5: off the offerable menu pending §10. Phase 3 builds
-        # the refusal envelope; Phase 2 emits the scaffold placeholder.
-        return DispatchResult(
-            fork_decision=None,
-            route_target=ROUTE_PHASE_3_MODEL_REFUSAL,
-            feasibility_result=None,
-            floor_feasibility=None,
-            placeholder_body=_make_placeholder(
-                route=ROUTE_PHASE_3_MODEL_REFUSAL,
-                phase_debt=DEBT_PHASE_3,
-                trace_id=trace_id,
-            ),
-            trace_id=trace_id,
-        )
+        # v3 §6.5: off the offerable menu. Phase 3 lands the governed
+        # AdmissionRefusal@v0 envelope (17th frozen contract) — the
+        # scaffold 501 placeholder is REPLACED here per Condition 5.
+        # Fires at BOTH entry points (Condition 4): external_request
+        # emits it directly at admission; work_order will render it via
+        # the wizard (Phase 7 receiver, not yet built).
+        return emit_form_not_offerable(request, trace_id)
     if form == OutputForm.KNOWLEDGE_ARTIFACT:
         return DispatchResult(
             fork_decision=None,
