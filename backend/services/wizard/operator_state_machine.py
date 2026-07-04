@@ -172,12 +172,24 @@ def record_agent_assumption(
     field_name: str,
     inferred_value: Any,
     evidence_ref: str = "",
+    variant: str = "operator",
 ) -> AgentAssumption_v0:
     """Guard 2 — record an agent-inferred value.
 
     The paired CommittedValue is created here as well, with
     source="agent_assumed" and a valid agent_assumption_id reference.
+
+    Phase 7 Stage B-2 Condition A(i) landing (Owner ruling, 2026-07-04):
+    when `variant == "operator"` AND `field_name` is in the mandatory
+    tier, refuse with SourceTagViolation. Closes the laundering surface
+    Guard 1 exists to close BEFORE the first non-stub agent connects.
+    Buyer variant (`variant == "buyer"`) has no mandatory-tier discipline
+    (agent-may-propose per v3 §3.3 buyer semantics) — permits any axis.
     """
+    if variant == "operator" and field_name in operator_mandatory_fields():
+        raise SourceTagViolation(
+            f"agent-assumption on mandatory-tier field {field_name!r} refused (Guard 1)"
+        )
     assumption = AgentAssumption_v0(
         assumption_id=_new_uuid("asn"),
         at=_iso_now(),

@@ -48,6 +48,7 @@ from services.wizard import (
     turn_ledger,
 )
 from services.wizard.agent_interface import DeterministicStubAgent
+from services.wizard.source_tagging import SourceTagViolation
 
 
 router = APIRouter(prefix="/wizard/operator", tags=["wizard-operator"])
@@ -155,10 +156,19 @@ async def post_agent_assumption(session_id: str, request: Request):
     field_name: str = body["field"]
     inferred_value: Any = body["inferred_value"]
     evidence_ref: str = body.get("evidence_ref", "")
-    assumption = osm.record_agent_assumption(
-        session=session, field_name=field_name,
-        inferred_value=inferred_value, evidence_ref=evidence_ref,
-    )
+    try:
+        assumption = osm.record_agent_assumption(
+            session=session, field_name=field_name,
+            inferred_value=inferred_value, evidence_ref=evidence_ref,
+            variant="operator",
+        )
+    except SourceTagViolation as exc:
+        # Owner Condition A(i) landing (Phase 7 Stage B-2 dispatch, 2026-07-04):
+        # mandatory-tier refusal on operator variant surfaces as 422.
+        return JSONResponse(
+            status_code=422,
+            content={"violations": [str(exc)], "refused": True},
+        )
     snapshot = osm._to_frozen_commit_state(session, committed_at=None)
     await session_persistence.upsert_session(snapshot)
     return {

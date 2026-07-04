@@ -1409,7 +1409,7 @@
       "notes": "G5b. Every intelligence response renders a trust-receipt URL per \u00a716.5 one-thread-throughout mandate."
     },
     {
-      "module": "frontend/src/__tests__/gate1_class_inseparable.test.js",
+      "module": "frontend/src/legacy/__tests__/gate1_class_inseparable.test.js",
       "cousin_citation": null,
       "shape_signature": "Static analysis: every claim-rendering component co-renders defensibility class",
       "resolves_by": [
@@ -1421,7 +1421,7 @@
       "notes": "G5b gate test. Enforces UX Arch \u00a714 class-inseparable invariant across 5 engine payload shapes."
     },
     {
-      "module": "frontend/src/__tests__/gate2_refusal_firstclass.test.js",
+      "module": "frontend/src/legacy/__tests__/gate2_refusal_firstclass.test.js",
       "cousin_citation": null,
       "shape_signature": "Static analysis: RefusalCard renders all 7 fields + validation-422 distinguishability",
       "resolves_by": [
@@ -1433,7 +1433,7 @@
       "notes": "G5b gate test. Enforces UX Arch \u00a714 refusal-first-class + Interface Spec \u00a75 validation-vs-refusal distinguishability."
     },
     {
-      "module": "frontend/src/__tests__/gate3_single_ingress.test.js",
+      "module": "frontend/src/legacy/__tests__/gate3_single_ingress.test.js",
       "cousin_citation": null,
       "shape_signature": "Static analysis: zero raw fetch/axios outside apiClient + trace_id retention in all receiving components",
       "resolves_by": [

@@ -57,6 +57,10 @@ async def ensure_indexes() -> None:
     col = db[WIZARD_SESSIONS_COLLECTION]
     await col.create_index("session_id", unique=True)
     await col.create_index([("variant", 1), ("initiated_at", 1)])
+    # Phase 7 Stage B-2 (Owner dispatch, 2026-07-04) — compound
+    # variant + session_id index for buyer/operator index-friendly
+    # lookups when the surface grows.
+    await col.create_index([("variant", 1), ("session_id", 1)])
     # Partial-filter unique — the index applies only when
     # frozen_objective_ref is a string (post-freeze). Mid-session
     # snapshots carry `frozen_objective_ref: null` which MUST NOT

@@ -102,6 +102,8 @@ app.include_router(pricing_router.router, prefix="/api")
 app.include_router(pricing_router.fleet_router, prefix="/api")
 from routers import wizard_operator as wizard_operator_router  # noqa: E402
 app.include_router(wizard_operator_router.router, prefix="/api")
+from routers import wizard_buyer as wizard_buyer_router  # noqa: E402
+app.include_router(wizard_buyer_router.router, prefix="/api")
 
 
 @app.on_event("startup")
