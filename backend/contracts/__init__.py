@@ -27,6 +27,9 @@ from contracts.five_rings import (  # noqa: F401
 from contracts.admission_refusal import (  # noqa: F401
     AdmissionRefusal_v0,
 )
+from contracts.composed_conclusion import (  # noqa: F401
+    ComposedConclusion_v0,
+)
 from contracts.feasibility_result import (  # noqa: F401
     ClassDistribution,
     FeasibilityResult_v0,

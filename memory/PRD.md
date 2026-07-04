@@ -24,7 +24,8 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - **Phase 2 — Shape-Responsive Execution Scaffold** (2026-07-03): CLOSED. `services/service_1/dispatch.py` + `POST /api/service_1/v2/dispatch` (501 + placeholder) live. No new frozen contracts (DispatchResult UNFROZEN per Ruling 3).
 - **Phase 3 — Admission-Refusal Envelope (unified §6.5 + future admission reasons via registry)** (2026-07-03): CLOSED. 17th frozen contract `AdmissionRefusal_v0` + versioned reason registry + service module + dispatch integration. Family-consistent with `Service1Refusal@v0`. Doctrinal-tension resolution: `reason` is constrained `str` (not `Literal`); adding a reason = registry bump, never contract modification.
 - **Phase 4 Stage A — Transform Layer design proposals (design-only)** (2026-07-03): CLOSED. Delivered full-text artifacts on the second close (first vacated). Verdicts: 4a/4b split, ComposedConclusion@v0 freeze at 4b, §6.1 payload UNFROZEN at 4a.
-- **Phase 4a Stage B — §6.1 qualified-data path + shared substrates** (2026-07-04): CLOSED. Live route: `POST /api/service_1/v2/dispatch` returns `Union[DispatchResult @501, AdmissionRefusal_v0 @422, QualifiedDataPayload @200]`. Zero new freezes (parity stays 17); three additive reason codes via v1 registry bump (`grain_form_incompatible`, `standard_below_admission_floor`, `license_class_unavailable`); Ruling 3 wire-shape LOAD-BEARING gate landed; Ruling 4 Phase-7 seam docstring pre-committed; Ruling 5 MODEL-cell defense-in-depth. CI 434/434 green.
+- **Phase 4a Stage B — §6.1 qualified-data path + shared substrates** (2026-07-04): CLOSED. Live route: `POST /api/service_1/v2/dispatch` returns `Union[DispatchResult @501, AdmissionRefusal_v0 @422, QualifiedDataPayload @200]`. Zero new freezes (parity stays 17); three additive reason codes via v1 registry bump. Three Owner rulings landed inline. CI 434/434 green.
+- **Phase 4b — §6.2 composed-conclusion path + 18th frozen contract** (2026-07-04): CLOSED. 18th frozen contract `ComposedConclusion_v0` landed (snapshot SHA `a85eaf95...`). Wire Union widened: 5 arms (adds `ComposedConclusion_v0 @200` and `Service1Refusal_v0 @422` for `composition_below_floor` per §6.2.6). Condition B1 LOAD-BEARING: `conclusion_class` threaded from Solva boundary; no local recomputation (AST + grep-negative verified). §6.1.6-vs-§6.2.6 reading documented in-module: §6.1.6 hard input filter applies to §6.1 only; §6.2 enforces standard at conclusion class. CI 446/446 green. On-disk canonical `/app/docs/close_reports/phase_4b.md` SHA-256 `2781313b28e152277e41f135801e4f5e3f0a3b083aa50a53ef3ab634c9cfb6c7`.
 - **Item 4 HAZARD-STOP (fixture-supersede posture)**: RESOLVED at 2026-07-03 per Ruling 1 — SYNTHETIC v1 = standing test substrate; real material = operational/benchmark input; no supersede semantics.
 - **G2b — Convergence Quality on Real Hour**: UNBLOCKED but parked on real RMS material.
 
@@ -41,7 +42,7 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 10. `lift_manifest_envelope@v0` (G5a)
 11. `outer_gate_receipt@v0` (G6)
 
-## Frozen contracts (17)
+## Frozen contracts (18)
 1. `five_rings@v0`
 2. `objective_request@v0`
 3. `qualification_matrix@v0`
@@ -59,8 +60,9 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 15. `objective_request_v2@v0` (Substrate-Drop v2, Part 2 / Phase 0)
 16. `feasibility_result@v0` (Phase 1)
 17. **`admission_refusal@v0` (Phase 3)** — unified admission-time refusal envelope; `form_not_offerable` (§6.5) is first firing reason; future admission reasons extend via `admission_refusal_reasons.vN.json` registry (never Literal-widening, never new contract).
+18. **`composed_conclusion@v0` (Phase 4b, 2026-07-04)** — governed composed-conclusion envelope for §6.2; `conclusion_class` threaded from Solva boundary (Condition B1 LOAD-BEARING); pairs with `Service1Refusal@v0(reason=composition_below_floor)` for below-floor at conclusion class per §6.2.6.
 
-All 17 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; bijection enforced by `test_frozen_contract_snapshot_parity.py`.
+All 18 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; bijection enforced by `test_frozen_contract_snapshot_parity.py`.
 
 ## Backlog (prioritised)
 - **P0 — G5b Frontend Operator Console + Consumer Terminal** (awaits user go): 4 operator surfaces (Portfolio, Runs, Sources, Discipline) + Consumer Terminal v0. Backend routes shipped at G5a + G6 + A2; G5b is the surface that renders them.

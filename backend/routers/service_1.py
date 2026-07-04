@@ -26,9 +26,11 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 from contracts.admission_refusal import AdmissionRefusal_v0
+from contracts.composed_conclusion import ComposedConclusion_v0
 from contracts.five_rings import DefensibilityClass, NormalizedUnit
 from contracts.objective_request_v2 import ObjectiveRequest_v2
 from contracts.service_1_refusal import Service1Refusal as Service1RefusalContract
+from services.service_1 import composed_conclusion as composed_conclusion_module
 from services.service_1 import dispatch as dispatch_module
 from services.service_1 import qualified_data as qualified_data_module
 from services.service_1 import service
@@ -159,31 +161,37 @@ async def run_status(run_id: str) -> Service1RunStatus:
     responses={
         200: {
             "description": (
-                "Phase 4a §6.1 qualified-data warm-fork success. Body is "
-                "an UNFROZEN payload (Stage A Section 7 Candidate 2) with "
-                "top-level `units`/`receipt`/`unit_count`/`computed_at`; "
-                "`receipt` conforms to OuterGateReceipt@v0 (frozen). "
-                "Ruling 3 wire-shape gate pins these keys."
+                "Phase 4a §6.1 qualified-data warm-fork success OR "
+                "Phase 4b §6.2 composed-conclusion warm-fork success. "
+                "Payload shape depends on `output.form`: "
+                "qualified_data → UNFROZEN payload (Stage A Section 7 "
+                "Candidate 2) with `units`/`receipt`/`unit_count`/`computed_at` "
+                "(receipt is OuterGateReceipt@v0, frozen; Ruling 3 wire-shape "
+                "gate pins these keys). composed_conclusion → "
+                "`ComposedConclusion_v0` (frozen — 18th contract) with "
+                "`conclusion_class`/`answer_text`/`trace_id`/"
+                "`load_bearing_unit_ids`/`objective_ref`/`computed_at`."
             ),
         },
         422: {
             "model": AdmissionRefusal_v0,
             "description": (
-                "Governed admission-time refusal (Phase 3 + Phase 4a). "
-                "outcome='refused'. Family with Service1Refusal@v0. "
-                "Fires for: form_not_offerable (§6.5), "
-                "grain_form_incompatible (§6.1.4/§6.2.4/etc), "
+                "Governed refusal — either AdmissionRefusal@v0 or "
+                "Service1Refusal@v0 (family). outcome='refused'. "
+                "AdmissionRefusal fires for: form_not_offerable (§6.5), "
+                "grain_form_incompatible (§6.1.4/§6.2.4), "
                 "standard_below_admission_floor (§6.1.6), "
                 "license_class_unavailable (§6.1.2). "
-                "Frontend keys on body.outcome === 'refused'."
+                "Service1Refusal fires for: composition_below_floor "
+                "(§6.2.6). Frontend keys on body.outcome === 'refused'."
             ),
         },
         501: {
             "model": dispatch_module.DispatchResult,
             "description": (
                 "Phase 2 scaffold: dispatch decided + placeholder emitted. "
-                "Downstream receiver (Phase 4b/5) not built yet. Distinct "
-                "from AdmissionRefusal@v0 by outcome discriminator "
+                "Downstream receiver (Phase 5+) not built yet. Distinct "
+                "from governed refusals by outcome discriminator "
                 "(placeholder_body.outcome == 'not_yet_implemented' vs "
                 "top-level outcome == 'refused')."
             ),
@@ -191,23 +199,60 @@ async def run_status(run_id: str) -> Service1RunStatus:
     },
 )
 async def v2_dispatch_endpoint(request: ObjectiveRequest_v2) -> JSONResponse:
-    """v3 §4 shape-responsive dispatch — Phase 2/3/4a.
+    """v3 §4 shape-responsive dispatch — Phase 2/3/4a/4b.
 
-    Return path fork (three arms):
+    Return path fork (five arms via settled wire table):
       * `QualifiedDataPayload` (§6.1 warm success) → HTTP 200, UNFROZEN
         payload with governance-carrying keys pinned by Ruling 3 gate.
+      * `ComposedConclusion_v0` (§6.2 warm success, Phase 4b) → HTTP 200,
+        18th frozen contract; `conclusion_class` threaded from Solva
+        boundary (Condition B1).
       * `AdmissionRefusal_v0` (governed admission refusal) → HTTP 422,
         flat JSON body per A2 family pattern. Fires for the four
         Phase-3/Phase-4a admission-time refusal reasons.
+      * `Service1Refusal` (§6.2.6 composition-below-floor, Phase 4b) →
+        HTTP 422 via exception catch; serialised into
+        `Service1RefusalContract` frozen envelope (A2, 14th contract).
       * `DispatchResult` (scaffold placeholder) → HTTP 501, envelope
         body with placeholder_body naming the phase-debt receiver.
+
+    Ruling 3 wire-shape gate (LOAD-BEARING) stays green on the widened
+    surface: only the qualified_data 200 branch produces the wire-shape
+    body; composed_conclusion 200 produces a different frozen shape;
+    the R3 gate asserts against qualified_data-triggering seeds only,
+    so its assertions still hold structurally.
     """
-    result = await dispatch_module.dispatch(request)
-    # Isinstance branch — three arms:
-    #   200 for §6.1 qualified-data success (Phase 4a landing)
-    #   422 for governed refusal (mirrors Service1Refusal@v0 at A2)
+    # Phase 4b — Service1Refusal (composition_below_floor) is raised as
+    # an exception from composed_conclusion.package_composed_conclusion,
+    # analogous to service.py's Service1Refusal for the v0 route. Catch
+    # and serialise into the frozen Service1RefusalContract @422.
+    try:
+        result = await dispatch_module.dispatch(request)
+    except composed_conclusion_module.Service1Refusal as e:
+        refusal = Service1RefusalContract(
+            reason=e.reason,
+            run_id=e.run_id,
+            trace_id=e.trace_id,
+            asked=e.asked,
+            supported_class=e.supported_class,
+            what_would_raise_it=e.what_would_raise_it,
+        )
+        return JSONResponse(
+            status_code=422,
+            content=refusal.model_dump(mode="json"),
+        )
+    # Isinstance branch — five arms:
+    #   200 for §6.1 qualified-data success (Phase 4a) — R3 wire-shape gate
+    #   200 for §6.2 composed-conclusion success (Phase 4b) — frozen envelope
+    #   422 for governed admission refusal (Phase 3 + Phase 4a/4b intake)
+    #   422 for composition_below_floor (exception, handled above)
     #   501 for scaffold placeholder (Phase 2 receiver-not-built)
     if isinstance(result, qualified_data_module.QualifiedDataPayload):
+        return JSONResponse(
+            status_code=200,
+            content=result.model_dump(mode="json"),
+        )
+    if isinstance(result, ComposedConclusion_v0):
         return JSONResponse(
             status_code=200,
             content=result.model_dump(mode="json"),

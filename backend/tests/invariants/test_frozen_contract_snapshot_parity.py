@@ -36,6 +36,7 @@ INVARIANTS_DIR = REPO_ROOT / "backend" / "tests" / "invariants"
 # two-side edit: add the source AND the snapshot AND an entry here.
 CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "admission_refusal.py":           "admission_refusal.contract_snapshot.json",
+    "composed_conclusion.py":         "composed_conclusion.contract_snapshot.json",
     "cumulative_disclosure.py":       "cumulative_disclosure_ledger.contract_snapshot.json",
     "extraction_params.py":           "extraction_params.contract_snapshot.json",
     "feasibility_result.py":          "feasibility_result.contract_snapshot.json",

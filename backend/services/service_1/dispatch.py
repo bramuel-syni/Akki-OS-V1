@@ -102,6 +102,14 @@ from services.service_1.qualified_data import (
     package_qualified_data,
 )
 
+# Phase 4b — §6.2 composed-conclusion packaging path (18th frozen
+# contract landing).
+from contracts.composed_conclusion import ComposedConclusion_v0
+from services.service_1.composed_conclusion import (
+    Service1Refusal as ComposedConclusionRefusal,
+    package_composed_conclusion,
+)
+
 
 # Route-target constants — named string constants surfaced in responses.
 # Naming discipline: `{receiver_phase}_{receiver_name}` where the
@@ -208,8 +216,11 @@ def _make_placeholder(route: str, phase_debt: str, trace_id: str) -> Dict[str, A
 
 async def dispatch(
     request: ObjectiveRequest_v2,
-) -> Union[DispatchResult, AdmissionRefusal_v0, QualifiedDataPayload]:
-    """Shape-responsive dispatch — the single Phase 2/3/4a entrypoint.
+) -> Union[
+    DispatchResult, AdmissionRefusal_v0, QualifiedDataPayload,
+    ComposedConclusion_v0,
+]:
+    """Shape-responsive dispatch — the single Phase 2/3/4a/4b entrypoint.
 
     Reads `entry`, `reach`, `output.form`, `output.grain`,
     `output.standard`. Calls `compute_feasibility` and
@@ -359,6 +370,14 @@ async def dispatch(
     # placeholder emission.
     if fork == "warm" and form == OutputForm.QUALIFIED_DATA:
         return await package_qualified_data(request, trace_id)
+
+    # Phase 4b §6.2 live-path: WARM + composed_conclusion → package
+    # via Solva-boundary threading and return ComposedConclusion_v0
+    # (or AdmissionRefusal_v0 for standard/license refusals, or raise
+    # ComposedConclusionRefusal (Service1Refusal family) for
+    # composition_below_floor). Otherwise fall through to placeholder.
+    if fork == "warm" and form == OutputForm.COMPOSED_CONCLUSION:
+        return await package_composed_conclusion(request, trace_id)
 
     route_target = (
         ROUTE_ADMISSION_WARM_FORK if fork == "warm"

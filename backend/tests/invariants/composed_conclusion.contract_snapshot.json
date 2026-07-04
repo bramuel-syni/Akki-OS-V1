@@ -1,0 +1,65 @@
+{
+  "$defs": {
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Governed composed-conclusion envelope \u2014 18th frozen contract.",
+  "properties": {
+    "answer_text": {
+      "description": "The synthesized answer to the specific ask (v3 \u00a76.2.1 at line 96). Renders inline in the live-path response body per v3 \u00a712 invariant #7 (line 169): 'no response shape separates claim from class'. answer_text and conclusion_class are colocated in the same top-level envelope \u2014 the invariant is satisfied structurally.",
+      "minLength": 1,
+      "title": "Answer Text",
+      "type": "string"
+    },
+    "computed_at": {
+      "description": "ISO-8601 UTC. When Solva's composition boundary emitted this envelope. Convention-anchored to `contracts.targeta_plan.MiningPlan.generated_at`.",
+      "minLength": 1,
+      "title": "Computed At",
+      "type": "string"
+    },
+    "conclusion_class": {
+      "$ref": "#/$defs/DefensibilityClass",
+      "description": "Ring 5 defensibility class of the composed conclusion. Populated by threading `services.solva_depth.assertion.conclusion_class(load_bearing_units)` output UNCHANGED (Condition B1). Below-floor conclusions do NOT populate this envelope \u2014 the sibling `Service1Refusal_v0(reason='composition_below_floor')` handles that case per v3 \u00a76.2.6."
+    },
+    "load_bearing_unit_ids": {
+      "description": "Ordered list of `NormalizedUnit.unit_id` values whose defensibility classes floored to `conclusion_class` (v3 \u00a76.2.2 at line 97). Non-empty invariant: `services.solva_depth.assertion.conclusion_class` raises ValueError on empty input, so the load-bearing set is always non-empty on success. Ordered: preserves Solva's identification order for downstream trace-lens reconstruction.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Load Bearing Unit Ids",
+      "type": "array"
+    },
+    "objective_ref": {
+      "description": "Identifier of the ObjectiveRequest (v0 or v2) this conclusion answers (v3 \u00a76.2.1 'specific ask'). Correlator into the commissioning record for governance-side auditability (Regulator/DPO surface per \u00a79).",
+      "minLength": 1,
+      "title": "Objective Ref",
+      "type": "string"
+    },
+    "trace_id": {
+      "description": "Correlation ID (v3 \u00a76.2.3 at line 98). Load-bearing set retrievable via Northena Ledger lookup keyed by this trace_id. Family field name/semantic \u2014 mirrors Service1Refusal.trace_id and AdmissionRefusal_v0.trace_id.",
+      "minLength": 1,
+      "title": "Trace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "conclusion_class",
+    "answer_text",
+    "trace_id",
+    "load_bearing_unit_ids",
+    "objective_ref",
+    "computed_at"
+  ],
+  "title": "ComposedConclusion_v0",
+  "type": "object"
+}
