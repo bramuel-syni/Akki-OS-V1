@@ -28,10 +28,12 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - **Phase 4b — §6.2 composed-conclusion path + 18th frozen contract** (2026-07-04): CLOSED. 18th frozen contract `ComposedConclusion_v0` landed (snapshot SHA `a85eaf95...`). Wire Union widened: 5 arms (adds `ComposedConclusion_v0 @200` and `Service1Refusal_v0 @422` for `composition_below_floor` per §6.2.6). Condition B1 LOAD-BEARING: `conclusion_class` threaded from Solva boundary; no local recomputation (AST + grep-negative verified). §6.1.6-vs-§6.2.6 reading documented in-module: §6.1.6 hard input filter applies to §6.1 only; §6.2 enforces standard at conclusion class. CI 446/446 green. On-disk canonical `/app/docs/close_reports/phase_4b.md` SHA-256 `2781313b28e152277e41f135801e4f5e3f0a3b083aa50a53ef3ab634c9cfb6c7`.
 - **Phase 5 Stage A — Async Delivery Contract design** (2026-07-04): CLOSED. Design-only proposal at `/app/docs/stage_a_proposals/phase_5_stage_a.md`. Owner returned 4 rulings + 3 Standing Owner Dispositions verbatim at Stage B open.
 - **Phase 5 Stage B — Async delivery §7 implementation** (2026-07-04): CLOSED. 2 new frozen contracts: `NorthenaLedgerRow_v1` (contract 19, supersets v0 + adds `terminate_cancelled` decision axis; snapshot SHA `0ec71fde...`) + `AsyncDeliveryAccepted_v0` (contract 20, snapshot SHA `d2027c02...`). Live routes: `POST /api/objectives` (202 AsyncDeliveryAccepted_v0 | 422 AdmissionRefusal_v0 | 503 infra-not-refusal) + `GET /api/objectives/{id}` (wire-shape polling) + `POST /api/objectives/{id}/cancel` (thin 4-key cancelled envelope). v2 dispatch fresh-fork Union widened to include `AsyncDeliveryAccepted_v0 @202`. 5-state machine on `objectives_async_state` Mongo collection with asyncio.Queue worker substrate (4 workers, maxsize 1024) + kill-and-restart recovery + HMAC-SHA256 webhook signing + 5-retry bounded backoff. 18 PRIOR frozen contract sources byte-identical verified. Three new Standing Owner Dispositions landed at §0.1: frozen-field-changes-as-new-versions + infra-not-refusal + cancellation-is-a-state-not-a-refusal. CI 504/504 green; `make ci` PASSED. On-disk canonical `/app/docs/close_reports/phase_5_stage_b.md` SHA-256 `49ce2262b1f6f6e244bb7294b165734f6de31a1b176a55f73dd8871e94a2def5`.
+- **Phase 6 Stage A — Economics §8 config design (design-only)** (2026-07-04): CLOSED. Delivered design proposal at `/app/docs/stage_a_proposals/phase_6_stage_a.md`. Owner returned 7-axis dispatch ruling + 2 new meta-doctrines at Stage B open.
+- **Phase 6 Stage B — §8 economics implementation** (2026-07-04): CLOSED. 2 new frozen contracts: `QuoteEnvelope_v0` (contract 21; 11 fields + inner `QuoteInstrumentationSeed_v0` per Axis 5; snapshot SHA `83679e7d...`) + `AsyncDeliveryAccepted_v1` (contract 22; narrows `quote: Optional[Any]` → `Optional[QuoteEnvelope_v0]` per Owner Axis 3 Option α; snapshot SHA `0cdb911b...`). Live economics surface: `POST /api/objectives` + `POST /api/service_1/v2/dispatch` fresh-fork mint QuoteEnvelope_v0 at admission via `services.economics.quote_service.issue_quote(...)`; governance-refusal precedence (form_not_offerable → exploratory_tier_expired → pricing_tier_frozen_by_control_surface → fleet_policy_reserved_zero_capacity) each return @422 AdmissionRefusal_v0. Two-band delivery (`warm_qualified`, `fresh_extraction`) per Owner Axis 4 override. Master Admin surface at `/api/pricing/*` + `/api/fleet/*` env-gated via `RMS_MASTER_ADMIN_TOKEN`. Instrumentation via `stamp_audit.quote_instrumentation_event` sidecar on Northena Ledger; idempotent per (trace_id, run_id, stage='converge') — kill-and-restart G1 LB preserved. 20 PRIOR frozen contract sources byte-identical verified by `test_v0_paths_byte_identical_after_6b.py`. `services/service_1/composed_conclusion.py:316-321` UNTOUCHED (slice SHA `d2e72653f84c4772796a6fb71b61fb70345f057cfd3451d60bbfb15bc2d58159`). Retroactive Standing-Disposition citation audit COMPLETE (3 Phase 5 dispositions re-landed with citation headers per new meta-doctrine `Disposition-must-cite-owner-ruling`). 2 new Standing Owner Dispositions inline at §0.1: `Disposition-must-cite-owner-ruling` + `Inline-delivery-scope-amended-v2`. Registry bump v2→v3 additive (3 new codes). CI 550/550 green. On-disk canonical `/app/docs/close_reports/phase_6_stage_b.md` SHA-256 `79d6e7f4caa865cad09d5eb10ae6ea1fd24e970e96546576ebf9b8ac1ac4cef3`.
 - **Item 4 HAZARD-STOP (fixture-supersede posture)**: RESOLVED at 2026-07-03 per Ruling 1 — SYNTHETIC v1 = standing test substrate; real material = operational/benchmark input; no supersede semantics.
 - **G2b — Convergence Quality on Real Hour**: UNBLOCKED but parked on real RMS material.
 
-## Frozen contracts (17)
+## Legacy count anchors (historical; superseded by "Frozen contracts (22)" below)
 1. `five_rings@v0`
 2. `objective_request@v0`
 3. `qualification_matrix@v0`
@@ -44,7 +46,7 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 10. `lift_manifest_envelope@v0` (G5a)
 11. `outer_gate_receipt@v0` (G6)
 
-## Frozen contracts (20)
+## Frozen contracts (22)
 1. `five_rings@v0`
 2. `objective_request@v0`
 3. `qualification_matrix@v0`
@@ -61,12 +63,14 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 14. `service_1_refusal@v0` (A2)
 15. `objective_request_v2@v0` (Substrate-Drop v2, Part 2 / Phase 0)
 16. `feasibility_result@v0` (Phase 1)
-17. **`admission_refusal@v0` (Phase 3)** — unified admission-time refusal envelope; `form_not_offerable` (§6.5) is first firing reason; future admission reasons extend via `admission_refusal_reasons.vN.json` registry (never Literal-widening, never new contract).
-18. **`composed_conclusion@v0` (Phase 4b, 2026-07-04)** — governed composed-conclusion envelope for §6.2; `conclusion_class` threaded from Solva boundary (Condition B1 LOAD-BEARING); pairs with `Service1Refusal@v0(reason=composition_below_floor)` for below-floor at conclusion class per §6.2.6.
-19. **`northena_ledger_row@v1` (Phase 5 Stage B, 2026-07-04)** — first application of Standing Owner Disposition `frozen-field-changes-as-new-versions`; supersets v0 validation set + adds `terminate_cancelled` to Literal decision axis; v0 file preserved byte-identical at SHA `68349bb0...`.
-20. **`async_delivery_accepted@v0` (Phase 5 Stage B, 2026-07-04)** — v3 §7 §7.1 acceptance envelope for `POST /api/objectives` @202; 5-field wire shape (`objective_id`, `status="accepted"`, `delivery_estimate`, `trace_id`, `accepted_at`, optional `quote`).
+17. `admission_refusal@v0` (Phase 3) — unified admission-time refusal envelope; `form_not_offerable` (§6.5) is first firing reason; future admission reasons extend via `admission_refusal_reasons.vN.json` registry (never Literal-widening, never new contract).
+18. `composed_conclusion@v0` (Phase 4b, 2026-07-04) — governed composed-conclusion envelope for §6.2; `conclusion_class` threaded from Solva boundary (Condition B1 LOAD-BEARING); pairs with `Service1Refusal@v0(reason=composition_below_floor)` for below-floor at conclusion class per §6.2.6.
+19. `northena_ledger_row@v1` (Phase 5 Stage B, 2026-07-04) — first application of Standing Owner Disposition `frozen-field-changes-as-new-versions`; supersets v0 validation set + adds `terminate_cancelled` to Literal decision axis; v0 file preserved byte-identical at SHA `68349bb0...`.
+20. `async_delivery_accepted@v0` (Phase 5 Stage B, 2026-07-04) — v3 §7 §7.1 acceptance envelope for `POST /api/objectives` @202; 6-field wire shape (`objective_id`, `status="accepted"`, `delivery_estimate`, `trace_id`, `accepted_at`, optional `quote`).
+21. **`quote_envelope@v0` (Phase 6 Stage B, 2026-07-04)** — v3 §8 economics quote envelope; 11 fields + inner `QuoteInstrumentationSeed_v0` per Owner Axis 5; `pricing_tier` is constrained-str via `PricingTierStr` (NOT Literal) per Ruling 5; `delivery_class` is Literal["warm_qualified", "fresh_extraction"] (EXACTLY TWO bands per Owner Axis 4).
+22. **`async_delivery_accepted@v1` (Phase 6 Stage B, 2026-07-04)** — second application of Standing Owner Disposition `frozen-field-changes-as-new-versions`; narrows `quote: Optional[Any]` → `Optional[QuoteEnvelope_v0]` per Owner Axis 3 Option α; v0 file preserved byte-identical at SHA `fc495b76...`.
 
-All 20 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; bijection enforced by `test_frozen_contract_snapshot_parity.py`.
+All 22 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; bijection enforced by `test_frozen_contract_snapshot_parity.py`.
 
 ## Backlog (prioritised)
 - **P0 — G5b Frontend Operator Console + Consumer Terminal** (awaits user go): 4 operator surfaces (Portfolio, Runs, Sources, Discipline) + Consumer Terminal v0. Backend routes shipped at G5a + G6 + A2; G5b is the surface that renders them.
@@ -116,4 +120,4 @@ All 20 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; 
 - `GET /api/openapi.json`, `/api/docs`, `/api/redoc`
 
 ## CI
-`make ci` = **402/402** green at 2026-07-03 (Phase 2 close). Delta from Phase 1 (387): +15 Phase 2 tests (4 named gates + 5 positive-path + 2 wire-shape + 3 v0-untouched + 1 malformed-body).
+`pytest -q` = **550/550** green at 2026-07-04 (Phase 6 Stage B close). Delta from Phase 5 Stage B (504): +46 (23 Phase-6-Stage-B economics gate roster + 20 byte-identity regression [20 prior contracts] + 1 count-invariant bump + 1 6b synthesis-anchor + 1 async_delivery_accepted_v1 supersets).

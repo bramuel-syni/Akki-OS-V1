@@ -31,6 +31,8 @@ from pymongo.errors import DuplicateKeyError
 
 from contracts.async_delivery_accepted import AsyncDeliveryAccepted_v0
 from contracts.objective_request_v2 import ObjectiveEntry, ObjectiveRequest_v2
+from services.economics import quote_service as _quote_service
+from contracts.admission_refusal import AdmissionRefusal_v0
 from services.service_1 import (
     admission_refusal as admission_refusal_service,
     async_state,
@@ -98,6 +100,18 @@ async def post_objective(
     accepted_at = async_state.now_iso()
     delivery_estimate = "PT5M"
 
+    # Phase 6 — mint QuoteEnvelope_v0. Governance refusals returned @422.
+    quote_or_refusal = await _quote_service.issue_quote(
+        obj_req, trace_id, warm_vs_fresh="fresh",
+    )
+    if isinstance(quote_or_refusal, AdmissionRefusal_v0):
+        return JSONResponse(
+            status_code=422,
+            content=quote_or_refusal.model_dump(mode="json"),
+        )
+    quote_dict = quote_or_refusal.model_dump(mode="json")
+    delivery_estimate = quote_or_refusal.delivery_estimate
+
     webhook_url = webhook_registration.resolve_webhook_url(x_rms_app_id, x_rms_webhook_url)
     sandbox_mode = webhook_registration.sandbox_mode_default(x_rms_app_id) if x_rms_app_id else False
 
@@ -124,6 +138,7 @@ async def post_objective(
         "accepted_at": accepted_at,
         "terminal_envelope": None,
         "webhook_undelivered": False,
+        "quote": quote_dict,
     }
 
     try:
@@ -163,6 +178,7 @@ async def post_objective(
         delivery_estimate=delivery_estimate,
         trace_id=trace_id,
         accepted_at=accepted_at,
+        quote=quote_dict,
     )
     return JSONResponse(status_code=202, content=accepted.model_dump(mode="json"))
 

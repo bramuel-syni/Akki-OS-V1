@@ -33,6 +33,17 @@ from `v0.json` to `v1.json`. v0.json remains byte-identical on disk
 codes (`grain_form_incompatible`, `standard_below_admission_floor`,
 `license_class_unavailable`). Extension enforced by
 `test_admission_refusal_registry_v1_extends_v0_additively`.
+
+Phase 5 Stage B registry-bump landing (2026-07-04): `_REGISTRY_PATH`
+bumped v1 → v2. v2 additively adds two idempotency codes; struck
+`caller_cancelled` (cancellation-is-a-state-not-a-refusal) +
+`async_queue_saturated` (infra-not-refusal).
+
+Phase 6 Stage B registry-bump landing (2026-07-04): `_REGISTRY_PATH`
+bumped v2 → v3. v3 additively adds THREE economics-surface
+governance-refusal codes: `fleet_policy_reserved_zero_capacity`,
+`pricing_tier_frozen_by_control_surface`, `exploratory_tier_expired`.
+Extension enforced by `test_admission_refusal_v3_extends_v2_additively`.
 """
 from __future__ import annotations
 
@@ -45,7 +56,7 @@ from contracts.admission_refusal import AdmissionRefusal_v0
 from contracts.objective_request_v2 import ObjectiveRequest_v2
 
 
-_REGISTRY_PATH = Path(__file__).parent / "admission_refusal_reasons.v2.json"
+_REGISTRY_PATH = Path(__file__).parent / "admission_refusal_reasons.v3.json"
 
 
 def _load_registry() -> Dict:
@@ -355,6 +366,145 @@ def emit_idempotency_key_missing(
         "Include an `idempotency_key` field on the request body — a "
         "client-generated unique string (uuid recommended) stable across "
         "retries of the same output form / reach / envelope."
+    )
+    return AdmissionRefusal_v0(
+        reason=reason,
+        trace_id=trace_id,
+        requested_output_form=request.output.form.value,
+        off_menu_fact=off_menu_fact,
+        what_you_can_do=what_you_can_do,
+        computed_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Phase 6 Stage B emit helpers — three §8 economics governance refusals.
+#
+# Registry-bump v2→v3 additive:
+#   * fleet_policy_reserved_zero_capacity — Master Admin set apportionment
+#     to zero for this capacity class. GOVERNANCE decision (unwilling),
+#     NEVER infra saturation (which is 503 per infra-not-refusal).
+#   * pricing_tier_frozen_by_control_surface — Master Admin locked the
+#     current-bless pricing tier via control surface. GOVERNANCE decision.
+#   * exploratory_tier_expired — v3 §8 bullet 2 time-boxed model version
+#     lapsed; honest-not-silent refusal until Master Admin bumps to a
+#     fresh price-model@vN.
+#
+# Actor-appropriate discipline preserved — every string is caller-facing.
+# ---------------------------------------------------------------------------
+
+
+def emit_fleet_policy_reserved_zero_capacity(
+    request: ObjectiveRequest_v2,
+    trace_id: str,
+    *,
+    capacity_class: str,
+) -> AdmissionRefusal_v0:
+    """v3 §8 bullet 5: capacity-class zero-reserved is a GOVERNANCE decision.
+
+    Master Admin set the fleet apportionment to zero for the
+    `capacity_class` this objective consumes (mining / transforms /
+    live_path). Distinct from queue saturation which is infra (503).
+
+    Standing Disposition infra-not-refusal DOES NOT apply here — zero
+    apportionment is the Master Admin declining to allocate capacity,
+    not the substrate unable.
+    """
+    reason = "fleet_policy_reserved_zero_capacity"
+    if not is_valid_reason(reason):
+        raise RuntimeError(
+            f"admission_refusal_reasons.vN.json registry does not list "
+            f"reason={reason!r} — construction blocked."
+        )
+    off_menu_fact = (
+        f"The '{capacity_class}' capacity class is currently apportioned "
+        f"ZERO in the fleet policy. This is a Master Admin governance "
+        f"decision (unwilling), not infra saturation (unable). Per v3 "
+        f"§8 bullet 5, fleet allocation is config; the Master Admin has "
+        f"set the ratio to 0.0 for this modality."
+    )
+    what_you_can_do = (
+        f"Wait for the Master Admin to bump the fleet policy to a "
+        f"fresh fleet_policy.vN.json with non-zero apportionment for "
+        f"'{capacity_class}', or submit an objective whose output form "
+        f"consumes a different capacity class."
+    )
+    return AdmissionRefusal_v0(
+        reason=reason,
+        trace_id=trace_id,
+        requested_output_form=request.output.form.value,
+        off_menu_fact=off_menu_fact,
+        what_you_can_do=what_you_can_do,
+        computed_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+def emit_pricing_tier_frozen_by_control_surface(
+    request: ObjectiveRequest_v2,
+    trace_id: str,
+) -> AdmissionRefusal_v0:
+    """v3 §8 bullet 2: Master Admin control surface locked the current tier.
+
+    Governance decision — the Master Admin has toggled the current-
+    bless pricing tier to `locked=True`. New quotes MUST refuse until
+    the toggle flips or a fresh tier lands via registry bump.
+    """
+    reason = "pricing_tier_frozen_by_control_surface"
+    if not is_valid_reason(reason):
+        raise RuntimeError(
+            f"admission_refusal_reasons.vN.json registry does not list "
+            f"reason={reason!r} — construction blocked."
+        )
+    off_menu_fact = (
+        "The current-bless pricing tier is locked by the Master Admin "
+        "control surface. Per v3 §8 bullet 2, the Master Admin swaps "
+        "price-model versions and can lock the surface mid-swap; new "
+        "quotes are governance-refused during the lock."
+    )
+    what_you_can_do = (
+        "Wait for the Master Admin to unlock the tier via the control "
+        "surface, or wait for a fresh price-model@vN registry bump to "
+        "land. Polling `GET /api/pricing/model_version` returns the "
+        "current lock state indirectly (version pointer + expires_at)."
+    )
+    return AdmissionRefusal_v0(
+        reason=reason,
+        trace_id=trace_id,
+        requested_output_form=request.output.form.value,
+        off_menu_fact=off_menu_fact,
+        what_you_can_do=what_you_can_do,
+        computed_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+def emit_exploratory_tier_expired(
+    request: ObjectiveRequest_v2,
+    trace_id: str,
+) -> AdmissionRefusal_v0:
+    """v3 §8 bullet 2: time-boxed model lapsed.
+
+    The current-bless `price-model@v0-exploratory` (or whichever tier
+    is current) has an `expires_at` in the past. Honest-not-silent:
+    quotes refuse until Master Admin bumps to a fresh version.
+    """
+    reason = "exploratory_tier_expired"
+    if not is_valid_reason(reason):
+        raise RuntimeError(
+            f"admission_refusal_reasons.vN.json registry does not list "
+            f"reason={reason!r} — construction blocked."
+        )
+    off_menu_fact = (
+        "The current-bless price-model version has expired per its "
+        "config-level `expires_at` field. Per v3 §8 bullet 2, "
+        "learning-phase quotes are structurally non-precedent and "
+        "TIME-BOXED — quoting after expiry would fabricate a precedent "
+        "the tier explicitly refuses."
+    )
+    what_you_can_do = (
+        "Wait for the Master Admin to bump to a fresh price-model@vN "
+        "config (via a fresh JSON file at "
+        "services/economics/price_model.vN-<tag>.json). Polling "
+        "`GET /api/pricing/model_version` surfaces `expires_at`."
     )
     return AdmissionRefusal_v0(
         reason=reason,

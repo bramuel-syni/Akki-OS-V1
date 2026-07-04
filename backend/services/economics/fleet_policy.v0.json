@@ -1,0 +1,27 @@
+{
+  "version": "fleet-policy@v0",
+  "landed_at": "2026-07-04",
+  "spec_ref": "v3 §8 bullet 5 (fleet apportionment across mining/transforms/live_path).",
+  "extension_note": "Additive-only via vN bump per Ruling 3 config-as-versioned-not-frozen. Master Admin bumps to fleet-policy@vN.json; NEVER in-place edit.",
+  "apportionment": {
+    "mining": 0.40,
+    "transforms": 0.35,
+    "live_path": 0.25
+  },
+  "apportionment_sum_tolerance": 0.001,
+  "governance": {
+    "control_surface": "master_admin_only",
+    "change_recording": "northena_ledger_row_per_change",
+    "reversible": true,
+    "audit_trail_ref": "v3 §6.1 Master Admin UI Spec + §11 build doctrine + §7.2 ledger append-only."
+  },
+  "arbitration_beyond_apportionment": {
+    "status": "OPEN — Owner Ruling R4-SD2 (Substrate-Drop v2, 2026-07-03)",
+    "spec_ref": "v3 §8 bullet 5 + §10 open decisions row 4",
+    "hazard_stop_notes": [
+      "SIMPLE APPORTIONMENT holds until concurrency bites.",
+      "Under-contention arbitration DEFERRED — module refuses arbitration decisions beyond apportionment ratios.",
+      "When measurable contention threshold TBD, escalate to Owner."
+    ]
+  }
+}

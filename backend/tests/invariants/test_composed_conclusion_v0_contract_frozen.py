@@ -42,11 +42,15 @@ def test_composed_conclusion_snapshot_parity_at_18():
     NorthenaLedgerRow_v1 + AsyncDeliveryAccepted_v0). This test's
     assertion updated to 20 to remain compatible; the underlying
     Phase-4b-composed_conclusion snapshot is still present.
+
+    Phase 6 Stage B (2026-07-04): parity count bumped 20 → 22 (added
+    QuoteEnvelope_v0 + AsyncDeliveryAccepted_v1). Same additive
+    pattern; underlying Phase-4b-composed_conclusion snapshot present.
     """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 20, (
-        f"Post-Phase-5-Stage-B snapshot count must be exactly 20 "
-        f"(18 pre-5b + NorthenaLedgerRow_v1 + AsyncDeliveryAccepted_v0). "
+    assert len(snapshots) == 22, (
+        f"Post-Phase-6-Stage-B snapshot count must be exactly 22 "
+        f"(20 pre-6b + QuoteEnvelope_v0 + AsyncDeliveryAccepted_v1). "
         f"Actual: {len(snapshots)}.\nSnapshots: {sorted(p.name for p in snapshots)}"
     )

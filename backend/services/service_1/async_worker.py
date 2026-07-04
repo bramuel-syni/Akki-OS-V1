@@ -17,6 +17,8 @@ from typing import Any, Dict, Optional
 from contracts.admission_refusal import AdmissionRefusal_v0
 from contracts.composed_conclusion import ComposedConclusion_v0
 from contracts.objective_request_v2 import ObjectiveRequest_v2, OutputForm
+from contracts.quote_envelope import QuoteEnvelope_v0
+from services.economics import instrumentation as _instrumentation
 from services.service_1 import async_state
 from services.service_1.composed_conclusion import (
     Service1Refusal as ComposedService1Refusal,
@@ -122,6 +124,7 @@ async def _process_one(objective_id: str) -> None:
             objective_id=objective_id, trace_id=trace_id, status="delivered",
             webhook_url=webhook_url, webhook_secret=webhook_secret,
         )
+        await _record_quote_delivered_if_present(doc, trace_id)
         return
     if isinstance(result, AdmissionRefusal_v0):
         envelope = result.model_dump()
@@ -130,6 +133,7 @@ async def _process_one(objective_id: str) -> None:
             objective_id=objective_id, trace_id=trace_id, status="refused",
             webhook_url=webhook_url, webhook_secret=webhook_secret,
         )
+        await _record_quote_delivered_if_present(doc, trace_id, event="rejected")
         return
     if isinstance(result, dict):
         # QualifiedDataPayload — dict-shaped (UNFROZEN by wire-shape gate per 4a).
@@ -138,6 +142,39 @@ async def _process_one(objective_id: str) -> None:
             objective_id=objective_id, trace_id=trace_id, status="delivered",
             webhook_url=webhook_url, webhook_secret=webhook_secret,
         )
+        await _record_quote_delivered_if_present(doc, trace_id)
+
+
+async def _record_quote_delivered_if_present(
+    doc: Dict[str, Any], trace_id: str, event: str = "accepted",
+) -> None:
+    """Phase 6 instrumentation hook — write ONE stamp_audit-sidecar
+    ledger row when a quote-carrying objective reaches its terminal.
+
+    Idempotent per (trace_id, run_id, stage='converge') via
+    `_instrumentation._ledger_row_exists` — matches the kill-and-
+    restart G1 LOAD-BEARING invariant guard.
+    """
+    quote_dict = doc.get("quote")
+    if not quote_dict:
+        return
+    try:
+        quote = QuoteEnvelope_v0.model_validate(quote_dict)
+    except Exception:  # noqa: BLE001 — instrumentation MUST NOT crash worker
+        log.exception("Phase 6 instrumentation: malformed quote on doc trace_id=%s", trace_id)
+        return
+    request_body = doc.get("request_body") or {}
+    lawful_basis = ((request_body.get("envelope") or {}).get("lawful_basis") or "unspecified")
+    objective_ref = f"objreq-{trace_id}"
+    try:
+        await _instrumentation.record_quote_event(
+            quote_envelope=quote,
+            event=event,
+            objective_ref=objective_ref,
+            lawful_basis_ref=lawful_basis,
+        )
+    except Exception:  # noqa: BLE001 — sidecar failure must not affect terminal transition
+        log.exception("Phase 6 instrumentation ledger write failed trace_id=%s", trace_id)
 
 
 async def worker_loop() -> None:

@@ -96,6 +96,9 @@ app.include_router(handoff_router.router, prefix="/api")
 app.include_router(objectives_router.router, prefix="/api")
 from routers import mtafiti as mtafiti_router  # noqa: E402
 app.include_router(mtafiti_router.router, prefix="/api")
+from routers import pricing as pricing_router  # noqa: E402
+app.include_router(pricing_router.router, prefix="/api")
+app.include_router(pricing_router.fleet_router, prefix="/api")
 
 
 @app.on_event("startup")

@@ -37,6 +37,7 @@ INVARIANTS_DIR = REPO_ROOT / "backend" / "tests" / "invariants"
 CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "admission_refusal.py":           "admission_refusal.contract_snapshot.json",
     "async_delivery_accepted.py":     "async_delivery_accepted.contract_snapshot.json",
+    "async_delivery_accepted_v1.py":  "async_delivery_accepted_v1.contract_snapshot.json",
     "composed_conclusion.py":         "composed_conclusion.contract_snapshot.json",
     "cumulative_disclosure.py":       "cumulative_disclosure_ledger.contract_snapshot.json",
     "extraction_params.py":           "extraction_params.contract_snapshot.json",
@@ -50,6 +51,7 @@ CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "objective_request_v2.py":        "objective_request_v2.contract_snapshot.json",
     "outer_gate_receipt.py":          "outer_gate_receipt.contract_snapshot.json",
     "qualification_matrix":           "qualification_matrix.contract_snapshot.json",
+    "quote_envelope.py":              "quote_envelope.contract_snapshot.json",
     "service_1_refusal.py":           "service_1_refusal.contract_snapshot.json",
     "signal_ring.py":                 "signal_ring.contract_snapshot.json",
     "targeta_plan.py":                "targeta_mining_plan.contract_snapshot.json",

@@ -120,6 +120,14 @@ from services.service_1 import async_worker as _async_worker
 from services.service_1 import idempotency as _idempotency
 from services.service_1.admission_refusal import emit_idempotency_key_missing
 
+# Phase 6 Stage B — quote-service integration: fresh-fork admission mints
+# a QuoteEnvelope_v0 via services.economics.quote_service and populates
+# the `quote` field on the AsyncDeliveryAccepted_v0 body (v0's Optional[Any]
+# accepts dict shape; the v1 file `AsyncDeliveryAccepted_v1` narrows the
+# type at contract layer for integrators binding v1).
+from services.economics import quote_service as _quote_service
+from contracts.admission_refusal import AdmissionRefusal_v0 as _AdmissionRefusal_v0_for_quote_check
+
 
 # Route-target constants — named string constants surfaced in responses.
 # Naming discipline: `{receiver_phase}_{receiver_name}` where the
@@ -432,6 +440,19 @@ async def dispatch(
         async_trace_id = _async_state.new_id("trc")
         accepted_at = _async_state.now_iso()
         delivery_estimate = "PT5M"
+        # Phase 6 — mint a QuoteEnvelope_v0 for this fresh-fork
+        # admission. Governance refusals from the quote service (fleet
+        # zero / tier locked / config expired / form not quotable) are
+        # returned as AdmissionRefusal_v0 (@422) directly; only a
+        # successful mint proceeds to enqueue.
+        quote_or_refusal = await _quote_service.issue_quote(
+            request, async_trace_id, warm_vs_fresh="fresh",
+        )
+        if isinstance(quote_or_refusal, _AdmissionRefusal_v0_for_quote_check):
+            return quote_or_refusal
+        # Prefer the quote's delivery estimate (config-driven, TWO-band).
+        delivery_estimate = quote_or_refusal.delivery_estimate
+        quote_dict = quote_or_refusal.model_dump(mode="json")
         doc = {
             "objective_id": objective_id,
             "status": "accepted",
@@ -453,6 +474,7 @@ async def dispatch(
             "accepted_at": accepted_at,
             "terminal_envelope": None,
             "webhook_undelivered": False,
+            "quote": quote_dict,
         }
         await _async_state.db[_async_state.ASYNC_STATE_COLLECTION].insert_one(doc)
         # Standing Disposition infra-not-refusal: queue saturation raises
@@ -463,6 +485,7 @@ async def dispatch(
             delivery_estimate=delivery_estimate,
             trace_id=async_trace_id,
             accepted_at=accepted_at,
+            quote=quote_dict,
         )
 
     # The receiver-side (transform layer §6.2 composed_conclusion for warm;
