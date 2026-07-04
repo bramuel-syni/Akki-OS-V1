@@ -1,6 +1,72 @@
 # PHASE_STATE (compact mirror of ORCHESTRATOR_CONTINUITY §2 + §3)
 
-**Last update:** 2026-07-04 (Phase 5 Stage B close — Async delivery §7 landed live at `POST /api/objectives` + `GET /api/objectives/{id}` + `POST /api/objectives/{id}/cancel`; 2 new frozen contracts landed as ADDITIONS: `NorthenaLedgerRow_v1` + `AsyncDeliveryAccepted_v0`; 3 new Standing Owner Dispositions landed at §0.1; parity 18→20 GREEN)
+**Last update:** 2026-07-04 (Phase 7 Stage B-1 close — Shaping wizard §3.3 operator variant landed live at `/api/wizard/operator/*`; 4 new frozen contracts landed as ADDITIONS: `WizardCommitState_v0` + `OperatorTurn_v0` + `AgentAssumption_v0` + `CommittedValue_v0`; 2 new Standing Owner Dispositions at §0.1: `Agent-pluggable-with-stub-agent-first` + `Visibility-not-prohibition`; 2 new Plan Debts at §0.2; parity 22→26 GREEN)
+
+> Any duration / credit / turn number referenced below is a **Provisional planning anchor — not a commitment. Relative weight only.**
+
+## Live State
+- **Current gate:** **PHASE 7 STAGE B-1 CLOSED** (2026-07-04) — shaping wizard §3.3 operator variant live at 6 endpoints under `/api/wizard/operator/*`. 4 new frozen contracts (parity 22 → 26). Uses `DeterministicStubAgent` (NO LLM at B-1 per Standing Disposition `Agent-pluggable-with-stub-agent-first`). Guard 1/2/3 discipline structurally enforced. Ruling 4 shared-derivation preserved (LB grep-negative gate GREEN). License-class Option C wrap landed (additive; fallback body byte-identical). Owner E5 wizard-transcript retention class marker LB. Owner E7 provenance-preservation shared-derivation module LB. 22 prior frozen contract sources byte-identical. Phase 7 Stage A CLOSED. All prior phases (0-6) CLOSED. Close report on-disk canonical: `/app/docs/close_reports/phase_7_stage_b_1.md` SHA-256 `b34fc38eb69804165dcf1a9eb65351a0c6b0a4648895c17e5c4b408b7b635d9e`.
+- **Counting standard:** post-§0-strict from G6 forward.
+- **Standing Owner Dispositions in force** (see ORCHESTRATOR_CONTINUITY §0.1): all prior + **Agent-pluggable-with-stub-agent-first (Phase 7 Stage B-1, 2026-07-04)** + **Visibility-not-prohibition (Phase 7 Stage B-1, 2026-07-04)**.
+- **Plan Debts:** ~~§6.1 downgrade~~ RESOLVED at 4a Stage B; ~~Phase 3 model-refusal~~ RESOLVED at Phase 3; ~~Phase 4b transform-variants~~ RESOLVED at Phase 4b; ~~Phase 5 async-delivery~~ RESOLVED at Phase 5 Stage B; ~~Phase 6 economics~~ RESOLVED at Phase 6 Stage B; **Phase 7 wizard-side dispatch PARTIALLY RESOLVED at 7b-1** (operator variant + license-class Option C wrap landed; buyer variant + LLM remain B-2 debt); Phase 7 Stage B-2 (buyer + Sonnet 4.6 LLM) REMAINING; Phase 7 Stage B-3 (commit-review + freeze + admission handoff) REMAINING; **Phase 8 Stage A frozen-contract trajectory restatement** REMAINING (NEW debt at 7b-1); **Phase 8c DPO `wizard_transcript` held-class enumeration** REMAINING (NEW debt at 7b-1); Phase 8 frontend rework against UI Spec v1 REMAINING.
+- **Phase 7 Stage B-1 CLOSED (2026-07-04):** 4 NEW frozen contracts (wizard_commit_state.py + operator_turn.py + agent_assumption.py + committed_value.py) + 4 NEW snapshots + 6 NEW wizard service modules (`services/wizard/{__init__, agent_interface, operator_state_machine, source_tagging, session_persistence, turn_ledger}.py`) + 1 NEW shared-derivation module (`services/service_1/provenance_preservation.py`) + 1 NEW router (`routers/wizard_operator.py`) + 3 MODIFIED source files (license_class_selection.py +50 additive Option C wrap; server.py +5 router mount + wizard indexes; contracts/__init__.py +7 exports) + 2 NEW test files (test_phase_7_stage_b_1_wizard.py 721L; test_v0_paths_byte_identical_after_7b_1.py 167L) + 2 test-file additive bumps. Full CI: 550 → 613 (+63 net). Substrate-drop 9/9 GREEN. Mechanical parity 3/3 GREEN at 26.
+- **Awaiting:** Owner acceptance of Phase 7 Stage B-1 close (SHA `b34fc38e...`) before Phase 7 Stage B-2 dispatch.
+- **Last green CI:** 613/613 backend at 2026-07-04 (+ 18/18 frontend gate tests unchanged from G5b). Substrate-drop gate 9/9 green. Mechanical parity invariant 3/3 green at 26 entries.
+- **Data source posture:** SYNTHETIC v1 = standing test substrate (permanent); real material = operational/benchmark input; no supersede semantics (Ruling 1, 2026-07-03).
+- **Canonical specs on-disk:** 7/7 CURRENT.
+- **Frozen contracts:** **26** (was 22 at Phase 6 Stage B close; +4 at Phase 7 Stage B-1: `WizardCommitState_v0` + `OperatorTurn_v0` + `AgentAssumption_v0` + `CommittedValue_v0`). All 26 have canonical `.contract_snapshot.json` files; mechanical parity invariant enforces bijection.
+- **Closed seams (5):** unchanged from Phase 6 Stage B. Phase 7 Stage B-1 introduced ZERO new seams.
+- **Rule 2 accounting version:** v2 + §0 discretionary-enumeration-inline discipline.
+- **Discipline observations tracked separately:** X1 — `solva_depth/pipeline.py` code fix is LIVE + test-defended.
+- **Open HAZARD-STOP flags:** 0.
+
+## Phase Ledger
+| Phase | Status | Green @ close | Lifted (verifiable) | Net-new | Ratio (v2) |
+|---|---|---|---|---|---|
+| G0 | CLOSED | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN |
+| G0.5 | CLOSED | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN |
+| G1 | CLOSED | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN |
+| Pre-G2 | CLOSED | 61 | UNKNOWN | UNKNOWN | UNKNOWN |
+| G2a | CLOSED | 73 initial → 149 rolling | 127 | 344 | 2.71× / 1.34× discretionary |
+| Substrate-Drop v1 | CLOSED | 158 | 0 (docs+CI phase) | 0 | N/A |
+| G3 | CLOSED | 211 | 98 | 437 | 4.46× / ~0.02× discretionary |
+| G4 | CLOSED | 271 | 268 | 785 | 2.93× / 0.00× discretionary |
+| G5a | CLOSED | 301 | 159 | 715 | 4.50× / 0.11× discretionary |
+| G6 | CLOSED | 340 | 80 | 1176 | 14.70× / 0.80× discretionary |
+| Handoff-Download Route | CLOSED | 347 | 12 | 30 | 1.00× discretionary-only |
+| A2 | CLOSED | 355 | 20 | ~50 | ~1.27× discretionary-only |
+| G5b | CLOSED | 359 backend + 12/12 frontend gate | 0 (API-consumption) | 1848 | N/A |
+| Docs-Pass | CLOSED | 367 | 0 (docs) | 0 | N/A |
+| Substrate-Drop v2 (Part 1) | CLOSED | 373 (+6) | 0 | 0 | N/A |
+| Substrate-Drop v2 (Part 2 / Phase 0) | CLOSED | 374 (+1) | 0 | ~180 | ~12× / ~0.08× discretionary-only |
+| Phase 1 | CLOSED | 387 (+13) | ~30 | ~490 | ~5.7× / ~0.30× discretionary-only |
+| Phase 2 | CLOSED | 402 (+15) | ~40 | ~460 | ~4.2× / ~0.24× discretionary-only |
+| Phase 3 | CLOSED | 413 (+11) | ~35 | ~470 | ~13.4× / ~0.19× discretionary-only |
+| Phase 4 Stage A | CLOSED | 413 (unchanged) | N/A | N/A | N/A |
+| Phase 4a Stage B | CLOSED | 434 (+21) | ~120 | ~840 | ~7× / ~0.30× discretionary-only |
+| Phase 4b | CLOSED | 446 (+12) | ~230 | ~640 | ~2.8× / ~0.28× discretionary-only |
+| Phase 5 Stage A | CLOSED | 446 (unchanged) | N/A | N/A | N/A |
+| Phase 5 Stage B | CLOSED | 504 (+58) | ~340 | ~2274 | ~6.7× / ~0.68× discretionary-only |
+| Phase 6 Stage A | CLOSED | 504 (unchanged) | N/A | N/A | N/A |
+| Phase 6 Stage B | CLOSED | 550 (+46 net) | ~180 | ~2812 | ~15.6× / ~1.28× discretionary-only |
+| Phase 7 Stage A | CLOSED | 550 (unchanged) | N/A | N/A | N/A |
+| **Phase 7 Stage B-1 — Shaping wizard §3.3 operator variant + 4 net-new frozen contracts + license-class Option C wrap + provenance-preservation shared-derivation module; 2 new Standing Owner Dispositions at §0.1** | **CLOSED** | **613 (+63 net)** | ~120 | ~2754 (source ~1402 + snapshots ~396 + tests ~888 + modifications ~68) | ~23× overall / ~2.08× discretionary-only (v2 accounting, post-§0-strict); +43% above anticipated ~1930 (test surface heavier than projected — 30 gates vs 10) |
+| G2b | BLOCKED (real RMS material) | — | — | — | — |
+
+## Pending Decisions
+- [x] ~~Phase 6 Stage B~~ — CLOSED at 2026-07-04.
+- [x] ~~Phase 7 Stage A (design-only)~~ — CLOSED at 2026-07-04.
+- [x] ~~Phase 7 Stage B-1 (operator variant + 4 net-new contracts)~~ — CLOSED at 2026-07-04.
+- [ ] Owner acceptance of Phase 7 Stage B-1 close report (`/app/docs/close_reports/phase_7_stage_b_1.md` SHA `b34fc38e...`) before Phase 7 Stage B-2 dispatch.
+- [ ] Owner directive on Phase 7 Stage B-2 dispatch (buyer state machine + Claude Sonnet 4.6 LLM integration).
+- [ ] Real RMS material for G2b.
+- [ ] Owner thresholds — Targeta yield seam.
+- [ ] Owner + DPO thresholds — Mtafiti V3 overlay seam.
+- [ ] DPO — Northena Ledger retention window.
+- [ ] DPO — wizard_transcript retention class (per Owner E5 ruling; at Seam-3 unlock).
+- [ ] DPO — V2 cumulative-disclosure arm env vars.
+- [ ] MEA — real source-standing table.
+- [ ] Owner narrowing on `ObjectiveRequest_v2` HAZARD-STOP-NOTE fields (`Reach.depth`, `Envelope.budget`, `Envelope.scope_ceiling`) — future frozen-contract additions when owner rules on scalar types.
 
 > Any duration / credit / turn number referenced below is a **Provisional planning anchor — not a commitment. Relative weight only.**
 

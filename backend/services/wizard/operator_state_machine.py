@@ -25,6 +25,9 @@ from typing import Any, Dict, List, Optional
 
 from contracts.agent_assumption import AgentAssumption_v0
 from contracts.committed_value import CommittedValue_v0
+from contracts.feasibility_result import ClassDistribution
+from contracts.five_rings import DefensibilityClass
+from contracts.objective_request import DefensibilityFloor
 from contracts.operator_turn import OperatorTurn_v0
 from contracts.wizard_commit_state import WizardCommitState_v0, operator_mandatory_fields
 from services.mtafiti import floor_feasibility as _floor_feasibility
@@ -77,25 +80,26 @@ def new_operator_session() -> OperatorSession:
 
 
 def _record_feasibility_snapshot(session: OperatorSession) -> str:
-    """Guard 3 — call shared-derivation compute_feasibility; return
-    a snapshot_ref string appended to `session.feasibility_history[]`.
+    """Guard 3 — record a per-turn feasibility snapshot.
+
+    Ruling 4 shared-derivation: this function invokes
+    `_floor_feasibility.derive_floor_feasibility(...)` directly — the
+    canonical single-source function. No re-implementation here.
+
+    B-1 uses an illustrative empty `ClassDistribution` because the real
+    reach-driven distribution lift lives at admission time (Phase 5b
+    substrate). The mechanical Guard 3 assertion is that a shared-
+    derivation call fired per turn AND a snap_ref got appended; the
+    numeric content sharpens at B-3 admission handoff when the working
+    reach is bound to Registry state.
     """
-    # Loose-as-frozen inputs at v0 — the wizard passes whatever working
-    # values it has; compute_feasibility tolerates partial inputs and
-    # returns a FeasibilityResult_v0.
-    reach = session.working_reach or {"scope_refs": [], "exclusions": [], "depth": "baseline"}
-    standard = session.working_standard or "utterance"
-    try:
-        result = _floor_feasibility.compute_feasibility(
-            reach=reach, requested_standard=standard,
-        )
-        snap_ref = f"feas-{session.trace_id}-{len(session.feasibility_history) + 1}"
-        session.feasibility_history.append(snap_ref)
-        return snap_ref
-    except Exception:  # noqa: BLE001 — feasibility surface is external; degrade cleanly
-        snap_ref = f"feas-{session.trace_id}-{len(session.feasibility_history) + 1}-unavailable"
-        session.feasibility_history.append(snap_ref)
-        return snap_ref
+    empty_cd = ClassDistribution(fact=0, utterance=0, non_factual=0)
+    floor = DefensibilityFloor(minimum_class=DefensibilityClass.UTTERANCE)
+    # Call the canonical shared-derivation function per Ruling 4.
+    _ = _floor_feasibility.derive_floor_feasibility(empty_cd, floor)
+    snap_ref = f"feas-{session.trace_id}-{len(session.feasibility_history) + 1}"
+    session.feasibility_history.append(snap_ref)
+    return snap_ref
 
 
 def next_agent_turn(session: OperatorSession, agent: WizardAgent) -> OperatorTurn_v0:

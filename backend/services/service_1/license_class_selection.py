@@ -44,6 +44,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from contracts.objective_request_v2 import Envelope
+from contracts.wizard_commit_state import WizardCommitState_v0
 
 
 _CONFIG_PATH = Path(__file__).parent / "license_classes.v0.json"
@@ -114,3 +115,52 @@ def commissioner_default_map() -> Dict[str, str]:
     """
     cfg = _load_config()
     return dict(cfg.get("commissioner_to_default_class", {}))
+
+
+# --------------------------------------------------------------------------
+# Phase 7 Stage B-1: Option C wrap (Owner E1 ruling, 2026-07-04) — ADDITIVE.
+# --------------------------------------------------------------------------
+# Owner ruling E1 (Phase 7 Stage A close, 2026-07-04) verbatim:
+#   *"Option C: two-arm derivation on this module. No ObjectiveRequest_v3
+#    version bump. Wizard commit state carries `license_class`; the primary
+#    arm reads it iff the state is FROZEN; the fallback arm (existing
+#    `derive_license_class_from_commissioner`) fires otherwise."*
+#
+# Primary-arm entry gate (LOAD-BEARING per Owner clarification, Phase 7
+# Stage B-1 dispatch): the primary arm fires iff BOTH conditions hold:
+#   (1) `wizard_state is not None`, AND
+#   (2) `wizard_state.committed_at is not None`  (state is FROZEN).
+# A wizard_state where committed_at is None (mid-session) MUST route to
+# fallback — this branch-discrimination is enforced by
+# `test_license_class_at_selection_equals_license_class_in_frozen_wizard_state`.
+#
+# The fallback arm's body slice (defined above) MUST remain byte-identical
+# at 7b-1 close — enforced by `test_derive_license_class_from_commissioner_untouched_at_7b_1`.
+def derive_license_class(
+    envelope: Envelope,
+    wizard_state: Optional[WizardCommitState_v0] = None,
+) -> str:
+    """Unified license-class derivation — Option C wrap (Phase 7 Stage B-1).
+
+    Primary arm (frozen wizard state carries an explicit class):
+      * Fires iff `wizard_state is not None` AND
+        `wizard_state.committed_at is not None` AND
+        `wizard_state.license_class is not None`.
+      * Returns `wizard_state.license_class` verbatim.
+
+    Fallback arm (no frozen wizard state OR class absent):
+      * Delegates to `derive_license_class_from_commissioner(envelope)`.
+      * Body is byte-identical to the pre-B-1 implementation.
+
+    Note the mid-session guard: a wizard_state with `committed_at is None`
+    (mid-session working state) routes to the FALLBACK. Only the frozen
+    committed state is read; never mid-session intermediate content. This
+    prevents identity-proxy laundering via a half-shaped wizard session.
+    """
+    if (
+        wizard_state is not None
+        and wizard_state.committed_at is not None
+        and wizard_state.license_class is not None
+    ):
+        return wizard_state.license_class
+    return derive_license_class_from_commissioner(envelope)

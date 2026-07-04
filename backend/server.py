@@ -34,6 +34,7 @@ from services.data_source import get_active_data_source
 from services.service_1 import async_state as async_state_service
 from services.service_1 import async_worker as async_worker_service
 from services.system_state import current_system_state
+from services.wizard import session_persistence as wizard_session_persistence
 
 log = logging.getLogger("rms.server")
 
@@ -99,6 +100,8 @@ app.include_router(mtafiti_router.router, prefix="/api")
 from routers import pricing as pricing_router  # noqa: E402
 app.include_router(pricing_router.router, prefix="/api")
 app.include_router(pricing_router.fleet_router, prefix="/api")
+from routers import wizard_operator as wizard_operator_router  # noqa: E402
+app.include_router(wizard_operator_router.router, prefix="/api")
 
 
 @app.on_event("startup")
@@ -113,6 +116,8 @@ async def _startup() -> None:
         await async_state_service.ensure_indexes()
         await async_worker_service.recovery_sweep()
         await async_worker_service.start_workers()
+        # Phase 7 Stage B-1 — wizard_sessions Mongo indexes.
+        await wizard_session_persistence.ensure_indexes()
     except Exception:
         log.exception("rms.startup: async delivery substrate boot failed")
         raise

@@ -57,4 +57,12 @@ async def ensure_indexes() -> None:
     col = db[WIZARD_SESSIONS_COLLECTION]
     await col.create_index("session_id", unique=True)
     await col.create_index([("variant", 1), ("initiated_at", 1)])
-    await col.create_index("frozen_objective_ref", unique=True, sparse=True)
+    # Partial-filter unique — the index applies only when
+    # frozen_objective_ref is a string (post-freeze). Mid-session
+    # snapshots carry `frozen_objective_ref: null` which MUST NOT
+    # collide across sessions.
+    await col.create_index(
+        "frozen_objective_ref",
+        unique=True,
+        partialFilterExpression={"frozen_objective_ref": {"$type": "string"}},
+    )
