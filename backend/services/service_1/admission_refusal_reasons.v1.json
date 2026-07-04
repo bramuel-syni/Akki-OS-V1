@@ -1,0 +1,26 @@
+{
+  "config_version": "v1",
+  "valid_reasons": [
+    {
+      "reason": "form_not_offerable",
+      "since_version": "v0",
+      "notes": "v3 §6.5 — off-menu output form (e.g. 'model' training-weights variant). First firing reason at Phase 3."
+    },
+    {
+      "reason": "grain_form_incompatible",
+      "since_version": "v1",
+      "notes": "v3 §6.1.4 + §6.2.4 + §6.3.4 + §6.4.4 — (output.form, output.grain) pair unsupported. Grain-compat matrix single source of truth: services/service_1/grain_compatibility.py. Ruling 7 (Phase 4a Stage B, 2026-07-03) — unified reason code across all grain-refusal cells; path_forward string discriminates specific fix per cell."
+    },
+    {
+      "reason": "standard_below_admission_floor",
+      "since_version": "v1",
+      "notes": "v3 §6.1.6 — standard = hard input filter; zero units survive selection at requested standard within reach. Distinct from Service1Refusal(composition_below_floor) which fires at conclusion-time in §6.2 composed_conclusion; this fires at admission-time selection in §6.1 qualified_data."
+    },
+    {
+      "reason": "license_class_unavailable",
+      "since_version": "v1",
+      "notes": "v3 §6.1.2 — three-way selection (reach + standard filter + license class) intersection empty on the license-class axis: the derived license class has zero qualifying units in the specified reach. Path forward: change license class (via commissioner change or Phase-7 wizard override) or expand reach."
+    }
+  ],
+  "notes": "Master Admin config. v1 additively extends v0 — v0 entries preserved byte-for-byte, v1 adds three admission-refusal reason codes covering the Phase-4a qualified-data admission-time refusals (grain incompatibility, standard below floor, license class unavailable). Adding a new admission-refusal reason = bumping this file (v1 -> v2) or appending an entry per the append-only config policy. NEVER modifies AdmissionRefusal@v0 contract file or its .contract_snapshot.json. Extension precedent anchors: qualification_matrix.v0.json + feasibility_config.v0.json + license_classes.v0.json. See contracts/admission_refusal.py module docstring 'Reason extension path'."
+}

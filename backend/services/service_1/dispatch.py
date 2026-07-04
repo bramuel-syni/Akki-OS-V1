@@ -89,7 +89,18 @@ from services.mtafiti.floor_feasibility import derive_floor_feasibility
 
 # Phase 3 admission-refusal emission — replaces the scaffold placeholder
 # for `output.form == "model"` (Condition 5 migration).
-from services.service_1.admission_refusal import emit_form_not_offerable
+from services.service_1.admission_refusal import (
+    emit_form_not_offerable,
+    emit_grain_form_incompatible,
+)
+
+# Phase 4a — grain-compat single-source-of-truth + §6.1 qualified-data
+# packaging path.
+from services.service_1.grain_compatibility import evaluate_grain_form
+from services.service_1.qualified_data import (
+    QualifiedDataPayload,
+    package_qualified_data,
+)
 
 
 # Route-target constants — named string constants surfaced in responses.
@@ -197,32 +208,34 @@ def _make_placeholder(route: str, phase_debt: str, trace_id: str) -> Dict[str, A
 
 async def dispatch(
     request: ObjectiveRequest_v2,
-) -> Union[DispatchResult, AdmissionRefusal_v0]:
-    """Shape-responsive dispatch — the single Phase 2/3 entrypoint.
+) -> Union[DispatchResult, AdmissionRefusal_v0, QualifiedDataPayload]:
+    """Shape-responsive dispatch — the single Phase 2/3/4a entrypoint.
 
-    Reads `entry`, `reach`, `output.form`, `output.standard`. Calls
-    `compute_feasibility` and `derive_floor_feasibility` from the
-    shared services when the admission warm/fresh fork applies. Emits
-    a `DispatchResult` carrying the routing decision + a governed
-    placeholder pointing at the phase-debt receiver — EXCEPT for
-    `output.form == "model"` which now (Phase 3, Condition 5) emits
-    the `AdmissionRefusal_v0` governed refusal envelope instead of the
-    scaffold placeholder.
+    Reads `entry`, `reach`, `output.form`, `output.grain`,
+    `output.standard`. Calls `compute_feasibility` and
+    `derive_floor_feasibility` from the shared services when the
+    admission warm/fresh fork applies. Fires grain-compat admission
+    refusal (Phase 4a) UPSTREAM of the fork. Fires §6.1 qualified-data
+    packaging (Phase 4a) on WARM + `output.form==qualified_data`.
 
-    Does NOT execute the receiver. Does NOT invoke
-    `services.service_1.service.run`. Does NOT write to any Mongo
-    collection (`compute_feasibility` is itself read-only per
-    `test_feasibility_readonly.py`).
+    Return type union — three arms:
+      * `DispatchResult` for the six placeholder-emitting code paths.
+      * `AdmissionRefusal_v0` for `form_not_offerable` (§6.5),
+        `grain_form_incompatible` (§6.1.4/§6.2.4/etc), or the two
+        §6.1 packaging-time refusals (`standard_below_admission_floor`,
+        `license_class_unavailable`) surfaced through
+        `package_qualified_data`.
+      * `QualifiedDataPayload` for §6.1 warm success (Section 7
+        Candidate 2 UNFROZEN plain payload).
 
-    Reach passthrough: `reach.scope_refs`, `reach.exclusions`,
-    `reach.depth` are threaded into the shared feasibility call
-    UNCHANGED. `depth` is not branched on (Gate 4).
-
-    Return type union: `DispatchResult` for the six placeholder-emitting
-    code paths; `AdmissionRefusal_v0` for the form_not_offerable path.
     The v2 route branches on isinstance and returns different HTTP
-    statuses (501 for scaffold, 422 for governed refusal — matching
-    A2 family status).
+    statuses (200 for qualified-data success, 422 for governed refusal,
+    501 for scaffold placeholder).
+
+    Does NOT invoke `services.service_1.service.run`. Does NOT write to
+    any Mongo collection (`compute_feasibility` and the qualified-data
+    packaging path are both read-only per
+    `test_feasibility_readonly.py` + Condition B3).
     """
     trace_id = f"disp-{uuid.uuid4().hex[:12]}"
 
@@ -240,6 +253,28 @@ async def dispatch(
         # emits it directly at admission; work_order will render it via
         # the wizard (Phase 7 receiver, not yet built).
         return emit_form_not_offerable(request, trace_id)
+
+    # Phase 4a — grain-compat admission-time refusal (§6.1.4 + §6.2.4
+    # + §6.3.4 + §6.4.4). Fires UPSTREAM of the form-specific branches
+    # so a mismatched (form, grain) pair never enters the deferred /
+    # warm packaging code paths. Grain-compat is the single-source-of
+    # truth per Ruling 4 (single derivation site, shared with Phase 7
+    # wizard). MODEL cells above already refused; this checks the
+    # remaining four forms.
+    grain_result = evaluate_grain_form(form, request.output.grain)
+    if not grain_result.compatible:
+        # Under normal control flow, MODEL cells are unreachable here
+        # (already returned above). This branch fires for the four
+        # non-MODEL forms whose (form, grain) pair is incompatible.
+        # `grain_result.refusal_reason` is `grain_form_incompatible`
+        # for non-MODEL cells per Ruling 7 unification.
+        assert grain_result.path_forward is not None
+        return emit_grain_form_incompatible(
+            request,
+            trace_id,
+            path_forward=grain_result.path_forward,
+        )
+
     if form == OutputForm.KNOWLEDGE_ARTIFACT:
         return DispatchResult(
             fork_decision=None,
@@ -269,8 +304,8 @@ async def dispatch(
 
     # ------------------------------------------------------------------
     # form is QUALIFIED_DATA or COMPOSED_CONCLUSION at this point.
-    # Both transform variants land in Phase 4; Phase 2 emits the
-    # routing decision + placeholder.
+    # QUALIFIED_DATA live-path lands at 4a (this phase);
+    # COMPOSED_CONCLUSION live-path lands at 4b (next phase).
     # ------------------------------------------------------------------
 
     # Entry-point branch — work_order vs external_request.
@@ -318,13 +353,20 @@ async def dispatch(
         else:
             fork = "fresh"
 
+    # Phase 4a §6.1 live-path: WARM + qualified_data → package and
+    # return QualifiedDataPayload (or AdmissionRefusal_v0 for the two
+    # packaging-time refusal cases). Otherwise fall through to
+    # placeholder emission.
+    if fork == "warm" and form == OutputForm.QUALIFIED_DATA:
+        return await package_qualified_data(request, trace_id)
+
     route_target = (
         ROUTE_ADMISSION_WARM_FORK if fork == "warm"
         else ROUTE_ADMISSION_FRESH_FORK
     )
-    # The receiver-side (transform layer §6.1/§6.2 for warm; async
-    # delivery §7 for fresh) is Phase 4/5 territory. Placeholder marks
-    # the phase-debt appropriately.
+    # The receiver-side (transform layer §6.2 composed_conclusion for warm;
+    # async delivery §7 for fresh) is Phase 4b/5 territory. Placeholder
+    # marks the phase-debt appropriately.
     receiver_debt = DEBT_PHASE_4 if fork == "warm" else DEBT_PHASE_5
 
     return DispatchResult(

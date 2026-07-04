@@ -1,0 +1,34 @@
+{
+  "config_version": "v0",
+  "notes": "Master Admin config. Class NAMES in valid_classes are ILLUSTRATIVE — not prescriptive. Owner rules on class naming at 4a Stage B dispatch. Extension: add entry OR bump v0.json -> v1.json per Ruling 3 append-only config policy. Never modifies any frozen contract. Precedent anchor: services/service_1/admission_refusal_reasons.v0.json.",
+  "valid_classes": [
+    {
+      "class_name": "editorial_use",
+      "since_version": "v0",
+      "description": "ILLUSTRATIVE: Internal editorial + reporting use; no redistribution."
+    },
+    {
+      "class_name": "syndication",
+      "since_version": "v0",
+      "description": "ILLUSTRATIVE: Redistribution to identified third-party outlets."
+    },
+    {
+      "class_name": "training_data",
+      "since_version": "v0",
+      "description": "ILLUSTRATIVE: Model training corpus use (ingredient-manifest scope per §6.5)."
+    }
+  ],
+  "commissioner_to_default_class": {
+    "operator_internal": "editorial_use",
+    "buyer_syndication_partner": "syndication",
+    "buyer_ml_partner": "training_data"
+  },
+  "default_class": "editorial_use",
+  "feed_id_to_license_class": {
+    "citizen_tv_news": "editorial_use",
+    "ktn_news": "syndication",
+    "ntv_news": "syndication",
+    "print_edition": "editorial_use",
+    "wire_kna": "training_data"
+  }
+}

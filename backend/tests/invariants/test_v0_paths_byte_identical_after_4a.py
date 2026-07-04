@@ -1,0 +1,73 @@
+"""v0-paths byte-identical after Phase 4a — Condition B4.
+
+Gate 10 — SHA-identity on the FIVE files enumerated by the Phase 4a
+dispatch:
+  * `contracts/objective_request.py`   (v0 objective contract)
+  * `services/service_1/service.py`    (v0 composition orchestrator)
+  * `contracts/service_1_refusal.py`   (14th frozen contract, A2)
+  * `contracts/admission_refusal.py`   (17th frozen contract, Phase 3)
+  * `services/outer_gate/transform.py` (Condition B3)
+  * `services/outer_gate/mint.py`      (Condition B3)
+  * `services/outer_gate/receipt.py`   (Condition B3)
+
+Pre-Phase-4a SHA-256s were captured at Phase 4a dispatch time
+(2026-07-03). If a future phase legitimately lifts one of these files
+(owner ruling), update the SHA constant IN THIS FILE and document the
+ruling — DO NOT bump SHAs to make a failing test pass.
+"""
+from __future__ import annotations
+
+import hashlib
+from pathlib import Path
+
+
+BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent  # /app/backend
+
+
+# Pre-Phase-4a canonical SHA-256s.
+PRE_PHASE_4A_SHA = {
+    "contracts/objective_request.py": (
+        "2588c735356fd096f10726b5a052b8af54172fec0c46f75a62767040aeca1ef1"
+    ),
+    "services/service_1/service.py": (
+        "05e905ed936982a98eae9b257ba629ded458924cf878dd436b1decc6c3d39656"
+    ),
+    "contracts/service_1_refusal.py": (
+        "4fe38c214dc592603ceeffaf07732d33e374bae825fc7556d8684f667e41b022"
+    ),
+    "contracts/admission_refusal.py": (
+        "e68a1e383042835c8104d140e39469615c5f4a81461defaa7d13f098f68acf6f"
+    ),
+    "services/outer_gate/transform.py": (
+        "90907d22be8124b7e07efe0e33027d2ef3ded67e06158f20243a6b33d126707e"
+    ),
+    "services/outer_gate/mint.py": (
+        "01cfe0e0fe8762e4b4c0421db89668f7eb88e3a3caf9eae57719ad496129ebbf"
+    ),
+    "services/outer_gate/receipt.py": (
+        "4591e5ff6834fc80e359a33b7ccd1faad88fa8980a62f687ad1976a0342e9348"
+    ),
+}
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def test_v0_paths_byte_identical_after_4a():
+    """Condition B4 — the seven files above stay byte-identical during
+    Phase 4a landing. Any drift is a HAZARD-STOP requiring owner
+    ruling before proceeding."""
+    drift = []
+    for rel_path, expected_sha in PRE_PHASE_4A_SHA.items():
+        actual = _sha256(BACKEND_ROOT / rel_path)
+        if actual != expected_sha:
+            drift.append(
+                f"  {rel_path}\n"
+                f"    pre-4a SHA:  {expected_sha}\n"
+                f"    post-4a SHA: {actual}"
+            )
+    assert not drift, (
+        "Condition B4 violation — v0/frozen-contract paths mutated during "
+        "Phase 4a landing:\n" + "\n".join(drift)
+    )

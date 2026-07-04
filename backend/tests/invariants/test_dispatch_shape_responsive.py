@@ -383,33 +383,46 @@ async def test_positive_work_order_dispatch_routes_to_service_1_v0():
 
 @pytest.mark.asyncio
 async def test_positive_external_request_warm_fork_populated_registry():
-    """external_request + feasible floor → warm fork.
+    """external_request + feasible floor + warm-fork qualified_data →
+    §6.1 packaging returns `QualifiedDataPayload` @200.
 
-    Populated Registry with UTTERANCE+FACT rows; floor=UTTERANCE.
-    derive_floor_feasibility.feasible == True; qualifying_volume >= 1;
-    freshness == FRESH. Fork MUST be `warm`.
+    Post-Phase-4a (2026-07-03): warm-fork + qualified_data no longer
+    emits a scaffold placeholder — it now returns the actual §6.1
+    qualified-data payload via
+    `services.service_1.qualified_data.package_qualified_data`.
+    (Condition-5 migration analogous to Phase 3's MODEL → refusal migration.)
+
+    To keep license-class filter passing, `feed_id=citizen_tv_news`
+    maps to `editorial_use`; the default commissioner="test_commissioner"
+    derives to `editorial_use` (config's `default_class`).
     """
     await _clear_registry()
-    await _seed_fresh_row("s://a/r.raw", "warm_region", "fact")
-    await _seed_fresh_row("s://a/s.raw", "warm_region", "utterance")
-    await _seed_fresh_row("s://a/t.raw", "warm_region", "utterance")
+    await _seed_fresh_row("s://a/r.raw", "warm_region_qd", "fact")
+    await _seed_fresh_row("s://a/s.raw", "warm_region_qd", "utterance")
+    await _seed_fresh_row("s://a/t.raw", "warm_region_qd", "utterance")
 
     req = _build_request(
         entry=ObjectiveEntry.EXTERNAL_REQUEST,
-        scope_refs=["warm_region"],
+        scope_refs=["warm_region_qd"],
         form=OutputForm.QUALIFIED_DATA,
         minimum_class=DefensibilityClass.UTTERANCE,
     )
+    # Override feed_id on all rows to citizen_tv_news (editorial_use).
+    from contracts.mtafiti_registry import MTAFITI_REGISTRY_COLLECTION as _C
+    await db[_C].update_many({}, {"$set": {"feed_id": "citizen_tv_news"}})
+
     result = await dispatch_module.dispatch(req)
-    assert result.feasibility_result is not None
-    assert result.feasibility_result.freshness == Freshness.FRESH
-    assert result.floor_feasibility is not None
-    assert result.floor_feasibility["feasible"] is True
-    assert result.fork_decision == "warm", (
-        f"populated feasible reach MUST fork WARM; got {result.fork_decision!r}"
+
+    # Post-Phase-4a: return is QualifiedDataPayload (not DispatchResult).
+    from services.service_1.qualified_data import QualifiedDataPayload
+    assert isinstance(result, QualifiedDataPayload), (
+        f"warm+qualified_data MUST return QualifiedDataPayload post-Phase-4a; "
+        f"got {type(result).__name__}"
     )
-    assert result.route_target == dispatch_module.ROUTE_ADMISSION_WARM_FORK
-    assert result.placeholder_body["phase_debt"] == dispatch_module.DEBT_PHASE_4
+    assert result.unit_count == 3
+    assert len(result.units) == 3
+    for unit in result.units:
+        assert "defensibility" in unit
 
 
 @pytest.mark.asyncio
