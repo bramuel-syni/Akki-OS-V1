@@ -1409,7 +1409,7 @@
       "notes": "G5b. Every intelligence response renders a trust-receipt URL per \u00a716.5 one-thread-throughout mandate."
     },
     {
-      "module": "frontend/src/legacy/__tests__/gate1_class_inseparable.test.js",
+      "module": "frontend/src/__tests__/ui_spec_v1/gate1_class_inseparable.test.js",
       "cousin_citation": null,
       "shape_signature": "Static analysis: every claim-rendering component co-renders defensibility class",
       "resolves_by": [
@@ -1418,10 +1418,10 @@
       ],
       "lift_kind": "mandate-forced-net-new",
       "transitive_chain": [],
-      "notes": "G5b gate test. Enforces UX Arch \u00a714 class-inseparable invariant across 5 engine payload shapes."
+      "notes": "G5b gate re-landed at Phase 8a-lite under UI Spec v1. Enforces UX Arch \u00a714 class-inseparable invariant across all claim-rendering components."
     },
     {
-      "module": "frontend/src/legacy/__tests__/gate2_refusal_firstclass.test.js",
+      "module": "frontend/src/__tests__/ui_spec_v1/gate2_refusal_firstclass.test.js",
       "cousin_citation": null,
       "shape_signature": "Static analysis: RefusalCard renders all 7 fields + validation-422 distinguishability",
       "resolves_by": [
@@ -1430,12 +1430,12 @@
       ],
       "lift_kind": "mandate-forced-net-new",
       "transitive_chain": [],
-      "notes": "G5b gate test. Enforces UX Arch \u00a714 refusal-first-class + Interface Spec \u00a75 validation-vs-refusal distinguishability."
+      "notes": "G5b gate re-landed at Phase 8a-lite under UI Spec v1. Enforces UX Arch \u00a714 refusal-first-class + Interface Spec \u00a75 validation-vs-refusal distinguishability."
     },
     {
-      "module": "frontend/src/legacy/__tests__/gate3_single_ingress.test.js",
+      "module": "frontend/src/__tests__/ui_spec_v1/gate3_single_ingress.test.js",
       "cousin_citation": null,
-      "shape_signature": "Static analysis: zero raw fetch/axios outside apiClient + trace_id retention in all receiving components",
+      "shape_signature": "Static analysis: zero raw fetch/axios outside apiClient (excl. archived src/legacy/) + trace_id retention in all receiving components",
       "resolves_by": [
         "fs",
         "path",
@@ -1443,7 +1443,7 @@
       ],
       "lift_kind": "mandate-forced-net-new",
       "transitive_chain": [],
-      "notes": "G5b gate test. Enforces Interface Spec \u00a716.5 single-trace-thread + API ingress channeling."
+      "notes": "G5b gate re-landed at Phase 8a-lite under UI Spec v1. Enforces Interface Spec \u00a716.5 single-trace-thread + API ingress channeling. Part A excludes src/legacy/ per Phase 8a-lite archival ruling."
     }
   ]
 }

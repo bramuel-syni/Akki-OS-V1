@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, ArrowRight, Activity } from 'lucide-react';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
 
 export default function LandingPage() {
   const { data: health, loading } = useApi(() => api.health(), []);

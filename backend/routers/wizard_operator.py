@@ -40,9 +40,13 @@ from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
+import httpx
+from httpx import ASGITransport
 
 from contracts.wizard_commit_state import WizardCommitState_v0
+from services.service_1.license_class_selection import derive_license_class
 from services.wizard import (
+    admission_handoff,
     operator_state_machine as osm,
     session_persistence,
     turn_ledger,
@@ -181,25 +185,73 @@ async def post_agent_assumption(session_id: str, request: Request):
 @router.post("/{session_id}/commit-review")
 async def post_commit_review(session_id: str):
     """Paint the marked-draft view + Guard 1 pre-flight + provenance
-    refusal enumeration.
+    refusal enumeration + license_class_drift (B-3).
+
+    B-3 extension: `license_class_drift: {committed: str, derived: str} | null`.
+    Soft signal — NOT a hard refusal.
 
     Response body:
       * `you_supplied`: [{field, value}, ...]
       * `agent_assumed_items`: [{field, value}, ...]
       * `violations`: [str, ...] — empty iff ready to freeze.
+      * `license_class_drift`: {committed, derived} | null.
     """
     session = _get_session_or_404(session_id)
     agent = _new_stub_agent()
     snapshot = osm._to_frozen_commit_state(session, committed_at=None)
     review = agent.commit_review(snapshot)
     violations = osm.preflight_freeze(session)
+    license_class_drift = _compute_license_class_drift(session, snapshot)
     return {
         "session_id": session.session_id,
         "you_supplied": review.you_supplied,
         "agent_assumed_items": review.agent_assumed_items,
         "violations": violations,
+        "license_class_drift": license_class_drift,
         "ready_to_freeze": not violations,
     }
+
+
+def _compute_license_class_drift(
+    session: osm.OperatorSession,
+    snapshot: WizardCommitState_v0,
+):
+    """Compute soft license_class_drift signal for operator variant.
+
+    Same semantics as the buyer router version — see docstring on
+    `routers/wizard_buyer.py::_compute_license_class_drift`. Returns
+    None when no committed class OR when derived matches committed.
+    """
+    if session.license_class is None:
+        return None
+    from services.wizard.operator_state_machine import _iso_now
+    committed_snapshot = snapshot.model_copy(update={"committed_at": _iso_now()})
+    envelope_shim = _envelope_shim_from_session(session)
+    derived = derive_license_class(envelope_shim, wizard_state=committed_snapshot)
+    if derived == session.license_class:
+        return None
+    return {"committed": session.license_class, "derived": derived}
+
+
+def _envelope_shim_from_session(session: osm.OperatorSession):
+    from contracts.objective_request_v2 import Envelope
+    return Envelope(
+        lawful_basis=_extract_field_str(session, "envelope.lawful_basis", "legitimate_interest"),
+        done_condition=_extract_field_str(session, "envelope.done_condition", "standing_floor"),
+        budget=_extract_field_str(session, "envelope.budget", "default"),
+        scope_ceiling=_extract_field_str(session, "envelope.scope_ceiling", "estate"),
+        availability_snapshot={},
+        floor_feasibility={},
+        commissioner=f"wizard-operator-{session.session_id}",
+        committed_at=session.initiated_at,
+    )
+
+
+def _extract_field_str(session: osm.OperatorSession, name: str, default: str) -> str:
+    cv = session.committed_values.get(name)
+    if cv is None or cv.value is None:
+        return default
+    return str(cv.value)
 
 
 @router.post("/{session_id}/freeze")
@@ -265,6 +317,56 @@ async def get_session(session_id: str):
         return snapshot.model_dump(mode="json")
     doc.pop("_id", None)
     return doc
+
+
+@router.post("/{session_id}/handoff")
+async def post_handoff(session_id: str, request: Request):
+    """B-3 admission handoff — mint `ObjectiveRequest_v2` from the frozen
+    wizard state and hand off to `POST /api/objectives`.
+
+    See `routers/wizard_buyer.py::post_handoff` docstring — the operator
+    variant mirrors the same semantics, but operator has no proposals
+    (empty list passed to the composer).
+    """
+    doc = await session_persistence.load_session(session_id)
+    if doc is None:
+        in_mem = _SESSIONS.get(session_id)
+        if in_mem is None:
+            raise HTTPException(status_code=404, detail=f"session_id={session_id!r} not found")
+        return JSONResponse(
+            status_code=422,
+            content={
+                "reason": "wizard_not_frozen",
+                "detail": "handoff requires a frozen wizard session; call POST /freeze first.",
+            },
+        )
+    doc.pop("_id", None)
+    frozen_state = WizardCommitState_v0.model_validate(doc)
+    if frozen_state.committed_at is None:
+        return JSONResponse(
+            status_code=422,
+            content={
+                "reason": "wizard_not_frozen",
+                "detail": "handoff requires a frozen wizard session; call POST /freeze first.",
+            },
+        )
+    obj_req = admission_handoff.compose_objective_request_from_frozen_state_with_proposals(
+        frozen_state, [],  # operator has no proposals
+    )
+    from server import app as _fastapi_app
+    payload = obj_req.model_dump(mode="json")
+    async with httpx.AsyncClient(
+        transport=ASGITransport(app=_fastapi_app),
+        base_url="http://wizard-handoff-internal",
+    ) as client:
+        resp = await client.post("/api/objectives", json=payload)
+    if resp.status_code == 202:
+        body = resp.json()
+        objective_id = body.get("objective_id")
+        if objective_id and frozen_state.frozen_objective_ref != objective_id:
+            updated = frozen_state.model_copy(update={"frozen_objective_ref": objective_id})
+            await session_persistence.upsert_session(updated)
+    return JSONResponse(status_code=resp.status_code, content=resp.json())
 
 
 async def _has_body(request: Request) -> bool:

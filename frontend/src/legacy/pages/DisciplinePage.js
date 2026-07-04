@@ -1,6 +1,6 @@
 import React from 'react';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
 import { Shield, FileText, Hash } from 'lucide-react';
 
 export default function DisciplinePage() {

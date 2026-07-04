@@ -682,18 +682,22 @@ def test_composed_conclusion_synthesis_lines_untouched_at_7b_2():
 
 
 def test_operator_router_untouched_at_7b_2():
-    """Block C — operator router is UNTOUCHED at 7b-2 (buyer router lives
-    in a separate file per Owner ratification)."""
+    """Block C — operator router surface shape.
+
+    B-2 landing: 5 POST + 1 GET (session, turn, agent-assumption,
+    commit-review, freeze + GET snapshot). B-3 adds `/handoff`
+    additively (post-freeze admission handoff to POST /api/objectives),
+    bringing the count to 6 POST + 1 GET. This gate now accepts either
+    posture; the strict B-3 mount-count invariant is
+    `test_operator_router_still_mounts_7_endpoints_at_7b_3` in the B-3
+    test file.
+    """
     p = _BACKEND_ROOT / "routers" / "wizard_operator.py"
-    expected_sha_lines_range = p.read_text().count("\n")
-    # SHA changes are OK if Block A's Condition A(i) landing bumped it;
-    # here we assert only that no NEW endpoints appeared beyond the
-    # 6 operator paths. Buyer paths MUST live in wizard_buyer.py.
     text = p.read_text()
-    # Grep-count of @router.post / @router.get in the operator file.
     n_post = len(re.findall(r"^@router\.post\(", text, re.MULTILINE))
     n_get = len(re.findall(r"^@router\.get\(", text, re.MULTILINE))
-    assert n_post == 5, f"Expected 5 POST endpoints on operator router; found {n_post}"
+    # Accept B-2 (5 POST) OR B-3 (6 POST) posture; both are point-in-time truths.
+    assert n_post in (5, 6), f"Expected 5 (B-2) or 6 (B-3) POST endpoints on operator router; found {n_post}"
     assert n_get == 1, f"Expected 1 GET endpoint on operator router; found {n_get}"
 
 
@@ -782,23 +786,26 @@ async def test_wizard_buyer_propose_endpoint_writes_proposal_with_dual_delta():
 @pytest.mark.asyncio
 async def test_wizard_buyer_freeze_endpoint_defers_admission_handoff_at_b_2():
     """Block C — buyer freeze at B-2 lands the machinery; admission
-    handoff to POST /api/objectives is B-3 scope (marker on response)."""
+    handoff to POST /api/objectives is B-3 scope.
+
+    Note: at B-3 close, the admission handoff lands via a separate
+    /handoff endpoint (not from freeze). The freeze body no longer
+    carries `admission_handoff_deferred_to_stage` — that marker was
+    dropped when B-3 landed the actual handoff. This gate now attests
+    only the structural buyer-freeze semantics (variant marker) which
+    survives B-3.
+    """
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         r0 = await client.post("/api/wizard/buyer/session")
         sid = r0.json()["session_id"]
-        # Buyer has no operator-mandatory tier — freeze is legal.
         r = await client.post(
             f"/api/wizard/buyer/{sid}/freeze",
             json={"license_class": "standard"},
         )
-    # Buyer freeze may 200 or 422 depending on preflight (no committed_values
-    # → source-tag check passes; provenance-preservation needs all 3 fields
-    # → if any is missing, that pre-check no-ops on absence).
     assert r.status_code in (200, 422), r.text
     if r.status_code == 200:
         body = r.json()
         assert body["variant"] == "buyer"
-        assert body["admission_handoff_deferred_to_stage"] == "B-3"
 
 
 @pytest.mark.asyncio
@@ -821,15 +828,19 @@ async def test_buyer_router_agent_assumption_refuses_lawful_basis():
 # ------------------------------------------------------------------ B-1 posture regression
 
 def test_operator_router_still_mounts_6_endpoints_at_7b_2():
-    """Block C regression — B-1 posture: operator router surface unchanged."""
+    """Block C regression — B-1 posture: operator router surface unchanged
+    at B-2 close. At B-3 close the surface grows to 7 (adds /handoff).
+    This gate accepts either posture."""
     from server import app
     ops = [r.path for r in app.routes if hasattr(r, "path") and "/api/wizard/operator" in r.path]
-    assert len(ops) == 6, f"Expected 6 operator wizard endpoints; found {len(ops)}"
+    assert len(ops) in (6, 7), f"Expected 6 (B-2) or 7 (B-3) operator wizard endpoints; found {len(ops)}"
 
 
 def test_buyer_router_mounts_7_endpoints_at_7b_2():
-    """Block C — buyer router mounts 7 endpoints (6 mirror + /propose)."""
+    """Block C — buyer router mounts 7 endpoints at B-2 (6 mirror + /propose).
+    At B-3 close the surface grows to 8 (adds /handoff). This gate
+    accepts either posture."""
     from server import app
     bs = [r.path for r in app.routes if hasattr(r, "path") and "/api/wizard/buyer" in r.path]
-    assert len(bs) == 7, f"Expected 7 buyer wizard endpoints; found {len(bs)}"
+    assert len(bs) in (7, 8), f"Expected 7 (B-2) or 8 (B-3) buyer wizard endpoints; found {len(bs)}"
 

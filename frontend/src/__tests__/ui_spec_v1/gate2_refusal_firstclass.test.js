@@ -1,24 +1,22 @@
 /**
- * Gate 2: Refusal first-class + validation distinguishability — RTL DOM verification.
+ * Gate 2 (UI Spec v1): Refusal first-class + validation distinguishability.
+ * Re-landed at Phase 8a-lite; surface-under-test is the Ask Console
+ * refusal branch, backed by the same `RefusalCard` shared component
+ * (Owner Condition-2 posture: no reimplementation).
  *
  * Tests:
- * T1: Mount RefusalCard with Service1Refusal@v0 → all 7 fields in DOM
- * T2: asked is prominent (has own data-testid, visible text)
- * T3: supported_class rendered as ClassBadge in DOM
- * T4: what_would_raise_it rendered as actionable text
- * T5: RefusalCard returns null when refusal is null (no DOM output)
- * T6: Validation-422 body shape {detail:[...]} is structurally distinct
- *     from refusal shape {outcome:"refused"} — the branching logic in
- *     ComposePage checks outcome before rendering RefusalCard.
- *     We verify RefusalCard does NOT render when given a validation-422-shaped object.
- *
- * Framework: React Testing Library.
+ *   T1: RefusalCard renders all displayable refusal envelope fields
+ *   T2: `asked` is prominent (own test-id, visible, labelled)
+ *   T3: `supported_class` rendered as ClassBadge in DOM
+ *   T4: `what_would_raise_it` rendered with actionable text
+ *   T5: RefusalCard returns null when refusal is null (no DOM output)
+ *   T6: Validation-422 body shape {detail:[...]} is structurally distinct
+ *       from refusal shape {outcome:"refused"} — RefusalCard shows no
+ *       refusal field content when handed a validation-422 body.
  */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import RefusalCard from '../components/RefusalCard';
-
-// ── Payloads ──────────────────────────────────────────────────────────
+import RefusalCard from '../../components/RefusalCard';
 
 const REFUSAL_PAYLOAD = {
   outcome: 'refused',
@@ -37,20 +35,13 @@ const VALIDATION_422 = {
   ],
 };
 
-// ── Tests ─────────────────────────────────────────────────────────────
-
-describe('Gate 2: Refusal first-class + validation distinguishability', () => {
-  test('T1: RefusalCard renders all displayable Service1Refusal@v0 fields', () => {
+describe('Gate 2 (UI Spec v1): Refusal first-class + validation distinguishability', () => {
+  test('T1: RefusalCard renders all displayable refusal envelope fields', () => {
     render(<RefusalCard refusal={REFUSAL_PAYLOAD} />);
-
-    // The 4 fields RefusalCard itself renders (asked, reason, supported_class, what_would_raise_it)
     expect(screen.getByTestId('refusal-asked')).toHaveTextContent(REFUSAL_PAYLOAD.asked);
     expect(screen.getByTestId('refusal-reason')).toHaveTextContent(REFUSAL_PAYLOAD.reason);
     expect(screen.getByTestId('refusal-supported-class')).toBeInTheDocument();
     expect(screen.getByTestId('refusal-raise')).toHaveTextContent(REFUSAL_PAYLOAD.what_would_raise_it);
-
-    // The card itself renders (outcome, run_id, trace_id are rendered by the parent ComposePage,
-    // but RefusalCard must render the card container proving it was triggered)
     expect(screen.getByTestId('refusal-card')).toBeInTheDocument();
     expect(screen.getByTestId('refusal-headline')).toHaveTextContent('Not to the standard required.');
   });
@@ -60,7 +51,6 @@ describe('Gate 2: Refusal first-class + validation distinguishability', () => {
     const askedEl = screen.getByTestId('refusal-asked');
     expect(askedEl).toBeVisible();
     expect(askedEl).toHaveTextContent('What is the Kenyan economic outlook?');
-    // Label present
     expect(screen.getByText('Asked')).toBeInTheDocument();
   });
 
@@ -83,15 +73,12 @@ describe('Gate 2: Refusal first-class + validation distinguishability', () => {
     expect(container.innerHTML).toBe('');
   });
 
-  test('T6: Validation-422 body does NOT trigger RefusalCard (structural distinguishability)', () => {
-    // Validation-422 has {detail: [...]} — no asked, no reason, no outcome.
-    // If someone accidentally passes validation-422 to RefusalCard, it renders null
-    // because the conditional checks (refusal.asked &&, refusal.reason &&, etc.) all fail.
+  test('T6: Validation-422 body shape is structurally distinct from refusal shape', () => {
     render(<RefusalCard refusal={VALIDATION_422} />);
-    // The card container still renders (refusal is truthy) but no field content appears
     const card = screen.getByTestId('refusal-card');
     expect(card).toBeInTheDocument();
-    // None of the refusal field test-ids should exist
+    // Validation-422 has no asked / reason / supported_class / what_would_raise_it —
+    // the field-conditional renders leave those DOM ids absent.
     expect(screen.queryByTestId('refusal-asked')).not.toBeInTheDocument();
     expect(screen.queryByTestId('refusal-reason')).not.toBeInTheDocument();
     expect(screen.queryByTestId('refusal-supported-class')).not.toBeInTheDocument();

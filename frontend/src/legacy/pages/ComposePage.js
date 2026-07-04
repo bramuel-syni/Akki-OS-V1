@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
-import ClassBadge from '../components/ClassBadge';
-import RefusalCard from '../components/RefusalCard';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
+import ClassBadge from '../../components/ClassBadge';
+import RefusalCard from '../../components/RefusalCard';
 import { Link } from 'react-router-dom';
 import { Send, Loader2, FileText } from 'lucide-react';
 

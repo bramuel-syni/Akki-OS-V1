@@ -1,6 +1,6 @@
-"""Wizard buyer router — Phase 7 Stage B-2 (v3 §3.3 buyer variant).
+"""Wizard buyer router — Phase 7 Stage B-2 + Phase 7 Stage B-3.
 
-Endpoints (7):
+Endpoints (8; B-3 adds `/handoff`):
   * POST /api/wizard/buyer/session — initiate; returns
       {session_id, trace_id, initiated_at, variant="buyer"}.
   * POST /api/wizard/buyer/{sid}/turn — advance state machine one turn.
@@ -10,9 +10,12 @@ Endpoints (7):
   * POST /api/wizard/buyer/{sid}/agent-assumption — mint an
       AgentAssumption_v0 (buyer variant permits ANY axis except
       envelope.lawful_basis; Condition A(ii)/(iii) structural).
-  * POST /api/wizard/buyer/{sid}/commit-review — paint marked draft.
-  * POST /api/wizard/buyer/{sid}/freeze — freeze (B-2 landing; B-3
-      wires the admission handoff to POST /api/objectives).
+  * POST /api/wizard/buyer/{sid}/commit-review — paint marked draft +
+      dual_delta_summary + license_class_drift (B-3 extensions).
+  * POST /api/wizard/buyer/{sid}/freeze — freeze + wizard_freeze ledger
+      write (B-3 parity with operator).
+  * POST /api/wizard/buyer/{sid}/handoff — B-3 admission handoff to
+      POST /api/objectives (in-process ASGI transport; single-source).
   * GET  /api/wizard/buyer/{sid} — read-only snapshot.
 
 Owner Standing Disposition #2 (Infra-not-refusal): if the underlying
@@ -23,14 +26,19 @@ from __future__ import annotations
 
 from typing import Any, Dict, FrozenSet, Optional
 
+import httpx
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
+from httpx import ASGITransport
 
 from contracts.wizard_commit_state import WizardCommitState_v0
+from services.service_1.license_class_selection import derive_license_class
 from services.synisense.exceptions import ServiceUnavailable
 from services.wizard import (
+    admission_handoff,
     buyer_state_machine as bsm,
     session_persistence,
+    turn_ledger,
 )
 from services.wizard.agent_interface import DeterministicStubAgent
 from services.wizard.source_tagging import SourceTagViolation
@@ -203,28 +211,115 @@ async def post_agent_assumption(session_id: str, request: Request):
 
 @router.post("/{session_id}/commit-review")
 async def post_commit_review(session_id: str):
+    """Paint the marked-draft view + dual-delta summary + license-class-drift.
+
+    B-3 extensions (both fields lift from single-source helpers; no
+    in-router computation):
+      * `dual_delta_summary`: dict keyed by `proposal_id` — buyer only.
+        Sourced from `services/wizard/admission_handoff.py::summarise_dual_deltas`.
+      * `license_class_drift`: {committed: str, derived: str} | null.
+        Sourced from `services/service_1/license_class_selection.py::derive_license_class`
+        invoked against the reviewed state. Soft signal — NOT a hard refusal.
+    """
     session = _get_session_or_404(session_id)
     agent = _new_agent()
     snapshot = bsm._to_frozen_commit_state(session, committed_at=None)
     review = agent.commit_review(snapshot)
     violations = bsm.preflight_freeze(session)
+    dual_delta_summary = admission_handoff.summarise_dual_deltas(session.proposals)
+    license_class_drift = _compute_license_class_drift(session, snapshot)
     return {
         "session_id": session.session_id,
         "you_supplied": review.you_supplied,
         "agent_assumed_items": review.agent_assumed_items,
         "proposals": session.proposals,
+        "dual_delta_summary": dual_delta_summary,
+        "license_class_drift": license_class_drift,
         "violations": violations,
         "ready_to_freeze": not violations,
     }
 
 
+def _compute_license_class_drift(
+    session: bsm.BuyerSession,
+    snapshot: WizardCommitState_v0,
+) -> Optional[Dict[str, str]]:
+    """Compute soft license_class_drift signal.
+
+    `committed` = value the user committed on the session (may be None
+    if mid-shape). `derived` = what `derive_license_class` would return
+    against a FROZEN wizard state (post-freeze primary arm).
+
+    Returns None when either (a) no committed class OR (b) derived
+    matches committed. Otherwise returns `{committed, derived}` for
+    surface rendering.
+
+    The primary-arm gate of `derive_license_class` requires
+    `wizard_state.committed_at is not None`. At commit-review time
+    the state is NOT yet frozen — we simulate the frozen posture by
+    minting a snapshot with `committed_at=_iso_now()` for derivation
+    purposes ONLY (this simulated snapshot is discarded; nothing
+    persists).
+    """
+    if session.license_class is None:
+        return None
+    # Simulate frozen posture for derivation.
+    from services.wizard.buyer_state_machine import _iso_now  # single-source
+    committed_snapshot = snapshot.model_copy(update={"committed_at": _iso_now()})
+    # Envelope is not passed here — derive_license_class primary arm
+    # returns wizard_state.license_class when the state is frozen. The
+    # fallback arm (from Envelope) is not exercised here because the
+    # primary arm gate fires.
+    # We invoke against a minimal envelope shim: pass the committed
+    # snapshot's envelope-shaped values if present, else None.
+    envelope_shim = _envelope_shim_from_session(session)
+    derived = derive_license_class(envelope_shim, wizard_state=committed_snapshot)
+    if derived == session.license_class:
+        return None
+    return {"committed": session.license_class, "derived": derived}
+
+
+def _envelope_shim_from_session(session: bsm.BuyerSession):
+    """Construct a minimal Envelope for the fallback arm.
+
+    The primary arm fires when the simulated snapshot has committed_at +
+    license_class both set; the fallback arm is not exercised. But
+    derive_license_class's signature requires a valid Envelope object,
+    so we build a minimal one from the session's committed values.
+    """
+    from contracts.objective_request_v2 import Envelope
+    return Envelope(
+        lawful_basis=_extract_field_str(session, "envelope.lawful_basis", "legitimate_interest"),
+        done_condition=_extract_field_str(session, "envelope.done_condition", "standing_floor"),
+        budget=_extract_field_str(session, "envelope.budget", "default"),
+        scope_ceiling=_extract_field_str(session, "envelope.scope_ceiling", "estate"),
+        availability_snapshot={},
+        floor_feasibility={},
+        commissioner=f"wizard-buyer-{session.session_id}",
+        committed_at=session.initiated_at,
+    )
+
+
+def _extract_field_str(session: bsm.BuyerSession, name: str, default: str) -> str:
+    cv = session.committed_values.get(name)
+    if cv is None or cv.value is None:
+        return default
+    return str(cv.value)
+
+
 @router.post("/{session_id}/freeze")
 async def post_freeze(session_id: str, request: Request):
-    """B-2 buyer freeze — lands the machinery; admission handoff to
-    POST /api/objectives is B-3 scope."""
+    """B-3 buyer freeze — parity with operator freeze:
+      * `record_wizard_freeze(...)` ledger write with
+        `data_class="wizard_transcript"` (Owner E5 marker) — this was
+        missing at B-2 and lands at B-3.
+      * Body accepts optional `lawful_basis_ref` (default matches operator).
+      * Response body carries `ledger_run_id`.
+    """
     session = _get_session_or_404(session_id)
     body: Dict[str, Any] = await request.json() if await _has_body(request) else {}
     license_class: Optional[str] = body.get("license_class")
+    lawful_basis_ref: str = body.get("lawful_basis_ref", "wizard-lawful-basis-unset")
     if license_class is not None:
         session.license_class = license_class
 
@@ -242,6 +337,11 @@ async def post_freeze(session_id: str, request: Request):
             content={"violations": [str(exc)], "ready_to_freeze": False},
         )
     await session_persistence.upsert_session(frozen)
+    # B-3 ledger parity with operator freeze — record_wizard_freeze is
+    # idempotent per (trace_id, run_id='wizard-freeze-{session_id}').
+    ledger_run_id = await turn_ledger.record_wizard_freeze(
+        frozen, lawful_basis_ref=lawful_basis_ref,
+    )
     _SESSIONS.pop(session.session_id, None)
     return {
         "session_id": frozen.session_id,
@@ -249,9 +349,86 @@ async def post_freeze(session_id: str, request: Request):
         "trace_id": frozen.trace_id,
         "variant": frozen.variant,
         "license_class": frozen.license_class,
-        "admission_handoff_deferred_to_stage": "B-3",
+        "ledger_run_id": ledger_run_id,
         "frozen_state": frozen.model_dump(mode="json"),
     }
+
+
+@router.post("/{session_id}/handoff")
+async def post_handoff(session_id: str, request: Request):
+    """B-3 admission handoff — mint `ObjectiveRequest_v2` from the frozen
+    wizard state and hand off to `POST /api/objectives` (existing async
+    admission surface).
+
+    Preconditions:
+      * Wizard session MUST be frozen (`committed_at is not None` on the
+        persisted state). If not frozen → 422 with
+        `{"reason": "wizard_not_frozen", ...}`.
+
+    Return codes:
+      * 202 with `AsyncDeliveryAccepted_v1` on admission accept
+        (or idempotent replay — repeat handoff on same frozen session
+        returns same `objective_id`).
+      * 422 with `AdmissionRefusal_v0` (or `Service1Refusal_v0`)
+        passthrough on governed admission refuse. **No new refusal
+        codes at B-3 per Owner ruling.**
+      * 503 on infra fault (async admission's existing infra-not-refusal
+        behavior).
+
+    Dual-delta acceptance recording (buyer only): `proposals` from the
+    in-memory session are aggregated by
+    `admission_handoff.compose_objective_request_from_frozen_state_with_proposals`
+    into `envelope.floor_feasibility["dual_delta_summary"]`.
+    """
+    # Load frozen state — Mongo authoritative post-freeze.
+    doc = await session_persistence.load_session(session_id)
+    if doc is None:
+        # Not persisted → maybe still mid-shape in memory.
+        in_mem = _SESSIONS.get(session_id)
+        if in_mem is None:
+            raise HTTPException(status_code=404, detail=f"session_id={session_id!r} not found")
+        return JSONResponse(
+            status_code=422,
+            content={
+                "reason": "wizard_not_frozen",
+                "detail": "handoff requires a frozen wizard session; call POST /freeze first.",
+            },
+        )
+    doc.pop("_id", None)
+    frozen_state = WizardCommitState_v0.model_validate(doc)
+    if frozen_state.committed_at is None:
+        return JSONResponse(
+            status_code=422,
+            content={
+                "reason": "wizard_not_frozen",
+                "detail": "handoff requires a frozen wizard session; call POST /freeze first.",
+            },
+        )
+    # Buyer variant — carry proposals summary into the composed request.
+    in_mem = _SESSIONS.get(session_id)
+    proposals = list(in_mem.proposals) if in_mem is not None else []
+    obj_req = admission_handoff.compose_objective_request_from_frozen_state_with_proposals(
+        frozen_state, proposals,
+    )
+    # In-process ASGI transport call to POST /api/objectives — single-source
+    # (no duplication of admission logic). Preserves idempotency via the
+    # deterministic idempotency_key = f"handoff-{session_id}".
+    from server import app as _fastapi_app  # local import to avoid circular
+    payload = obj_req.model_dump(mode="json")
+    async with httpx.AsyncClient(
+        transport=ASGITransport(app=_fastapi_app),
+        base_url="http://wizard-handoff-internal",
+    ) as client:
+        resp = await client.post("/api/objectives", json=payload)
+    # Persist frozen_objective_ref on the wizard state (mongo update)
+    # when handoff was accepted at 202 with an objective_id.
+    if resp.status_code == 202:
+        body = resp.json()
+        objective_id = body.get("objective_id")
+        if objective_id and frozen_state.frozen_objective_ref != objective_id:
+            updated = frozen_state.model_copy(update={"frozen_objective_ref": objective_id})
+            await session_persistence.upsert_session(updated)
+    return JSONResponse(status_code=resp.status_code, content=resp.json())
 
 
 @router.get("/{session_id}")

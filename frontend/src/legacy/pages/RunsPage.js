@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
-import StatusBadge from '../components/StatusBadge';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
+import StatusBadge from '../../components/StatusBadge';
 import { List, RefreshCw, Search } from 'lucide-react';
 
 export default function RunsPage() {

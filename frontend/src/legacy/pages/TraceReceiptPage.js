@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
-import LedgerTable from '../components/LedgerTable';
-import ClassBadge from '../components/ClassBadge';
-import StatusBadge from '../components/StatusBadge';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
+import LedgerTable from '../../components/LedgerTable';
+import ClassBadge from '../../components/ClassBadge';
+import StatusBadge from '../../components/StatusBadge';
 import { ArrowLeft, Layers, Search, ChevronDown, ChevronRight } from 'lucide-react';
 
 function Collapsible({ title, badge, defaultOpen = false, testId, children }) {

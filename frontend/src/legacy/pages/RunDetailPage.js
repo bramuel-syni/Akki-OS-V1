@@ -1,8 +1,8 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
-import LedgerTable from '../components/LedgerTable';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
+import LedgerTable from '../../components/LedgerTable';
 import { ArrowLeft, FileText } from 'lucide-react';
 
 export default function RunDetailPage() {

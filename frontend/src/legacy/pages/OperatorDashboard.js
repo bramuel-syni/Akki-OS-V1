@@ -1,7 +1,7 @@
 import React from 'react';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
-import StatusBadge from '../components/StatusBadge';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
+import StatusBadge from '../../components/StatusBadge';
 import { AlertTriangle, Database, Lock, Layers } from 'lucide-react';
 
 export default function OperatorDashboard() {

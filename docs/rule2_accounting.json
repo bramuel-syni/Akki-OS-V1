@@ -29,7 +29,9 @@
     "Phase 6 Stage B": "post-§0-strict",
     "Phase 7 Stage A": "post-§0-strict",
     "Phase 7 Stage B-1": "post-§0-strict",
-    "Phase 7 Stage B-2": "post-§0-strict"
+    "Phase 7 Stage B-2": "post-§0-strict",
+    "Phase 8a-lite": "post-§0-strict",
+    "Phase 7 Stage B-3": "post-§0-strict"
   },
   "G0.5": {
     "lifted_verifiable": "UNKNOWN",
@@ -254,5 +256,21 @@
     "overall_ratio": "~3.5x",
     "discretionary_only_ratio": "~1.4x",
     "journal_ref": "[counting_standard: post-§0-strict] Phase 7 Stage B-2 close 2026-07-04. Buyer variant state machine + Sonnet 4.6 LLM integration + dual-delta gate. 7-endpoint buyer router mounted at /api/wizard/buyer/*. Zero new frozen contracts; mechanical parity 26 unchanged. 26 prior frozen contract sources byte-identical (verified by test_prior_contract_file_exists_and_stable_at_7b_2 parametrised over 25 contract sources + 1 count-invariant). Owner Condition-A pre-LLM Guard-1 mandatory-tier gate landed BEFORE any LLM code (Block A → 624 GREEN → Block B Sonnet wiring → 631 GREEN → Block C buyer SM + router + dual-delta → 685 GREEN). Owner Condition-2 grep-negative gates confirm buyer_state_machine.py re-implements NONE of {validate_source_tags, validate_guard_1_operator_mandatory_all_operator_supplied, _record_feasibility_snapshot}. SonnetWizardAgent lives inside services/synisense/shield/llm_router.py (Shield boundary preserved). Temp 0.2 live / 0.0 hermetic replay. No silent model degrade — Sonnet-unavailable → HTTP 503 (Owner Standing Disposition Infra-not-refusal). Zero new §0.1 Standing Dispositions at B-2 (§0.1 FROZEN per Owner correction). ~1600-2000 anchored band target (mid ~1800) → ~1757 actual → WITHIN BAND (-2.4% delta below mid; +0.4% within top-of-band). Deliverables: 3 NEW source files (dual_delta.py 91L + buyer_state_machine.py 332L + routers/wizard_buyer.py 267L) + 1 NEW test file (test_phase_7_stage_b_2_wizard.py 835L) + 5 MODIFIED files. Close report: /app/docs/close_reports/phase_7_stage_b_2.md (SHA quoted in return message). Ratio strings transcribed verbatim per Owner cap."
+  },
+  "Phase 8a-lite": {
+    "lifted_verifiable": "N/A",
+    "net_new_discretionary": "N/A",
+    "mandate_forced_net_new": "N/A",
+    "overall_ratio": "N/A",
+    "discretionary_only_ratio": "N/A",
+    "journal_ref": "[counting_standard: post-§0-strict; frontend phase] Phase 8a-lite close 2026-07-04. Ask Console (RMS UI Specification v1 §3 landing) LIVE at `/`. Frontend-only phase; zero backend surface delta (pytest 685/685 unchanged); no backend Rule 2 v2 accounting entry applies. ~1173 frontend LoC across 6 new files: AskConsolePage 610L + 5 UI-Spec-v1 gate test files 481L + mechanical import-path adjust on 8 archived legacy pages. Component reuse (Owner Condition-2 posture): ClassBadge + RefusalCard + LedgerTable + TrustReceiptLink from `src/components/*` reused unchanged. Close report: /app/docs/close_reports/phase_8a_lite.md SHA-256 bf4ba9a94f250abad61d33a842bdedf2e7c8571a3fe61b1d3323c25601dbe888."
+  },
+  "Phase 7 Stage B-3": {
+    "lifted_verifiable": "~275",
+    "net_new_discretionary": "UNKNOWN",
+    "mandate_forced_net_new": "~1094",
+    "overall_ratio": "~2.24x",
+    "discretionary_only_ratio": "~1.6x",
+    "journal_ref": "[counting_standard: post-§0-strict] Phase 7 Stage B-3 close 2026-07-04. Wizard trilogy COMPLETE (B-1 + B-2 + B-3). Commit-review extensions (both variants: license_class_drift signal; buyer-only: dual_delta_summary) + buyer freeze ledger parity with operator (record_wizard_freeze call + ledger_run_id in response body + lawful_basis_ref body param) + admission handoff endpoints (both variants: POST /handoff → mints ObjectiveRequest_v2 via admission_handoff.compose_objective_request_from_frozen_state_with_proposals + POSTs to /api/objectives via httpx.AsyncClient(ASGITransport) in-process → returns 202 AsyncDeliveryAccepted_v1 | 422 wizard_not_frozen | 422 AdmissionRefusal_v0 passthrough | 503 infra). Deterministic idempotency_key `handoff-{session_id}` — repeat handoff returns same objective_id per Phase 5 §7 async guarantee (E2E verified: same objective_id=obj-fc9c056a48c1 across two calls). NEW module services/wizard/admission_handoff.py (211L; pure fn; no LLM; no I/O; no network). Zero new frozen contracts (parity 26 unchanged); zero new §0.1 Standing Dispositions (§0.1 FROZEN); zero new §0.2 Plan Debts. 26 prior frozen contract sources byte-identical (verified by test_prior_contract_file_exists_and_stable_at_7b_3 parametrised over 25 sources + count invariant). Owner Condition-2 grep-negative gates × 3 confirm admission_handoff.py imports (does NOT reimplement) derive_license_class + _record_feasibility_snapshot + evaluate_dual_delta. **No new refusal codes at B-3** per Owner ruling verbatim (test_no_new_refusal_codes_at_7b_3 LB GREEN — registered admission_refusal + service_1_refusal registries unchanged; `wizard_not_frozen` returned as an ad-hoc router-layer 422 body, NOT registered as an admission-refusal reason). Dual-delta acceptance recording persists through handoff into envelope.floor_feasibility[\"dual_delta_summary\"] (buyer only). Owner E5 wizard-transcript retention class marker preserved (buyer freeze now writes ledger). Router surfaces: operator 6 → 7 (adds /handoff); buyer 7 → 8 (adds /handoff). Anchored band 800-1100 (mid ~950) → 1094 actual → WITHIN BAND (+15% of mid; -0.5% within top-of-band). No Rule-2 stop-and-judge triggered. Deliverables: 1 NEW source file (admission_handoff.py 211L) + 1 NEW test file (test_phase_7_stage_b_3_wizard.py 574L) + 1 NEW Stage A doc (232L) + 2 MODIFIED routers (wizard_buyer.py +176, wizard_operator.py +101) + 2 MODIFIED support files (test_phase_7_stage_b_2_wizard.py ±32 point-in-time gate adjustments; docs/lift_manifest.json ±60 8a-lite copy-forward). Close report: /app/docs/close_reports/phase_7_stage_b_3.md SHA-256 ea12517cec7deee48818a097e942d08601fda5a0f381e215a7df2c508c801c30."
   }
 }

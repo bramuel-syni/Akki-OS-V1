@@ -1,7 +1,7 @@
 import React from 'react';
-import { useApi } from '../hooks/useApi';
-import api from '../apiClient';
-import EngineCard from '../components/EngineCard';
+import { useApi } from '../../hooks/useApi';
+import api from '../../apiClient';
+import EngineCard from '../../components/EngineCard';
 
 export default function EnginesPage() {
   const { data: v1, loading: v1L } = useApi(() => api.v1Status(), []);
