@@ -42,7 +42,7 @@
 | Phase 1 — Estate Feasibility Query | CLOSED | 387 (+13) | ~30 | ~490 | ~5.7× overall / ~0.30× discretionary-only |
 | Phase 2 — Shape-Responsive Execution Scaffold | CLOSED | 402 (+15) | ~40 | ~460 | ~4.2× overall / ~0.24× discretionary-only |
 | Phase 3 — Admission-Refusal Envelope (unified §6.5 + future admission reasons via registry) | CLOSED | 413 (+11) | ~35 | ~470 | ~13.4× overall / ~0.19× discretionary-only |
-| **Phase 4 Stage A — Transform Layer design proposals (design-only)** | **CLOSED** | **413** (unchanged; docs-only) | N/A | N/A (Stage B does LoC accounting) | N/A |
+| **Phase 4 Stage A — Transform Layer design proposals (design-only)** | **CLOSED** | **413** (unchanged; docs-only) — initial verdict-summary close vacated same-day; full-text artifacts delivered 2026-07-03 on owner request | N/A | N/A (Stage B does LoC accounting) | N/A |
 | G2b | BLOCKED (real RMS material) | — | — | — | — |
 
 ## Pending Decisions
