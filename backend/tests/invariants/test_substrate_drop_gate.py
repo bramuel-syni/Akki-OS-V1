@@ -166,7 +166,7 @@ def test_all_phase_required_specs_have_manifest_entries():
     )
 
 
-@pytest.mark.parametrize("phase", ["G3", "G4", "G5a", "G5b", "G6"])
+@pytest.mark.parametrize("phase", ["G3", "G4", "G5a", "G5b", "G6", "Phase_5", "Phase_6", "Phase_7", "Phase_8"])
 def test_phase_gate_ready(phase: str):
     """Fine-grained per-phase readiness — each phase asserts its full spec set is present + hash-matches.
 

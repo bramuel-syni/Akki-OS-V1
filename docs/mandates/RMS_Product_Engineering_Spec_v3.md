@@ -170,3 +170,28 @@ Phase-sized dispatches to sharp acceptance gates; contract-first — frozen cont
 8. Late refusal is a governed outcome, not an error, and is ledgered like every refusal.
 9. Cost is measured before price is modelled; every quote stamps its price-model version; exploratory pricing is non-precedent by construction.
 10. High-privilege change is plain-language, consequence-visible, versioned, recorded, reversible — never silent.
+
+---
+
+## Closed Seam — Unlock: V2 Cumulative-Disclosure Arm
+
+The V2 gate's cumulative-disclosure arm (K-anonymity / L-diversity / DP-epsilon-budget across repeated file-outs) is BUILT and GATED. `services/v2_gate/cumulative.py::cumulative_arm_admitted()` returns `False` when any of the three env vars is unset or unparseable (`cumulative.py:27-50`). V2 single-packet refusal is live (`services/v2_gate/refusal.py`); the cumulative arm across sessions is dark until unlocked.
+
+- **Owner:** Data Protection Officer (DPO-signed decision required).
+- **§-anchor:** Product v2.1 §21.2 (k-anonymity + l-diversity + DP-noise primitives) + §29.1 ("Until V2 passes") + §32 (DPO-owned env-var-gated pattern).
+- **Config keys** (verbatim from `services/v2_gate/cumulative.py:40-42`):
+  - `RMS_G6_K_ANONYMITY_THRESHOLD` — integer, minimum group size (k in k-anonymity, §21.2).
+  - `RMS_G6_L_DIVERSITY_THRESHOLD` — integer, minimum distinct-value count within a group (l in l-diversity, §21.2).
+  - `RMS_G6_DP_EPSILON_BUDGET` — float, cumulative DP epsilon budget (§21.2).
+  - All three must parse and cross zero-value guards for `cumulative_arm_admitted()` to return True.
+- **Unlock procedure:**
+  1. DPO decides threshold values.
+  2. Set env vars at container/deployment layer (env is read at request time per `cumulative.py:36-50`; no restart strictly required, but recommended for cache coherence).
+  3. `cumulative_arm_admitted()` begins returning True; the load-bearing arm becomes live.
+- **Behavioural delta when opened:**
+  - V2 refusal envelope gains a new reason code path: `cumulative_disclosure_risk` (defined at G6 for this exact unlock).
+  - Individually-clean egresses that re-combine to reconstruct identities are refused when the k-anonymity or l-diversity threshold is crossed, OR when the DP epsilon budget is exhausted.
+  - The V2 tracking store begins persisting egress fingerprints across sessions (implementation lives behind `cumulative_arm_admitted()` guard at `cumulative.py:73`).
+- **Test that proves it opened:** `tests/invariants/test_v2_gate_refusal_cumulative.py` already includes an unlock-simulation test (`L144+` region) that monkey-patches all three env vars and asserts `cumulative_arm_admitted() is True` — this is the LOAD-BEARING seam test that flips on unlock. On real unlock: no new test file strictly required; the LOAD-BEARING test at `L144+` becomes an end-to-end guarantee. Optional positive additions: `test_cumulative_arm_refuses_at_k_threshold` (construct synthetic egress-history crossing `k`; assert refusal), `test_cumulative_arm_epsilon_budget_exhaustion_refuses` (repeated queries deplete epsilon budget; assert next query refuses).
+- **Consolidated runbook:** `/app/docs/handoff/seam_unlock_runbook.md` Seam 5 (already on disk; extend if this block's language settles).
+

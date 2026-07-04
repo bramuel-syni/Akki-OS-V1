@@ -46,3 +46,37 @@ G6:
   - RMS_Product_Engineering_Spec_v3.md
   - RMS_UI_Specification_v1.md
   - northena.md
+
+# Phase 5 — Async delivery contract (v3 §7).
+# Depends on Product Spec v3 (parent §7) + UI Spec v1 (§4.2/§4.3 async additions) +
+# Northena Spec (ledger absorbs state transitions + late refusal per §7).
+Phase_5:
+  - RMS_Product_Engineering_Spec_v3.md
+  - RMS_UI_Specification_v1.md
+  - northena.md
+
+# Phase 6 — Economics config (v3 §8).
+# Depends on Product Spec v3 (parent §8) + UX Architecture v2 (§7 economics posture) +
+# UI Spec v1 (§6.1 Master Admin surface + §5.1 buyer price card).
+Phase_6:
+  - RMS_Product_Engineering_Spec_v3.md
+  - RMS_UX_Architecture_v2.md
+  - RMS_UI_Specification_v1.md
+
+# Phase 7 — Shaping wizard (v3 §3.3 operator + buyer variants).
+# Depends on Product Spec v3 (parent §3.3 + §6 provenance-preservation) +
+# UI Spec v1 (§2.2/§2.3/§5.1 wizard surfaces) + UX Architecture v2 (§4.3 shaping architecture) +
+# Mtafiti Spec (floor_feasibility shared-derivation per Ruling 4).
+Phase_7:
+  - RMS_Product_Engineering_Spec_v3.md
+  - RMS_UI_Specification_v1.md
+  - RMS_UX_Architecture_v2.md
+  - RMS_Mtafiti_Specification.md
+
+# Phase 8 — Frontend rework against UI Spec v1 (six surfaces + async additions).
+# Depends on UI Spec v1 (concrete surfaces + §8 binding copy) +
+# UX Architecture v2 (personas + trust model) + Product Spec v3 (parent).
+Phase_8:
+  - RMS_UI_Specification_v1.md
+  - RMS_UX_Architecture_v2.md
+  - RMS_Product_Engineering_Spec_v3.md
