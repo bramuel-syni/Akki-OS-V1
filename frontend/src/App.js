@@ -21,6 +21,9 @@ import EngineerAdministerPage from './pages/engineer/EngineerAdministerPage';
 import BuyerShapePage from './pages/buyer/BuyerShapePage';
 import BuyerAcquirePage from './pages/buyer/BuyerAcquirePage';
 import BuyerReceivePage from './pages/buyer/BuyerReceivePage';
+import MasterAdminHomePage from './pages/master_admin/MasterAdminHomePage';
+import ChangeARulePage from './pages/master_admin/ChangeARulePage';
+import AuditTrailPage from './pages/master_admin/AuditTrailPage';
 import { AuthProvider } from './hooks/useAuth';
 
 // Phase 8 Stage B-1 — Auth landing (Owner E1 ratified: custom JWT + bcrypt).
@@ -47,6 +50,10 @@ export default function App() {
           <Route path="buyer/shape" element={<BuyerShapePage />} />
           <Route path="buyer/acquire/:sessionId" element={<BuyerAcquirePage />} />
           <Route path="buyer/receive/:sessionId" element={<BuyerReceivePage />} />
+          {/* Phase 8 Stage B-4 — Master Admin surface (UI Spec §6) */}
+          <Route path="master-admin" element={<MasterAdminHomePage />} />
+          <Route path="master-admin/change-a-rule/:ruleId" element={<ChangeARulePage />} />
+          <Route path="master-admin/audit-trail" element={<AuditTrailPage />} />
           {/* Legacy G5b surfaces — nested under /legacy/* (Phase 8a-lite archival) */}
           <Route path="legacy" element={<AppShell />}>
             <Route index element={<LandingPage />} />

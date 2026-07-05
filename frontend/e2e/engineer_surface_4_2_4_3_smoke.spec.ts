@@ -49,9 +49,12 @@ test('engineer_first_call_renders_ui_spec_4_2_verbatim_including_binding_copy', 
   // §4.2 two response panels side by side.
   await expect(page.getByTestId('first-call-response-panels')).toBeVisible();
   await expect(page.getByTestId('first-call-answered-panel')).toBeVisible();
-  await expect(page.getByTestId('first-call-answered-panel')).toContainText('outcome');
+  // Phase 8 Stage B-4 amendment — fixture now matches ComposedConclusion_v0
+  // frozen contract shape (fixture-schema gate). Fields per contract 18.
+  await expect(page.getByTestId('first-call-answered-panel')).toContainText('answer_text');
+  await expect(page.getByTestId('first-call-answered-panel')).toContainText('conclusion_class');
   await expect(page.getByTestId('first-call-answered-panel')).toContainText('trace_id');
-  await expect(page.getByTestId('first-call-answered-panel')).toContainText('defensibility');
+  await expect(page.getByTestId('first-call-answered-panel')).toContainText('load_bearing_unit_ids');
   await expect(page.getByTestId('first-call-refused-panel')).toBeVisible();
   await expect(page.getByTestId('first-call-refused-panel')).toContainText('"outcome": "refused"');
   await expect(page.getByTestId('first-call-refused-panel')).toContainText('asked');

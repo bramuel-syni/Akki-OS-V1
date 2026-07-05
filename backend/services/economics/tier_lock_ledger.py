@@ -33,11 +33,16 @@ def _run_id_for(rule_id: str, idempotency_key: str) -> str:
     return f"master-admin-rule-change-{rule_id}-{idempotency_key}"
 
 
-async def _ledger_row_exists(trace_id: str, run_id: str) -> bool:
-    existing = await db[NORTHENA_LEDGER_COLLECTION].find_one({
-        "trace_id": trace_id, "run_id": run_id, "stage": "converge",
+async def _find_existing_row(run_id: str) -> Optional[Dict]:
+    """Return the existing ledger row for this run_id, if any.
+
+    Idempotency is keyed on `run_id` alone — the run_id is deterministic
+    per (rule_id, idempotency_key), so a repeat POST with the same
+    idempotency_key produces the same run_id and short-circuits here.
+    """
+    return await db[NORTHENA_LEDGER_COLLECTION].find_one({
+        "run_id": run_id, "stage": "converge",
     })
-    return existing is not None
 
 
 async def record_master_admin_rule_change(
@@ -51,15 +56,18 @@ async def record_master_admin_rule_change(
     trace_id: str,
     lawful_basis_ref: str = "master-admin-rule-change-lawful-basis-v0",
 ) -> Dict[str, str]:
-    """Write one ledger row per rule-change, idempotent per (trace_id, run_id).
+    """Write one ledger row per rule-change, idempotent per `run_id`.
 
     Returns `{"run_id": ..., "trace_id": ...}`. Repeat calls with the
-    same (rule_id, idempotency_key) return the existing run_id without
-    a second write.
+    same (rule_id, idempotency_key) return the EXISTING run_id + the
+    ORIGINAL trace_id from the first write (the caller-supplied
+    `trace_id` on the repeat call is ignored — the row was already
+    written; the audit chain has a stable pointer).
     """
     run_id = _run_id_for(rule_id, idempotency_key)
-    if await _ledger_row_exists(trace_id, run_id):
-        return {"run_id": run_id, "trace_id": trace_id}
+    existing = await _find_existing_row(run_id)
+    if existing is not None:
+        return {"run_id": run_id, "trace_id": existing.get("trace_id", trace_id)}
     row = LedgerRow(
         run_id=run_id,
         trace_id=trace_id,

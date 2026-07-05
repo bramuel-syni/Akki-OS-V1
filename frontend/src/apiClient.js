@@ -179,6 +179,41 @@ export const api = {
     client
       .get(`/wizard/buyer/${sid}`, { validateStatus: (s) => s >= 200 && s < 500 })
       .then((r) => ({ status: r.status, body: r.data })),
+  // Phase 8 Stage B-4 — Master Admin surface (UI Spec §6).
+  masterAdminPendingSeams: () =>
+    client
+      .get('/master_admin/pending_seams', { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  masterAdminAuditTrail: (limit = 50) =>
+    client
+      .get(`/master_admin/audit_trail?limit=${limit}`, {
+        validateStatus: (s) => s >= 200 && s < 500,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  masterAdminTierLockCommit: (body) =>
+    client
+      .post('/pricing/tier_lock', body, {
+        validateStatus: (s) => s >= 200 && s < 600,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  masterAdminModelVersionBump: () =>
+    client
+      .post('/pricing/model_version', null, {
+        validateStatus: (s) => s >= 200 && s < 600,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  masterAdminFleetPolicyBump: () =>
+    client
+      .post('/fleet/policy', null, {
+        validateStatus: (s) => s >= 200 && s < 600,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  // Helper for §6.3 audit-trail "See full diff" lazy fetch — accepts
+  // an absolute API path from `full_diff_ref` (already `/api/…`).
+  northenaLedgerByRunAbs: (absPath) => {
+    const trimmed = absPath.startsWith('/api') ? absPath.slice(4) : absPath;
+    return client.get(trimmed).then((r) => r.data);
+  },
 };
 
 export default api;

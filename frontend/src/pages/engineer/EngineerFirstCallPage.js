@@ -3,59 +3,80 @@
  *
  * Verbatim elements per Spec:
  *   * request block (POST /v1/objectives with ask / standard / scope);
- *   * two response panels side by side — Answered (outcome, trace_id, claim,
- *     defensibility inline, provenance) and Refused — same envelope, body
- *     discriminator (outcome: refused, asked, supported_class,
- *     what_would_raise_it).
- *   * async addition: fresh-extraction asks return 202 { objective_id,
- *     accepted, delivery_estimate }; status transitions appear in Administer.
+ *   * two response panels side by side — Answered and Refused — same
+ *     envelope, body discriminator;
+ *   * async addition: fresh-extraction asks return 202 with the
+ *     AsyncDeliveryAccepted_v1 shape; status transitions appear in
+ *     Administer.
  *   * Binding copy: "There is no response shape in which the claim is
  *     separable from its class. Infrastructure faults return 500 and
  *     are never rendered as refusals."
+ *
+ * Phase 8 Stage B-4 amendment (Owner-ratified fixture-schema gate,
+ * 2026-07-05): the three illustrative fixtures are now shaped VERBATIM
+ * against their frozen backend contracts and are exported so the Jest
+ * gate `test_engineer_first_call_fixture_matches_frozen_contracts.test.js`
+ * validates fixture keys as a subset of the contract snapshot property
+ * names. "Marked as illustration" moves from assertion to invariant.
  */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileCode2 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
-const REQUEST_ILLUSTRATIVE = `POST /v1/objectives
+export const REQUEST_ILLUSTRATIVE = `POST /v1/objectives
 {
   "ask": "What lifespan does this cohort exhibit?",
   "standard": "established_fact",
   "scope": "estate"
 }`;
 
-const ANSWERED_ILLUSTRATIVE = `{
-  "outcome": "answered",
-  "trace_id": "trc-a1b2c3",
-  "claim": {
-    "text": "Cohort A shows median lifespan 41 months.",
-    "defensibility": {
-      "class": "established_fact",
-      "contested": false
-    }
-  },
-  "provenance": {
-    "source_ref": "acq-2026-Q1-004",
-    "trace_id": "trc-a1b2c3"
-  }
-}`;
+// Answered response — shape matches ComposedConclusion_v0 (frozen contract 18)
+// verbatim. Fields: answer_text, conclusion_class, trace_id,
+// load_bearing_unit_ids, objective_ref, computed_at.
+export const ANSWERED_ILLUSTRATIVE = Object.freeze({
+  answer_text: 'Cohort A shows median lifespan 41 months.',
+  conclusion_class: 'fact',
+  trace_id: 'trc-a1b2c3',
+  load_bearing_unit_ids: ['unit-solva-9f42', 'unit-solva-3a10'],
+  objective_ref: 'obj-e2f3g4',
+  computed_at: '2026-07-05T14:00:00Z',
+});
 
-const REFUSED_ILLUSTRATIVE = `{
-  "outcome": "refused",
-  "asked": "established_fact",
-  "supported_class": "recorded_statement",
-  "what_would_raise_it": [
-    "Cross-source corroboration required."
-  ],
-  "trace_id": "trc-a1b2c3"
-}`;
+// Refused response — shape matches Service1Refusal_v0 (frozen contract 14)
+// verbatim. Fields: outcome, reason, run_id, trace_id, asked,
+// supported_class (nullable), what_would_raise_it.
+export const REFUSED_ILLUSTRATIVE = Object.freeze({
+  outcome: 'refused',
+  reason: 'composition_below_floor',
+  run_id: 'run-a1b2c3',
+  trace_id: 'trc-a1b2c3',
+  asked: 'established_fact — median cohort lifespan',
+  supported_class: 'utterance',
+  what_would_raise_it: 'Cross-source corroboration required.',
+});
 
-const ASYNC_ACCEPTED_ILLUSTRATIVE = `{
-  "objective_id": "obj-e2f3g4",
-  "accepted": true,
-  "delivery_estimate": "2026-07-06T14:00:00Z"
-}`;
+// Async-accepted response — shape matches AsyncDeliveryAccepted_v1
+// (frozen contract 22) verbatim. Required: objective_id,
+// delivery_estimate, trace_id, accepted_at. Optional: status, quote.
+export const ASYNC_ACCEPTED_ILLUSTRATIVE = Object.freeze({
+  objective_id: 'obj-e2f3g4',
+  delivery_estimate: 'PT5M',
+  trace_id: 'trc-a1b2c3',
+  accepted_at: '2026-07-05T14:00:00Z',
+  status: 'accepted',
+});
+
+// Explicit fixture→contract mapping consumed by the fixture-schema gate.
+export const FIXTURE_CONTRACT_MAP = Object.freeze({
+  ANSWERED_ILLUSTRATIVE: 'composed_conclusion.contract_snapshot.json',
+  REFUSED_ILLUSTRATIVE: 'service_1_refusal.contract_snapshot.json',
+  ASYNC_ACCEPTED_ILLUSTRATIVE: 'async_delivery_accepted_v1.contract_snapshot.json',
+});
+
+function pretty(obj) {
+  return JSON.stringify(obj, null, 2);
+}
 
 export default function EngineerFirstCallPage() {
   const { identity } = useAuth();
@@ -102,7 +123,7 @@ export default function EngineerFirstCallPage() {
           <div data-testid="first-call-answered-panel">
             <h2 className="text-base font-semibold mb-2">Answered</h2>
             <pre className="border border-emerald-200 bg-emerald-50 rounded p-3 text-xs font-mono overflow-x-auto whitespace-pre">
-{ANSWERED_ILLUSTRATIVE}
+{pretty(ANSWERED_ILLUSTRATIVE)}
             </pre>
           </div>
           <div data-testid="first-call-refused-panel">
@@ -110,7 +131,7 @@ export default function EngineerFirstCallPage() {
               Refused — <span className="italic font-normal">same envelope, body discriminator</span>
             </h2>
             <pre className="border border-amber-200 bg-amber-50 rounded p-3 text-xs font-mono overflow-x-auto whitespace-pre">
-{REFUSED_ILLUSTRATIVE}
+{pretty(REFUSED_ILLUSTRATIVE)}
             </pre>
           </div>
         </section>
@@ -118,11 +139,11 @@ export default function EngineerFirstCallPage() {
         {/* Async addition: third variant noted beneath. */}
         <section data-testid="first-call-async-variant">
           <div className="text-sm text-rms-mute mb-2">
-            Fresh-extraction asks return <code className="font-mono">202 &#123; objective_id, accepted, delivery_estimate &#125;</code>;
+            Fresh-extraction asks return <code className="font-mono">202 AsyncDeliveryAccepted_v1</code>;
             status transitions appear in Administer.
           </div>
           <pre className="border border-rms-line bg-white rounded p-3 text-xs font-mono overflow-x-auto whitespace-pre">
-{ASYNC_ACCEPTED_ILLUSTRATIVE}
+{pretty(ASYNC_ACCEPTED_ILLUSTRATIVE)}
           </pre>
         </section>
 

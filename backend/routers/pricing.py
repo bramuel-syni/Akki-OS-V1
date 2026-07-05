@@ -40,7 +40,11 @@ from services.economics import (
     price_model as _price_model,
     quote_service as _quote_service,
 )
-from services.economics.tier_lock_ledger import record_master_admin_rule_change
+from services.economics.tier_lock_ledger import (
+    _find_existing_row,
+    _run_id_for,
+    record_master_admin_rule_change,
+)
 
 
 router = APIRouter(prefix="/pricing", tags=["pricing"])
@@ -152,6 +156,24 @@ async def post_tier_lock(body: TierLockRequest, request: Request) -> JSONRespons
         return deny
     prior_locked = _quote_service.is_tier_locked()
     idempotency_key = body.idempotency_key or uuid.uuid4().hex[:16]
+    # Idempotency short-circuit: if the same idempotency_key was used
+    # for this rule already, return the SAME response (no new file, no
+    # new ledger row, runtime state left as-is).
+    prior_run_id = _run_id_for("tier_lock", idempotency_key)
+    prior_row = await _find_existing_row(prior_run_id)
+    if prior_row is not None:
+        prior_stamp = (prior_row.get("stamp_audit") or {}).get("rule_change") or {}
+        return JSONResponse(
+            status_code=200,
+            content={
+                "locked": _quote_service.is_tier_locked(),
+                "reason_note": prior_stamp.get("reason_note"),
+                "trace_id": prior_row.get("trace_id"),
+                "ledger_run_id": prior_run_id,
+                "versioned_file_path": prior_stamp.get("versioned_file_path"),
+                "at": prior_row["at"].isoformat() if prior_row.get("at") else None,
+            },
+        )
     versioned_path = _next_tier_lock_version_path()
     # Write versioned file (append-only marker).
     marker = {
@@ -184,7 +206,7 @@ async def post_tier_lock(body: TierLockRequest, request: Request) -> JSONRespons
             "reason_note": body.reason_note,
             "trace_id": ledger["trace_id"],
             "ledger_run_id": ledger["run_id"],
-            "versioned_file_path": marker["idempotency_key"] and str(
+            "versioned_file_path": str(
                 versioned_path.relative_to(Path("/app").resolve())
             ),
             "at": marker["at"],

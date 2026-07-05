@@ -412,34 +412,51 @@ def test_admission_refusal_v3_extends_v2_additively():
 
 # ---------------------------------------------------------------------------
 # Gate 16 — Master Admin gated pricing writes (§6.1 UI Spec surface).
+# Phase 8 Stage B-4 amendment (Owner ratified, 2026-07-05): retire the
+# `X-RMS-Master-Admin` header + `RMS_MASTER_ADMIN_TOKEN` env-gating;
+# highest-privilege surface now uses JWT `master_admin` role check
+# exclusively.
 # ---------------------------------------------------------------------------
 
 
 @pytest.mark.asyncio
-async def test_master_admin_gated_pricing_writes(monkeypatch):
-    """Write endpoints refuse without Master Admin auth header."""
-    monkeypatch.delenv("RMS_MASTER_ADMIN_TOKEN", raising=False)
+async def test_master_admin_gated_pricing_writes():
+    """Write endpoints refuse without JWT master_admin role (post-B-4)."""
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-        # No env var set → deployment does not carry Master Admin → 403.
-        r = await client.post("/api/pricing/tier_lock", params={"locked": True})
-        assert r.status_code == 403
-        r2 = await client.post("/api/fleet/policy")
-        assert r2.status_code == 403
-
-    # With env var set + correct header → passes gate (501 = not-yet-implemented).
-    monkeypatch.setenv("RMS_MASTER_ADMIN_TOKEN", "test-master-token")
-    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        # No auth → 401 auth_missing (post-B-4 taxonomy).
         r = await client.post(
             "/api/pricing/tier_lock",
-            params={"locked": False, "reason_note": "test"},
-            headers={"X-RMS-Master-Admin": "test-master-token"},
+            json={"locked": True, "reason_note": "t", "idempotency_key": "pre-b4-gate-16-a"},
         )
-        assert r.status_code == 200
+        assert r.status_code == 401
+        r2 = await client.post("/api/fleet/policy")
+        assert r2.status_code == 401
+
+    # With JWT master_admin login → passes gate:
+    #   * tier_lock → 200 (Path A ledger + versioned file write).
+    #   * fleet/policy → 501 (Path B honest 501).
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        login = await client.post(
+            "/api/auth/login",
+            json={"email": "admin@rms.example.com", "password": "admin-b1-test-pw"},
+        )
+        assert login.status_code == 200, login.text
+        token = login.json()["access_token"]
+        r = await client.post(
+            "/api/pricing/tier_lock",
+            json={"locked": False, "reason_note": "gate-16", "idempotency_key": "gate-16-b4"},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        assert r.status_code == 200, r.text
         r2 = await client.post(
             "/api/fleet/policy",
-            headers={"X-RMS-Master-Admin": "test-master-token"},
+            headers={"Authorization": f"Bearer {token}"},
         )
         assert r2.status_code == 501
+    # Test-cleanliness: reset tier_lock runtime state so downstream
+    # tests in this file (which rely on the mint path) don't refuse
+    # with `pricing_tier_frozen_by_control_surface`.
+    _quote_service.set_tier_lock(False, None)
 
 
 # ---------------------------------------------------------------------------
