@@ -2,7 +2,57 @@ import axios from 'axios';
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
+// Phase 8 Stage B-1 — access token store + Bearer interceptor.
+// Owner E1 ratified: JWT single-source. Federation-forward: OAuth adapters
+// later mint the same JWT claim shape; the token store here is the
+// integration seam that later adapters replace.
+const TOKEN_STORAGE_KEY = 'rms.b1.auth.access_token';
+const REFRESH_STORAGE_KEY = 'rms.b1.auth.refresh_token';
+
+export const tokenStore = {
+  getAccessToken: () => {
+    try { return window.localStorage.getItem(TOKEN_STORAGE_KEY); } catch { return null; }
+  },
+  getRefreshToken: () => {
+    try { return window.localStorage.getItem(REFRESH_STORAGE_KEY); } catch { return null; }
+  },
+  setTokens: ({ access_token, refresh_token }) => {
+    try {
+      if (access_token) window.localStorage.setItem(TOKEN_STORAGE_KEY, access_token);
+      if (refresh_token) window.localStorage.setItem(REFRESH_STORAGE_KEY, refresh_token);
+    } catch { /* Storage unavailable — no-op */ }
+  },
+  clear: () => {
+    try {
+      window.localStorage.removeItem(TOKEN_STORAGE_KEY);
+      window.localStorage.removeItem(REFRESH_STORAGE_KEY);
+    } catch { /* no-op */ }
+  },
+};
+
 const client = axios.create({ baseURL: API, timeout: 15000 });
+
+// Bearer interceptor: attach access token when present.
+client.interceptors.request.use((cfg) => {
+  const t = tokenStore.getAccessToken();
+  if (t) cfg.headers.Authorization = `Bearer ${t}`;
+  return cfg;
+});
+
+// Detail-safe error message formatter for FastAPI validation-422s.
+// FastAPI returns detail as an array of {msg, ...}; rendering that in JSX
+// crashes React. This helper flattens any shape to a string.
+export function formatApiErrorDetail(detail) {
+  if (detail == null) return 'Something went wrong. Please try again.';
+  if (typeof detail === 'string') return detail;
+  if (Array.isArray(detail))
+    return detail
+      .map((e) => (e && typeof e.msg === 'string' ? e.msg : JSON.stringify(e)))
+      .filter(Boolean)
+      .join(' ');
+  if (detail && typeof detail.msg === 'string') return detail.msg;
+  return String(detail);
+}
 
 export const api = {
   health: () => client.get('/health').then(r => r.data),
@@ -20,20 +70,39 @@ export const api = {
   contractFiveRings: () => client.get('/contracts/five_rings').then(r => r.data),
   contractQualMatrix: () => client.get('/contracts/qualification_matrix').then(r => r.data),
   // Phase 8a-lite (Ask Console) — v2 dispatch consumer.
-  // Backend contract is frozen at ObjectiveRequest_v2 in / (200|422|202|501 body-shape) out.
-  // Callers pass the raw ObjectiveRequest_v2 payload; the router discriminates the
-  // response envelope by HTTP status (200 = ComposedConclusion_v0 or qualified_data
-  // payload dict; 422 = AdmissionRefusal_v0 or Service1Refusal_v0; 202 =
-  // AsyncDeliveryAccepted_v0/v1; 503 = infra-not-refusal). We return `{status, body}`
-  // so the surface can key on the discriminator per UI Spec §4.2 ("There is no
-  // response shape in which the claim is separable from its class").
   dispatchV2: (objectiveRequestV2) =>
     client
       .post('/service_1/v2/dispatch', objectiveRequestV2, {
-        // Do NOT throw on 4xx — refusal is a first-class body per A2 doctrine.
         validateStatus: (s) => s >= 200 && s < 500,
       })
       .then((r) => ({ status: r.status, body: r.data })),
+  // Phase 8 Stage B-1 — auth surface. Returns raw response body per Owner E2
+  // {reason, detail} shape on auth denial; validateStatus permits 401/403/409.
+  authRegister: (email, password, name) =>
+    client
+      .post('/auth/register', { email, password, name }, {
+        validateStatus: (s) => s >= 200 && s < 500,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  authLogin: (email, password) =>
+    client
+      .post('/auth/login', { email, password }, {
+        validateStatus: (s) => s >= 200 && s < 500,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  authMe: () =>
+    client
+      .get('/auth/me', { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  authRefresh: () => {
+    const rt = tokenStore.getRefreshToken();
+    return client
+      .post('/auth/refresh', null, {
+        headers: rt ? { Authorization: `Bearer ${rt}` } : {},
+        validateStatus: (s) => s >= 200 && s < 500,
+      })
+      .then((r) => ({ status: r.status, body: r.data }));
+  },
 };
 
 export default api;

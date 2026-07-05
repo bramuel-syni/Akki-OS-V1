@@ -487,12 +487,9 @@ Explicit per §1.3 above. Standing Disposition `Sizing-anchor-declares-snapshot-
 
 - **E3 — Envelope-shim triad symbol names (P0 blocker for B-1).** Actual symbol names to be resolved by reading `routers/wizard_buyer.py` + `routers/wizard_operator.py` at implementation time. Landing module: `services/wizard/router_shims.py`. Owner ratifies module name + landing sub-stage (B-1 proposed).
 
-- **E4 — Engineer key-grant governed record shape (P1 conditional at B-3).** Two candidate paths:
-  - (a) **`EngineerKeyGrant_v0` as NEW frozen contract** at Phase 8 B-3. Parity 26→27. `snapshot_lloc_in_band=yes` at B-3, band expands by ~200 LoC.
-  - (b) **`engineer_keys.vN.json` versioned config** (Ruling 3 pattern). No parity change. Landing config file only.
-  - Agent recommends: **(b) versioned config** unless Owner explicitly requires a governed record (i.e., key issuance must trust-receipt through the same wire as objectives). Owner ratifies at Stage B-3 open — sub-stage-scoped decision, does not block B-1 dispatch.
+- **E4 — Engineer key-grant governed record shape [Owner-steered at Phase 8 Stage B-1 dispatch, DEFERRED to B-3 open]** — Owner steer verbatim (2026-07-05): *"Key grants are runtime-issued records minted by the registration flow, not admin-versioned config — engineer_keys.vN.json mismatches the issuance model. Grant schema as a Pydantic model; freeze-or-not gets its D4b case argued at B-3 against actual wire exposure."* — the two candidate paths at Stage A ((a) new frozen `EngineerKeyGrant_v0` OR (b) versioned config `engineer_keys.vN.json`) are BOTH corrected: engineer key grants are runtime-issued records (registration flow mints, not admin bump), so the grant schema lands as a Pydantic model. Freeze-or-not is a D4b case that Owner argues at B-3 open against the actual wire-exposure surface. B-1 lands no engineer-key surface.
 
-- **E5 — DPO retention-window inheritance vs split (Owner ruling deferred from Phase 7 B-1 close; Phase 8 B-5 surfaces the CHOICE).** Not a blocker for Phase 8 B-1/B-2/B-3/B-4. Owner rules at Phase 8 B-5 open OR when DPO surface goes live.
+- **E5 — DPO retention-window inheritance vs split [Owner-clarified at Phase 8 Stage B-1 dispatch, DEFERRED to B-5 surface open]** — Owner standing ruling verbatim (2026-07-05): *"The choice is the DPO's, surfaced by the surface. Standing ruling shapes it: inheritance-as-default, wizard_transcript separately-addressable preserved."* — Phase 8 B-5 renders the choice with inheritance-as-default pre-selected + `wizard_transcript` separately-addressable held-class row (per §0.2 refined debt). DPO overrides at will; no pre-decision.
 
 - **E6 — Trust-receipt public URL** — `rms.intel/trace/{id}` verbatim from UI Spec, but domain not yet resolved in-pod. Two candidate paths:
   - (a) **In-pod internal route** `/trace/{id}` served by `routers/trust.py` at Phase 8 B-5; public URL rendered as `${REACT_APP_BACKEND_URL}/trace/{id}`.

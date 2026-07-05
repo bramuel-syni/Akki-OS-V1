@@ -35,6 +35,8 @@ from services.service_1 import async_state as async_state_service
 from services.service_1 import async_worker as async_worker_service
 from services.system_state import current_system_state
 from services.wizard import session_persistence as wizard_session_persistence
+from services.auth import user_store as auth_user_store
+from services.auth import session_binding as auth_session_binding
 
 log = logging.getLogger("rms.server")
 
@@ -104,6 +106,9 @@ from routers import wizard_operator as wizard_operator_router  # noqa: E402
 app.include_router(wizard_operator_router.router, prefix="/api")
 from routers import wizard_buyer as wizard_buyer_router  # noqa: E402
 app.include_router(wizard_buyer_router.router, prefix="/api")
+# Phase 8 Stage B-1 — auth/key model (Owner E1 ratified: custom JWT via PyJWT + bcrypt).
+from routers import auth as auth_router  # noqa: E402
+app.include_router(auth_router.router, prefix="/api")
 
 
 @app.on_event("startup")
@@ -120,6 +125,15 @@ async def _startup() -> None:
         await async_worker_service.start_workers()
         # Phase 7 Stage B-1 — wizard_sessions Mongo indexes.
         await wizard_session_persistence.ensure_indexes()
+        # Phase 8 Stage B-1 — auth users + wizard session binding indexes.
+        await auth_user_store.ensure_indexes()
+        await auth_session_binding.ensure_indexes()
+        # Idempotent admin seed for local/dev + testing agent.
+        import os as _os
+        _admin_email = _os.environ.get("ADMIN_EMAIL")
+        _admin_password = _os.environ.get("ADMIN_PASSWORD")
+        if _admin_email and _admin_password:
+            await auth_user_store.seed_admin_if_absent(_admin_email, _admin_password)
     except Exception:
         log.exception("rms.startup: async delivery substrate boot failed")
         raise

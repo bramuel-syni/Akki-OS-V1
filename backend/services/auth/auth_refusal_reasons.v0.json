@@ -1,0 +1,22 @@
+{
+  "version": "v0",
+  "description": "Phase 8 Stage B-1 — auth-denial reason bounded set (Owner E2 ratified). Auth denial is NOT a governed refusal; access-control class, neither governance nor infra. 403/401 body carries {reason, detail} — NEVER outcome=refused. No auth code enters the admission-refusal registry.",
+  "reasons": {
+    "auth_missing": {
+      "http_status": 401,
+      "detail_template": "Authentication required. Provide a valid Authorization: Bearer <token> header."
+    },
+    "auth_expired": {
+      "http_status": 401,
+      "detail_template": "Access token expired. Refresh via POST /api/auth/refresh."
+    },
+    "auth_scope_insufficient": {
+      "http_status": 403,
+      "detail_template": "Caller identity is authenticated but the required scope grant is absent."
+    },
+    "auth_identity_mismatch_for_wizard_session": {
+      "http_status": 403,
+      "detail_template": "Caller identity does not match the wizard session's bound identity."
+    }
+  }
+}
