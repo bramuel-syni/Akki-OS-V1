@@ -103,6 +103,33 @@ export const api = {
       })
       .then((r) => ({ status: r.status, body: r.data }));
   },
+  // Phase 8 Stage B-2 — Operator surface (UI Spec §2).
+  operatorStatus: () =>
+    client
+      .get('/operator/status', { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  fleetPolicy: () => client.get('/fleet/policy').then((r) => r.data),
+  // Wizard operator (7 endpoints from Phase 7 B-1/B-2/B-3) — auth-passing.
+  wizardOperatorStart: () =>
+    client
+      .post('/wizard/operator/session', null, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardOperatorTurn: (sid, payload) =>
+    client
+      .post(`/wizard/operator/${sid}/turn`, payload, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardOperatorCommitReview: (sid) =>
+    client
+      .post(`/wizard/operator/${sid}/commit-review`, null, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardOperatorFreeze: (sid, body) =>
+    client
+      .post(`/wizard/operator/${sid}/freeze`, body || {}, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardOperatorGet: (sid) =>
+    client
+      .get(`/wizard/operator/${sid}`, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
 };
 
 export default api;

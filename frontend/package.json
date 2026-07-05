@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0",
+    "@playwright/test": "^1.61.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -34,6 +35,7 @@
     "start": "concurrently \"yarn tailwind:watch\" \"craco start\"",
     "build": "yarn tailwind:build && craco build",
     "test": "craco test",
+    "test:e2e": "playwright test --project=chromium",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

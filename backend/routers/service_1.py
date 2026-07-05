@@ -21,7 +21,7 @@ RequestValidationError (which has detail: list, no outcome).
 """
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -31,6 +31,8 @@ from contracts.composed_conclusion import ComposedConclusion_v0
 from contracts.five_rings import DefensibilityClass, NormalizedUnit
 from contracts.objective_request_v2 import ObjectiveRequest_v2
 from contracts.service_1_refusal import Service1Refusal as Service1RefusalContract
+from services.auth import auth_refusal, key_grants
+from services.auth.dependencies import get_current_identity_or_none
 from services.service_1 import async_worker as async_worker_module
 from services.service_1 import composed_conclusion as composed_conclusion_module
 from services.service_1 import dispatch as dispatch_module
@@ -209,8 +211,22 @@ async def run_status(run_id: str) -> Service1RunStatus:
         },
     },
 )
-async def v2_dispatch_endpoint(request: ObjectiveRequest_v2) -> JSONResponse:
+async def v2_dispatch_endpoint(request: ObjectiveRequest_v2, http_request: Request) -> JSONResponse:
     """v3 §4/§7 shape-responsive dispatch — Phase 2/3/4a/4b/5b.
+
+    Phase 8 Stage B-2 (Owner ruling verbatim, symmetric E2 cut):
+      Auth is access-control class. Scope enforcement lands as a gate PAIR
+      (not a wire change): granted key → dispatch executes (200/202/422/501);
+      insufficient key → 403 with the E2 body shape
+      `{"reason": "auth_scope_insufficient", "detail": "..."}` —
+      NO `outcome` key, NO admission-refusal discriminator, NO governance
+      semantics leaking into the auth-denial. Anonymous callers (no
+      Authorization header) fall through to dispatch — Ask Console
+      anonymous-friendly posture at B-1 is preserved.
+
+    ZERO envelope delta on the 200/202/422 side (Owner ruling: "auth metadata
+    off the intelligence envelope in both directions" — a 200 already
+    implies scope passed).
 
     Return path fork (six arms via settled wire table):
       * `QualifiedDataPayload` (§6.1 warm) → 200
@@ -221,6 +237,33 @@ async def v2_dispatch_endpoint(request: ObjectiveRequest_v2) -> JSONResponse:
       * `DispatchResult` (scaffold placeholder) → 501
       * QueueSaturatedError → HTTP 503 (infra-not-refusal doctrine).
     """
+    # Phase 8 B-2 scope-enforcement gate pair (Owner E1+E2 ratified).
+    # Anonymous: fall through (Ask Console B-1 posture).
+    # Authenticated: verify {class="external", path="live_query",
+    # floor=request.output.standard.minimum_class, scope=request.envelope.scope_ceiling}.
+    identity = await get_current_identity_or_none(http_request)
+    if identity is not None:
+        # Coerce enum to its string value (DefensibilityClass is a str-Enum).
+        min_class = request.output.standard.minimum_class
+        required_floor = str(getattr(min_class, "value", min_class))
+        required_scope = str(request.envelope.scope_ceiling)
+        check = key_grants.check_scope(
+            identity=identity,
+            required_class="external",
+            required_path="live_query",
+            required_floor=required_floor,
+            required_scope=required_scope,
+        )
+        if not check.granted:
+            return auth_refusal.emit(
+                "auth_scope_insufficient",
+                detail=(
+                    "Caller identity is authenticated but no granted key "
+                    "matches the required scope tuple "
+                    f"(class=external, path=live_query, "
+                    f"floor={required_floor!r}, scope={required_scope!r})."
+                ),
+            )
     try:
         result = await dispatch_module.dispatch(request)
     except composed_conclusion_module.Service1Refusal as e:

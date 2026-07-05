@@ -109,6 +109,9 @@ app.include_router(wizard_buyer_router.router, prefix="/api")
 # Phase 8 Stage B-1 — auth/key model (Owner E1 ratified: custom JWT via PyJWT + bcrypt).
 from routers import auth as auth_router  # noqa: E402
 app.include_router(auth_router.router, prefix="/api")
+# Phase 8 Stage B-2 — operator surface (UI Spec §2.1 Home aggregate).
+from routers import operator as operator_router  # noqa: E402
+app.include_router(operator_router.router, prefix="/api")
 
 
 @app.on_event("startup")

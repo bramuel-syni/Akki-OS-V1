@@ -12,6 +12,9 @@ import TraceReceiptPage from './legacy/pages/TraceReceiptPage';
 import ComposePage from './legacy/pages/ComposePage';
 import AuthLoginPage from './pages/AuthLoginPage';
 import AuthRegisterPage from './pages/AuthRegisterPage';
+import OperatorHomePage from './pages/operator/OperatorHomePage';
+import CommissionWizardPage from './pages/operator/CommissionWizardPage';
+import CommitReviewPage from './pages/operator/CommitReviewPage';
 import { AuthProvider } from './hooks/useAuth';
 
 // Phase 8 Stage B-1 — Auth landing (Owner E1 ratified: custom JWT + bcrypt).
@@ -26,6 +29,10 @@ export default function App() {
           <Route index element={<AskConsolePage />} />
           <Route path="auth/login" element={<AuthLoginPage />} />
           <Route path="auth/register" element={<AuthRegisterPage />} />
+          {/* Phase 8 Stage B-2 — Operator surface (UI Spec §2) */}
+          <Route path="operator" element={<OperatorHomePage />} />
+          <Route path="operator/commission" element={<CommissionWizardPage />} />
+          <Route path="operator/commit-review/:sessionId" element={<CommitReviewPage />} />
           {/* Legacy G5b surfaces — nested under /legacy/* (Phase 8a-lite archival) */}
           <Route path="legacy" element={<AppShell />}>
             <Route index element={<LandingPage />} />

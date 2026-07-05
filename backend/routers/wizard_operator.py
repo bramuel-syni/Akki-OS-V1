@@ -44,6 +44,8 @@ import httpx
 from httpx import ASGITransport
 
 from contracts.wizard_commit_state import WizardCommitState_v0
+from services.auth import auth_refusal, session_binding
+from services.auth.dependencies import get_current_identity_or_none
 from services.service_1.license_class_selection import derive_license_class
 from services.wizard import (
     admission_handoff,
@@ -56,6 +58,27 @@ from services.wizard.source_tagging import SourceTagViolation
 
 
 router = APIRouter(prefix="/wizard/operator", tags=["wizard-operator"])
+
+
+async def _check_session_ownership_or_deny(session_id: str, request: Request):
+    """Phase 8 Stage B-2 — session-ownership enforcement (Owner E2 ratified).
+
+    Wired across ALL POST /{sid}/* and GET /{sid} operator endpoints.
+
+    Semantics:
+      * Session grandfathered (no binding on disk) → permit (pre-B-1 sessions).
+      * Session bound + caller identity matches → permit.
+      * Session bound + caller anonymous OR different identity → 403 with
+        `{reason: "auth_identity_mismatch_for_wizard_session", detail: ...}`.
+
+    Returns None (permit) OR a JSONResponse (deny). Caller short-circuits on
+    deny per the router's E2-compliant return-fast pattern.
+    """
+    identity = await get_current_identity_or_none(request)
+    caller_uid = identity.user_id if identity is not None else None
+    if not await session_binding.check_binding(session_id, caller_uid):
+        return auth_refusal.emit("auth_identity_mismatch_for_wizard_session")
+    return None
 
 
 # In-memory session cache — B-1 keeps working state in-process; Mongo
@@ -81,13 +104,27 @@ def _get_session_or_404(session_id: str) -> osm.OperatorSession:
 
 
 @router.post("/session")
-async def post_session():
-    """Initiate a fresh operator wizard session."""
+async def post_session(request: Request):
+    """Initiate a fresh operator wizard session.
+
+    Phase 8 Stage B-2: if the caller carries a valid Bearer token, the new
+    session is BOUND to the caller's identity in
+    `services/auth/session_binding.py` (sidecar table). Subsequent operations
+    on this session_id require the same caller identity — mismatch → 403
+    `auth_identity_mismatch_for_wizard_session`. Anonymous callers create
+    grandfathered sessions (no binding).
+    """
     session = osm.new_operator_session()
     _SESSIONS[session.session_id] = session
     # Persist an initial snapshot to Mongo (mid-session, committed_at=None).
     snapshot = osm._to_frozen_commit_state(session, committed_at=None)
     await session_persistence.upsert_session(snapshot)
+    # Phase 8 B-2: bind session to caller identity if authenticated.
+    identity = await get_current_identity_or_none(request)
+    if identity is not None:
+        await session_binding.bind_session_to_identity(
+            session.session_id, identity.user_id,
+        )
     return JSONResponse(
         status_code=201,
         content={
@@ -115,6 +152,9 @@ async def post_turn(session_id: str, request: Request):
     then the agent advances one turn. If no `turn_ref` → agent advances
     one turn immediately (first turn or reply-less advance).
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     body: Dict[str, Any] = await request.json() if await _has_body(request) else {}
 
@@ -155,6 +195,9 @@ async def post_agent_assumption(session_id: str, request: Request):
 
     Body: `{field: str, inferred_value: Any, evidence_ref: str = ""}`.
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     body = await request.json()
     field_name: str = body["field"]
@@ -183,7 +226,7 @@ async def post_agent_assumption(session_id: str, request: Request):
 
 
 @router.post("/{session_id}/commit-review")
-async def post_commit_review(session_id: str):
+async def post_commit_review(session_id: str, request: Request):
     """Paint the marked-draft view + Guard 1 pre-flight + provenance
     refusal enumeration + license_class_drift (B-3).
 
@@ -196,6 +239,9 @@ async def post_commit_review(session_id: str):
       * `violations`: [str, ...] — empty iff ready to freeze.
       * `license_class_drift`: {committed, derived} | null.
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     agent = _new_stub_agent()
     snapshot = osm._to_frozen_commit_state(session, committed_at=None)
@@ -265,6 +311,9 @@ async def post_freeze(session_id: str, request: Request):
     handoff. B-1 freezes the state and writes the wizard_freeze ledger
     row (with `data_class="wizard_transcript"` marker per Owner E5).
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     body: Dict[str, Any] = await request.json() if await _has_body(request) else {}
     license_class: Optional[str] = body.get("license_class")
@@ -305,8 +354,11 @@ async def post_freeze(session_id: str, request: Request):
 
 
 @router.get("/{session_id}")
-async def get_session(session_id: str):
+async def get_session(session_id: str, request: Request):
     """Read-only snapshot — Mongo is authoritative post-freeze."""
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     doc = await session_persistence.load_session(session_id)
     if doc is None:
         # Not persisted yet; check in-memory working state.
@@ -328,6 +380,9 @@ async def post_handoff(session_id: str, request: Request):
     variant mirrors the same semantics, but operator has no proposals
     (empty list passed to the composer).
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     doc = await session_persistence.load_session(session_id)
     if doc is None:
         in_mem = _SESSIONS.get(session_id)
