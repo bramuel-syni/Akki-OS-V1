@@ -130,3 +130,11 @@ All 26 mapped 1:1 to `.contract_snapshot.json` files under `tests/invariants/`; 
 
 ## CI
 `pytest -q` = **740/740** green at 2026-07-04 (Phase 7 Stage B-3 close). Delta from Phase 7 Stage B-2 (685): +55 (Block A buyer freeze ledger parity + commit-review extensions 7 gates + Block B admission_handoff.py composer + /handoff endpoints on both variants 13 gates + Block C frozen-contract posture + regressions 10 gates + parametrised expansions: Condition-2 grep-negative × 3 symbols + prior-contract × 25 files = ~55 collected new cases).
+
+## Phase 8 Stage A (Design-only dispatch, 2026-07-04)
+- **Status:** CLOSED (design-only; zero code writes; parity stays 26; CI unchanged 740/740).
+- **On-disk canonical:** `/app/docs/stage_a_proposals/phase_8.md` SHA-256 `4e4dd82ae2834f7c680429e1b2771221566d2bdc810e04444b722afda7b5c188`.
+- **Deliverables:** trajectory restatement through Phase 8 (parity 26 baseline; conditional 27 if Escalation E4 lands `EngineerKeyGrant_v0` at B-3) + `snapshot_lloc_in_band` per sub-stage (B-1/B-2/B-4/B-5 = `no`; B-3 conditional) + Six Surfaces per UI Spec v1 (§§2-7) + §8 shared components + Playwright Ask Console smoke shape (6 scenarios) + Governance seam posture (session-ownership binding + auth-refusal shape + DPO wizard_transcript separately-addressable) + Standing constraints compliance (22 constraints preserved) + 8 escalations (E1-E8; E1/E2/E3 block B-1 dispatch).
+- **§0.2 Plan Debts updated:** trajectory restatement MARKED RESOLVED with SHA reference; wizard_transcript entry REFINED with "separately-addressable" qualifier + dual citation header; envelope-shim helper triad extraction debt APPENDED per Owner Decision 3 at B-3 close acceptance.
+- **`wizard_not_frozen` 422 body confirmed:** `{"reason": "wizard_not_frozen", "detail": "..."}` — NO `outcome=refused`, NO `AdmissionRefusal_v0` discriminator (router-layer ad-hoc; already documented in B-3 close §5).
+- **Next:** Owner rulings on Escalations E1-E3 (P0 blockers for Phase 8 Stage B-1 dispatch) + E4-E8 (sub-stage-scoped).
