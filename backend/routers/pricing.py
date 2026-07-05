@@ -1,55 +1,78 @@
-"""Pricing + Fleet control surface router — Phase 6 Stage B.
+"""Pricing + Fleet control surface router.
 
-Master Admin control surface per v3 §8 bullets 2 + 5. Read endpoints are
-open; write endpoints are gated by header `X-RMS-Master-Admin` matching
-`RMS_MASTER_ADMIN_TOKEN` env (or by config presence of the token
-`master_admin_only` sentinel in fleet-policy JSON — thin gate; full
-auth surface Phase 8).
+Phase 6 Stage B origin — Master Admin control surface per v3 §8 bullets 2 + 5.
 
-Standing Owner Dispositions applied here:
-  * Ruling R3-SD2 config-as-versioned-not-frozen — writes bump the vN
-    file, not in-place edit. This surface returns 501 on unsupported
-    mutations (mutations that would violate versioning), 200 on
-    Master-Admin-approved state-only writes (tier lock).
-  * infra-not-refusal — capacity-unavailable is 503; governance-lock is
-    422 AdmissionRefusal_v0.
+**Phase 8 Stage B-4 auth reconciliation** (Owner ratified, 2026-07-05):
+`RMS_MASTER_ADMIN_TOKEN` env-gating and the `X-RMS-Master-Admin` header
+are RETIRED. Highest-privilege surface now uses JWT `master_admin` role
+check exclusively. Zero production consumers of the retired token
+remained pre-retirement (audit at Stage-A close).
+
+**Phase 8 Stage B-4 Path A / Path B disposition** (Owner ratified):
+  * `POST /pricing/tier_lock` → **Path A**: writes `tier_lock.vN.json`
+    versioned marker + emits `NorthenaLedgerRow_v1` via
+    `services/economics/tier_lock_ledger.record_master_admin_rule_change`
+    (stamp_audit sidecar, idempotent per (rule_id, idempotency_key)).
+  * `POST /pricing/model_version` → **Path B**: honest 501 with
+    plain-language `detail` in `{reason, detail}` body — no technical
+    hint, no client-side ghosting.
+  * `POST /fleet/policy` → **Path B**: same as model_version.
+
+Never Path C (no in-place mutation, no ghosting, no deferred queue).
 """
 from __future__ import annotations
 
-import os
+import json
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, ConfigDict
 
+from services.auth import auth_refusal
+from services.auth.dependencies import require_identity_or_deny
+from services.auth.identity import Identity
 from services.economics import (
     fleet_policy as _fleet_policy,
     price_model as _price_model,
     quote_service as _quote_service,
 )
+from services.economics.tier_lock_ledger import record_master_admin_rule_change
 
 
 router = APIRouter(prefix="/pricing", tags=["pricing"])
 fleet_router = APIRouter(prefix="/fleet", tags=["fleet"])
 
 
-def _require_master_admin(header_value: Optional[str]) -> None:
-    """Master Admin gate — checks header against env var; fails 403 else.
+async def _require_master_admin_or_deny(request: Request):
+    """Two-step gate mirroring B-3 engineer authority pattern:
+      1. Bearer token → Identity (or 401 auth_missing / auth_expired).
+      2. Identity → master_admin/admin role (or 403 auth_scope_insufficient).
 
-    Phase 8 replaces this with the full app-registration surface + JWT
-    scope check. Stage B keeps the surface thin per doctrine.
+    Returns `(identity, None)` on permit; `(None, JSONResponse)` on deny.
     """
-    expected = os.environ.get("RMS_MASTER_ADMIN_TOKEN", "")
-    if not expected:
-        # Env-var not set → deployment does not carry a Master Admin;
-        # writes are refused (governance decision, not infra).
-        raise HTTPException(status_code=403, detail="Master Admin surface not configured.")
-    if not header_value or header_value != expected:
-        raise HTTPException(status_code=403, detail="Master Admin authorisation required.")
+    result = await require_identity_or_deny(request)
+    if isinstance(result, JSONResponse):
+        return None, result
+    identity: Identity = result
+    roles = set(identity.roles)
+    if not ("master_admin" in roles or "admin" in roles):
+        return None, auth_refusal.emit(
+            "auth_scope_insufficient",
+            detail=(
+                "Pricing / Fleet control surface requires the `master_admin` "
+                "role (or `admin`). The caller identity is authenticated but "
+                "lacks master-admin authority."
+            ),
+        )
+    return identity, None
 
 
 # ---------------------------------------------------------------------------
-# Pricing read surface — model version + tiers.
+# Pricing read surface — model version + tiers (open reads).
 # ---------------------------------------------------------------------------
 
 
@@ -66,21 +89,25 @@ async def get_model_version() -> dict:
 
 
 @router.post("/model_version")
-async def post_model_version(
-    x_rms_master_admin: Optional[str] = Header(default=None, alias="X-RMS-Master-Admin"),
-) -> JSONResponse:
-    """Master Admin bumps the model version — but ONLY via registry-bump
-    (fresh price-model@vN.json file); this endpoint refuses in-place
-    edits per Ruling R3-SD2.
+async def post_model_version(request: Request) -> JSONResponse:
+    """Path B — honest 501 with plain-language detail.
+
+    Changing the price model requires a versioned file update on the
+    server. UI cannot safely mutate the disk contract under Ruling
+    R3-SD2. The 501 surfaces this fact in plain language; the UI renders
+    `detail` verbatim in the "What changes" info box.
     """
-    _require_master_admin(x_rms_master_admin)
+    _, deny = await _require_master_admin_or_deny(request)
+    if deny is not None:
+        return deny
     return JSONResponse(
         status_code=501,
         content={
-            "outcome": "not_yet_implemented",
-            "reason": "phase_6_scaffold_registry_bump_via_disk_only",
-            "hint": "Master Admin bumps by adding a fresh services/economics/price_model.vN.json file "
-                    "and updating the pointer. In-place edit is a Ruling R3-SD2 violation.",
+            "reason": "requires_versioned_file_change_by_owner",
+            "detail": (
+                "Changing the price model requires a versioned file update on "
+                "the server. Contact Owner. No change applied."
+            ),
         },
     )
 
@@ -88,24 +115,81 @@ async def post_model_version(
 @router.get("/tiers")
 async def get_tiers() -> dict:
     """v3 §8 bullet 2 registry read — enumerates known tiers per current bless."""
-    import json
-    from pathlib import Path
     registry_path = Path(_price_model._CONFIG_PATH).parent / "pricing_tiers.v0.json"
     return json.loads(registry_path.read_text(encoding="utf-8"))
 
 
+class TierLockRequest(BaseModel):
+    """Path A body per Owner amendment 2026-07-05."""
+    model_config = ConfigDict(extra="forbid")
+    locked: bool
+    reason_note: Optional[str] = None
+    idempotency_key: Optional[str] = None
+
+
+def _next_tier_lock_version_path() -> Path:
+    """Return path for the NEXT versioned tier_lock file (append-only)."""
+    base = Path(_price_model._CONFIG_PATH).parent
+    existing = sorted(base.glob("tier_lock.v*.json"))
+    n = len(existing)
+    return base / f"tier_lock.v{n}.json"
+
+
 @router.post("/tier_lock")
-async def post_tier_lock(
-    locked: bool,
-    reason_note: Optional[str] = None,
-    x_rms_master_admin: Optional[str] = Header(default=None, alias="X-RMS-Master-Admin"),
-) -> dict:
-    """Master Admin toggles current-bless tier lock. Governance decision;
-    quote issuance refuses via `pricing_tier_frozen_by_control_surface` when set.
+async def post_tier_lock(body: TierLockRequest, request: Request) -> JSONResponse:
+    """Path A — write versioned file + emit ledger row + set runtime state.
+
+    Idempotent per `(rule_id="tier_lock", idempotency_key)`. Repeat POST
+    with the same idempotency_key returns the same `ledger_run_id` +
+    `versioned_file_path` without a second file-write or ledger row.
+
+    Reversibility: opposite POST (`locked=<opposite>`) writes a NEW
+    versioned file + NEW ledger row — historical record is append-only;
+    runtime state moves.
     """
-    _require_master_admin(x_rms_master_admin)
-    _quote_service.set_tier_lock(locked, reason_note)
-    return {"locked": _quote_service.is_tier_locked(), "reason_note": reason_note}
+    identity, deny = await _require_master_admin_or_deny(request)
+    if deny is not None:
+        return deny
+    prior_locked = _quote_service.is_tier_locked()
+    idempotency_key = body.idempotency_key or uuid.uuid4().hex[:16]
+    versioned_path = _next_tier_lock_version_path()
+    # Write versioned file (append-only marker).
+    marker = {
+        "rule_id": "tier_lock",
+        "locked": bool(body.locked),
+        "reason_note": body.reason_note,
+        "grantor_id": identity.user_id,
+        "idempotency_key": idempotency_key,
+        "at": datetime.now(timezone.utc).isoformat(),
+    }
+    if not versioned_path.exists():
+        versioned_path.write_text(json.dumps(marker, indent=2), encoding="utf-8")
+    trace_id = f"master-admin-tier-lock-{uuid.uuid4().hex[:12]}"
+    ledger = await record_master_admin_rule_change(
+        rule_id="tier_lock",
+        from_value=bool(prior_locked),
+        to_value=bool(body.locked),
+        reason_note=body.reason_note,
+        versioned_file_path=str(versioned_path.relative_to(Path("/app").resolve())),
+        grantor_id=identity.user_id,
+        idempotency_key=idempotency_key,
+        trace_id=trace_id,
+    )
+    # Set runtime state AFTER the audit chain lands.
+    _quote_service.set_tier_lock(body.locked, body.reason_note)
+    return JSONResponse(
+        status_code=200,
+        content={
+            "locked": _quote_service.is_tier_locked(),
+            "reason_note": body.reason_note,
+            "trace_id": ledger["trace_id"],
+            "ledger_run_id": ledger["run_id"],
+            "versioned_file_path": marker["idempotency_key"] and str(
+                versioned_path.relative_to(Path("/app").resolve())
+            ),
+            "at": marker["at"],
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -119,19 +203,23 @@ async def get_fleet_policy() -> dict:
 
 
 @fleet_router.post("/policy")
-async def post_fleet_policy(
-    x_rms_master_admin: Optional[str] = Header(default=None, alias="X-RMS-Master-Admin"),
-) -> JSONResponse:
-    """Master Admin bumps fleet policy via `fleet_policy.vN.json`
-    additive-only (Ruling R3-SD2). This endpoint refuses in-place edits.
+async def post_fleet_policy(request: Request) -> JSONResponse:
+    """Path B — honest 501 with plain-language detail.
+
+    Changing GPU capacity apportionment requires a versioned file update
+    on the server. UI cannot safely mutate the disk contract under
+    Ruling R3-SD2.
     """
-    _require_master_admin(x_rms_master_admin)
+    _, deny = await _require_master_admin_or_deny(request)
+    if deny is not None:
+        return deny
     return JSONResponse(
         status_code=501,
         content={
-            "outcome": "not_yet_implemented",
-            "reason": "phase_6_scaffold_registry_bump_via_disk_only",
-            "hint": "Master Admin bumps by adding a fresh services/economics/fleet_policy.vN.json file "
-                    "and updating the pointer. In-place edit is a Ruling R3-SD2 violation.",
+            "reason": "requires_versioned_file_change_by_owner",
+            "detail": (
+                "Changing GPU capacity apportionment requires a versioned "
+                "file update on the server. Contact Owner. No change applied."
+            ),
         },
     )
