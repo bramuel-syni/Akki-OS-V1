@@ -46,15 +46,15 @@ const MANDATORY_FIELDS = [
   { key: 'envelope.lawful_basis', label: 'Lawful basis' },
 ];
 
-function EstateCheckChip({ ref }) {
-  if (!ref) return null;
+function EstateCheckChip({ snapshotRef }) {
+  if (!snapshotRef) return null;
   return (
     <span
       data-testid="estate-check-chip"
       className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5"
     >
       <Check className="w-3 h-3" />
-      estate-check · {String(ref).slice(0, 24)}
+      estate-check · {String(snapshotRef).slice(0, 24)}
     </span>
   );
 }
@@ -98,7 +98,7 @@ function ChatMessage({ turn }) {
     <div data-testid={`chat-turn-${turn.turn_ref}`} className="rounded-md border border-rms-line p-3 bg-white">
       {turn.feasibility_snapshot_ref && (
         <div className="mb-2">
-          <EstateCheckChip ref={turn.feasibility_snapshot_ref} />
+          <EstateCheckChip snapshotRef={turn.feasibility_snapshot_ref} />
         </div>
       )}
       <p className="text-sm text-rms-ink whitespace-pre-wrap">{turn.agent_content}</p>
