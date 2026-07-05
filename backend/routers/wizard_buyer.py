@@ -32,6 +32,8 @@ from fastapi.responses import JSONResponse
 from httpx import ASGITransport
 
 from contracts.wizard_commit_state import WizardCommitState_v0
+from services.auth import auth_refusal, session_binding
+from services.auth.dependencies import get_current_identity_or_none
 from services.service_1.license_class_selection import derive_license_class
 from services.synisense.exceptions import ServiceUnavailable
 from services.wizard import (
@@ -45,6 +47,28 @@ from services.wizard.source_tagging import SourceTagViolation
 
 
 router = APIRouter(prefix="/wizard/buyer", tags=["wizard-buyer"])
+
+
+async def _check_session_ownership_or_deny(session_id: str, request: Request):
+    """Phase 8 Stage B-3 — buyer-variant session-ownership enforcement.
+
+    Mirror of operator router's `_check_session_ownership_or_deny`
+    (Owner ruling: buyer session-binding "rolls up under session-ownership
+    resolution" — same 4-code registry, same sidecar table, same semantics).
+
+    Wired across ALL POST /{sid}/* and GET /{sid} buyer endpoints.
+
+    Semantics:
+      * Session grandfathered (no binding) → permit (pre-B-3 sessions).
+      * Session bound + caller identity matches → permit.
+      * Session bound + caller anonymous OR different identity → 403 with
+        `{reason: "auth_identity_mismatch_for_wizard_session", detail: ...}`.
+    """
+    identity = await get_current_identity_or_none(request)
+    caller_uid = identity.user_id if identity is not None else None
+    if not await session_binding.check_binding(session_id, caller_uid):
+        return auth_refusal.emit("auth_identity_mismatch_for_wizard_session")
+    return None
 
 
 # In-memory buyer session cache. Same posture as operator router — B-2
@@ -77,12 +101,26 @@ async def _has_body(request: Request) -> bool:
 
 
 @router.post("/session")
-async def post_session():
-    """Initiate a fresh buyer wizard session (variant='buyer')."""
+async def post_session(request: Request):
+    """Initiate a fresh buyer wizard session (variant='buyer').
+
+    Phase 8 Stage B-3: if the caller carries a valid Bearer token, the new
+    session is BOUND to the caller's identity in
+    `services/auth/session_binding.py` (sidecar table). Subsequent operations
+    on this session_id require the same caller identity — mismatch → 403
+    `auth_identity_mismatch_for_wizard_session`. Anonymous callers create
+    grandfathered sessions (no binding) — parity with operator variant.
+    """
     session = bsm.new_buyer_session()
     _SESSIONS[session.session_id] = session
     snapshot = bsm._to_frozen_commit_state(session, committed_at=None)
     await session_persistence.upsert_session(snapshot)
+    # Phase 8 B-3: bind buyer session to caller identity if authenticated.
+    identity = await get_current_identity_or_none(request)
+    if identity is not None:
+        await session_binding.bind_session_to_identity(
+            session.session_id, identity.user_id,
+        )
     return JSONResponse(
         status_code=201,
         content={
@@ -96,6 +134,9 @@ async def post_session():
 
 @router.post("/{session_id}/turn")
 async def post_turn(session_id: str, request: Request):
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     body: Dict[str, Any] = await request.json() if await _has_body(request) else {}
     turn_ref: Optional[str] = body.get("turn_ref")
@@ -151,6 +192,9 @@ async def post_propose(session_id: str, request: Request):
     On dual-delta refusal → 422 with the bounded refusal reason
     (Owner E6 Visibility-not-prohibition mechanical application).
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     body = await request.json()
     axes_changed: FrozenSet[str] = frozenset(body.get("axes_changed", []) or [])
@@ -185,6 +229,9 @@ async def post_agent_assumption(session_id: str, request: Request):
     Condition A(ii)/(iii) still apply: this endpoint mints agent-source
     CommittedValue only; never writes operator-turn content.
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     body = await request.json()
     field_name: str = body["field"]
@@ -210,7 +257,7 @@ async def post_agent_assumption(session_id: str, request: Request):
 
 
 @router.post("/{session_id}/commit-review")
-async def post_commit_review(session_id: str):
+async def post_commit_review(session_id: str, request: Request):
     """Paint the marked-draft view + dual-delta summary + license-class-drift.
 
     B-3 extensions (both fields lift from single-source helpers; no
@@ -221,6 +268,9 @@ async def post_commit_review(session_id: str):
         Sourced from `services/service_1/license_class_selection.py::derive_license_class`
         invoked against the reviewed state. Soft signal — NOT a hard refusal.
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     agent = _new_agent()
     snapshot = bsm._to_frozen_commit_state(session, committed_at=None)
@@ -316,6 +366,9 @@ async def post_freeze(session_id: str, request: Request):
       * Body accepts optional `lawful_basis_ref` (default matches operator).
       * Response body carries `ledger_run_id`.
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     session = _get_session_or_404(session_id)
     body: Dict[str, Any] = await request.json() if await _has_body(request) else {}
     license_class: Optional[str] = body.get("license_class")
@@ -380,6 +433,9 @@ async def post_handoff(session_id: str, request: Request):
     `admission_handoff.compose_objective_request_from_frozen_state_with_proposals`
     into `envelope.floor_feasibility["dual_delta_summary"]`.
     """
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     # Load frozen state — Mongo authoritative post-freeze.
     doc = await session_persistence.load_session(session_id)
     if doc is None:
@@ -432,7 +488,10 @@ async def post_handoff(session_id: str, request: Request):
 
 
 @router.get("/{session_id}")
-async def get_session(session_id: str):
+async def get_session(session_id: str, request: Request):
+    denied = await _check_session_ownership_or_deny(session_id, request)
+    if denied is not None:
+        return denied
     doc = await session_persistence.load_session(session_id)
     if doc is None:
         session = _SESSIONS.get(session_id)

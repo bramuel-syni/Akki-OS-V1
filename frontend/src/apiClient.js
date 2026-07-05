@@ -130,6 +130,55 @@ export const api = {
     client
       .get(`/wizard/operator/${sid}`, { validateStatus: (s) => s >= 200 && s < 500 })
       .then((r) => ({ status: r.status, body: r.data })),
+  // Phase 8 Stage B-3 — Engineer surface (§4 key-grant CRUD).
+  engineerListKeyGrants: (granteeEmail) =>
+    client
+      .get('/engineer/key_grants', {
+        params: granteeEmail ? { grantee_email: granteeEmail } : {},
+        validateStatus: (s) => s >= 200 && s < 500,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  engineerRegisterKeyGrant: (body) =>
+    client
+      .post('/engineer/key_grants', body, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  engineerRevokeKeyGrant: (grantId, reason) =>
+    client
+      .post(
+        `/engineer/key_grants/${grantId}/revoke`,
+        { reason },
+        { validateStatus: (s) => s >= 200 && s < 500 },
+      )
+      .then((r) => ({ status: r.status, body: r.data })),
+  // Phase 8 Stage B-3 — Buyer wizard (§5 shape / acquire / receive).
+  wizardBuyerStart: () =>
+    client
+      .post('/wizard/buyer/session', null, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardBuyerTurn: (sid, payload) =>
+    client
+      .post(`/wizard/buyer/${sid}/turn`, payload, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardBuyerPropose: (sid, payload) =>
+    client
+      .post(`/wizard/buyer/${sid}/propose`, payload, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardBuyerCommitReview: (sid) =>
+    client
+      .post(`/wizard/buyer/${sid}/commit-review`, null, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardBuyerFreeze: (sid, body) =>
+    client
+      .post(`/wizard/buyer/${sid}/freeze`, body || {}, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardBuyerHandoff: (sid) =>
+    client
+      .post(`/wizard/buyer/${sid}/handoff`, {}, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
+  wizardBuyerGet: (sid) =>
+    client
+      .get(`/wizard/buyer/${sid}`, { validateStatus: (s) => s >= 200 && s < 500 })
+      .then((r) => ({ status: r.status, body: r.data })),
 };
 
 export default api;

@@ -265,3 +265,19 @@ E4 remains DEFERRED to B-3 open per Owner (steer verbatim in Stage A §8 as edit
 ---
 
 *End of Phase 8 Stage B-2 close report. Awaiting Owner ratification before Phase 8 B-3 (Engineer + Buyer surfaces) dispatch.*
+
+---
+
+## Retroactive cross-reference (Owner-ruled at B-3 dispatch, 2026-07-05)
+
+EstateCheckChip regression shipped at B-2 → CAUGHT AND FIXED at B-3 first commit. See B-3 close SHA `c2863974bf52f69ff8b7256ad1bae07854a546526672c2d099305a98d01bec22` § Rule 2 accounting > REGRESSION FIX.
+
+Root cause: `EstateCheckChip({ ref })` parameter shadowed React's special `ref` prop in `frontend/src/pages/operator/CommissionWizardPage.js` — React 18 strict-mode raises "Function components cannot have string refs" on render, silently dropping the estate-check chip. Playwright (real-browser dev-mode) surfaced this as a component-tree render abort. The bug shipped past B-2 because B-2 landed the Commission Wizard surface with only a single Playwright smoke against `/` (Ask Console), NOT against `/operator/commission` — which is the exact "sharp coverage hole" the B-3 first-commit gates closed.
+
+Mirror pattern established (B-1 Playwright NOT-LANDED → LANDED at B-2). The B-3 draft-rail-3-states Jest gate + `operator_commission_wizard_smoke.spec.ts` Playwright chromium smoke caught it; fix landed at Block 1 first commit as a Rule-2-costed regression fix (2 lines: `ref` → `snapshotRef` + caller update). Post-fix CommissionWizardPage.js SHA-256 `9aa7cda4f3c8cddec7cd4759ed35aade28b82d0a12a37dbf3a5820423d8bfe1f`.
+
+Standing operational lesson (Owner Condition 1 at B-3, elevated to doctrine):
+first-commit gating is standing pattern; surfaces do not land ungated with smokes deferred a sub-stage. B-2's hole does not repeat.
+
+The gate did its job. Recorded, not celebrated.
+

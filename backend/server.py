@@ -112,6 +112,9 @@ app.include_router(auth_router.router, prefix="/api")
 # Phase 8 Stage B-2 — operator surface (UI Spec §2.1 Home aggregate).
 from routers import operator as operator_router  # noqa: E402
 app.include_router(operator_router.router, prefix="/api")
+# Phase 8 Stage B-3 — engineer surface (§4 key-grant CRUD backend).
+from routers import engineer as engineer_router  # noqa: E402
+app.include_router(engineer_router.router, prefix="/api")
 
 
 @app.on_event("startup")

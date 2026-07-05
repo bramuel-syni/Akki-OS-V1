@@ -15,6 +15,12 @@ import AuthRegisterPage from './pages/AuthRegisterPage';
 import OperatorHomePage from './pages/operator/OperatorHomePage';
 import CommissionWizardPage from './pages/operator/CommissionWizardPage';
 import CommitReviewPage from './pages/operator/CommitReviewPage';
+import EngineerRegisterAppPage from './pages/engineer/EngineerRegisterAppPage';
+import EngineerFirstCallPage from './pages/engineer/EngineerFirstCallPage';
+import EngineerAdministerPage from './pages/engineer/EngineerAdministerPage';
+import BuyerShapePage from './pages/buyer/BuyerShapePage';
+import BuyerAcquirePage from './pages/buyer/BuyerAcquirePage';
+import BuyerReceivePage from './pages/buyer/BuyerReceivePage';
 import { AuthProvider } from './hooks/useAuth';
 
 // Phase 8 Stage B-1 — Auth landing (Owner E1 ratified: custom JWT + bcrypt).
@@ -33,6 +39,14 @@ export default function App() {
           <Route path="operator" element={<OperatorHomePage />} />
           <Route path="operator/commission" element={<CommissionWizardPage />} />
           <Route path="operator/commit-review/:sessionId" element={<CommitReviewPage />} />
+          {/* Phase 8 Stage B-3 — Engineer surface (UI Spec §4) */}
+          <Route path="engineer/register" element={<EngineerRegisterAppPage />} />
+          <Route path="engineer/first-call" element={<EngineerFirstCallPage />} />
+          <Route path="engineer/administer" element={<EngineerAdministerPage />} />
+          {/* Phase 8 Stage B-3 — Buyer surface (UI Spec §5) */}
+          <Route path="buyer/shape" element={<BuyerShapePage />} />
+          <Route path="buyer/acquire/:sessionId" element={<BuyerAcquirePage />} />
+          <Route path="buyer/receive/:sessionId" element={<BuyerReceivePage />} />
           {/* Legacy G5b surfaces — nested under /legacy/* (Phase 8a-lite archival) */}
           <Route path="legacy" element={<AppShell />}>
             <Route index element={<LandingPage />} />
