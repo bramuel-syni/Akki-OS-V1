@@ -1,0 +1,31 @@
+{
+  "version": "v0",
+  "landed_at": "2026-07-06",
+  "governance_note": "E1.γ registry per Owner ruling (2026-07-06 Amendment A + refinement 8.1). Refusal-family is a constrained-str backed by this external versioned registry (per admission_refusal_reasons.vN.json precedent). NEVER a Literal on NorthenaLedgerRow_v1. Family value pinned at stamp_audit['refusal_family'] on every refusal-terminal row (decision='refused'). Load-bearing wire-shape gate `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit` asserts presence + registry-validity on every refusal-terminal row (retirement condition: never). NorthenaLedgerRow_v1 stays byte-identical; frozen contract parity 26 unchanged. Family additions land as registry version bumps (v0 -> v1 -> v2 …), append-only.",
+  "valid_families": [
+    {
+      "family": "admission_refusals",
+      "landed_at_version": "v0",
+      "description": "Governed refusal at admission time via AdmissionRefusal_v0 (v3 admission_refusal_reasons registry codes). Sync path: services/northena/admit.py::_refuse; services/service_1/service.py sync raises for no_defensibility_floor / no_lawful_basis. Async path: services/service_1/async_worker.py:129-131 (AdmissionRefusal_v0 arm).",
+      "spec_anchor": "Stage A §4 (Sub-stage 1 deliverables); RMS_Build_Completion_Requirements_v1_4 §3.5 (retention-adjacent refusal-family evidence surface)."
+    },
+    {
+      "family": "composition_below_floor",
+      "landed_at_version": "v0",
+      "description": "Service_1 composition-time refusal at the defensibility floor. Reasons: composition_below_floor, no_defensibility_floor, no_lawful_basis (services/service_1/service_1_refusal_reasons.v0.json). Sync sites: services/service_1/service.py:187 + services/service_1/composed_conclusion.py:272. Async site: services/service_1/async_worker.py:97-108 (ComposedService1Refusal arm).",
+      "spec_anchor": "Stage A §4 + service_1_refusal_reasons.v0.json (spec-anchor v3 §6.2.6)."
+    },
+    {
+      "family": "outer_gate_refusals",
+      "landed_at_version": "v0",
+      "description": "V2 outer-gate refusals absorbed via services/northena/converge.py::absorb_v2_refusal. Reason string prefixed 'v2_refused:'. Stage='gate', decision='refused'.",
+      "spec_anchor": "Stage A §4; RMS_Product_Engineering_Spec_v3 §29.1 (V2 gates the outer-gate file-out)."
+    },
+    {
+      "family": "unclassified",
+      "landed_at_version": "v0",
+      "description": "Escape hatch — refusal-terminal row whose reason does not match any known registry family. MUST be surfaced honestly (never silently dropped). Any occurrence is a finding for future registry-additions review.",
+      "spec_anchor": "refusal_family_classifier.py line 39 (deterministic escape hatch)."
+    }
+  ]
+}

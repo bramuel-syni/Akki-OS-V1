@@ -2,7 +2,7 @@ Verification MATCHED. `3fe969c2…` cryptographically legitimate. Amendment E ra
 
 ## §1. Authority sources (verbatim, no paraphrase, no expansion beyond cited scope)
 
-- **Stage A proposal** — `/app/docs/stage_a_proposals/phase_8_seam_3_and_checker.md` — SHA `3fe969c2add52da7f4d80251a8bcb2d1bcf3154c82a10a7fb2241d44bb08500d`. §5 (Sub-stage 1 deliverables) is the scope authority — read verbatim, execute as written, do NOT flatten or expand.
+- **Stage A proposal** — `/app/docs/stage_a_proposals/phase_8_seam_3_and_checker.md` — SHA `3fe969c2add52da7f4d80251a8bcb2d1bcf3154c82a10a7fb2241d44bb08500d`. §4 (Sub-stage 1 deliverables) is the scope authority — read verbatim, execute as written, do NOT flatten or expand.
 - **Rulings record** — `/app/docs/rulings/seam_3_stage_a_e1_to_e7.md` — SHA `37db1729c26be94a7dfb8f4eb79cb14ab2ff62e56506b1a82b18d22cfab2e211`. §1 (E1–E7 verbatim) + §8 (Owner refinements) are the ruling authority.
 - **BCR v1.4.1** — `/app/docs/mandates/RMS_Build_Completion_Requirements_v1_4.md` — SHA `ce5206c9e244fe58edb6824f785077c1c835bdf3f5b347f6a4fb98c036212524`. §3.5 + §3.11 CK-U1 (middle-dot binding copy).
 - **Conformance map** — `/app/docs/close_reports/phase_8_conformance_map.md` — SHA `e747a0f6…` prefix. Canonical REUSE/EXTEND/NEW classification.
@@ -23,18 +23,18 @@ Before touching any code, write this entire message verbatim to `/app/docs/build
 | **E5 narrowed** (rulings record §3.3 + §8.2 + §8.5) | No new auth codes. Sub-stage 1 obligation: **no HTTP 409 introduced by this sub-stage** (diff-inspection + one-line confirmation in close report; no dedicated gate). Standing 409-for-governance-state anti-rule (§8.2) applies globally but full enforcement machinery is not required at Sub-stage 1 (activates at Sub-stage 2/3). |
 | **E7** (rulings record §3.5) | All binding-copy strings in Sub-stage 1 render with middle-dots (`·`, U+00B7) per BCR v1.4.1 + UI Spec v2.1 §8/§10. Playwright chromium coverage-marker smoke MUST assert the middle-dot glyph specifically — not just surrounding words. Named gate: `test_coverage_marker_renders_middle_dot_glyph_verbatim` (per §8.6). |
 
-## §4. Scope binding — READ from Stage A §5 verbatim
+## §4. Scope binding — READ from Stage A §4 verbatim
 
-Sub-stage 1 deliverables come from Stage A proposal §5 (post-Amendment-E, SHA `3fe969c2…`). Read that section verbatim and execute as written. Do NOT flatten, expand, or infer scope. If §5 is silent on something Sub-stage 1 needs, STOP and escalate to me — do not fill gaps with inference.
+Sub-stage 1 deliverables come from Stage A proposal §4 (post-Amendment-E, SHA `3fe969c2…`). Read that section verbatim and execute as written. Do NOT flatten, expand, or infer scope. If §4 is silent on something Sub-stage 1 needs, STOP and escalate to me — do not fill gaps with inference.
 
-Known deliverables from prior recon (verify against current §5, then execute):
+Known deliverables from prior recon (verify against current §4, then execute):
 - Refusal-family ledger wire-up at 4 un-ledgered emission sites at `services/compliance/refusal_family_classifier.py:42-49`.
 - New `services/compliance/refusal_ledger.py` module with canonical `emit_refusal_ledger_row`.
 - `async_state.py:238` migration-docstring-only edit (body preserved).
 - Registry file `refusal_families.v0.json` at `services/compliance/`.
 - Coverage-marker read behavior at `services/compliance/coverage_marker.py` (query-time β per §7.3.β.1 amended §4.1 line 173).
 - Compliance Console refusals-card rider carrying the coverage-marker binding-copy string with middle-dots.
-- First-commit gate per Stage A §5 exact name.
+- First-commit gate per Stage A §4 exact name.
 
 ## §5. Test matrix (matrix-enumerated per Standing Correction — cells × postures × cases, no LoC lumps)
 
@@ -42,7 +42,7 @@ Enumerate in close report as a table:
 - **Backend invariants (Pytest):** existing 66 files + Sub-stage 1 additions. Each new test cell = endpoint × posture × case. LB gate `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit` parametrised over 4 emission sites + 1 aggregate regression cell = 5 parametrised cases minimum.
 - **Jest:** existing suites + refusals-card rider additions covering coverage-marker text rendering, refusal-family enumeration, empty-state.
 - **Playwright chromium:** existing 26 smokes + coverage-marker smoke `test_coverage_marker_renders_middle_dot_glyph_verbatim` (assert `·` glyph, not just surrounding words) + refusals-card render.
-- Any additional named gates from Stage A §5 exact roster.
+- Any additional named gates from Stage A §4 exact roster.
 
 Report cell counts per posture (happy path / auth-denied / registry-invalid / query-empty / aggregate) per endpoint. Not "N tests added" — the matrix itself, enumerated.
 
@@ -80,7 +80,7 @@ Return only:
 - No pre-optimization on E3.β (no index, no materialization).
 - No 409 codes anywhere in the Sub-stage 1 diff.
 - Middle-dot rendering strict — Playwright asserts glyph.
-- If Stage A §5 is silent on any needed detail, STOP and escalate.
+- If Stage A §4 is silent on any needed detail, STOP and escalate.
 - If LoC ceiling breached, STOP and escalate for split proposal.
 - If contract-adjacency risk surfaces during build (anything touching the 26 frozen contracts or their snapshots), STOP and escalate.
 
