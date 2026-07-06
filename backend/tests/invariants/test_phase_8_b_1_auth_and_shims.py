@@ -294,34 +294,47 @@ async def test_e2_post_auth_register_login_me_flow_e2e():
 
 
 # ────────────────────────────────────────────────────────────────
-# E3 — router_shims triad extraction + grep-negative gate
+# E3 — router_shims triad extraction + grep-negative gate.
+#
+# Commercial-cut 2026-07-06 (BCR v1.4 §12): the two buyer-only members
+# of the triad — `summarise_dual_deltas` and
+# `compose_objective_request_from_frozen_state_with_proposals` — were
+# relocated verbatim to salvage. The operator-remaining member,
+# `compose_objective_request_from_frozen_state`, stays in-tree.
+# All symbol-level grep-negative gates are updated to the reduced
+# operator-remaining set.
 # ────────────────────────────────────────────────────────────────
 
 TRIAD_SYMBOLS = [
     "compose_objective_request_from_frozen_state",
+]
+
+SALVAGED_TRIAD_SYMBOLS = [
     "compose_objective_request_from_frozen_state_with_proposals",
     "summarise_dual_deltas",
 ]
 
 
-def test_e3_router_shims_hosts_the_triad():
-    """The B-1 landing module `services/wizard/router_shims.py` defines all three symbols."""
+def test_e3_router_shims_hosts_the_operator_remaining_triad_symbol():
+    """The B-1 landing module `services/wizard/router_shims.py` still
+    defines the operator-remaining triad symbol post-commercial-cut."""
     p = _SERVICES / "wizard" / "router_shims.py"
-    assert p.exists(), "router_shims.py must exist at Phase 8 B-1 (Owner E3 named receiver)"
+    assert p.exists(), "router_shims.py must exist post-cut (Owner E3 named receiver)"
     src = p.read_text()
     for sym in TRIAD_SYMBOLS:
         assert f"def {sym}(" in src, f"{sym} must be defined in router_shims.py"
 
 
-@pytest.mark.parametrize("symbol_name", TRIAD_SYMBOLS)
-def test_e3_wizard_buyer_router_does_not_locally_define_triad_symbol(symbol_name: str):
-    """Grep-negative: routers/wizard_buyer.py MUST NOT locally define any triad symbol."""
-    p = _ROUTERS / "wizard_buyer.py"
+def test_e3_router_shims_does_not_locally_define_salvaged_symbols():
+    """Post-cut regression: the two salvaged buyer-only helpers must
+    NOT re-appear in the extractor build tree."""
+    p = _SERVICES / "wizard" / "router_shims.py"
     src = p.read_text()
-    assert f"def {symbol_name}(" not in src, (
-        f"wizard_buyer.py must not locally define {symbol_name!r} — "
-        f"router_shims.py is the canonical single source"
-    )
+    for sym in SALVAGED_TRIAD_SYMBOLS:
+        assert f"def {sym}(" not in src, (
+            f"{sym!r} was relocated to salvage at commercial cut; must not "
+            f"resurrect inside router_shims.py"
+        )
 
 
 @pytest.mark.parametrize("symbol_name", TRIAD_SYMBOLS)
@@ -336,24 +349,23 @@ def test_e3_wizard_operator_router_does_not_locally_define_triad_symbol(symbol_n
 
 
 def test_e3_admission_handoff_now_pure_reexport_shim():
-    """After B-1, services/wizard/admission_handoff.py is a pure re-export shim.
-
-    It MUST NOT locally define any triad symbol; all three come from router_shims.
-    BC preserved for the historical import path used by Phase 7 B-3 invariant tests.
+    """After B-1 + commercial cut 2026-07-06, services/wizard/admission_handoff.py
+    is a pure re-export shim for the OPERATOR-REMAINING triad symbol.
     """
     p = _SERVICES / "wizard" / "admission_handoff.py"
     src = p.read_text()
-    for sym in TRIAD_SYMBOLS:
+    for sym in TRIAD_SYMBOLS + SALVAGED_TRIAD_SYMBOLS:
         assert f"def {sym}(" not in src, (
-            f"admission_handoff.py must be a pure re-export at B-1; "
-            f"{sym!r} lives in router_shims.py"
+            f"admission_handoff.py must be a pure re-export post-cut; "
+            f"{sym!r} lives elsewhere"
         )
-    # Verifies re-export line present
+    # Verifies re-export line present.
     assert "from services.wizard.router_shims import" in src
 
 
 def test_e3_admission_handoff_bc_import_still_works():
-    """Historical import path `services.wizard.admission_handoff.<symbol>` still resolves."""
+    """Historical import path `services.wizard.admission_handoff.<symbol>`
+    still resolves for the OPERATOR-REMAINING triad symbol post-cut."""
     from services.wizard import admission_handoff  # noqa: F401
     for sym in TRIAD_SYMBOLS:
         assert hasattr(admission_handoff, sym), f"BC broken: {sym!r} not importable"

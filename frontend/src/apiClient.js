@@ -150,35 +150,11 @@ export const api = {
         { validateStatus: (s) => s >= 200 && s < 500 },
       )
       .then((r) => ({ status: r.status, body: r.data })),
-  // Phase 8 Stage B-3 — Buyer wizard (§5 shape / acquire / receive).
-  wizardBuyerStart: () =>
-    client
-      .post('/wizard/buyer/session', null, { validateStatus: (s) => s >= 200 && s < 500 })
-      .then((r) => ({ status: r.status, body: r.data })),
-  wizardBuyerTurn: (sid, payload) =>
-    client
-      .post(`/wizard/buyer/${sid}/turn`, payload, { validateStatus: (s) => s >= 200 && s < 500 })
-      .then((r) => ({ status: r.status, body: r.data })),
-  wizardBuyerPropose: (sid, payload) =>
-    client
-      .post(`/wizard/buyer/${sid}/propose`, payload, { validateStatus: (s) => s >= 200 && s < 500 })
-      .then((r) => ({ status: r.status, body: r.data })),
-  wizardBuyerCommitReview: (sid) =>
-    client
-      .post(`/wizard/buyer/${sid}/commit-review`, null, { validateStatus: (s) => s >= 200 && s < 500 })
-      .then((r) => ({ status: r.status, body: r.data })),
-  wizardBuyerFreeze: (sid, body) =>
-    client
-      .post(`/wizard/buyer/${sid}/freeze`, body || {}, { validateStatus: (s) => s >= 200 && s < 500 })
-      .then((r) => ({ status: r.status, body: r.data })),
-  wizardBuyerHandoff: (sid) =>
-    client
-      .post(`/wizard/buyer/${sid}/handoff`, {}, { validateStatus: (s) => s >= 200 && s < 500 })
-      .then((r) => ({ status: r.status, body: r.data })),
-  wizardBuyerGet: (sid) =>
-    client
-      .get(`/wizard/buyer/${sid}`, { validateStatus: (s) => s >= 200 && s < 500 })
-      .then((r) => ({ status: r.status, body: r.data })),
+  // Phase 8 Stage B-3 — Buyer wizard (§5) CUT at commercial cut
+  // 2026-07-06 (BCR v1.4 §12). All 7 buyer wizard client methods
+  // (wizardBuyerStart / Turn / Propose / CommitReview / Freeze /
+  // Handoff / Get) removed from the extractor build tree; the buyer
+  // wizard router variant on the backend is likewise cut whole.
   // Phase 8 Stage B-4 — Master Admin surface (UI Spec §6).
   masterAdminPendingSeams: () =>
     client

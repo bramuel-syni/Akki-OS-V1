@@ -18,9 +18,10 @@ import CommitReviewPage from './pages/operator/CommitReviewPage';
 import EngineerRegisterAppPage from './pages/engineer/EngineerRegisterAppPage';
 import EngineerFirstCallPage from './pages/engineer/EngineerFirstCallPage';
 import EngineerAdministerPage from './pages/engineer/EngineerAdministerPage';
-import BuyerShapePage from './pages/buyer/BuyerShapePage';
-import BuyerAcquirePage from './pages/buyer/BuyerAcquirePage';
-import BuyerReceivePage from './pages/buyer/BuyerReceivePage';
+// Commercial-cut 2026-07-06 (BCR v1.4 §12): buyer §5 surface (BuyerShape/
+// Acquire/Receive) cut whole — buyer wizard variant is not built on this
+// tree post-cut. Salvage location:
+//   /app/salvage/commercial_cut_2026_07_06/frontend/pages/
 import MasterAdminHomePage from './pages/master_admin/MasterAdminHomePage';
 import ChangeARulePage from './pages/master_admin/ChangeARulePage';
 import AuditTrailPage from './pages/master_admin/AuditTrailPage';
@@ -46,10 +47,8 @@ export default function App() {
           <Route path="engineer/register" element={<EngineerRegisterAppPage />} />
           <Route path="engineer/first-call" element={<EngineerFirstCallPage />} />
           <Route path="engineer/administer" element={<EngineerAdministerPage />} />
-          {/* Phase 8 Stage B-3 — Buyer surface (UI Spec §5) */}
-          <Route path="buyer/shape" element={<BuyerShapePage />} />
-          <Route path="buyer/acquire/:sessionId" element={<BuyerAcquirePage />} />
-          <Route path="buyer/receive/:sessionId" element={<BuyerReceivePage />} />
+          {/* Phase 8 Stage B-3 — Buyer surface (UI Spec §5) CUT at
+              commercial cut 2026-07-06 (BCR v1.4 §12); no live routes. */}
           {/* Phase 8 Stage B-4 — Master Admin surface (UI Spec §6) */}
           <Route path="master-admin" element={<MasterAdminHomePage />} />
           <Route path="master-admin/change-a-rule/:ruleId" element={<ChangeARulePage />} />
