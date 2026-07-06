@@ -3,7 +3,13 @@
 ## Original problem statement
 Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence System on top of the `Akki-Executive-New-Arch` legacy substrate (now `/reference/akki-legacy/`). Phases G0 → G6 with strict doctrine: frozen contracts via Pydantic + JSON snapshots, all LLM calls through the SyniSense Shield chokepoint, spike vs production hours kept distinct, Rule-2 STOP if net-new code outgrows lifted-substrate lines.
 
-## Current gate status (2026-07-04)
+## Current gate status (2026-07-06)
+- **Latest gate:** **Phase 8 Conformance Map CLOSED 2026-07-06** — read-only map + manifest re-authoring preamble per Owner narrow-scope dispatch. 4 priority anchors evidenced (v2.1 §4.1-4.3 Compliance Console EXTENDS-back / NEW-BUILD-front; v2.1 §5.5 Governed-extract API EXTENDS; v2.1 §5.4 Dual-actor NEW-BUILD; Operator-agent line CONFORMS on `DeterministicStubAgent`); non-priority: 82 total verdicts; 0 DIVERGES. Backend CI 814/814 unchanged; Jest 70/70; Playwright chromium 20/20; substrate-drop 13/13 GREEN post-preamble edits. Manifest preamble: MANIFEST.md new SHA `46d81b8b37226dcad8c2bf75057337b44248bba4673cc84c6ea89a4de54ab7ef` (v2.1 + BCR v1.4 canonical rows added; v1 archived); phase_source_requirements.yaml new SHA `59d43a95028783570546ffeda0e55fd3cfc7d661c2a5303bbca74b668a952927` (7 phases redirected v1 → v2.1). Escalation-cap wording restored to ORIGINAL (defaults everywhere except frozen-contract, owner-value, or governance-semantic contact). Close report: `/app/docs/close_reports/phase_8_conformance_map.md`.
+- **Previous gate:** **Commercial Cut per BCR v1.4 §12 CLOSED, ACCEPTED 2026-07-06** — subtractive change with mandatory preservation; buyer §5 + Phase 6 commercial half + Sonnet 4.6 LLM extracted to `/app/salvage/commercial_cut_2026_07_06/`. `QuoteEnvelope_v0` + `pricing_tiers.v0.json` + `AsyncDeliveryAccepted_v1.quote` field + `WizardCommitState_v0.variant="buyer"` Literal ORPHAN-IN-PLACE. Parity 26/26 byte-identical. MAN-G1/G2/G3 GREEN. Close report SHA `bbf14900...`. Salvage MANIFEST SHA `31962579...`.
+- **Awaiting:** Owner ratification of conformance-map close. **On acceptance → B-5a Stage A dispatch** (Compliance Console read/prove per v2.1 §4.1-4.3 + BCR v1.4 §3.6) with test matrix enumerated (endpoints × postures × cases per B-4-close-acceptance standing correction).
+- **Sequenced work (post-B-5a):** Phase 8 Stage B-5b (Rulebook writes + §8 checker) → Phase 9 Extraction Console sampling → Transform forms (post-B-5) → Compliance Council checker cross-console → §5.4 Dual-actor Integration Console.
+
+## Historical gate ledger (2026-07-04 baseline; append-only)
 - **G0 — Foundation & Contracts**: CLOSED.
 - **G0.5 — V1 Spike Harness Construction**: CLOSED.
 - **G1 — Defensibility Detection Substrate**: CLOSED.

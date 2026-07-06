@@ -9,6 +9,15 @@
 #
 # Substrate-Drop v2 (2026-07-03): v2.1 → v3, Interface Spec → UI Spec v1,
 # UX Architecture Spec → UX Architecture v2. Old filenames moved to archive/.
+#
+# Conformance-map dispatch (2026-07-06): UI Spec v1 → v2.1 redirect for
+# Phase 5, Phase 6, Phase 7, Phase 8 (all v1 anchors have equivalent v2.1
+# anchors — v1 §2/§3/§4/§5/§6/§7/§8 → v2.1 §3/§7.1/§5/§(Sales-Service-CUT)/
+# §6/§4/§10 per §11 migration map). G5a and G5b are historical closed
+# gates whose pointers stay on v1 for record-of-what-was-built provenance
+# (they were built against v1; changing their pointer would rewrite
+# history). BCR v1.4 is NOT currently referenced by any phase in this
+# file; adding a BCR pointer is a future dispatch decision.
 
 G3:
   - RMS_Solva_Specification.md
@@ -21,62 +30,82 @@ G4:
 
 # G5a: backend routes (/api/discipline/lift_manifest, /api/northena/trace/{trace_id},
 # trace-lens correlation, intelligence-query response contract per UI Spec §11).
-# Depends on UI Spec v1 (§11 response contract, §14 trace_id retrieval) +
-# Product Spec v3 (parent) + Northena Spec (ledger absorption seam) +
-# Mtafiti Spec (Registry read routes, added at G4 close) +
-# Targeta Spec (MiningPlan read routes, added at G4 close).
+# Historical closed gate; pointer redirected v1 → v2.1 at conformance-map dispatch
+# 2026-07-06 per Owner directive (v1 no-longer-consumed). v1 §11 response
+# contract → v2.1 §5.2 First-call contract + §10 cross-surface bindings;
+# v1 §14 trace_id retrieval → v2.1 §1 global "One trace thread" rule +
+# §7.1 trust-receipt link on Ask reference application.
 G5a:
-  - RMS_UI_Specification_v1.md
+  - RMS_UI_Specification_v2_1.md
   - RMS_Product_Engineering_Spec_v3.md
   - northena.md
   - RMS_Mtafiti_Specification.md
   - RMS_Targeta_Specification.md
 
 # G5b: frontend surfaces (Operator Console + Consumer Terminal + trace-lenses render).
-# Depends on UX Architecture v2 (experience model, trust model) +
-# UI Spec v1 (concrete surfaces + layouts) + Product Spec v3 (parent).
+# Historical closed gate; pointer redirected v1 → v2.1 at conformance-map dispatch
+# 2026-07-06 per Owner directive (v1 no-longer-consumed). v1 §2 Operator Console
+# concrete surfaces → v2.1 §3 Extraction Console; v1 Consumer Terminal §5 buyer
+# CUT per commercial-cut ruling; v1 trace-lens render → v2.1 §7.1 trust-receipt.
 G5b:
   - RMS_UX_Architecture_v2.md
-  - RMS_UI_Specification_v1.md
+  - RMS_UI_Specification_v2_1.md
   - RMS_Product_Engineering_Spec_v3.md
 
 # G6: Outer Gate + V2 gate. Depends on Product Spec v3 (parent) +
 # UI Spec v1 §12 (Data-Buying Path) + Northena Spec (governance ceiling).
+# Historical closed gate; pointer redirected v1 → v2.1 at conformance-map dispatch
+# 2026-07-06 per Owner directive (v1 no-longer-consumed). v1 §12 Data-Buying Path
+# was buyer-surface content → CUT per commercial-cut; outer-gate governance
+# principle lives in v2.1 §5.5 governed-extract API rules ("full outer gate on
+# governed_extract — rights, irreversibility, cumulative-disclosure debit, license
+# issue"). Governance ceiling unchanged (northena.md unchanged).
 G6:
   - RMS_Product_Engineering_Spec_v3.md
-  - RMS_UI_Specification_v1.md
+  - RMS_UI_Specification_v2_1.md
   - northena.md
 
 # Phase 5 — Async delivery contract (v3 §7).
-# Depends on Product Spec v3 (parent §7) + UI Spec v1 (§4.2/§4.3 async additions) +
-# Northena Spec (ledger absorbs state transitions + late refusal per §7).
+# v1 § anchors mapped to v2.1: v1 §4.2/§4.3 async additions → v2.1 §5.2
+# "Async variant" note ("fresh-extraction asks return 202 { objective_id,
+# accepted, delivery_estimate }; status transitions appear in Administer").
 Phase_5:
   - RMS_Product_Engineering_Spec_v3.md
-  - RMS_UI_Specification_v1.md
+  - RMS_UI_Specification_v2_1.md
   - northena.md
 
 # Phase 6 — Economics config (v3 §8).
-# Depends on Product Spec v3 (parent §8) + UX Architecture v2 (§7 economics posture) +
-# UI Spec v1 (§6.1 Master Admin surface + §5.1 buyer price card).
+# v1 § anchors mapped to v2.1: v1 §6.1 Master Admin surface → v2.1 §6
+# Administration Console + §6.4 scope-split (operational rulebook only);
+# v1 §5.1 buyer price card → v2.1 §11/§12 (CUT from extractor per commercial-cut
+# ruling 2026-07-06; extractor has no commercial price).
 Phase_6:
   - RMS_Product_Engineering_Spec_v3.md
   - RMS_UX_Architecture_v2.md
-  - RMS_UI_Specification_v1.md
+  - RMS_UI_Specification_v2_1.md
 
 # Phase 7 — Shaping wizard (v3 §3.3 operator + buyer variants).
-# Depends on Product Spec v3 (parent §3.3 + §6 provenance-preservation) +
-# UI Spec v1 (§2.2/§2.3/§5.1 wizard surfaces) + UX Architecture v2 (§4.3 shaping architecture) +
-# Mtafiti Spec (floor_feasibility shared-derivation per Ruling 4).
+# v1 § anchors mapped to v2.1: v1 §2.2 Commission Wizard + §2.3 CommitReview
+# → v2.1 §3.2 Commission (shaping wizard) + §3.3 Freeze (commit review);
+# v1 §5.1 buyer wizard → v2.1 §11/§12 (CUT from extractor per commercial-cut
+# ruling 2026-07-06; buyer wizard variant salvaged, orphan-in-place
+# WizardCommitState_v0.variant="buyer" Literal preserved for future
+# Sales-Service reference).
 Phase_7:
   - RMS_Product_Engineering_Spec_v3.md
-  - RMS_UI_Specification_v1.md
+  - RMS_UI_Specification_v2_1.md
   - RMS_UX_Architecture_v2.md
   - RMS_Mtafiti_Specification.md
 
-# Phase 8 — Frontend rework against UI Spec v1 (six surfaces + async additions).
-# Depends on UI Spec v1 (concrete surfaces + §8 binding copy) +
-# UX Architecture v2 (personas + trust model) + Product Spec v3 (parent).
+# Phase 8 — Frontend rework against UI Spec v2.1 (four consoles + reference
+# applications + async additions).
+# v1 § anchors mapped to v2.1: v1 §2 Operator → v2.1 §3 Extraction Console;
+# v1 §3 Ask console → v2.1 §7.1 Internal Reference Application; v1 §4
+# Engineer → v2.1 §5 Integration Console; v1 §5 Buyer → v2.1 §11/§12 (CUT);
+# v1 §6 Master Admin → v2.1 §6 Administration Console; v1 §7 Regulator/DPO
+# → v2.1 §4 Compliance Console; v1 §8 binding copy → v2.1 §10 cross-surface
+# bindings.
 Phase_8:
-  - RMS_UI_Specification_v1.md
+  - RMS_UI_Specification_v2_1.md
   - RMS_UX_Architecture_v2.md
   - RMS_Product_Engineering_Spec_v3.md
