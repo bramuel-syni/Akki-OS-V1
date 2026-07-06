@@ -152,3 +152,25 @@ Anchored bands and rulings for B-4 will be re-priced at Stage A per Owner B-1 le
 ---
 
 **Report SHA-256:** (computed from this file at close time — Standing Rule v3 canonical marker; consuming tools may recompute).
+
+---
+
+## Footer — Retroactive cross-reference (appended 2026-07-05 per Owner ruling at B-4 close acceptance)
+
+Fixture shape drifted at B-3 → CAUGHT AND FIXED at B-4 fixture-schema
+gate. See B-4 close SHA `3cf03f80...` (pre-acceptance) at
+`/app/docs/close_reports/phase_8_b_4.md`. The three illustrative
+fixtures on `EngineerFirstCallPage.js` (§4.2) were realigned at B-4
+to match their frozen contract shapes verbatim (ComposedConclusion_v0
+/ Service1Refusal_v0 / AsyncDeliveryAccepted_v1); the Owner-amended
+Jest gate `test_engineer_first_call_fixture_matches_frozen_contracts.test.js`
+now enforces subset-property-name checking on 3 fixture-contract pairs
+as an invariant (not an assertion). This mirrors the B-1→B-2 Playwright
+completion pattern and the B-2→B-3 EstateCheckChip regression pattern
+— each next-stage close catches and records the prior-stage drift.
+
+*This footer does NOT change the primary B-3 close-report SHA
+`c2863974bf52f69ff8b7256ad1bae07854a546526672c2d099305a98d01bec22`
+as record — the SHA quoted throughout the ledger is the
+pre-acceptance-footer canonical. The post-footer SHA is computed on
+next `sha256sum` and recorded alongside in the Phase Ledger.*

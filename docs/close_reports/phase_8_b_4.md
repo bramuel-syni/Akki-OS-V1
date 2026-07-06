@@ -293,3 +293,47 @@ GREEN and self-contained.
 
 *End of close report. SHA-256 is computed after this file is written
 and recorded in the return message to Owner.*
+
+---
+
+## 9. Owner acceptance disposition (appended 2026-07-05)
+
+**Owner acceptance:** Phase 8 Stage B-4 ACCEPTED. Push at this close.
+
+**Overage split-disposition — Owner verbatim (2026-07-05):**
+
+> "Overage: split disposition, not B-1's blanket narrative. The
+> mandate-forced portion — verbatim §6 binding copy + first-commit
+> gates — is ratified on record. The backend-test underestimate (888
+> actual vs ~330 estimated, 2.7×) is an estimation miss, not a
+> mandate; the orchestrator owns it. Standing correction, specific
+> and binding on every future dispatch: Stage-A sizing enumerates the
+> test matrix — endpoints × postures × cases — never a test-LoC lump.
+> Every overage in this build traces to tests counted as a lump. B-4
+> is post-signal where B-1 was pre-signal: same magnitude, different
+> meaning, recorded as such. [Owner ruling, Phase 8 B-4 close
+> acceptance, 2026-07-05]"
+
+**Audit-trail rendering ratification (Owner-ruled 2026-07-05):**
+Inline collapsible pre-block accepted; no pivot to modal or drawer.
+Owner verbatim: "Modal/drawer is below ruling altitude, no pivot."
+All three binding rules verified — never primary display, one click
+away, full on open.
+
+**Retroactive record cross-reference (Owner ruled YES, 2026-07-05):**
+Fixture shape drifted at B-3 → CAUGHT AND FIXED at B-4 fixture-schema
+gate. See B-4 close SHA `3cf03f80...` (pre-acceptance). Mirrors the
+B-1→B-2 Playwright pattern and B-2→B-3 EstateCheckChip pattern.
+
+**Standing correction posture:** The test-matrix enumeration
+correction is orchestrator-side, NOT a new §0.1 disposition. §0.1
+remains FROZEN. §0.2 remains unchanged (seams-pending is not a debt
+per Owner amendment). Live-state marker landed at
+`/app/memory/ORCHESTRATOR_CONTINUITY.md` §3 as informational.
+
+**Pre-acceptance close-report SHA (baseline):**
+`3cf03f809a7e19f9d275e2caddc3f1f75d68d29c33190504f4c37377892591b5`
+
+*Post-acceptance-footer SHA follows this file on next compute; recorded
+in `/app/memory/ORCHESTRATOR_CONTINUITY.md` §2 Phase Ledger as
+`B-4 close SHA (post-acceptance footer)`.*
