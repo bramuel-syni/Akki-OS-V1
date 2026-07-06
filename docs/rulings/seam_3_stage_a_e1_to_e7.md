@@ -75,6 +75,8 @@
 
 ### §3.4 E3 + E4 CLOSED — ruled, no further proposal change required
 
+**Cross-reference (added post-Sub-stage-1-ratification, 2026-07-06):** E3 mechanism REFINED per Owner ratification-point Point 1 — REJECT deploy-date config store (α), APPLY query-time first-timestamp-per-family (β) with honest-cost binding. See §8.4 below for the standing refinement text; see Stage A proposal §7.3.β + §7.3.β.1 for the codified mechanism. E4 remains unchanged.
+
 - **E3:** Server-computed ISO date. Client-locale composition rejected. Applied in Stage A §7.3 amendment.
 - **E4:** Colocate in `services/compliance/`. Applied in Stage A §7.4 amendment; `emit_refusal_ledger_row` lives at `services/compliance/refusal_ledger.py`; dead stub at `services/service_1/async_state.py:238` receives migration docstring but stays byte-identical (BC preserved).
 
@@ -195,6 +197,42 @@ Owner refinement dispatch received 2026-07-06 (post-acknowledgment of §1-§7 ab
 **Applied disposition (record only):**
 - No change to §3.1 (E2 binding condition — Sub-stage 2 dispatch precondition).
 - The named gate `test_retention_endpoint_loosening_disabled_pre_checker` (from §3.1) is confirmed by Owner as the load-bearing mechanism enforcing the E2 loosening block at Sub-stage 2 close. Retires at Sub-stage 3 close per §3.1.
+
+### §8.4 Point 1 refinement — E3 mechanism (RULED, 2026-07-06 Amendment E)
+
+**Owner refinement verbatim (Point 1):**
+
+> Reject the deploy-date store; use query-time first-timestamp-per-family (the proposal's β). Deploy date is false-by-construction: it claims coverage from the moment emission went live, but three families were historically un-ledgered, so their true coverage-since is the first timestamp a row actually carries `refusal_family` — a fact in the ledger, not a config value. Store the deploy date and you assert coverage that may not exist. β reports what the ledger contains. If β has a query-cost problem (unindexed scan on every card render), solve it honestly — index or a materialized value showing its as-of timestamp — never substitute a wrong-but-cheap date. Flag the cost if it's real; don't route around correctness.
+
+**Applied disposition (binding):**
+- (a) **Query-time first-timestamp-per-family is the canonical mechanism.** For each family, the `{date}` literal is the ISO-8601 date (`YYYY-MM-DD` UTC) of the earliest `NorthenaLedgerRow_v1` whose `stamp_audit["refusal_family"]` matches that family. Query filter: `{decision: "refused", "stamp_audit.refusal_family": <family>}` sorted timestamp ascending; picks first row per family. Pre-wire-up rows without the pinned key are naturally excluded — β reports what the ledger contains AND carries the family key.
+- (b) **`refusal_family_since_dates.v0.json` config file does NOT land at Sub-stage 1.** The pre-Amendment-A filename is permanently ruled out; the pre-Amendment-A OR-branch language ("set once server-side at Sub-stage 1 close and persisted immutably in the versioned config") is also permanently ruled out. The registry `refusal_families.v0.json` (per §7.1.γ) remains the family-enumeration authority; its `since_date` field (if present in the Sub-stage 1 registry shape decision) MUST NOT be consumed for coverage-marker `{date}` rendering — that consumption path is the exact α trap.
+- (c) **Honest-cost flagging obligation on `e1_dev` at Sub-stage 1 build:** IF the query cost manifests as a measurable problem during Sub-stage 1 implementation (observable render latency on v2.1 §4.1 Refusals card, unindexed-scan warnings from MongoDB explain plans, or equivalent honest evidence), `e1_dev` MUST flag this HONESTLY in the Sub-stage 1 close report with concrete evidence (measured latency numbers, explain-plan output, or equivalent).
+- (d) **NO pre-optimization.** Do NOT pre-emptively add an index. Do NOT pre-emptively add a materialization file. Do NOT pre-emptively add a cached-value store. Owner rules the mechanism if and only if a cost problem is honestly flagged. Correctness-preserving posture: any future cost-solving mechanism ruled by Owner must preserve query-time correctness — index the SAME query, or materialize with an AS-OF timestamp visible to the read, never fabricate a coverage claim.
+- (e) **Stage A proposal §7.3.β + §7.3.β.1 are the canonical codification.** §7.3.α + §7.3.γ are RULED AGAINST verbatim-preserved. §7.3.β.1 (Honest-cost binding) carries the pure-query-time default + honest-cost obligation + no-pre-optimization + correctness-preserving posture verbatim.
+
+### §8.5 Point 2 narrowing — §8.2 anti-rule scope at Sub-stage 1 (RECORD)
+
+**Owner refinement verbatim (Point 2):**
+
+> Narrow to "no 409 introduced by this sub-stage." Full anti-rule enforcement on a sub-stage that builds no checker code is machinery for an absent risk. The 409 ban stands globally; Sub-stage 1 carries only the obligation not to introduce one.
+
+**Applied disposition (record only, NO re-ruling of §8.2):**
+- The standing 409-for-governance-state anti-rule (§8.2) applies GLOBALLY across all phases, all seams, all checker-adjacent work. That standing remains untouched.
+- Sub-stage 1 obligation NARROWED to: **"no 409 introduced by this sub-stage."** Sufficient because Sub-stage 1 builds no checker code — full anti-rule enforcement machinery (per-endpoint scan, per-router grep, cross-console negative gates) on a sub-stage that ships zero checker semantics is machinery for an absent risk.
+- Sub-stage 1 enforcement mechanism: `e1_dev` at Sub-stage 1 build confirms — via inspection of the Sub-stage 1 diff — that no new endpoint or handler in the Sub-stage 1 changeset returns HTTP 409. No dedicated gate required at Sub-stage 1; the diff-inspection assertion is captured as a one-line confirmation in the Sub-stage 1 close report.
+- Full anti-rule enforcement machinery (dedicated grep-negative gate + AST negative gate + cross-endpoint audit) reactivates at Sub-stage 2 (retention endpoint touches checker-adjacent surface via loosening path) and Sub-stage 3 (§8 checker itself lands with its state machine + counter-sign transitions).
+
+### §8.6 Point 3 confirmation — Playwright glyph assertion (RECORD)
+
+**Owner refinement verbatim (Point 3):**
+
+> Keep the glyph assertion. E7 exists because the glyph was wrong. A smoke that checks surrounding words but not the glyph passes on the exact defect E7 fixed. Glyph-level assertion is brittle only when the glyph doesn't matter; here it's the point.
+
+**Applied disposition (record only):**
+- Playwright chromium smoke for the coverage-marker refusals-card rider (part of Sub-stage 1 first-commit-gated smoke suite) MUST assert the middle-dot glyph (`·`, U+00B7) **specifically** — not just the surrounding words. This applies wherever the Owner-supplied binding-copy pattern renders: v2.1 §4.1 Refusals card coverage-marker text (Sub-stage 1) AND downstream at v2.1 §8 checker CK-U1 commit-line binding-copy render (Sub-stage 3).
+- Rationale (Owner verbatim): E7 fixed a glyph-level defect (hyphens vs middle-dots); a smoke that asserts only surrounding words would pass on the exact defect E7 corrected. Glyph-level assertion is correctness-preserving here — not brittleness — because the glyph IS the point.
+- Concrete smoke assertion pattern (indicative; exact syntax settled at build): `expect(page.locator('[data-testid="coverage-marker-text"]')).toHaveText(/·/)` — MUST match the U+00B7 middle-dot byte specifically. Naming convention: `test_coverage_marker_renders_middle_dot_glyph_verbatim` (Sub-stage 1); `test_countersign_commit_line_renders_middle_dot_glyphs_verbatim` (Sub-stage 3).
 
 ═══════════════════════════════════════════════════════════════════
 

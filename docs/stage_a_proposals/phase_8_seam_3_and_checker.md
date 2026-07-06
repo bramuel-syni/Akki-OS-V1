@@ -170,8 +170,7 @@ hence (b) first (no escalation) → (a) second (with resolution) →
 - `services/compliance/refusal_ledger.py` — canonical single-source (per E4 ruling: colocate in `services/compliance/`)
   `emit_refusal_ledger_row(run_id, trace_id, family, reason, actor, at, extra_stamp_audit=None)` function. Mirrors B-3 `record_wizard_freeze` shape (declarative + idempotent-by-(run_id, trace_id, stage, decision, reason)). Emits `NorthenaLedgerRow_v1` byte-identical (per E1.γ ruling: no contract change) with `stage="admit" | "gate" | "converge"` honestly per emission context + `decision="refused"` + `stamp_audit.family` sidecar carrying the constrained-str family value validated against `refusal_families.v0.json`. Never sets `stage="converge"` for non-converge events (α rejected).
 - `services/compliance/refusal_families.v0.json` — NEW versioned registry (per E1.γ ruling). Mirrors admission-refusal-reasons registry shape (`services/service_1/admission_refusal_reasons.vN.json` precedent). Enumerates initial valid families: `admission_refusals`, `composition_below_floor`, `outer_gate_refusals`, `unclassified` — each with `{family, description, since_version, since_date}`. Family additions land as `v0` → `v1` bump; NEVER as Literal widening on `NorthenaLedgerRow_v1` (that Literal isn't touched; family lives in stamp_audit sidecar).
-- `services/compliance/coverage_marker.py` — reads per-family
-  since-dates from `refusal_families.v0.json` `since_date` field (per E1.γ registry-backed disposition) + composes coverage-marker payload for §4.1 refusals card. Two sets: `since_system_start_families` (families whose `since_version = "v0"` + `since_date <= G5a`) + `since_seam_3_families` (families landing at Sub-stage 1 wire-up, marked with `since_date = <server-computed ISO date at Sub-stage 1 close>` per E3 ruling). Response model UNFROZEN.
+- `services/compliance/coverage_marker.py` — queries the Northena ledger at request time (per E3 Amendment E ruling: pure query-time β; NO config file, NO materialization, NO pre-optimization). Query filter `{decision: "refused", "stamp_audit.refusal_family": <family>}` sorted timestamp ascending; picks first row per family; renders ISO date (`YYYY-MM-DD` UTC). NEVER sources `{date}` from `refusal_families.v0.json`'s `since_date` field or any config file — that consumption path is the exact α trap Owner ruled against at Amendment E. Two family sets composed at response time: `since_system_start_families` (practically empty at Sub-stage 1 wire-up — pre-wire-up rows lack the pinned key `stamp_audit["refusal_family"]` and drop out of the query filter) + `since_seam_3_families` (those whose earliest pinned-key row lands at Sub-stage 1 wire-up date or later). Honest-cost obligation: IF query cost manifests during Sub-stage 1 implementation (measurable render latency or unindexed-scan warnings), `e1_dev` MUST flag honestly in the Sub-stage 1 close report — NO pre-emptive index, NO pre-emptive materialization. Response model UNFROZEN.
 
 **Backend (modified — 4 emission sites, per Sub-stage 0 line-owed evidence):**
 - `services/service_1/async_worker.py:97-108` — instrument
@@ -436,6 +435,8 @@ Historical text preserved for audit. **Owner ruling:** *"β widens a frozen Lite
 
 **Impact on Sub-stage 1 build brief:** the wire-shape gate is a **first-commit-gated LB**; lands in the same commit as `emit_refusal_ledger_row` + the 4 emission-site instrumentations. All 4 instrumented emission sites (async_worker.py:97-108, async_worker.py:129-131, service.py:187-192, composed_conclusion.py:272-273) MUST set `stamp_audit["refusal_family"]` with a registry-valid value; the gate parametrises over all 4 sites + covers regression via the aggregate re-verification tests.
 
+### §7.2 Escalation E2 — governance-semantic (surface ownership) — **RULED (2026-07-06)**
+
 **Substrate:** BCR §3.5 S3-R1 says "retention CONFIGURATION SURFACE" lands with Seam 3; BCR §3.6B B5b-R1 says Compliance Console owns writes to retention windows.
 
 **Owner ruling verbatim:** *"Confirm dev disposition: backend endpoint at Sub-stage 2, retention-write UI queued for B-5b. One binding condition: the retention endpoint and its consequence-class routing land in the same commit, or the endpoint ships loosening-disabled. A retention write is protection-relevant — tightening is unilateral-with-delay, loosening/lengthening requires Administration counter-sign. No ungated loosening write ships 'because the UI is later.'"*
@@ -446,17 +447,49 @@ Historical text preserved for audit. **Owner ruling:** *"β widens a frozen Lite
 - Given the split ordering (Sub-stage 2 lands the endpoint; Sub-stage 3 lands the checker), the natural fit is **loosening-disabled at Sub-stage 2**, enabled at Sub-stage 3 close. See §5 propagation below.
 - The E2 binding condition **MUST be re-cited in the Sub-stage 2 build brief** (Owner-directed).
 
-### §7.3 Escalation E3 — owner-value (coverage-marker `{date}` composition) — **RULED (2026-07-06)**
+### §7.3 Escalation E3 — owner-value (coverage-marker `{date}` composition) — **RULED (Amendment A 2026-07-06) + REFINED (Amendment E 2026-07-06)**
 
 **Substrate:** Owner-supplied binding-copy `"Counts {families} since system start; {families} since {date} — earlier events in those families were not recorded."`
 
-**Owner ruling verbatim:** *"Server-computed ISO date. A compliance record's date is a fact of the record, computed once server-side, identical across every viewer and export. Client-locale composition rejected."*
+**Owner ruling verbatim (Amendment A, 2026-07-06):** *"Server-computed ISO date. A compliance record's date is a fact of the record, computed once server-side, identical across every viewer and export. Client-locale composition rejected."*
 
-**Disposition (binding):**
-- The `{date}` literal is **server-computed at query time** (or set once server-side at Sub-stage 1 close and persisted immutably in the versioned config) as an **ISO-8601 date** (`YYYY-MM-DD` in UTC).
-- The value is identical across every viewer and every export — a single fact of the record, not a locale-dependent render.
-- **Client-locale composition REJECTED** — no frontend-side date formatting; the backend returns the ISO literal; the frontend renders verbatim.
-- Historical α/β/γ options in the pre-ruling text (fixed-in-config vs earliest-ledger-row vs env-var) all yielded a client-locale-independent server value; the specific mechanism (fixed literal in `refusal_families.v0.json` since_date registry field OR computed-once-at-Sub-stage-1-close) settled at Sub-stage 1 build — both satisfy the ruling.
+**Owner refinement verbatim (Amendment E, 2026-07-06):** *"Reject the deploy-date store; use query-time first-timestamp-per-family (the proposal's β). Deploy date is false-by-construction: it claims coverage from the moment emission went live, but three families were historically un-ledgered, so their true coverage-since is the first timestamp a row actually carries `refusal_family` — a fact in the ledger, not a config value. Store the deploy date and you assert coverage that may not exist. β reports what the ledger contains. If β has a query-cost problem (unindexed scan on every card render), solve it honestly — index or a materialized value showing its as-of timestamp — never substitute a wrong-but-cheap date. Flag the cost if it's real; don't route around correctness."*
+
+#### §7.3.α — Fixed literal in `refusal_family_since_dates.v0.json` config — **RULED AGAINST (Amendment E, 2026-07-06)**
+
+**Owner rejection verbatim (Amendment E, 2026-07-06):** *"Reject the deploy-date store; ... Store the deploy date and you assert coverage that may not exist."*
+
+Historical α body preserved verbatim for audit:
+> **E3.α (proposed default):** Fixed literal in `refusal_family_since_dates.v0.json` config; value set at sub-stage 1 close to the UTC-ISO date of the seam-3 first-commit deploy. Config is versioned, honest, never rewritten. Precedent: `feasibility-config@v0-provisional`.
+
+Amendment A had briefly folded α into a "server-computed at query time OR set once server-side at Sub-stage 1 close and persisted immutably" disposition; Amendment E supersedes — the OR-branch (config-persisted deploy date) is permanently RULED AGAINST. Rationale (Owner verbatim): *"Deploy date is false-by-construction: it claims coverage from the moment emission went live, but three families were historically un-ledgered, so their true coverage-since is the first timestamp a row actually carries `refusal_family` — a fact in the ledger, not a config value."*
+
+#### §7.3.β — Query-time first-timestamp-per-family — **RULED (Amendment E, 2026-07-06)**
+
+**Owner selection verbatim (Amendment E, 2026-07-06):** *"β reports what the ledger contains."*
+
+Historical β body preserved verbatim for audit:
+> **E3.β:** Derived at query time from the earliest `NorthenaLedgerRow_v1` timestamp for each newly-instrumented family. More expensive query; potentially inaccurate if the same family has old rows from a different code path.
+
+**Canonical mechanism (binding, per Owner ruling):** for each family, the `{date}` literal rendered on v2.1 §4.1 Refusals card is the ISO-8601 date (`YYYY-MM-DD` in UTC) of the earliest `NorthenaLedgerRow_v1` whose `stamp_audit["refusal_family"]` matches that family. Query filter: `{decision: "refused", "stamp_audit.refusal_family": <family>}` sorted by timestamp ascending; picks first. Since Sub-stage 1's pinned-key wire-shape gate (§7.1.γ.1) guarantees `stamp_audit["refusal_family"]` is present + registry-valid on every refusal-terminal row **post-wire-up**, the earliest-row query is exact for post-Sub-stage-1 rows. Pre-Sub-stage-1 rows (which lack the pinned key) are naturally excluded from the query — this is the honest report: *rows the ledger contains AND carry the family key*. The historical β caveat ("potentially inaccurate if same family has old rows from a different code path") is neutralized by the pinned-key filter — pre-wire-up rows without the key drop out of the query set.
+
+#### §7.3.γ — Env var render — **RULED AGAINST (Amendment E, 2026-07-06, by implication)**
+
+Historical γ body preserved verbatim for audit:
+> **E3.γ:** Rendered from an env var. Not versioned; violates config-versioned-not-frozen posture.
+
+Amendment A already ruled γ against on config-versioning grounds. Amendment E makes γ additionally moot: under Point 1 disposition, **no config file lands at all** for the coverage-marker date — the ledger IS the source of truth, computed at query time.
+
+#### §7.3.β.1 — Honest-cost binding (Owner refinement, 2026-07-06)
+
+**Owner honest-cost principle verbatim (Amendment E, 2026-07-06):** *"If β has a query-cost problem (unindexed scan on every card render), solve it honestly — index or a materialized value showing its as-of timestamp — never substitute a wrong-but-cheap date. Flag the cost if it's real; don't route around correctness."*
+
+**Sub-stage 1 default disposition (binding):**
+- **Pure query-time β.** NO materialization file, NO index added, NO `refusal_family_since_dates.v0.json` config file created (at this pass OR at Sub-stage 1 build). Coverage-marker read scans the ledger with the query filter `{decision: "refused", "stamp_audit.refusal_family": <family>}` sorted timestamp ascending; picks first per family; renders ISO date.
+- **Honest-cost flagging obligation on `e1_dev` at Sub-stage 1 build:** IF the query cost manifests as a measurable problem during Sub-stage 1 implementation (observable render latency on v2.1 §4.1 refusals card; unindexed-scan warnings from MongoDB explain plans; or equivalent honest evidence), `e1_dev` MUST flag this HONESTLY in the Sub-stage 1 close report — with concrete evidence (measured latency numbers, explain-plan output, or equivalent).
+- **NO PRE-OPTIMIZATION.** Do NOT pre-emptively add an index, materialization file, or cached-value store. Owner rules the mechanism if and only if a cost problem is honestly flagged.
+- **Correctness-preserving posture (binding):** wrong-but-cheap substitutes (deploy-date store, config-fixed literal, env-var render) are permanently ruled out per Points α + γ RULED AGAINST above. Any future cost-solving mechanism ruled by Owner post-honest-flag MUST preserve query-time correctness (index the same query; materialize with an as-of timestamp visible to the read; never fabricate a coverage claim).
+- **Coverage-marker read behavior (binding, replaces Amendment A prior language at Stage A proposal §4.1 Sub-stage 1 deliverables):** `services/compliance/coverage_marker.py` at Sub-stage 1 build queries the Northena ledger at request time; NEVER sources `{date}` from `refusal_families.v0.json` or any config file. The registry's `since_version` field (per §7.1.γ) is family-registration provenance metadata; the registry's `since_date` field (if present in the Sub-stage 1 registry shape decision) MUST NOT be consumed for the coverage-marker `{date}` rendering — that consumption path is the exact α trap Owner ruled against. Two family sets composed at response time: (a) `since_system_start_families` — those with a pinned-key ledger row bearing a timestamp at or before a semantic "system start" boundary; practically empty at Sub-stage 1 wire-up because pre-Sub-stage-1 rows lack the pinned key. (b) `since_seam_3_families` — those whose earliest pinned-key row lands at Sub-stage 1 wire-up or later; `{date}` = ISO of that earliest row per family.
 
 ### §7.4 Escalation E4 — module placement (`emit_refusal_ledger_row`) — **RULED (2026-07-06)**
 
@@ -542,7 +575,7 @@ against branches marked. No pending pauses on Owner rulings; all sub-
 stages are dispatchable in strict sequence.**
 
 **Sub-stage 1 (refusal-family ledger wire-up + coverage marker):**
-- All rulings applied: E1.γ registry (`refusal_families.v0.json` colocated in `services/compliance/`); E3 server-computed ISO date; E4 module placement colocated in `services/compliance/refusal_ledger.py`; E5 no new codes; E7 middle-dot binding-copy landed at BCR v1.4.1.
+- All rulings applied: E1.γ registry (`refusal_families.v0.json` colocated in `services/compliance/`) + §7.1.γ.1 pinned key `stamp_audit["refusal_family"]` + LB wire-shape gate; E3 query-time first-timestamp-per-family via `stamp_audit["refusal_family"]` (Amendment E refinement: β canonical, no config-date store, honest-cost flagging obligation); E4 module placement colocated in `services/compliance/refusal_ledger.py`; E5 no new codes (§8.2 anti-rule narrowed to "no 409 introduced by this sub-stage"); E7 middle-dot binding-copy landed at BCR v1.4.1 + Playwright glyph-level assertion on the coverage-marker rider smoke per §8.6.
 - **READY TO DISPATCH ON OWNER GO-SIGNAL.** Zero governance-semantic escalation open.
 
 **Sub-stage 2 (authorized-deletion path):**
