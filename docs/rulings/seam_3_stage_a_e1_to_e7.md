@@ -69,6 +69,8 @@
 
 ### §3.3 E5 CLOSED
 
+**Cross-reference (added post-acknowledgment, 2026-07-06):** the 409-for-governance-state anti-rule stated in this section is ELEVATED TO STANDING per Owner refinement at §8.2 below — applies to any checker-adjacent work, all phases, all seams; no longer Seam-3-scoped. This §3.3 body preserved verbatim as the historical Seam-3-scoped record; §8.2 carries the standing elevation.
+
 **No action, no proposal change.** The 4-code auth registry closed posture is preserved (`auth_scope_insufficient` / `auth_missing` / `auth_expired` / `auth_identity_mismatch_for_wizard_session`). Explicitly ruled OUT: any HTTP 409 pattern for counter-sign-pending states — counter-sign-pending is NOT an HTTP conflict. The 403 access-control path is reused for unauthorized-on-checker denials. No new §0.1 dispositions expected across Sub-stages 1-3.
 
 ### §3.4 E3 + E4 CLOSED — ruled, no further proposal change required
@@ -155,4 +157,51 @@
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of rulings record. Build stays PAUSED.*
+## §8. Owner refinements (post-acknowledgment, 2026-07-06)
+
+Owner refinement dispatch received 2026-07-06 (post-acknowledgment of §1-§7 above). Two refinements landed as an addendum-only pass — Amendment C (Stage A §7.1.γ.1 subsection) + Amendment D (this section). Owner refinement text is verbatim below; no paraphrase.
+
+### §8.1 Observation 1 refinement — carrier + wire-shape gate
+
+**Owner refinement verbatim:**
+
+> Sidecar is the right container, wrong as a loose Dict. Pin the key. The refusal-family value is a queried, grouped dimension (it feeds the refusals-by-month aggregate and the regulator surface), not audit metadata — burying it in an unschematized stamp_audit Dict means every aggregate reads a key with no guarantee it exists or holds a registry-valid value. But a top-level typed field mutates NorthenaLedgerRow_v1 and breaks byte-identity. Resolve both the same way §6.1 was: keep the sidecar, pin `stamp_audit["refusal_family"]` under a load-bearing wire-shape gate asserting presence and registry-validity on every refusal-terminal row. Contract stays byte-identical, parity 26 holds, the aggregate reads a guaranteed key. One-line addendum to §7.1.γ.
+
+**Applied disposition (binding):**
+- **Pinned-key mechanism:** the registry-backed constrained-str family value lives at **`stamp_audit["refusal_family"]`** — pinned key inside the existing `stamp_audit: Optional[Dict]` sidecar on `NorthenaLedgerRow_v1`. Contract stays byte-identical (parity 26 holds).
+- **Load-bearing wire-shape gate:** **`test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit`** — LB. Asserts on every refusal-terminal row (any `NorthenaLedgerRow_v1` with `decision="refused"`): (a) `stamp_audit` is present; (b) `stamp_audit["refusal_family"]` is present as a key; (c) its value is a registry-valid entry per the currently-loaded `refusal_families.vN.json`. **Retirement condition: never** — permanent load-bearing gate protecting aggregate + regulator-surface consumers from unschematized reads.
+- **§6.1 precedent cited:** Sub-stage 3 CK-B1 dual-identity uses the same pattern — `services/checker/countersign_ledger.py` (Stage A proposal line 319) emits with pinned-key stamp_audit + gate CK-G2 `test_countersign_row_carries_both_identities` (Stage A proposal §6.1 test matrix line 342) asserts LB presence of the pinned keys on every countersign row.
+- **First-commit gating:** the wire-shape gate lands in the same commit as `emit_refusal_ledger_row` + the 4 emission-site instrumentations at Sub-stage 1 build.
+- **Amendment C landing location:** Stage A proposal §7.1.γ.1 subsection immediately after §7.1.γ body (before §7.2); §7.1.α, §7.1.β, and existing §7.1.γ body all UNMODIFIED.
+
+### §8.2 Observation 3 elevation — 409-for-governance-state anti-rule (STANDING)
+
+**Owner refinement verbatim:**
+
+> Keep, elevated. 409-for-governance-state is a trap on any checker-adjacent work, not just Seam 3. The standing anti-rule is better than my narrower version.
+
+**Applied disposition (binding, STANDING):**
+- **Elevation:** the "counter-sign-pending is NOT an HTTP conflict; reuse the 403 access-control path, no 409-for-governance-state" anti-rule is **ELEVATED TO STANDING** — applies to any checker-adjacent work, all phases, all seams. Not Seam-3-scoped.
+- **Historical §3.3 (E5 CLOSED) preserved verbatim** as the original Seam-3-scoped record; §3.3 now carries a cross-reference note pointing at this §8.2 for the standing elevation. The Seam-3-scoped body was NOT rewritten.
+- **Enforcement footprint:** applies to every future dispatch touching state-machine transitions, dual-control paths, tightening-effective/objection paths, retention-write consequence routing (Sub-stage 2 loosening path), and any B-5b write path that routes through the §8 checker. If any such surface proposes 409 for a governance-pending state, that proposal is anti-rule-violating and MUST be rewritten to use the 403 access-control class with a plain-language reason.
+- **Naming convention for the anti-rule (for future citation):** *"409-for-governance-state anti-rule (standing, ruled 2026-07-06)"*.
+
+### §8.3 Observation 2 record — test-gate enforcement of E2 loosening block
+
+**Owner refinement verbatim:**
+
+> Keep test-gate enforcement of the E2 loosening block. No change.
+
+**Applied disposition (record only):**
+- No change to §3.1 (E2 binding condition — Sub-stage 2 dispatch precondition).
+- The named gate `test_retention_endpoint_loosening_disabled_pre_checker` (from §3.1) is confirmed by Owner as the load-bearing mechanism enforcing the E2 loosening block at Sub-stage 2 close. Retires at Sub-stage 3 close per §3.1.
+
+═══════════════════════════════════════════════════════════════════
+
+## §9. Post-Amendment-C+D posture
+
+**All Owner refinements (Observations 1 + 2 + 3) applied.** Per Owner directive on this dispatch: *"Authorize Sub-stage 1 after the Observation-1 addendum lands (pinned key + gate). E1.γ / E2 / E3 / E4 / E7 pre-carry as listed, cited to `038bd24d…`."* — Sub-stage 1 is **pre-authorized** once this addendum pass lands with confirmed SHAs. Build agent does NOT self-dispatch Sub-stage 1; awaits the Sub-stage 1 build brief in a follow-up Owner message.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of rulings record. Build stays PAUSED through this addendum pass.*
