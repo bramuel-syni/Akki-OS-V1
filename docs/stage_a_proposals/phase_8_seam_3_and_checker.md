@@ -83,8 +83,9 @@ overlay with a family; retracted honestly here and replaced with the
   Gate proves mechanism, not staffing.
 - **CK-U1** pending items on BOTH consoles' banners; counter-signing
   console sees full plain-language consequence statement before
-  signing. Commit-line binding copy verbatim:
-  *"Signed by {initiator} - counter-signed by {checker} - recorded with both identities."*
+  signing. Commit-line binding copy verbatim (post-E7 correction —
+  BCR v1.4.1 aligns with UI Spec v2.1 §8/§10 middle-dot rendering):
+  *"Signed by {initiator} · counter-signed by {checker} · recorded with both identities."*
 - **CK-G1..G5** enumerated:
   * CK-G1 `test_dual_control_blocks_until_countersign`
   * CK-G2 `test_countersign_row_carries_both_identities`
@@ -156,10 +157,8 @@ empirical ceiling ~[2500, 3000] LoC** from B-5a's razor-thin close.
 hence (b) first (no escalation) → (a) second (with resolution) →
 (c) third (leverages both).
 
-**Cumulative frozen-contract count across all 3 sub-stages:**
-- If E1 disposed as stamp_audit-only (option E1.α below): **26 (unchanged).**
-- If E1 disposed as NorthenaLedgerRow_v2 (option E1.β below): **27 at
-  sub-stage 2 close; unchanged thereafter.**
+**Cumulative frozen-contract count across all 3 sub-stages (post-E1.γ ruling, 2026-07-06):**
+- **26 (unchanged) across all 3 sub-stages.** E1.γ registry-pattern ruling supersedes both α and β; `NorthenaLedgerRow_v1` stays byte-identical; families extend via `refusal_families.v0.json` registry additions per admission-refusal-reasons precedent. No new frozen contracts. No snapshot bumps. Mechanical parity 26/26 preserved.
 
 ═══════════════════════════════════════════════════════════════════
 
@@ -168,25 +167,26 @@ hence (b) first (no escalation) → (a) second (with resolution) →
 ### §4.1 Deliverables
 
 **Backend (new):**
-- `services/northena/refusal_ledger.py` — canonical single-source
-  `emit_refusal_ledger_row(run_id, trace_id, family, reason, actor, at, extra_stamp_audit=None)` function. Mirrors B-3 `record_wizard_freeze` shape (declarative + idempotent-by-(run_id, trace_id, stage, decision, reason)). Emits `NorthenaLedgerRow_v1` with `stage="admit" | "converge"` per family context + `decision="refused"` + stamp_audit sidecar carrying `{data_class: "governed_refusal", family, source: sync|async}`.
+- `services/compliance/refusal_ledger.py` — canonical single-source (per E4 ruling: colocate in `services/compliance/`)
+  `emit_refusal_ledger_row(run_id, trace_id, family, reason, actor, at, extra_stamp_audit=None)` function. Mirrors B-3 `record_wizard_freeze` shape (declarative + idempotent-by-(run_id, trace_id, stage, decision, reason)). Emits `NorthenaLedgerRow_v1` byte-identical (per E1.γ ruling: no contract change) with `stage="admit" | "gate" | "converge"` honestly per emission context + `decision="refused"` + `stamp_audit.family` sidecar carrying the constrained-str family value validated against `refusal_families.v0.json`. Never sets `stage="converge"` for non-converge events (α rejected).
+- `services/compliance/refusal_families.v0.json` — NEW versioned registry (per E1.γ ruling). Mirrors admission-refusal-reasons registry shape (`services/service_1/admission_refusal_reasons.vN.json` precedent). Enumerates initial valid families: `admission_refusals`, `composition_below_floor`, `outer_gate_refusals`, `unclassified` — each with `{family, description, since_version, since_date}`. Family additions land as `v0` → `v1` bump; NEVER as Literal widening on `NorthenaLedgerRow_v1` (that Literal isn't touched; family lives in stamp_audit sidecar).
 - `services/compliance/coverage_marker.py` — reads per-family
-  since-dates from `refusal_family_since_dates.v0.json` config + composes coverage-marker payload for §4.1 refusals card. Two sets: `since_system_start` (families ledgered since G5a) + `since_seam_3_date` (families ledgered since seam-3 wire-up). Response model UNFROZEN.
-- `refusal_family_since_dates.v0.json` — versioned config carrying
-  `{ system_start_families: [...], seam_3_landing_families: [...], seam_3_landing_date: "YYYY-MM-DD" }`.
+  since-dates from `refusal_families.v0.json` `since_date` field (per E1.γ registry-backed disposition) + composes coverage-marker payload for §4.1 refusals card. Two sets: `since_system_start_families` (families whose `since_version = "v0"` + `since_date <= G5a`) + `since_seam_3_families` (families landing at Sub-stage 1 wire-up, marked with `since_date = <server-computed ISO date at Sub-stage 1 close>` per E3 ruling). Response model UNFROZEN.
 
-**Backend (modified — 4 emission sites):**
+**Backend (modified — 4 emission sites, per Sub-stage 0 line-owed evidence):**
 - `services/service_1/async_worker.py:97-108` — instrument
-  ComposedService1Refusal handler with `emit_refusal_ledger_row(family="composition_below_floor", source="async")` **before** `transition_to_refused` call.
+  ComposedService1Refusal handler with `emit_refusal_ledger_row(family="composition_below_floor", ...)` **before** `transition_to_refused` call.
 - `services/service_1/async_worker.py:129-131` — instrument
-  AdmissionRefusal_v0 handler with `emit_refusal_ledger_row(family="admission_refusals", source="async")` **before** `transition_to_refused` call.
+  AdmissionRefusal_v0 handler with `emit_refusal_ledger_row(family="admission_refusals", ...)` **before** `transition_to_refused` call.
 - `services/service_1/service.py:187-192` — instrument
-  `Service1Refusal("composition_below_floor")` raise site with `emit_refusal_ledger_row(family="composition_below_floor", source="sync")` **before** raise.
+  `Service1Refusal("composition_below_floor")` raise site with `emit_refusal_ledger_row(family="composition_below_floor", ...)` **before** raise.
 - `services/service_1/composed_conclusion.py:272-273` — instrument same
   pattern.
 
+Family values are constrained-str validated against the registry; never Literal, never a frozen-contract touch.
+
 **Backend (dead-stub migration):**
-- `services/service_1/async_state.py:238::emit_ledger_terminate_refused` — module docstring note added; body kept byte-identical (BC) with `# MIGRATED: canonical single-source is services/northena/refusal_ledger.py::emit_refusal_ledger_row`. Callable stays dead (zero callers pre + post).
+- `services/service_1/async_state.py:238::emit_ledger_terminate_refused` — module docstring note added; body kept byte-identical (BC) with `# MIGRATED: canonical single-source is services/compliance/refusal_ledger.py::emit_refusal_ledger_row` (per E4 ruling). Callable stays dead (zero callers pre + post).
 
 **Backend (new endpoint):**
 - `GET /api/compliance/refusals_coverage` — reads coverage marker. Auth: same as existing `/api/compliance/refusals` (any authenticated role; anonymous 401).
@@ -232,7 +232,11 @@ Falls at ~35% into anchored band [1400, 1800]. Within band.
 
 ## §5. Sub-stage 2 — (a) Authorized-deletion path
 
-### §5.1 Deliverables (pending §7 Escalation E1 resolution)
+### §5.1 Deliverables (E1.γ registry pattern + E2 binding condition applied)
+
+**Post-ruling clarifications (2026-07-06):**
+- **E1.γ:** `NorthenaLedgerRow_v1` stays byte-identical. Deletion-event ledger emissions carry the family/data-class disambiguation via `stamp_audit` sidecar keyed off the SAME registry pattern established at Sub-stage 1 (constrained-str + versioned registry). Specific data-class value for deletion events: `authorized_deletion` (registered as a family/data-class entry via versioned registry — exact registry scope/naming settled at Sub-stage 2 build; the pattern is the ruling). NEVER overloaded onto `stage="converge"` (α rejected); NEVER a new frozen contract version (β rejected).
+- **E2 binding condition:** the retention endpoint and its consequence-class routing land in the same commit — OR the endpoint ships **loosening-disabled**. Since Sub-stage 3 (checker) lands AFTER Sub-stage 2, the natural fit is loosening-disabled at Sub-stage 2, enabled at Sub-stage 3 close.
 
 **Backend (new):**
 - `services/retention/authorized_deletion.py` — SINGLE-SOURCE-OF-DELETION module. Contains the ONLY `db.<collection>.delete_one/delete_many/drop` call sites in the extractor tree. Function: `execute_authorized_deletion(held_class, retention_rule, actor) -> DeletionResult`.
@@ -240,8 +244,11 @@ Falls at ~35% into anchored band [1400, 1800]. Within band.
 - `retention.v0.json` — initial config carrying all-null windows (honest indefinite default). Landing at close means "retention config surface is now writable" but the values remain null until DPO writes.
 
 **Backend (new endpoint):**
-- `POST /api/compliance/retention_config` — write half. Auth: DPO role required (Amendment 1 pattern). Body: partial config (any subset of 3 held-classes' window_days). Response: new `retention.vN+1.json` version + ledger row emitted.
-- `POST /api/compliance/authorized_deletion` — deletion executor. Auth: DPO role. Body: `{held_class, keys_selector}`. Behavior: LOOKUP retention rule for held_class; if `window_days is null` → 422 refusal `no_retention_rule_set`; else if selector matches expired-window keys → `execute_authorized_deletion(...)` + emit ledger row via `emit_refusal_ledger_row`-adjacent helper `emit_deletion_ledger_row`.
+- `POST /api/compliance/retention_config` — write half. Auth: DPO role required (Amendment 1 pattern). Body: partial config (any subset of 3 held-classes' window_days). Response: new `retention.vN+1.json` version + ledger row emitted. **E2 binding condition:** at Sub-stage 2 close (before Sub-stage 3 checker lands), loosening/lengthening writes (any `window_days` increase, or `int → null` transition on an already-set class) are refused with 403 access-control class body citing `awaiting_consequence_class_checker`. Tightening writes (any `window_days` decrease, or `null → int` transition on an unset class) are accepted at Sub-stage 2 without checker (they are tightening_unilateral per CK-B2; unilateral-with-delay path is a Sub-stage 3 concern). Sub-stage 3 close enables loosening writes via the checker's countersign path.
+- `POST /api/compliance/authorized_deletion` — deletion executor. Auth: DPO role. Body: `{held_class, keys_selector}`. Behavior: LOOKUP retention rule for held_class; if `window_days is null` → 422 refusal `no_retention_rule_set`; else if selector matches expired-window keys → `execute_authorized_deletion(...)` + emit ledger row via `emit_deletion_ledger_row` (uses same registry-backed constrained-str `family` sidecar per E1.γ; family value `authorized_deletion` registered via versioned registry).
+
+**Named gate for E2 binding condition:**
+- `test_retention_endpoint_loosening_disabled_pre_checker` — LOAD-BEARING. Attempt a loosening write at Sub-stage 2 → 403 access-control body with reason `awaiting_consequence_class_checker`. Ledger row NOT written for the refused loosening attempt. Retires at Sub-stage 3 close (replaced by `test_retention_loosening_write_requires_administration_countersign` per CK-B3 symmetry).
 
 **Backend (modified):**
 - `backend/server.py` — mount retention router (2 lines).
@@ -270,28 +277,30 @@ Slightly higher than initial ~54 estimate (re-tabulated); pushes LoC
 band accordingly.
 
 **Rule 2 estimated band (sub-stage 2):** [2500, 2900] LoC.
-`snapshot_lloc_in_band = conditional` — `no` if E1.α (stamp_audit-only);
-`yes` if E1.β (NorthenaLedgerRow_v2 lands at this sub-stage, +216L snapshot).
+`snapshot_lloc_in_band = no` (E1.γ registry-pattern ruling: `NorthenaLedgerRow_v1` byte-identical; zero snapshot changes across all 3 sub-stages).
 
 **Per-bucket LoC breakdown (sub-stage 2):**
 
 | Bucket | Estimated LoC |
 |---|---|
-| Backend impl (authorized_deletion.py 180L + retention_config_writes.py 140L + retention.v0.json 20L + 2 write endpoints 110L + `emit_deletion_ledger_row` helper 60L) | ~510 |
-| Backend tests (67 backend cells × ~25 LoC/cell) | ~1675 |
-| Config + snapshot (retention.v0.json + optional v2 contract if E1.β) | conditional 20-280L |
+| Backend impl (authorized_deletion.py 180L + retention_config_writes.py 140L + retention.v0.json 20L + 2 write endpoints 110L + `emit_deletion_ledger_row` helper 60L + loosening-disabled gate wiring 40L) | ~550 |
+| Backend tests (67 backend cells × ~25 LoC/cell + E2 loosening-disabled gate ~30L) | ~1705 |
 | Invariant re-scope gate (AST + retirement) | ~120 |
-| **Total (E1.α)** | **~2325** |
-| **Total (E1.β with v2 contract + snapshot)** | **~2605** |
+| **Total** | **~2375** |
 
-E1.α falls at ~-7% below band mid ~2700. E1.β falls at ~-3% below.
-Both within band.
+Falls at ~-12% below band mid ~2700. Within band. No conditional
+snapshot bump (E1.γ ruling preserves parity 26).
 
 ═══════════════════════════════════════════════════════════════════
 
 ## §6. Sub-stage 3 — (c) §8 consequence-class checker
 
-### §6.1 Deliverables (pending §7 Escalation E1 resolution)
+### §6.1 Deliverables (E1.γ registry pattern + E6 confirmed applied)
+
+**Post-ruling clarifications (2026-07-06):**
+- **E1.γ (reused from Sub-stage 2):** `NorthenaLedgerRow_v1` stays byte-identical. Countersign / tightening-effective / objection ledger emissions carry data-class disambiguation via `stamp_audit` sidecar keyed off the SAME registry pattern (constrained-str + versioned registry — exact registry scope for rule-change events settled at Sub-stage 3 build; the pattern is the ruling). NEVER `stage="converge"` semantic overload (α rejected); NEVER a new frozen contract version (β rejected).
+- **E6 CLOSED:** `MasterAdminHomePage.js` confirmed on-disk (verified 2026-07-06 recon); HAZARD-STOP branch dead; Sub-stage 3 extends the page inline.
+- **E2 loosening-enablement:** Sub-stage 3 close enables loosening writes on the retention endpoint via the checker's countersign path — retires `test_retention_endpoint_loosening_disabled_pre_checker` and lands `test_retention_loosening_write_requires_administration_countersign` (CK-B3 symmetry).
 
 **Backend (new):**
 - `services/checker/consequence_classes.py` — constrained-str `consequence_class` type via Pydantic `Field(pattern=r"^(tightening_unilateral|dual_control)$")`. Explicitly documented in docstring: **NEVER Literal** (per CK-I1 + CK-G5).
@@ -319,7 +328,7 @@ Both within band.
 - `frontend/src/components/CounterSignBanner.jsx` — added to `ui_spec_v1/index.js` barrel. Renders on BOTH Compliance and Administration consoles.
 - `frontend/src/pages/compliance/ComplianceHomePage.js` — extend to render `CounterSignBanner` (top of page).
 - `frontend/src/pages/master_admin/MasterAdminHomePage.js` (extend or NEW; TBD at sub-stage 3 dispatch reading of existing tree) — same banner.
-- Commit-line binding copy VERBATIM per CK-U1: `"Signed by {initiator} - counter-signed by {checker} - recorded with both identities."`
+- Commit-line binding copy VERBATIM per CK-U1 (post-E7 correction): `"Signed by {initiator} · counter-signed by {checker} · recorded with both identities."`
 
 **Test matrix (sub-stage 3):**
 
@@ -363,7 +372,13 @@ Falls at ~-4% below band mid ~2250. Within band.
 
 ## §7. Escalations to Owner
 
-### §7.1 Escalation E1 — governance-semantic (frozen-contract touch question)
+**AMENDMENT PASS (2026-07-06) — Owner rulings E1 through E7 applied.**
+All six escalations E1-E6 ruled at this pass; E7 (binding-copy
+punctuation) added and ruled in the same batch. Historical α/β
+analysis preserved verbatim for audit; ruled-against branches marked
+inline. Downstream §4/§5/§6 rosters propagated to reflect the rulings.
+
+### §7.1 Escalation E1 — governance-semantic (frozen-contract touch question) — **RULED (γ)**
 
 **Substrate:** `NorthenaLedgerRow_v1.stage: Literal["admit", "gate", "converge"]` + `decision: Literal[...]` do NOT semantically contemplate:
 - deletion events (`data_class="authorized_deletion"` per §3.5 annex);
@@ -371,67 +386,114 @@ Falls at ~-4% below band mid ~2250. Within band.
 
 Both §3.5 and §3.11 annexes explicitly write "NorthenaLedgerRow_v1" without any note on the stage/decision mismatch. Escalation cap applies.
 
-**Two options for Owner ruling:**
+#### §7.1.α — stamp_audit-only disambiguation — **RULED AGAINST (2026-07-06)**
 
-**E1.α — stamp_audit-only disambiguation (proposed default):**
+Historical text preserved for audit. **Owner ruling:** *"α (reason-string overloaded onto `stage='converge'`) makes the ledger row misreport its own stage — rejected."*
+
 - Reuse `stage="converge"` + `decision="continue"` as neutral placeholders + reason string prefix (e.g. `authorized_deletion:{held_class}`, `countersigned_rule_change:{rule_class}`, `tightening_effective:{rule_class}`, `tightening_objected:{rule_class}`) + `stamp_audit.data_class` carries semantic disambiguation per mandate.
 - Precedent: Phase 6 Stage B stamp_audit-disambiguation for quote-mint instrumentation already writes `stage="converge"` + stamp_audit sidecar.
 - Frozen contract parity: **26 (unchanged) across all 3 sub-stages.**
 - Honesty cost: `stage="converge"` and `decision="continue"` are semantically stretched for events that are neither convergence nor continuation. `reason` string carries the honest label; classifier + regulator surface can key off stamp_audit.data_class or reason prefix.
 
-**E1.β — NorthenaLedgerRow_v2 (frozen-contract addition, HAZARD-STOP path):**
+#### §7.1.β — NorthenaLedgerRow_v2 (frozen-contract addition) — **RULED AGAINST (2026-07-06)**
+
+Historical text preserved for audit. **Owner ruling:** *"β widens a frozen Literal — the scheduled hazard-stop."*
+
 - Lands `contracts/northena_ledger_v2.py` with `stage: Literal["admit","gate","converge","retention","rule_change"]` + `decision` Literal supersetted for the new semantics. Superset-validating (v1 rows also validate under v2 per `frozen-field-changes-as-new-versions` Standing Disposition).
 - v0 + v1 files remain byte-identical (guarded by regression gates parametrised over 20 prior contract sources).
 - Snapshot map bumps 26→27 at sub-stage 2 close.
 - Honesty benefit: `stage` names the event class truthfully; classifier queries + regulator surface read `stage` directly without semantic overloads.
 - Cost: HAZARD-STOP (a) at Owner's frozen-field ruling. Substrate-Drop v1 gate re-runs post-freeze.
 
-**Proposed disposition (dev):** E1.α — retains parity 26 unchanged; the mandate annexes explicitly cite `NorthenaLedgerRow_v1` and do not narrow `stage` semantics. But **Owner rules at sub-stage 2 dispatch** — this is the exact governance-semantic contact class the escalation cap protects.
+#### §7.1.γ — Registry pattern — **RULED (2026-07-06)**
 
-### §7.2 Escalation E2 — governance-semantic (surface ownership)
+**Owner ruling verbatim:** *"Reject both α and β. Apply the registry pattern. Refusal-family is a constrained-str backed by an external versioned registry (`refusal_families.v0.json`), per the admission-refusal-reasons precedent. α (reason-string overloaded onto `stage='converge'`) makes the ledger row misreport its own stage — rejected. β widens a frozen Literal — the scheduled hazard-stop. `NorthenaLedgerRow_v1` stays byte-identical; families extend as registry additions. Amend the Stage A proposal to reflect this before Sub-stage 2 dispatches."*
+
+**Design (binding):**
+- Refusal-family is a **constrained-str** type validated against an **external versioned registry** file. Never a `Literal`. Never inlined into a frozen contract.
+- Registry file: **`refusal_families.v0.json`** — versioned, append-only, following the admission-refusal-reasons precedent exactly.
+- On-disk registry path: **`/app/backend/services/compliance/refusal_families.v0.json`** — colocated with the consumer per E4 ruling (`services/compliance/`), mirroring the admission-refusal-reasons location convention (`/app/backend/services/service_1/admission_refusal_reasons.vN.json` — service-local, consumer-adjacent).
+- Registry shape: `{ "valid_families": [ { "family": "<snake_case>", "description": "<one-line>", "since_version": "v0", "since_date": "YYYY-MM-DD" }, ... ] }` (exact schema settled at Sub-stage 1 build; mirror of admission-refusal-reasons registry shape).
+- Family additions land as **registry version bumps** (`v0` → `v1` → `v2` …) — the admission-refusal-reasons precedent (bumped `v0` → `v3` across Phase 3 / Phase 4a / Phase 5 / Phase 6 without a single frozen-contract touch).
+- **`NorthenaLedgerRow_v1` stays byte-identical.** Frozen contract parity remains **26 (unchanged) across all 3 sub-stages of Seam 3 + §8 checker.** No contract mutation, no new contract version, no snapshot bump.
+- Family value on emission sites: passed as an explicit `family` argument into `emit_refusal_ledger_row(...)`; carried on the ledger row via `stamp_audit.family` sidecar (existing `Optional[Dict]` field on `NorthenaLedgerRow_v1` — accommodates new sidecar keys without contract change).
+- Named gate: `test_refusal_family_is_registry_backed_constrained_str_never_literal` — grep-negative on `Literal["admission_refusals"...` / `Literal["composition_below_floor"...` across `services/compliance/*.py`; positive on constrained-str schema + registry-file load.
+- **Extension pattern applies verbatim to Sub-stage 2 + Sub-stage 3 data-class disambiguation** (authorized_deletion, countersigned_rule_change, tightening_effective, tightening_objected): each event class extends the SAME registry (or a scope-parallel registry per data-class family) as append-only additions at its dispatch. `NorthenaLedgerRow_v1.stage` + `decision` are NEVER overloaded onto these events (α rejected) and are NEVER widened via a v2 contract (β rejected). Exact registry scope for Sub-stage 2/3 (single unified registry vs per-purpose registries) settled at those dispatches; the ruling here is that whatever scope is chosen, the pattern is registry-backed constrained-str.
+
+**Precedent cited:** `/app/backend/services/service_1/admission_refusal_reasons.v0.json` (Phase 3, 2026-07-03) → `.v1.json` (Phase 4a Stage B, 2026-07-04) → `.v2.json` (Phase 5 Stage B, 2026-07-04) → `.v3.json` (Phase 6 Stage B, 2026-07-04). `AdmissionRefusal_v0.reason` field is a constrained-str (snake_case pattern), NEVER a Literal — Standing Owner Disposition landed at Phase 3 close: *"Admission-refusal reason codes: extend by ADDITION via versioned registry."*
+
+**Impact on frozen contracts:** **ZERO.** All 26 frozen contract sources + all 26 `.contract_snapshot.json` files remain byte-identical across all 3 sub-stages. Mechanical parity invariant unchanged.
+
+### §7.2 Escalation E2 — governance-semantic (surface ownership) — **RULED (2026-07-06)**
 
 **Substrate:** BCR §3.5 S3-R1 says "retention CONFIGURATION SURFACE" lands with Seam 3; BCR §3.6B B5b-R1 says Compliance Console owns writes to retention windows.
 
-**Proposed disposition (dev):** Seam 3 = BACKEND ENDPOINT ONLY at sub-stage 2 (`POST /api/compliance/retention_config` + `POST /api/compliance/authorized_deletion`); Compliance Console UI for retention windows lands with B-5b atop the Seam-3 endpoint. Coverage-marker rider (sub-stage 1) is the ONLY frontend touch during Seam 3 sub-stages.
+**Owner ruling verbatim:** *"Confirm dev disposition: backend endpoint at Sub-stage 2, retention-write UI queued for B-5b. One binding condition: the retention endpoint and its consequence-class routing land in the same commit, or the endpoint ships loosening-disabled. A retention write is protection-relevant — tightening is unilateral-with-delay, loosening/lengthening requires Administration counter-sign. No ungated loosening write ships 'because the UI is later.'"*
 
-Owner rules if UI should ride Seam 3 sub-stage 2 (retention window write buttons on §4.3 Retention & rights page) OR stay queued for B-5b per §3.6B mandate reading.
+**Disposition (binding):**
+- **Seam 3 = BACKEND ENDPOINT ONLY at Sub-stage 2** — `POST /api/compliance/retention_config` + `POST /api/compliance/authorized_deletion` land at Sub-stage 2. Compliance Console UI for retention windows lands with B-5b atop the Seam-3 endpoint. Coverage-marker rider (Sub-stage 1) is the ONLY frontend touch during Seam 3 sub-stages.
+- **BINDING CONDITION (E2 preprocessor for Sub-stage 2 dispatch):** the retention endpoint and its consequence-class routing land in the same commit — **OR** the endpoint ships **loosening-disabled** (tightening writes accepted; loosening/lengthening writes refused with 403 access-control class citing `awaiting_consequence_class_checker`, until Sub-stage 3 checker lands and enables loosening path).
+- Given the split ordering (Sub-stage 2 lands the endpoint; Sub-stage 3 lands the checker), the natural fit is **loosening-disabled at Sub-stage 2**, enabled at Sub-stage 3 close. See §5 propagation below.
+- The E2 binding condition **MUST be re-cited in the Sub-stage 2 build brief** (Owner-directed).
 
-### §7.3 Escalation E3 — owner-value (coverage-marker `{date}` composition)
+### §7.3 Escalation E3 — owner-value (coverage-marker `{date}` composition) — **RULED (2026-07-06)**
 
 **Substrate:** Owner-supplied binding-copy `"Counts {families} since system start; {families} since {date} — earlier events in those families were not recorded."`
 
-**What does `{date}` literal render as?** Three options:
-- **E3.α (proposed default):** Fixed literal in `refusal_family_since_dates.v0.json` config; value set at sub-stage 1 close to the UTC-ISO date of the seam-3 first-commit deploy. Config is versioned, honest, never rewritten. Precedent: `feasibility-config@v0-provisional`.
-- **E3.β:** Derived at query time from the earliest `NorthenaLedgerRow_v1` timestamp for each newly-instrumented family. More expensive query; potentially inaccurate if the same family has old rows from a different code path.
-- **E3.γ:** Rendered from an env var. Not versioned; violates config-versioned-not-frozen posture.
+**Owner ruling verbatim:** *"Server-computed ISO date. A compliance record's date is a fact of the record, computed once server-side, identical across every viewer and export. Client-locale composition rejected."*
 
-**Proposed disposition (dev):** E3.α. Owner rules at sub-stage 1 dispatch.
+**Disposition (binding):**
+- The `{date}` literal is **server-computed at query time** (or set once server-side at Sub-stage 1 close and persisted immutably in the versioned config) as an **ISO-8601 date** (`YYYY-MM-DD` in UTC).
+- The value is identical across every viewer and every export — a single fact of the record, not a locale-dependent render.
+- **Client-locale composition REJECTED** — no frontend-side date formatting; the backend returns the ISO literal; the frontend renders verbatim.
+- Historical α/β/γ options in the pre-ruling text (fixed-in-config vs earliest-ledger-row vs env-var) all yielded a client-locale-independent server value; the specific mechanism (fixed literal in `refusal_families.v0.json` since_date registry field OR computed-once-at-Sub-stage-1-close) settled at Sub-stage 1 build — both satisfy the ruling.
 
-### §7.4 Escalation E4 — module placement (`emit_refusal_ledger_row`)
+### §7.4 Escalation E4 — module placement (`emit_refusal_ledger_row`) — **RULED (2026-07-06)**
 
 **Substrate:** Owner's B-5a §7.1 observation named `services/service_1/async_state.py:238::emit_ledger_terminate_refused` as candidate wire-up target (dead stub today).
 
-**Two options:**
-- **E4.α (proposed default):** New module `services/northena/refusal_ledger.py` — parallel to `admit.py`, `converge.py`. Serves BOTH sync (`service_1/service.py` + `composed_conclusion.py`) AND async (`async_worker.py`) callers from ONE canonical home. `async_state.py:238` gets migration docstring but body kept byte-identical (BC preserved).
-- **E4.β:** Revive `async_state.py:238::emit_ledger_terminate_refused` as canonical. Uses Owner-named function name. But places the callable in an async-worker-scoped module while it must serve sync paths too.
+**Owner ruling verbatim:** *"Colocate in `services/compliance/`. One consumer exists; a shared `_helpers/` module is speculative. Extract on second use, not before."*
 
-**Proposed disposition (dev):** E4.α. Owner rules at sub-stage 1 dispatch.
+**Disposition (binding):**
+- **`emit_refusal_ledger_row` lives at `services/compliance/refusal_ledger.py`** — colocated with the compliance package (its consumer). NOT at `services/northena/` (α-proposed, superseded) and NOT reviving `services/service_1/async_state.py:238` (β-proposed, superseded).
+- One consumer (the compliance-family classifier + coverage-marker read + emission-site instrumentations); no shared `_helpers/` module extracted this pass. **Extract on second use, not before.**
+- `services/service_1/async_state.py:238::emit_ledger_terminate_refused` stays byte-identical dead stub (BC preserved); receives a migration docstring pointing at the canonical single-source at `services/compliance/refusal_ledger.py`.
 
-### §7.5 Escalation E5 — new named gate registry
+### §7.5 Escalation E5 — new named gate registry — **RULED (2026-07-06, confirmed no action)**
 
-No new auth codes needed. `4-code auth registry closed` posture preserved (`auth_scope_insufficient` for DPO-role denials on write endpoints; `auth_missing` / `auth_expired` for JWT plumbing). No new §0.1 dispositions expected across sub-stages 1-3.
+**Owner ruling verbatim:** *"Confirmed, no action. Unauthorized on the checker is access-control class; the 4-code registry covers it. The rejected 409 was the trap — a counter-sign-pending state is not an HTTP conflict. Reuse the 403 path, no new codes."*
 
-### §7.6 Escalation E6 — sub-stage 3 second-console page existence
+**Disposition (binding):**
+- No new auth codes needed. `4-code auth registry closed` posture preserved (`auth_scope_insufficient` / `auth_missing` / `auth_expired` / `auth_identity_mismatch_for_wizard_session`).
+- Explicitly ruled OUT: any HTTP 409 pattern for counter-sign-pending states. **Counter-sign-pending is NOT an HTTP conflict.** The 403 access-control path is reused for unauthorized-on-checker denials.
+- No new §0.1 dispositions expected across sub-stages 1-3.
 
-**Substrate:** BCR CK-U1 requires pending-items banner on BOTH consoles (Compliance + Administration). Need to read Master Admin surface tree at sub-stage 3 open to confirm `MasterAdminHomePage.js` (or equivalent) exists.
+### §7.6 Escalation E6 — sub-stage 3 second-console page existence — **CLOSED (2026-07-06)**
 
-**Proposed disposition (dev):** flagged for read at sub-stage 3 dispatch. If page missing: HAZARD-STOP at sub-stage 3 open with a page-creation escalation to Owner. If page exists: extend it inline.
+**Owner ruling verbatim:** *"Close. `MasterAdminHomePage.js` exists on disk; the HAZARD-STOP branch is dead. Extend inline at Sub-stage 3."*
+
+**Disposition (binding):**
+- `frontend/src/pages/master_admin/MasterAdminHomePage.js` confirmed present on-disk at Phase 8 B-4 (verified via 2026-07-06 recon).
+- HAZARD-STOP branch (page-creation escalation) is dead.
+- Sub-stage 3 extends the page **inline** — adds `CounterSignBanner` render + pending-items read wiring.
+
+### §7.7 Escalation E7 — binding-copy punctuation (UI Spec v2.1 §8/§10 vs BCR v1.4 CK-U1) — **RULED (2026-07-06)**
+
+**Substrate (surfaced at targeted-read pass, 2026-07-06):** BCR v1.4 CK-U1 (line 256) rendered the commit-line binding copy with ASCII hyphens (`-`); UI Spec v2.1 §8 + §10 Cross-surface bindings render the same string with middle-dot separators (`·`, U+00B7). "Verbatim per CK-U1" pointed at two different strings — an unsatisfiable spec.
+
+**Owner ruling verbatim:** *"UI Spec v2.1 is the surface authority; middle-dot wins. 'Verbatim per CK-U1' currently points at two different strings — an unsatisfiable spec. Correct BCR v1.4's two hyphen instances to middle-dots. One-glyph doc fix, rides the E1 amendment pass, not a separate phase."*
+
+**Disposition (binding):**
+- **BCR v1.4 corrected in this same amendment pass** — line 256 CK-U1 rendering updated to middle-dot; changelog v1.4.1 entry added at file top per Standing Rule v3 provenance.
+- **Stage A proposal lines carrying the CK-U1 quote (formerly at lines 87 and 322) updated** in this same amendment pass to match the corrected BCR — middle-dot rendering preserved verbatim.
+- **UI Spec v2.1 §8/§10 wins as canonical source** for future close-report / gate binding-copy assertions. Named gate at Sub-stage 3 (`test_countersign_binding_copy_verbatim_matches_ui_spec_v2_1`) compares against the middle-dot byte sequence.
+- One-glyph doc fix; NO separate phase; rides the E1 amendment pass per Owner directive.
 
 ═══════════════════════════════════════════════════════════════════
 
 ## §8. Standing constraints compliance one-liner (pre-dispatch)
 
-- 26 frozen contracts byte-identical **UNLESS E1.β ruled at sub-stage 2** (in which case 27 at sub-stage 2 close; frozen-field-changes-as-new-versions Standing Disposition applies).
+- **26 frozen contracts byte-identical across all 3 sub-stages** (E1.γ registry-pattern ruling preserves parity 26 — no frozen-contract mutation; families extend via `refusal_families.v0.json` registry additions per admission-refusal-reasons precedent).
 - No LLM outside Shield.
 - §0.1 FROZEN — zero new dispositions expected across sub-stages 1-3.
 - §0.2 updates: un-ledgered families debt marked IN-PROGRESS at sub-stage 1 Stage B dispatch; RESOLVED at sub-stage 1 Stage B close with per-family evidence.
@@ -448,33 +510,40 @@ No new auth codes needed. `4-code auth registry closed` posture preserved (`auth
 
 ## §9. Total cell counts + Rule 2 anchor bands
 
+**Post-E1.γ ruling (2026-07-06):** parity 26 unchanged across all 3 sub-stages; no snapshot conditional; no NorthenaLedgerRow_v2 branch.
+
 | Sub-stage | Cells | Anchored LoC band | snapshot_lloc_in_band |
 |---|---|---|---|
 | 1. Refusal-family ledger wire-up + coverage marker | 35 | [1400, 1800] | no |
-| 2. Authorized-deletion path | 67 | [2500, 2900] (E1.α) OR [2500, 3100] (E1.β) | no (E1.α) / yes (E1.β) |
-| 3. §8 consequence-class checker | 49 | [2000, 2500] | no |
-| **TOTAL** | **151 cells** | **[5900, 7400]** | mixed |
+| 2. Authorized-deletion path (E2 loosening-disabled at close) | 67 | [2500, 2900] | no |
+| 3. §8 consequence-class checker (enables loosening writes at close) | 49 | [2000, 2500] | no |
+| **TOTAL** | **151 cells** | **[5900, 7200]** | no (all sub-stages) |
 
-Single-dispatch derives ~5900-7400 LoC — 2×+ ceiling. **Split required
+Single-dispatch derives ~5900-7200 LoC — 2×+ ceiling. **Split required
 and proposed as sub-stages 1 → 2 → 3.**
 
 ═══════════════════════════════════════════════════════════════════
 
-## §10. Ready-to-dispatch posture
+## §10. Ready-to-dispatch posture (post-E1..E7 rulings, 2026-07-06)
+
+**All escalations E1 through E7 ruled at the 2026-07-06 amendment
+pass. Historical α/β analysis preserved in §7.1.α + §7.1.β; ruled-
+against branches marked. No pending pauses on Owner rulings; all sub-
+stages are dispatchable in strict sequence.**
 
 **Sub-stage 1 (refusal-family ledger wire-up + coverage marker):**
-- E3 (coverage-marker `{date}` composition) + E4 (module placement) resolutions needed BEFORE sub-stage 1 Stage B dispatch. Both default proposals (α) available for owner α-ratify shortcut.
-- No frozen-contract escalation.
-- No governance-semantic ambiguity.
-- **READY TO DISPATCH ON OWNER RULING E3/E4** (or on α-defaults ratification).
+- All rulings applied: E1.γ registry (`refusal_families.v0.json` colocated in `services/compliance/`); E3 server-computed ISO date; E4 module placement colocated in `services/compliance/refusal_ledger.py`; E5 no new codes; E7 middle-dot binding-copy landed at BCR v1.4.1.
+- **READY TO DISPATCH ON OWNER GO-SIGNAL.** Zero governance-semantic escalation open.
 
 **Sub-stage 2 (authorized-deletion path):**
-- E1 (frozen-contract touch question) + E2 (surface-ownership question) resolutions needed BEFORE sub-stage 2 Stage B dispatch. Both are governance-semantic surfaces per Owner ruling.
-- **RULING-CONDITIONED PAUSE FLAGGED.**
+- All rulings applied: E1.γ (registry pattern extends to authorized_deletion family; parity 26 preserved); E2 binding condition (loosening-disabled at Sub-stage 2 close; retention endpoint refuses loosening/lengthening writes with 403 access-control class citing `awaiting_consequence_class_checker`); E5 no new codes.
+- **E2 binding condition MUST be re-cited in the Sub-stage 2 build brief (Owner-directed).**
+- **READY TO DISPATCH POST SUB-STAGE 1 RATIFICATION.**
 
 **Sub-stage 3 (§8 consequence-class checker):**
-- E1 (reused from sub-stage 2) + E6 (Master Admin page existence read) resolutions needed BEFORE sub-stage 3 Stage B dispatch.
-- **RULING-CONDITIONED PAUSE FLAGGED.**
+- All rulings applied: E1.γ (same registry pattern extends to rule-change data classes); E5 no new codes (403 access-control class for counter-sign-pending; explicitly NOT 409); E6 CLOSED (`MasterAdminHomePage.js` on-disk; extend inline); E7 middle-dot binding-copy verbatim gate compares against UI Spec v2.1 §8/§10 corrected BCR.
+- Enables loosening writes on the retention endpoint at close (retires `test_retention_endpoint_loosening_disabled_pre_checker`; lands `test_retention_loosening_write_requires_administration_countersign` per CK-B3 symmetry).
+- **READY TO DISPATCH POST SUB-STAGE 2 RATIFICATION.**
 
 ═══════════════════════════════════════════════════════════════════
 
