@@ -1,3 +1,7 @@
+> **SUPERSEDED** by `/app/docs/mandates/RMS_UI_Specification_v2_1.md` (SHA `ef6da4b498117608a3091033b5cfa43571ad8a7a38b5954cae7c4a1a698de5e2`) as of 2026-07-05 per Owner ingestion.
+> This file is retained for archive per doctrine. Do NOT consume as canonical.
+
+
 # RMS Intelligence System — UI Specification
 ## Version 1.0 · canonical (markdown) · binding
 
