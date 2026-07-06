@@ -121,6 +121,10 @@ app.include_router(engineer_router.router, prefix="/api")
 from routers import master_admin as master_admin_router  # noqa: E402
 app.include_router(master_admin_router.router, prefix="/api")
 
+# Phase 8 Stage B-5a — Compliance Console read/prove.
+from routers import compliance as compliance_router  # noqa: E402
+app.include_router(compliance_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:

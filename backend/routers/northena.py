@@ -9,15 +9,28 @@ Pydantic model is declared as `response_model` on the by_run route so
 document — same discipline as `NormalizedUnit`, `ObjectiveRequest`,
 `FiveRings`, etc. External consumers (audit lens, DPO tooling, G5
 operator console) can discover the nine-field row shape via OpenAPI.
+
+Phase 8 B-5a (2026-07-06) Amendment 1 — trace-lens auth-branch: the
+anonymous / lesser-role view is BUILT UP from the public trust-receipt
+allowlist (fact + fingerprint); the full record renders only for
+`dpo` / `master_admin` / `admin`. `TraceLensEnvelope_v0` frozen
+contract byte-identical (allowlist applied at render time, not by
+contract mutation).
 """
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse
 
 from contracts.northena_ledger import NORTHENA_LEDGER_COLLECTION, LedgerRow
 from contracts.trace_lens import TraceLensEnvelope
 from core import db
 from fastapi import HTTPException
+from services.auth.dependencies import get_current_identity_or_none
+from services.compliance.trust_receipt_allowlist import (
+    has_full_record_authority,
+    project_to_anonymous_view,
+)
 from services.northena import ledger, trace_lens as trace_lens_svc
 
 router = APIRouter(prefix="/northena", tags=["northena"])
@@ -65,19 +78,33 @@ async def by_run(run_id: str) -> List[LedgerRow]:
     return rows
 
 
-@router.get("/trace/{trace_id}", response_model=TraceLensEnvelope)
-async def trace_lens(trace_id: str) -> TraceLensEnvelope:
+@router.get("/trace/{trace_id}")
+async def trace_lens(trace_id: str, request: Request):
     """Cross-engine trace-lens read surface (G5a).
 
     Realises Interface Spec §16 invariant #9: one record, seen at two
     scopes. Resolves every engine artifact under `trace_id`.
 
+    Phase 8 B-5a (2026-07-06) Amendment 1 — auth-branch:
+      * `dpo` / `master_admin` / `admin` roles → FULL `TraceLensEnvelope_v0`
+        (byte-identical to the frozen contract; nothing masked, nothing
+         reconstructed).
+      * Anonymous OR any other authenticated role → ALLOWLIST projection
+        built UP from the trust-receipt spec (fact + fingerprint:
+        trace_id, resolved_at, run_ids, engines_touched). Byte-equivalent
+        to the trust-receipt shape. Blocklist masking rejected per
+        Owner ruling — allowlist inverts the failure mode so future
+        field additions default to NOT-visible-anonymously.
+
     READ-ONLY. Zero writes to any persistent store. GET-only (FastAPI
     method enforcement + `test_trace_lens_readonly.py` invariant).
     Errors: 404 (unknown trace_id), 400 (malformed).
+
+    `TraceLensEnvelope_v0` frozen contract byte-identical — allowlist
+    is applied at RENDER time, not by contract mutation.
     """
     try:
-        return await trace_lens_svc.resolve_trace(trace_id)
+        envelope = await trace_lens_svc.resolve_trace(trace_id)
     except trace_lens_svc.TraceLensInputError as e:
         raise HTTPException(status_code=400, detail={
             "reason": "malformed_trace_id", "message": str(e),
@@ -88,3 +115,18 @@ async def trace_lens(trace_id: str) -> TraceLensEnvelope:
             "message": str(e),
             "trace_id": trace_id,
         })
+    identity = await get_current_identity_or_none(request)
+    if identity is not None and has_full_record_authority(identity.roles):
+        # Full record for dpo / master_admin / admin. Byte-identical to
+        # TraceLensEnvelope_v0 frozen contract.
+        return JSONResponse(
+            status_code=200,
+            content=envelope.model_dump(mode="json"),
+        )
+    # Anonymous or lesser-role — allowlist projection.
+    full_dict = envelope.model_dump(mode="json")
+    anonymous_view = project_to_anonymous_view(full_dict)
+    return JSONResponse(
+        status_code=200,
+        content=anonymous_view,
+    )

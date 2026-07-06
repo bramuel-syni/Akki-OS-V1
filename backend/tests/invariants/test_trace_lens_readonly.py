@@ -131,10 +131,30 @@ async def test_trace_lens_known_trace_id_writes_zero():
     )
     trace_id = result["trace_id"]
 
+    # Post-Amendment 1 (2026-07-06 B-5a): trace endpoint returns the
+    # allowlist projection for anonymous callers. To assert full-envelope
+    # fields (ledger_rows), read as an admin identity.
+    from services.auth import jwt_service as _jwt_svc
+    from services.auth import user_store as _user_store
+    import uuid as _uuid
+    _admin_email = f"tracereadonly_{_uuid.uuid4().hex[:8]}@rms.test"
+    _admin_id = await _user_store.create_user(
+        email=_admin_email,
+        password_plaintext="Passw0rd!Passw0rd!",
+        roles=["admin"],
+        name="trace-readonly-tester",
+    )
+    _admin_token = _jwt_svc.create_access_token(
+        _admin_id.user_id, _admin_id.email, _admin_id.roles, []
+    )
+
     # Now measure — writes from THIS point onward must be zero
     before = await _opcounters()
     async with httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as c:
-        resp = await c.get(f"/api/northena/trace/{trace_id}")
+        resp = await c.get(
+            f"/api/northena/trace/{trace_id}",
+            headers={"Authorization": f"Bearer {_admin_token}"},
+        )
     assert resp.status_code == 200, resp.json()
     body = resp.json()
     assert body["trace_id"] == trace_id

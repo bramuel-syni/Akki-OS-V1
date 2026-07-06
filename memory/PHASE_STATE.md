@@ -1,6 +1,6 @@
 # PHASE_STATE (compact mirror of ORCHESTRATOR_CONTINUITY §2 + §3)
 
-**Last update:** 2026-07-06 (Phase 8 Conformance Map CLOSED — read-only map + manifest re-authoring preamble per Owner narrow-scope dispatch. 4 priority anchors evidenced; 82 total verdict assignments; 0 DIVERGES. Substrate-drop 13/13 GREEN post-preamble. B-5a Stage A DISPATCHABLE on Owner ratification.)
+**Last update:** 2026-07-06 (Phase 8 Stage B-5a CLOSED — Compliance Console read/prove v2.1 §4.1-4.3 LIVE with Amendment 1 [trust-receipt allowlist-up] + Amendment 2 [family-by-family refusal coverage]. 2 refusal families LEDGERED + 3 UN-LEDGERED FINDINGS filed as new §0.2 debt. DPO wizard_transcript §0.2 debt RESOLVED. Sequence amendment binding: B-5a → Seam 3 + §8 checker → B-5b.)
 
 > Any duration / credit / turn number referenced below is a **Provisional planning anchor — not a commitment. Relative weight only.**
 

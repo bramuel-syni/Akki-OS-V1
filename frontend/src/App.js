@@ -25,6 +25,10 @@ import EngineerAdministerPage from './pages/engineer/EngineerAdministerPage';
 import MasterAdminHomePage from './pages/master_admin/MasterAdminHomePage';
 import ChangeARulePage from './pages/master_admin/ChangeARulePage';
 import AuditTrailPage from './pages/master_admin/AuditTrailPage';
+// Phase 8 Stage B-5a — Compliance Console (UI Spec v2.1 §4).
+import ComplianceHomePage from './pages/compliance/ComplianceHomePage';
+import ComplianceProveOneRunPage from './pages/compliance/ComplianceProveOneRunPage';
+import ComplianceRetentionRightsPage from './pages/compliance/ComplianceRetentionRightsPage';
 import { AuthProvider } from './hooks/useAuth';
 
 // Phase 8 Stage B-1 — Auth landing (Owner E1 ratified: custom JWT + bcrypt).
@@ -53,6 +57,11 @@ export default function App() {
           <Route path="master-admin" element={<MasterAdminHomePage />} />
           <Route path="master-admin/change-a-rule/:ruleId" element={<ChangeARulePage />} />
           <Route path="master-admin/audit-trail" element={<AuditTrailPage />} />
+          {/* Phase 8 Stage B-5a — Compliance Console (UI Spec v2.1 §4) */}
+          <Route path="compliance" element={<ComplianceHomePage />} />
+          <Route path="compliance/prove" element={<ComplianceProveOneRunPage />} />
+          <Route path="compliance/prove/:traceId" element={<ComplianceProveOneRunPage />} />
+          <Route path="compliance/retention" element={<ComplianceRetentionRightsPage />} />
           {/* Legacy G5b surfaces — nested under /legacy/* (Phase 8a-lite archival) */}
           <Route path="legacy" element={<AppShell />}>
             <Route index element={<LandingPage />} />

@@ -59,6 +59,24 @@ def _async_client() -> httpx.AsyncClient:
     return httpx.AsyncClient(transport=ASGITransport(app=app), base_url="http://test")
 
 
+async def _admin_token() -> str:
+    """Mint an admin-scoped access token. Post-Amendment 1 (2026-07-06),
+    trace endpoint returns allowlist projection for anonymous callers;
+    tests asserting full-envelope fields must authenticate as
+    dpo/master_admin/admin."""
+    from services.auth import jwt_service as _jwt_svc
+    from services.auth import user_store as _user_store
+    import uuid as _uuid
+    email = f"tracecorr_{_uuid.uuid4().hex[:8]}@rms.test"
+    ident = await _user_store.create_user(
+        email=email,
+        password_plaintext="Passw0rd!Passw0rd!",
+        roles=["admin"],
+        name="trace-corr-tester",
+    )
+    return _jwt_svc.create_access_token(ident.user_id, ident.email, ident.roles, [])
+
+
 def _fact_unit() -> NormalizedUnit:
     return NormalizedUnit(
         unit_id="corr-fact-1",
@@ -109,7 +127,7 @@ async def test_service_1_flow_resolves_all_four_engines():
     trace_id = result["trace_id"]
 
     async with _async_client() as c:
-        resp = await c.get(f"/api/northena/trace/{trace_id}")
+        token = await _admin_token(); resp = await c.get(f"/api/northena/trace/{trace_id}", headers={"Authorization": f"Bearer {token}"})
     assert resp.status_code == 200, resp.json()
     body = resp.json()
 
@@ -181,7 +199,7 @@ async def test_solva_flow_resolves_northena_and_solva_engines():
     assert row.stage == "converge"
 
     async with _async_client() as c:
-        resp = await c.get(f"/api/northena/trace/{trace.trace_id}")
+        token = await _admin_token(); resp = await c.get(f"/api/northena/trace/{trace.trace_id}", headers={"Authorization": f"Bearer {token}"})
     assert resp.status_code == 200, resp.json()
     body = resp.json()
 
@@ -253,7 +271,7 @@ async def test_run_id_trace_id_semantics_northena_7_2():
     )
     resp = None
     async with _async_client() as c:
-        resp = await c.get(f"/api/northena/trace/{result['trace_id']}")
+        token = await _admin_token(); resp = await c.get(f"/api/northena/trace/{result['trace_id']}", headers={"Authorization": f"Bearer {token}"})
     body = resp.json()
     # At G4, Service 1 uses one trace_id across admit/gate/converge — so
     # the lens sees one run_id under the trace_id.

@@ -26,3 +26,8 @@ export { default as TrustReceiptLink } from '../TrustReceiptLink';
 // per Owner E2 non-negotiable: the three governance render paths do not
 // gain a fourth wearing the first's clothes).
 export { default as AuthDeniedNotice } from '../AuthDeniedNotice';
+
+// Phase 8 B-5a addition — Compliance Console §4.3 held-class posture badge
+// (inheriting / explicit / unset). Single-source; consumed only by
+// ComplianceRetentionRightsPage.
+export { default as RetentionPostureBadge } from '../RetentionPostureBadge';

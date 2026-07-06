@@ -190,6 +190,25 @@ export const api = {
     const trimmed = absPath.startsWith('/api') ? absPath.slice(4) : absPath;
     return client.get(trimmed).then((r) => r.data);
   },
+  // Phase 8 B-5a — Compliance Console read/prove (v2.1 §4.1-4.3).
+  complianceRetentionConfig: () =>
+    client
+      .get('/compliance/retention_config', {
+        validateStatus: (s) => s >= 200 && s < 600,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  complianceRefusalsByMonth: (month) =>
+    client
+      .get(`/compliance/refusals?month=${encodeURIComponent(month)}`, {
+        validateStatus: (s) => s >= 200 && s < 600,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
+  northenaTraceRead: (traceId) =>
+    client
+      .get(`/northena/trace/${encodeURIComponent(traceId)}`, {
+        validateStatus: (s) => s >= 200 && s < 600,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
 };
 
 export default api;
