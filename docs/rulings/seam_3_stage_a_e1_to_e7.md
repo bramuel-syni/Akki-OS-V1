@@ -275,4 +275,73 @@ Build UN-PAUSES on Amendment F landing with confirmed SHAs. Sub-stage 1 executio
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of rulings record. Build UN-PAUSED on Amendment F landing.*
+## §11. Owner rulings — Sub-stage 3 dispatch (2026-07-07 Amendment G pass)
+
+**Ruling date:** 2026-07-07
+**Dispatch class:** Seven rulings resolving S3-E1..S3-E5 (Sub-stage 3 Stage A escalations) + §12 disposition + Sub-stage 2 final acceptance. Amendment G carries these rulings into the Sub-stage 3 Stage A proposal.
+**Anchor SHAs cited by Owner in dispatch:**
+- Sub-stage 3 Stage A proposal pre-Amendment-G: `c385fe00605913cea4525e0128d5697fb97d98f66985f122f2ea07aa0b833ffe` (current on-disk).
+- Sub-stage 2 close report cited by Owner: `c17b578b…` (Ruling 7 acceptance).
+**Standing Rule v3:** Owner rulings below are verbatim; no paraphrase.
+
+### §11.1 Prelude (Owner verbatim)
+
+> Owner delivered seven rulings. Amendment G lands first (rulings-record append + Stage A restructure), then Sub-stage 3 executes autonomously. Build UN-PAUSES on Amendment G.
+>
+> **Ruling 1 clarification for the record:** the +500 LoC sidecar retrofit proposed in Band B (adding `stamp_audit["governance_artifact_type"]`) is **REJECTED as redundant**. The truth is already carried by the pinned `stamp_audit["data_class"]` key established in Sub-stage 2. The retrofit collapses to a much smaller shape — see §3.1 below. Band B is void; band re-derives per Ruling 5.
+
+### §11.2 Rulings verbatim
+
+**Ruling 1 (§12 / S3-E4):** Path 3 confirmed; the +500 LoC sidecar retrofit is REJECTED as redundant. The truth already exists: `stamp_audit["data_class"]` is pinned, registry-backed, LB-gated since Sub-stage 2. A `governance_artifact_type` key would duplicate it. Actual retrofit:
+- (i) If `artifact_ref` is Optional on the ledger row, governance-event rows emit `None` going forward. If required, the placeholder stands vestigial-by-ruling — registry note + close state that on governance-event rows `artifact_type` is non-authoritative and `data_class` is the event class.
+- (ii) The existing data-class LB gate extends over the new rule-change classes.
+- (iii) No backfill migration — Sub-stage 2 rows already carry the pinned truth; corrective note in the close.
+
+Lands as integral rider (S3-E4a). Band B collapses.
+
+**Ruling 2 (S3-E1):** (d): render the capacity role. The endpoint's required role is deterministic and is the governance fact. (a) can misreport, (b) muddies capacity, (c) breaks single-person operation. Banner renders the role the countersign endpoint required.
+
+**Ruling 3 (S3-E2):** State machine corrected before dispatch; the a/b/c menu is void. As proposed, `object()` halts a tightening — an Administration veto over protection-tightening, prohibited by B5b-R3/CK-B2. Correct semantics: **objection annotates and escalates; it never blocks.** Tightening proceeds to effective at delay expiry unless the owner suspends — **owner-suspend is a distinct, ledgered action.** The asked question dissolves: identical `initiate()` while pending is idempotent; post-effect re-initiates are new changes with their own windows; no objection memory.
+
+**Ruling 4 (S3-E3):** (a). `data_class_registry` v0→v1, rule-change classes appended. Single registry, Sub-stage 2 pattern.
+
+**Ruling 5 (S3-E5):** Re-derive, then (a). Rulings 1 and 3 change the cell count; re-derive the matrix, restate the band at dispatch per the Standing Correction, land one atomic commit, overrun disclosed if any. **No split, no band-widening.**
+
+**Ruling 6 (§12.2):** Gap confirmed, closes at Sub-stage 3 by named gate. Retention-config writes route through the checker; `test_every_retention_write_emits_ledger_row_with_consequence_class` joins the roster. Checker scope, not B-5b's.
+
+**Ruling 7:** Sub-stage 2 close `c17b578b…`: **FINAL ACCEPTANCE.**
+
+### §11.3 `artifact_ref` field determination on `NorthenaLedgerRow_v1` (Ruling 1(i) fork)
+
+**Verbatim declaration from `/app/backend/contracts/northena_ledger_v1.py` line 60:**
+
+```python
+    artifact_ref: LedgerArtifactRef
+```
+
+**Optional-vs-Required determination:** **REQUIRED.** No `Optional[…]` wrapper, no default value, no `= None`. Pydantic parses this as a strict required field.
+
+**Companion determination on `LedgerArtifactRef.artifact_type` (`/app/backend/contracts/northena_ledger.py` line 32):**
+
+```python
+    artifact_type: Literal["portfolio_mandate", "objective_request"]
+```
+
+Required Literal; identical shape at v0 and v1 (v1 re-uses v0's `LedgerArtifactRef` via re-import at v1 line 35).
+
+**Ruling 1(i) applied disposition:** placeholder stands **vestigial-by-ruling**. Sub-stage 2 already established this pattern at `backend/routers/compliance.py:305-314` — governance-event rows set `artifact_type="objective_request"` with an in-line pragmatic-choice comment. Sub-stage 3 rule-change events (`countersigned_rule_change`, `tightening_effective`, `tightening_objected`, `owner_suspended_tightening`) will use the identical vestigial pattern (`artifact_type="objective_request"`, `artifact_id=f"rule-change-{rule_class}-{request_id}"`, `version=<request_id>`). Corrective note in Sub-stage 3 close report records: on governance-event rows `artifact_type` is non-authoritative; the honest event class lives at `stamp_audit["data_class"]` (registry-backed, LB-gated).
+
+### §11.4 Amendment G disposition (this pass)
+
+Amendment G is doc-only. Three files touched:
+- **This rulings record** — §11 appended verbatim (Rulings 1–7 + prelude + `artifact_ref` determination).
+- **Sub-stage 3 Stage A proposal** (`/app/docs/stage_a_proposals/phase_8_seam_3_sub_stage_3.md`) — §8.4 rewrite (Ruling 1); §8.2 rewrite (Ruling 3); §3 deliverables deltas (owner-suspend endpoint + state machine correction); §4/§6 cell-count re-derivation (Ruling 5 + Ruling 6); §7 band restatement (Band B collapses, Band A re-derived); §9 split-candidacy update (no split per Ruling 5); §10 ready-to-dispatch posture update. Historical S3-E4 α/β / S3-E2 a/b/c menus preserved as RULED AGAINST verbatim per §7.1 preservation pattern.
+- **No code changes.** Sub-stage 3 execution proceeds only after Amendment G lands with confirmed SHAs.
+
+### §11.5 Sub-stage 3 posture post-Amendment-G
+
+Build UN-PAUSES on Amendment G landing. Sub-stage 3 executes autonomously per the Amendment-G-corrected Stage A proposal, all seven rulings pre-carried. Escalation triggers narrowed to three governance classes (per §10.3): frozen-contract contact, Owner-value contact, governance-semantic contact. Everything else — LoC surprises, test-count surprises, refactor opportunities, style choices — dev handles autonomously and reports in the close.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of rulings record. Build UN-PAUSED on Amendment G landing.*

@@ -1,0 +1,14 @@
+{
+  "$comment": "Phase 8 Seam 3 Sub-stage 3 (2026-07-07) — consequence-class registry per Stage A §6 + Amendment G. Maps rule_class → consequence_class + declares effective delay for unilateral tightenings. Ruling 3: object() annotates but NEVER halts; suspend() is the sole halt action.",
+  "spec_anchor": "Stage A §6.1 line 302 (CK-B3 symmetry) + rulings §11.2 Ruling 3 (state machine correction) + Ruling 6 (retention-write consequence-class stamp_audit).",
+  "amendment_provenance": "Landed at Sub-stage 3 (2026-07-07) atomic commit per Ruling 5. Registry version: v0.",
+  "version": "v0",
+  "effective_delay_seconds": 3600,
+  "rule_class_map": {
+    "retention_windows": "dual_control",
+    "disclosure_thresholds": "dual_control",
+    "lawful_basis_registry": "dual_control",
+    "source_standing_table": "tightening_unilateral",
+    "master_admin_rule_change": "tightening_unilateral"
+  }
+}

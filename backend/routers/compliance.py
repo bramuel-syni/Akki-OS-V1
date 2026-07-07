@@ -184,15 +184,91 @@ async def post_retention_config(request: Request):
             actor_email=identity.email,
         )
     except LoosengingRefused as e:
-        # E2 binding-condition refusal — HTTP 403, reason=auth_scope_insufficient,
-        # detail carries the "awaiting_consequence_class_checker:" prefix that
-        # the LB gate asserts on. Ledger row NOT written.
-        return auth_refusal.emit("auth_scope_insufficient", detail=e.detail)
+        # Amendment G Ruling 6: loosening writes route through the checker
+        # (rather than 403 refuse pre-checker). Retire the E2 loosening-
+        # disabled gate; emit a ledger row + kick off dual-control state.
+        import uuid as _uuid
+        from services.checker import state_machine as _sm
+        from services.compliance.deletion_ledger import emit_deletion_ledger_row as _emit
+        from contracts.northena_ledger import LedgerArtifactRef as _AR
+        try:
+            init_result = await _sm.initiate(
+                rule_class="retention_windows",
+                from_value_ref=str(sorted(e.attempt.old_window_days_per_class.items())),
+                to_value_ref=str(sorted(e.attempt.new_window_days_per_class.items())),
+                initiator_id=identity.email,
+                initiator_role="compliance",  # capacity role — Ruling 2
+            )
+        except Exception as init_exc:
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "reason": "checker_infra_fault",
+                    "detail": f"checker initiate failed: {init_exc}",
+                },
+            )
+        # Ruling 6: emit a ledger row carrying stamp_audit.consequence_class.
+        await _emit(
+            run_id=f"ret-{_uuid.uuid4().hex[:12]}",
+            trace_id=f"ret-trace-{_uuid.uuid4().hex[:12]}",
+            data_class="unclassified",  # config-write itself is unclassified per registry v1
+            held_class="retention_windows",
+            keys_deleted=0,
+            retention_rule_ref="retention.pending",
+            actor=identity.email,
+            artifact_ref=_AR(
+                artifact_type="objective_request",
+                artifact_id=f"retention-config-write-{init_result.request_id}",
+                version=init_result.request_id,
+            ),
+            lawful_basis_ref="compliance:retention_config_write_pending",
+            extra_stamp_audit={
+                "consequence_class": init_result.consequence_class,  # Ruling 6
+                "request_id": init_result.request_id,
+                "state": init_result.state,
+                "action": "loosening_pending_countersign",
+            },
+        )
+        return JSONResponse(
+            status_code=202,
+            content={
+                "outcome": "pending_counter_sign",
+                "request_id": init_result.request_id,
+                "state": init_result.state,
+                "consequence_class": init_result.consequence_class,
+                "detail": "Loosening/lengthening retention windows requires Administration counter-sign per §8 CK-B3 symmetry.",
+            },
+        )
     except ValueError as e:
         return JSONResponse(
             status_code=400,
             content={"reason": "malformed_payload", "detail": str(e)},
         )
+    # Ruling 6: every accepted write emits a ledger row with consequence_class.
+    import uuid as _uuid2
+    from services.compliance.deletion_ledger import emit_deletion_ledger_row as _emit2
+    from contracts.northena_ledger import LedgerArtifactRef as _AR2
+    await _emit2(
+        run_id=f"ret-{_uuid2.uuid4().hex[:12]}",
+        trace_id=f"ret-trace-{_uuid2.uuid4().hex[:12]}",
+        data_class="unclassified",
+        held_class="retention_windows",
+        keys_deleted=0,
+        retention_rule_ref=f"retention.v{attempt.new_version}",
+        actor=identity.email,
+        artifact_ref=_AR2(
+            artifact_type="objective_request",
+            artifact_id=f"retention-config-v{attempt.new_version}",
+            version=str(attempt.new_version),
+        ),
+        lawful_basis_ref="compliance:retention_config_write_tightening",
+        extra_stamp_audit={
+            "consequence_class": "tightening_unilateral",  # Ruling 6
+            "action": attempt.outcome,
+            "old_version": attempt.old_version,
+            "new_version": attempt.new_version,
+        },
+    )
     return JSONResponse(
         status_code=200,
         content={

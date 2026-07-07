@@ -125,6 +125,10 @@ app.include_router(master_admin_router.router, prefix="/api")
 from routers import compliance as compliance_router  # noqa: E402
 app.include_router(compliance_router.router, prefix="/api")
 
+# Phase 8 Seam 3 Sub-stage 3 — §8 consequence-class checker router.
+from routers import checker as checker_router  # noqa: E402
+app.include_router(checker_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:

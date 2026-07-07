@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import api from '../../apiClient';
 import { useAuth } from '../../hooks/useAuth';
-import { AuthDeniedNotice } from '../../components/ui_spec_v1';
+import { AuthDeniedNotice, CounterSignBanner } from '../../components/ui_spec_v1';
 import RefusalsCoverageMarker from './RefusalsCoverageMarker';
 
 const V2_1_HOME_BINDING_COPY =
@@ -118,6 +118,12 @@ export default function ComplianceHomePage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+        {/* Phase 8 Seam 3 Sub-stage 3 — CounterSignBanner (Owner Ruling 2,
+            Amendment G, 2026-07-07: capacity-role render). */}
+        <CounterSignBanner
+          role="compliance"
+          token={identity?.token || localStorage.getItem('rms_auth_token') || ''}
+        />
         {/* §4.1 Attention — at most ONE (adversarial to comfort). */}
         {anyAttention && (
           <section

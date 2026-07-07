@@ -31,3 +31,12 @@ export { default as AuthDeniedNotice } from '../AuthDeniedNotice';
 // (inheriting / explicit / unset). Single-source; consumed only by
 // ComplianceRetentionRightsPage.
 export { default as RetentionPostureBadge } from '../RetentionPostureBadge';
+
+// Phase 8 Seam 3 Sub-stage 3 addition — CounterSignBanner (Owner Ruling 2,
+// Amendment G, 2026-07-07: renders the capacity role the countersign
+// endpoint required, not identity primary/bracket roles). Middle-dot
+// (U+00B7) is E7-strict on binding copy.
+export {
+  default as CounterSignBanner,
+  MIDDLE_DOT as COUNTER_SIGN_MIDDLE_DOT,
+} from './CounterSignBanner';

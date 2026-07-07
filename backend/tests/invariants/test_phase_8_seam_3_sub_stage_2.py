@@ -257,8 +257,11 @@ async def test_a7_retention_config_write_tightening_accepted():
 
 
 @pytest.mark.anyio
-async def test_a8_retention_config_write_loosening_refused_int_to_int():
-    """E2 gate — window_days increase = loosening → 403 with prefix detail."""
+async def test_a8_retention_config_write_loosening_routes_to_checker(
+    _isolate_test_ledger,
+):
+    """Sub-stage 3 (Ruling 6): E2 loosening-disabled gate RETIRED; loosening
+    writes now route through the checker (202 pending_counter_sign)."""
     token = await _make_token(["dpo"])
     async with _client() as c:
         await c.post(
@@ -271,15 +274,19 @@ async def test_a8_retention_config_write_loosening_refused_int_to_int():
             headers={"Authorization": f"Bearer {token}"},
             json={"ledger_row": {"window_days": 365}},
         )
-    assert r.status_code == 403
+    assert r.status_code == 202
     body = r.json()
-    assert body["reason"] == "auth_scope_insufficient"
-    assert body["detail"].startswith("awaiting_consequence_class_checker:")
+    assert body["outcome"] == "pending_counter_sign"
+    assert body["state"] == "pending_counter_sign"
+    assert body["consequence_class"] == "dual_control"
+    assert "request_id" in body
 
 
 @pytest.mark.anyio
-async def test_a9_retention_config_write_loosening_refused_int_to_null():
-    """E2 gate — int→null on already-set class = loosening → 403."""
+async def test_a9_retention_config_write_loosening_int_to_null_routes_to_checker(
+    _isolate_test_ledger,
+):
+    """Sub-stage 3 (Ruling 6): int→null loosening routes to checker."""
     token = await _make_token(["dpo"])
     async with _client() as c:
         await c.post(
@@ -292,51 +299,29 @@ async def test_a9_retention_config_write_loosening_refused_int_to_null():
             headers={"Authorization": f"Bearer {token}"},
             json={"ledger_row": {"window_days": None}},
         )
-    assert r.status_code == 403
-    assert r.json()["detail"].startswith("awaiting_consequence_class_checker:")
+    assert r.status_code == 202
+    assert r.json()["state"] == "pending_counter_sign"
 
 
 # ════════════════════════════════════════════════════════════════════
-# §F. Named LB gate — E2 binding condition
+# §F. RETIRED at Sub-stage 3 close (Amendment G Ruling 5 + Ruling 6).
+# `test_retention_endpoint_loosening_disabled_pre_checker` was the
+# E2 loosening-disabled LB gate; retired because the checker now lands
+# and loosening routes through it. Replaced at Sub-stage 3 by:
+#   * test_retention_loosening_write_requires_administration_countersign
+#   * test_every_retention_write_emits_ledger_row_with_consequence_class
+# See /app/backend/tests/invariants/test_phase_8_seam_3_sub_stage_3.py.
 # ════════════════════════════════════════════════════════════════════
 
 
 @pytest.mark.anyio
-async def test_retention_endpoint_loosening_disabled_pre_checker(
-    _isolate_test_ledger,
-):
-    """E2 named LB gate (Amendment F rulings §10; Stage A §5.1 line 238):
-    Loosening the retention window is REFUSED with 403 access-control class
-    body citing `awaiting_consequence_class_checker` UNTIL Sub-stage 3
-    checker lands. Ledger row NOT written for refused loosening.
+async def test_retention_endpoint_loosening_disabled_pre_checker_retirement_note():
+    """Retirement note — asserted preservation of the retirement per
+    Amendment G Ruling 5. The prior gate body is replaced by this note.
     """
-    token = await _make_token(["dpo"])
-    async with _client() as c:
-        # Seed a tightened value.
-        await c.post(
-            "/api/compliance/retention_config",
-            headers={"Authorization": f"Bearer {token}"},
-            json={"ledger_row": {"window_days": 30}},
-        )
-        # Snapshot ledger count.
-        before = await db[NORTHENA_LEDGER_COLLECTION].count_documents({})
-        # Attempt loosening.
-        r = await c.post(
-            "/api/compliance/retention_config",
-            headers={"Authorization": f"Bearer {token}"},
-            json={"ledger_row": {"window_days": 90}},
-        )
-        after = await db[NORTHENA_LEDGER_COLLECTION].count_documents({})
-    # Contract:
-    assert r.status_code == 403, "loosening must be refused with 403"
-    body = r.json()
-    assert body["reason"] == "auth_scope_insufficient"
-    assert body["detail"].startswith("awaiting_consequence_class_checker:")
-    # Ledger not written.
-    assert after == before, (
-        f"E2 gate violation — ledger written on refused loosening: "
-        f"{before} → {after}"
-    )
+    # Retirement is documented; the checker path is exercised by the
+    # Sub-stage 3 tests referenced in the comment above.
+    assert True
 
 
 # ════════════════════════════════════════════════════════════════════

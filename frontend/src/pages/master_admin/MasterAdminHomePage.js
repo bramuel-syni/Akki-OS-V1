@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import api from '../../apiClient';
 import { useAuth } from '../../hooks/useAuth';
+import { CounterSignBanner } from '../../components/ui_spec_v1';
 
 const ACTION_BUTTONS = [
   { id: 'assign-a-role', label: 'Assign a role', target: '/master-admin/change-a-rule/tier-lock' },
@@ -91,6 +92,12 @@ export default function MasterAdminHomePage() {
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+        {/* Phase 8 Seam 3 Sub-stage 3 — CounterSignBanner (Owner Ruling 2,
+            Amendment G, 2026-07-07: capacity-role render). */}
+        <CounterSignBanner
+          role="admin"
+          token={identity?.token || localStorage.getItem('rms_auth_token') || ''}
+        />
         {/* §6.1 Pending banner — plural-aware, count-substituted, plain language. */}
         {pendingCount != null && pendingCount > 0 && (
           <section

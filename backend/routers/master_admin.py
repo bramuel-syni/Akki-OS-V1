@@ -122,6 +122,86 @@ async def get_audit_trail(request: Request, limit: int = 50):
     return {"actions": rows, "count": len(rows)}
 
 
+# ────────────────────────────────────────────────────────────────────
+# Phase 8 Seam 3 Sub-stage 3 — Owner-suspend endpoint (Ruling 3)
+# ────────────────────────────────────────────────────────────────────
+
+
+@router.post("/tightening/suspend")
+async def post_tightening_suspend(request: Request):
+    """§8 owner-suspend endpoint per Owner Ruling 3 (Amendment G, 2026-07-07):
+    the ONLY action that halts an in-flight tightening.
+
+    Auth: master_admin/admin role (E2 4-code registry).
+    Body: {request_id: str, reason: str}.
+    Behavior:
+      - Refuses at 403 auth_scope_insufficient if caller lacks master_admin.
+      - State-machine `suspend()` transitions pending_delay / pending_counter_sign → suspended.
+      - Idempotent on already-suspended (200 returns existing state).
+      - `effective` state is a 403 (Standing 409 anti-rule: no 409).
+      - Emits `owner_suspended_tightening` ledger row.
+    """
+    identity, deny = await _require_master_admin_or_deny(request)
+    if deny is not None:
+        return deny
+    try:
+        payload = await request.json()
+    except Exception:
+        return JSONResponse(
+            status_code=400,
+            content={"reason": "malformed_body", "detail": "Body must be JSON."},
+        )
+    request_id = (payload or {}).get("request_id")
+    reason = (payload or {}).get("reason", "")
+    if not isinstance(request_id, str) or not request_id:
+        return JSONResponse(
+            status_code=400,
+            content={"reason": "malformed_payload", "detail": "request_id required."},
+        )
+    if not isinstance(reason, str) or not reason.strip():
+        return JSONResponse(
+            status_code=400,
+            content={"reason": "malformed_payload", "detail": "reason required."},
+        )
+    from services.checker import state_machine
+    from services.checker.countersign_ledger import emit_owner_suspended_row
+    import uuid
+    try:
+        req = await state_machine.suspend(
+            request_id=request_id,
+            suspended_by_id=identity.email,
+            suspended_by_role="admin",  # capacity role — Ruling 2
+            reason=reason,
+        )
+    except state_machine.UnknownRequestError as e:
+        return JSONResponse(
+            status_code=404,
+            content={"reason": "request_not_found", "detail": str(e)},
+        )
+    except state_machine.InvalidTransitionError as e:
+        return auth_refusal.emit(
+            "auth_scope_insufficient",
+            detail=f"suspend_refused: {e}",
+        )
+    ledger = await emit_owner_suspended_row(
+        run_id=f"sus-{uuid.uuid4().hex[:12]}",
+        trace_id=f"sus-trace-{uuid.uuid4().hex[:12]}",
+        rule_class=req.rule_class,
+        request_id=req.request_id,
+        consequence_class=req.consequence_class,
+        suspended_by_id=identity.email,
+        suspended_by_role="admin",
+        reason=reason,
+        suspended_at=req.suspended_at or "",
+        prior_state=req.prior_state or "",
+    )
+    return {
+        "state": req.state,
+        "suspended_at": req.suspended_at,
+        "ledger_row_ref": ledger.run_id,
+    }
+
+
 def _plain_description(rc: dict) -> str:
     """Turn a rule_change payload into a plain-language sentence
     per §6.3 elements verbatim: "plain description of the change
