@@ -60,6 +60,7 @@ from contracts.composed_conclusion import ComposedConclusion_v0
 from contracts.five_rings import DefensibilityClass
 from contracts.northena_ledger import LedgerArtifactRef, LedgerRow
 from contracts.objective_request_v2 import ObjectiveRequest_v2
+from services.compliance.refusal_ledger import emit_refusal_ledger_row
 from services.mtafiti.floor_feasibility import _CLASS_ORDER
 from services.northena import ledger as northena_ledger
 
@@ -270,6 +271,19 @@ async def package_composed_conclusion(
     if _CLASS_ORDER[computed_class] < _CLASS_ORDER[requested_floor]:
         run_id = f"cc-run-{uuid.uuid4().hex[:12]}"
         reason = "composition_below_floor"
+        # I4 Sub-stage 1: pinned-key refusal-family ledger emission per R-1.
+        await emit_refusal_ledger_row(
+            run_id=run_id, trace_id=trace_id,
+            family="composition_below_floor", reason=reason,
+            artifact_ref=LedgerArtifactRef(
+                artifact_type="objective_request",
+                artifact_id=f"objreq-{trace_id}",
+                version="v2",
+            ),
+            lawful_basis_ref=request.envelope.lawful_basis,
+            stage="admit",
+            extra_stamp_audit={"source": "service_1.composed_conclusion.sync"},
+        )
         raise Service1Refusal(
             reason=reason,
             run_id=run_id,

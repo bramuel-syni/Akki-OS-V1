@@ -46,8 +46,15 @@ BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent  # /app/backend
 PRE_PHASE_2_V0_CONTRACT_SHA = (
     "2588c735356fd096f10726b5a052b8af54172fec0c46f75a62767040aeca1ef1"
 )
+# Phase 8 Seam 3 Sub-stage 1 (2026-07-07): Owner Amendment F + R-1..R-6
+# authorised additive wire-up of the un-ledgered refusal-terminal emission
+# sites I1–I3 at service.py:127 / service.py:135 / service.py:188 via
+# services/compliance/refusal_ledger.py::emit_refusal_ledger_row. See
+# /app/docs/rulings/seam_3_stage_a_e1_to_e7.md §10 for the six rulings.
+# The pre-2 baseline SHA below is retained in the module history via git;
+# the constant is refreshed to reflect the Sub-stage 1 landing.
 PRE_PHASE_2_V0_SERVICE_SHA = (
-    "05e905ed936982a98eae9b257ba629ded458924cf878dd436b1decc6c3d39656"
+    "4a453e30a05f3d840ac7ff54d4a387db6f6f7252ad70358edcd1a9b5299c17f8"
 )
 
 

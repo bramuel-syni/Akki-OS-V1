@@ -223,9 +223,11 @@ def test_composed_conclusion_synthesis_lines_untouched_at_7b_3():
         pytest.skip("composed_conclusion.py not present")
     text = p.read_text()
     lines = text.splitlines()
-    if len(lines) < 321:
+    if len(lines) < 335:
         pytest.skip("composed_conclusion.py too short for slice check")
-    slice_text = "\n".join(lines[315:321])
+    # Sub-stage 1 (2026-07-07): synthesis lines shifted [315:321]→[329:335]
+    # after I4 wire-up; content byte-identical.
+    slice_text = "\n".join(lines[329:335])
     slice_sha = hashlib.sha256(slice_text.encode("utf-8")).hexdigest()
     assert slice_sha.startswith("9e4e6152"), (
         f"composed_conclusion.py:316-321 slice drifted; got SHA {slice_sha[:16]}"

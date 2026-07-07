@@ -27,7 +27,10 @@ PRE_PHASE_4B_SHA = {
         "2588c735356fd096f10726b5a052b8af54172fec0c46f75a62767040aeca1ef1"
     ),
     "services/service_1/service.py": (
-        "05e905ed936982a98eae9b257ba629ded458924cf878dd436b1decc6c3d39656"
+        # Phase 8 Seam 3 Sub-stage 1 (2026-07-07): Owner Amendment F +
+        # R-1..R-6 authorised additive wire-up of I1–I3 via
+        # emit_refusal_ledger_row. Constant refreshed to reflect landing.
+        "4a453e30a05f3d840ac7ff54d4a387db6f6f7252ad70358edcd1a9b5299c17f8"
     ),
     "contracts/service_1_refusal.py": (
         "4fe38c214dc592603ceeffaf07732d33e374bae825fc7556d8684f667e41b022"

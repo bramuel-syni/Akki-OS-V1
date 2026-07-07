@@ -214,7 +214,9 @@ def test_composed_conclusion_synthesis_lines_untouched_at_7b_2():
     """Block C — Verdict A regression at 7b-2."""
     p = _BACKEND_ROOT / "services" / "service_1" / "composed_conclusion.py"
     lines = p.read_text().splitlines(keepends=True)
-    slice_bytes = "".join(lines[315:321]).encode("utf-8")
+    # Sub-stage 1 (2026-07-07): synthesis-lines slice shifted [315:321]→[329:335]
+    # after I4 wire-up; slice content SHA d2e72653 byte-identical.
+    slice_bytes = "".join(lines[329:335]).encode("utf-8")
     slice_sha = hashlib.sha256(slice_bytes).hexdigest()
     EXPECTED = "d2e72653f84c4772796a6fb71b61fb70345f057cfd3451d60bbfb15bc2d58159"
     assert slice_sha == EXPECTED

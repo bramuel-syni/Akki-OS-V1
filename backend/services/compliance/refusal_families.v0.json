@@ -6,7 +6,7 @@
     {
       "family": "admission_refusals",
       "landed_at_version": "v0",
-      "description": "Governed refusal at admission time via AdmissionRefusal_v0 (v3 admission_refusal_reasons registry codes). Sync path: services/northena/admit.py::_refuse; services/service_1/service.py sync raises for no_defensibility_floor / no_lawful_basis. Async path: services/service_1/async_worker.py:129-131 (AdmissionRefusal_v0 arm).",
+      "description": "Governed refusal at admission time via AdmissionRefusal_v0 (v3 admission_refusal_reasons registry codes). Sync path: services/northena/admit.py::_refuse (dead-code today via state_machine.run_service1_linear — zero live callers). Async path: services/service_1/async_worker.py:129-137 (AdmissionRefusal_v0 arm; live-reachable via async worker consuming POST /api/objectives). Note (R-4 Amendment F, 2026-07-07): the reasons no_defensibility_floor and no_lawful_basis emit from service_1's composition path (raises in service.py:127 + service.py:135), live in service_1_refusal_reasons.v0.json, and classify to composition_below_floor per refusal_family_classifier.py:107-108; they are NOT admission_refusals. The prior attribution note attached them to this family — corrected here to match classifier behavior. Registry-as-authority preserved; no version bump per R-6 (file is pre-landing WIP).",
       "spec_anchor": "Stage A §4 (Sub-stage 1 deliverables); RMS_Build_Completion_Requirements_v1_4 §3.5 (retention-adjacent refusal-family evidence surface)."
     },
     {

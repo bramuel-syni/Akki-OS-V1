@@ -239,7 +239,16 @@ async def emit_ledger_terminate_refused(
     *, trace_id: str, objective_ref: str, lawful_basis_ref: str,
     run_id: str, reason: str,
 ) -> None:
-    """v0 ledger row for governance-refused terminal at admit stage. Idempotent."""
+    """v0 ledger row for governance-refused terminal at admit stage. Idempotent.
+
+    MIGRATED (Seam 3 Sub-stage 1, 2026-07-07): canonical single-source is now
+    `services/compliance/refusal_ledger.py::emit_refusal_ledger_row` per E4
+    ruling. This stub kept BYTE-IDENTICAL for BC (zero production callers at
+    Sub-stage 1 close; grep-verified). Do NOT extend this function; new
+    refusal-terminal emission sites MUST wire via the canonical helper which
+    pins `stamp_audit["refusal_family"]` per E1.γ + §8.1 (LB gate
+    `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit`).
+    """
     if await _ledger_row_exists(trace_id, run_id, stage="admit"):
         return
     row = LedgerRow(

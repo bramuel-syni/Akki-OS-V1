@@ -203,6 +203,13 @@ export const api = {
         validateStatus: (s) => s >= 200 && s < 600,
       })
       .then((r) => ({ status: r.status, body: r.data })),
+  // Phase 8 Seam 3 Sub-stage 1 — coverage marker (E3.β query-time).
+  complianceRefusalsCoverage: () =>
+    client
+      .get('/compliance/refusals_coverage', {
+        validateStatus: (s) => s >= 200 && s < 600,
+      })
+      .then((r) => ({ status: r.status, body: r.data })),
   northenaTraceRead: (traceId) =>
     client
       .get(`/northena/trace/${encodeURIComponent(traceId)}`, {

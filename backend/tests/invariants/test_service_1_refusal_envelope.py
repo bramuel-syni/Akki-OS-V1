@@ -170,9 +170,14 @@ async def test_no_lawful_basis_refusal_returns_flat_outcome_refused():
     # Round-trip through the frozen contract to prove shape conformance
     parsed = Service1RefusalContract(**b)
     assert parsed.outcome == "refused"
-    # No writes on a pre-composition refusal
-    assert _write_delta(before, after) == 0, (
-        f"no_lawful_basis refusal wrote to DB: {before} -> {after}"
+    # Phase 8 Seam 3 Sub-stage 1 (2026-07-07): pre-composition refusals now
+    # emit EXACTLY ONE ledger row via emit_refusal_ledger_row per R-1 (LB
+    # gate: every decision="refused" row pins refusal_family). Pre-Sub-
+    # stage-1 asserted zero writes; post-Sub-stage-1 asserts exactly one
+    # insert (the pinned-key ledger row) into NORTHENA_LEDGER_COLLECTION.
+    assert _write_delta(before, after) == 1, (
+        f"no_lawful_basis refusal expected exactly 1 write (pinned "
+        f"refusal-family ledger row): {before} -> {after}"
     )
 
 

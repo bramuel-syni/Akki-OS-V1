@@ -16,8 +16,11 @@ from typing import Any, Dict, Optional
 
 from contracts.admission_refusal import AdmissionRefusal_v0
 from contracts.composed_conclusion import ComposedConclusion_v0
+from contracts.northena_ledger import LedgerArtifactRef, NORTHENA_LEDGER_COLLECTION
 from contracts.objective_request_v2 import ObjectiveRequest_v2, OutputForm
 from contracts.quote_envelope import QuoteEnvelope_v0
+from core import db
+from services.compliance.refusal_ledger import emit_refusal_ledger_row
 from services.economics import instrumentation as _instrumentation
 from services.service_1 import async_state
 from services.service_1.composed_conclusion import (
@@ -80,6 +83,39 @@ async def _dispatch_objective(request: ObjectiveRequest_v2, trace_id: str):
     )
 
 
+async def _refusal_row_exists_for_objective(
+    objective_id: str, reason: str,
+) -> bool:
+    """R-5 idempotency check: dedup key (objective_id, reason) — prevents
+    duplicate `decision="refused"` ledger rows if a crash re-fires the
+    async worker on the same objective.
+
+    Note: `NORTHENA_LEDGER_COLLECTION` does not carry `objective_id`
+    directly, but the async-worker sync path uses `f"objreq-{trace_id}"`
+    as the artifact_ref.artifact_id, and `trace_id` is stable per
+    objective. So the dedup key materializes as
+    (artifact_ref.artifact_id, reason, decision='refused').
+    """
+    trace_id = None
+    doc = await db["objectives_async_state"].find_one(
+        {"objective_id": objective_id}, {"trace_id": 1, "_id": 0},
+    )
+    if doc:
+        trace_id = doc.get("trace_id")
+    if not trace_id:
+        return False
+    existing = await db[NORTHENA_LEDGER_COLLECTION].find_one(
+        {
+            "trace_id": trace_id,
+            "decision": "refused",
+            "reason": reason,
+            "stamp_audit.refusal_family": {"$exists": True},
+        },
+        {"_id": 1},
+    )
+    return existing is not None
+
+
 async def _process_one(objective_id: str) -> None:
     """Worker's per-objective loop: claim → dispatch → terminal-transition + webhook."""
     doc = await async_state.atomic_claim_accepted_to_running(objective_id)
@@ -95,6 +131,24 @@ async def _process_one(objective_id: str) -> None:
     try:
         result = await _dispatch_objective(request, trace_id)
     except ComposedService1Refusal as e:
+        # I5 Sub-stage 1 (R-5 emission timing): emit ledger row BEFORE
+        # `async_state.transition_to_refused`. Write-ahead — the ledger row
+        # records a decision already made; the transition applies it. Crash
+        # between the two leaves a truthful row + resumable state, deduped
+        # via `_refusal_row_exists_for_objective` on retry.
+        if not await _refusal_row_exists_for_objective(objective_id, e.reason):
+            await emit_refusal_ledger_row(
+                run_id=e.run_id, trace_id=e.trace_id,
+                family="composition_below_floor", reason=e.reason,
+                artifact_ref=LedgerArtifactRef(
+                    artifact_type="objective_request",
+                    artifact_id=f"objreq-{e.trace_id}",
+                    version="v2",
+                ),
+                lawful_basis_ref=request.envelope.lawful_basis,
+                stage="admit",
+                extra_stamp_audit={"source": "service_1.async_worker.async"},
+            )
         envelope = {
             "outcome": "refused",
             "reason": e.reason,
@@ -127,6 +181,24 @@ async def _process_one(objective_id: str) -> None:
         await _record_quote_delivered_if_present(doc, trace_id)
         return
     if isinstance(result, AdmissionRefusal_v0):
+        # I6 Sub-stage 1 (R-5 emission timing): emit ledger row BEFORE
+        # `async_state.transition_to_refused`, same discipline as I5.
+        # Family = `admission_refusals` (result carries AdmissionRefusal_v0
+        # with reason in admission_refusal_reasons.v3.json scope per classifier).
+        if not await _refusal_row_exists_for_objective(objective_id, result.reason):
+            _run_id = getattr(result, "run_id", None) or f"async-{trace_id[:10]}"
+            await emit_refusal_ledger_row(
+                run_id=_run_id, trace_id=trace_id,
+                family="admission_refusals", reason=result.reason,
+                artifact_ref=LedgerArtifactRef(
+                    artifact_type="objective_request",
+                    artifact_id=f"objreq-{trace_id}",
+                    version="v2",
+                ),
+                lawful_basis_ref=request.envelope.lawful_basis,
+                stage="admit",
+                extra_stamp_audit={"source": "service_1.async_worker.async"},
+            )
         envelope = result.model_dump()
         await async_state.transition_to_refused(objective_id, envelope, reason=result.reason)
         await fire_webhook(

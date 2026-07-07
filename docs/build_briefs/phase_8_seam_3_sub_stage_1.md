@@ -16,7 +16,7 @@ Before touching any code, write this entire message verbatim to `/app/docs/build
 
 | Ruling | Pre-carry in Sub-stage 1 |
 |---|---|
-| **E1.γ** (rulings record §3.1 + §8.1) | Registry `refusal_families.v0.json` at `/app/backend/services/compliance/refusal_families.v0.json` — v0 schema per admission-refusal-reasons precedent (verify structure of `admission_refusal_reasons.vN.json` and mirror the shape). Family value carried at pinned `stamp_audit["refusal_family"]` — NOT a loose Dict key, pinned by LB gate. `NorthenaLedgerRow_v1` byte-identical (parity 26 unchanged). Load-bearing gate `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit` — parametrised over all 4 refusal-terminal emission sites at `services/compliance/refusal_family_classifier.py:42-49` PLUS aggregate re-verification regression. Retirement: never. |
+| **E1.γ** (rulings record §3.1 + §8.1 + §10.1 R-1 + R-3) | Registry `refusal_families.v0.json` at `/app/backend/services/compliance/refusal_families.v0.json` — v0 schema per admission-refusal-reasons precedent (verify structure of `admission_refusal_reasons.vN.json` and mirror the shape). Family value carried at pinned `stamp_audit["refusal_family"]` — NOT a loose Dict key, pinned by LB gate. `NorthenaLedgerRow_v1` byte-identical (parity 26 unchanged). Load-bearing gate `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit` — **R-1 disposition:** data-shape invariant over every `decision="refused"` row in `NORTHENA_LEDGER_COLLECTION`; asserts presence of pinned `stamp_audit["refusal_family"]` + membership in `refusal_families.v0.json::valid_families`. Fixture roster: 6 exercise fixtures (one per live instrumentation site I1–I6, grep census `a6697d82…` §2 anchors) + 1 aggregate-regression fixture = **7 cases total**. Retirement: never. **R-3 disposition:** `unclassified` is itself a registered, renderable family in `refusal_families.v0.json`; if it ever appears, the Compliance card surfaces it as a nonzero count — never silence. Any validation reason outside the two reason-registries falls to `unclassified` honestly; accepted-as-latent on dead paths (C1–C6). |
 | **E2** (rulings record §3.2 + §8.3) | NOT exercised at Sub-stage 1. `test_retention_endpoint_loosening_disabled_pre_checker` NOT touched this pass. |
 | **E3.β + honest-cost** (rulings record §3.4 + §8.4; Stage A §7.3.β + §7.3.β.1) | Coverage-marker `{date}` = **query-time first-timestamp-per-family** derived from earliest `NorthenaLedgerRow_v1` timestamp where `stamp_audit["refusal_family"] == <family>`. Query filter: `{decision: "refused", "stamp_audit.refusal_family": <family>}` sorted timestamp ascending, first result. **NO** `refusal_family_since_dates.v0.json` config file. **NO** materialization file. **NO** pre-emptive index. **NO** pre-optimization of any kind. **Honest-cost flagging obligation:** if query cost manifests during Sub-stage 1 (measured, not speculated), you MUST flag it honestly in the close report with concrete evidence (query time, dataset shape, page render time). Owner rules on mechanism if cost is real. Do NOT route around correctness with a wrong-but-cheap substitute. |
 | **E4** (rulings record §3.4) | `emit_refusal_ledger_row` colocates at `/app/backend/services/compliance/refusal_ledger.py`. `services/service_1/async_state.py:238::emit_ledger_terminate_refused` gets a migration docstring pointing at the new canonical location, but the function body is byte-identical (BC preserved). Do NOT extract shared helpers to `_helpers/` — one consumer exists, that is the extraction rule. |
@@ -27,11 +27,23 @@ Before touching any code, write this entire message verbatim to `/app/docs/build
 
 Sub-stage 1 deliverables come from Stage A proposal §4 (post-Amendment-E, SHA `3fe969c2…`). Read that section verbatim and execute as written. Do NOT flatten, expand, or infer scope. If §4 is silent on something Sub-stage 1 needs, STOP and escalate to me — do not fill gaps with inference.
 
+**Amendment F census-confirmed count (2026-07-07):** Grep census (SHA `a6697d82…`) confirmed:
+- **6 live instrumentation sites** (I1–I6) — reachable from live HTTP routes today; **wired** via `emit_refusal_ledger_row` at Sub-stage 1. Live-site anchors from grep census §2 + §3:
+  - **I1** = `services/service_1/service.py:127` (raise `no_defensibility_floor` → `composition_below_floor`)
+  - **I2** = `services/service_1/service.py:135` (raise `no_lawful_basis` → `composition_below_floor`)
+  - **I3** = `services/service_1/service.py:188` (raise `composition_below_floor` → `composition_below_floor`)
+  - **I4** = `services/service_1/composed_conclusion.py:273` (raise `composition_below_floor` → `composition_below_floor`)
+  - **I5** = `services/service_1/async_worker.py:97-113` (`except ComposedService1Refusal` → `composition_below_floor`)
+  - **I6** = `services/service_1/async_worker.py:129-137` (`isinstance(result, AdmissionRefusal_v0)` → `admission_refusals`)
+- **6 dead-code construct sites** (C1–C6; C5 = new canonical writer excluded) — **NOT wired** per R-2 disposition. R-1's data-shape invariant guards resurrection mechanically: any future phase reviving a C-path emits rows this same gate validates. Deferral is safe by construction, not by promise.
+
+**R-5 disposition — I5/I6 emission timing:** Emit BEFORE `async_state.transition_to_refused`. Write-ahead order — the ledger row records a decision already made; the transition applies it. Idempotent — retry-safe dedup key on `(objective_id, reason)` for the async paths. Crash between the two leaves a truthful row + resumable state. Reverse order can leave a refused state with no row — the undercounting class this sub-stage eliminates. **Gate:** extend the existing kill-and-restart recovery gate to assert no duplicate ledger rows across the emission+transition pair.
+
 Known deliverables from prior recon (verify against current §4, then execute):
-- Refusal-family ledger wire-up at 4 un-ledgered emission sites at `services/compliance/refusal_family_classifier.py:42-49`.
+- Refusal-family ledger wire-up at **6 live instrumentation sites (I1–I6, anchors above)** via canonical `emit_refusal_ledger_row`.
 - New `services/compliance/refusal_ledger.py` module with canonical `emit_refusal_ledger_row`.
 - `async_state.py:238` migration-docstring-only edit (body preserved).
-- Registry file `refusal_families.v0.json` at `services/compliance/`.
+- Registry file `refusal_families.v0.json` at `services/compliance/` (post-R-4-attribution-fix; `unclassified` family present per R-3).
 - Coverage-marker read behavior at `services/compliance/coverage_marker.py` (query-time β per §7.3.β.1 amended §4.1 line 173).
 - Compliance Console refusals-card rider carrying the coverage-marker binding-copy string with middle-dots.
 - First-commit gate per Stage A §4 exact name.
@@ -39,8 +51,9 @@ Known deliverables from prior recon (verify against current §4, then execute):
 ## §5. Test matrix (matrix-enumerated per Standing Correction — cells × postures × cases, no LoC lumps)
 
 Enumerate in close report as a table:
-- **Backend invariants (Pytest):** existing 66 files + Sub-stage 1 additions. Each new test cell = endpoint × posture × case. LB gate `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit` parametrised over 4 emission sites + 1 aggregate regression cell = 5 parametrised cases minimum.
-- **Jest:** existing suites + refusals-card rider additions covering coverage-marker text rendering, refusal-family enumeration, empty-state.
+- **Backend invariants (Pytest):** existing 66 files + Sub-stage 1 additions. Each new test cell = endpoint × posture × case. **LB gate `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit` per R-1 disposition** — data-shape invariant scan over `NORTHENA_LEDGER_COLLECTION` where `decision="refused"`; **6 exercise fixtures (one per live instrumentation site I1–I6) + 1 aggregate-regression fixture = 7 cases**. C1–C6 dead-code sites NOT enumerated per R-2 (R-1's invariant guards resurrection). The gate quantifies over ledger rows, not code paths.
+- **Recovery gate extension (R-5 disposition):** extend the existing kill-and-restart recovery gate for async_worker paths (I5/I6) to assert no duplicate ledger rows across the emission+transition pair when a crash interposes between `emit_refusal_ledger_row` and `async_state.transition_to_refused`. Dedup key: `(objective_id, reason)`.
+- **Jest:** existing suites + refusals-card rider additions covering coverage-marker text rendering, refusal-family enumeration (all 4 families incl. `unclassified` per R-3), empty-state.
 - **Playwright chromium:** existing 26 smokes + coverage-marker smoke `test_coverage_marker_renders_middle_dot_glyph_verbatim` (assert `·` glyph, not just surrounding words) + refusals-card render.
 - Any additional named gates from Stage A §4 exact roster.
 
@@ -63,13 +76,16 @@ Backend + registry file + tests + frontend rider + Playwright smoke land in **ON
 Return only:
 - SHA-256 of this build brief on disk (`/app/docs/build_briefs/phase_8_seam_3_sub_stage_1.md`).
 - SHA-256 of the close report (`/app/docs/close_reports/phase_8_seam_3_sub_stage_1.md`).
-- SHA-256 of `refusal_families.v0.json` (v0 content).
+- SHA-256 of `refusal_families.v0.json` (v0 content, post-R-4-attribution-fix).
+- SHA-256 of rulings record (post-§10 append).
 - Test pass counts: pytest new + total (both must be all-green); jest new + total; playwright chromium new + total.
 - Rule 2 accounting LoC delta (cite `rule2_accounting.json` velocity baseline).
 - Candidate commit hash (Owner pushes; you do NOT `git push`).
 - One-line summary of the matrix-enumerated test roster (full table lives in close report).
 - Honest-cost report on query-time β: "no cost problem observed" OR concrete evidence with query time + dataset shape.
 - 409 self-audit: "no HTTP 409 introduced" one-line confirmation.
+- **R-6 WIP-checkpoint line (MANDATORY):** *"a33d9eb = pre-authorization WIP checkpoint, interrupted by compaction; landing commit is [hash]."*
+- **yarn.lock disposition line (MANDATORY):** "folded into landing commit" or "dropped from working-tree."
 - Any Sub-stage 2 preconditions surfaced during Sub-stage 1 build.
 
 ## §9. Hard constraints

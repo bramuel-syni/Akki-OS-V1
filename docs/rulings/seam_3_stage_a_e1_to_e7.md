@@ -242,4 +242,37 @@ Owner refinement dispatch received 2026-07-06 (post-acknowledgment of §1-§7 ab
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of rulings record. Build stays PAUSED through this addendum pass.*
+## §10. Owner rulings R-1 through R-6 (2026-07-07 grep-census post-verification pass)
+
+**Ruling date:** 2026-07-07
+**Dispatch class:** Six rulings resolving the four grep-census ambiguities (grep report SHA `a6697d82191500220cf2d56e1787ed979d2e6b9546ee776ca1b3c9f0496029d1`), plus timing ruling for I5/I6 (R-5), plus WIP-checkpoint disposition for commit `a33d9eb` (R-6). Amendment F carries these six rulings into the Sub-stage 1 build brief + the `refusal_families.v0.json` registry attribution-note fix (R-4).
+**Standing Rule v3:** Owner rulings below are verbatim; no paraphrase.
+
+### §10.1 Rulings verbatim
+
+**R-1 (Ambiguity 1):** Strategy A. The LB gate `test_refusal_terminal_row_carries_registry_valid_refusal_family_in_stamp_audit` is a data-shape invariant over every `decision="refused"` row in `NORTHENA_LEDGER_COLLECTION` — presence of pinned `stamp_audit["refusal_family"]` + membership in `refusal_families.v0.json::valid_families`. Fixture roster: 6 exercise fixtures (I1–I6) + 1 aggregate-regression fixture = 7 cases. Rationale on record: "every refusal-terminal row" quantifies over rows, not code paths; the invariant is resurrection-proof — any future phase reviving a C-path emits rows this same gate validates, red CI inherits the pin obligation, no memory required. Strategy B rejected: 5 extra cases coupling tests to private helpers of zero-caller code.
+
+**R-2 (Ambiguity 2):** Do NOT amend the 8-item list. C2 and C6 stay un-wired. Dead paths; R-1's invariant guards resurrection mechanically. Deferral is safe by construction, not by promise.
+
+**R-3 (Ambiguity 3):** Accept `unclassified`; do NOT extend any registry. No `out_of_scope` or `scope_unresolved` family is minted — families come from live emission evidence, and these reasons have never emitted in production. **Binding condition:** `unclassified` is itself a registered, renderable family in `refusal_families.v0.json` — if it ever appears, the Compliance card shows it as a surfaced nonzero count, never silence. This also disposes the un-verified `val.refusal_reason()` latent flag: any validation reason outside the two reason-registries falls to `unclassified` honestly; accepted-as-latent on the dead path.
+
+**R-4 (Ambiguity 4):** The classifier is correct; the registry's prose note is the defect. `no_defensibility_floor` / `no_lawful_basis` emit from service_1's composition path, live in `service_1_refusal_reasons.v0.json`, and classify to `composition_below_floor` per `refusal_family_classifier.py:107-108`. **Fix `refusal_families.v0.json:8-10`'s attribution note to match.** No version bump — the file is pre-landing WIP per R-6. This preserves registry-as-authority: the authoritative file is exactly where a wrong annotation is least tolerable.
+
+**R-5 (I5/I6 emission timing):** Emit BEFORE `async_state.transition_to_refused`, idempotent. Write-ahead order — the ledger row records a decision already made; the transition applies it. Crash between the two leaves a truthful row + resumable state, deduped on retry per the Phase 5 recovery pattern. Reverse order can leave a refused state with no row — the undercounting class this sub-stage eliminates. Gate: extend the existing kill-and-restart recovery gate to assert no duplicate ledger rows across the emission+transition pair.
+
+**R-6 (commit `a33d9eb` first-commit shape):** α, one condition. The four scaffolding files are inert (no callers, no routes, no test dependencies) — WIP checkpoint, not a landing. **Condition:** the true Sub-stage 1 landing commit is the atomic gate event — wiring + registry + all tests + frontend rider + Playwright smoke in ONE commit — and the close report carries one line: *"a33d9eb = pre-authorization WIP checkpoint, interrupted by compaction; landing commit is [hash]."* Recorded, not punished. No revert.
+
+### §10.2 Amendment F disposition (this pass)
+
+Amendment F is doc-only. Three files touched:
+- **Build brief** (`/app/docs/build_briefs/phase_8_seam_3_sub_stage_1.md`) — 7 fold points (line 19 + line 31 census-confirmed count; `refusal_family_classifier.py:42-49` re-anchored to I1–I6 live-site anchors; §5 test matrix folds R-1; §4 scope folds R-2; §3 E1.γ pre-carry folds R-3; §4 I5/I6 wire-up spec folds R-5; §8 reply format adds R-6 WIP-checkpoint obligation).
+- **Registry attribution note** (`/app/backend/services/compliance/refusal_families.v0.json`) — `admission_refusals` description note corrected per R-4. No version bump (pre-landing WIP per R-6).
+- **This rulings record** — §10 appended verbatim.
+
+### §10.3 Sub-stage 1 posture post-Amendment-F
+
+Build UN-PAUSES on Amendment F landing with confirmed SHAs. Sub-stage 1 execution proceeds autonomously per Amendment-F-corrected brief, R-1 through R-6 pre-carried. Escalation triggers narrowed to three governance classes: frozen-contract contact, Owner-value contact, governance-semantic contact. Everything else — LoC surprises, test-count surprises, refactor opportunities, style choices, minor citation slips — dev handles autonomously and reports in the close.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of rulings record. Build UN-PAUSED on Amendment F landing.*

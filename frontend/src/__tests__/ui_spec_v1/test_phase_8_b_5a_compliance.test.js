@@ -82,6 +82,18 @@ jest.mock('../../apiClient', () => ({
         by_day: [],
       },
     }),
+    // Phase 8 Seam 3 Sub-stage 1 — coverage marker mock (empty state).
+    complianceRefusalsCoverage: () => Promise.resolve({
+      status: 200,
+      body: {
+        families_since_system_start: [],
+        families_since_seam_3: [],
+        per_family_since_date: {},
+        seam_3_earliest_date: null,
+        honest_note_when_no_families_covered:
+          'No refusal-family coverage yet \u00B7 mock empty state.',
+      },
+    }),
     northenaTraceRead: () => Promise.resolve({
       status: 200,
       body: {

@@ -24,6 +24,7 @@ from fastapi.responses import JSONResponse
 from services.auth import auth_refusal
 from services.auth.dependencies import require_identity_or_deny
 from services.auth.identity import Identity
+from services.compliance.coverage_marker import compose_coverage_marker
 from services.compliance.refusals_aggregate import (
     MalformedMonthError,
     aggregate_refusals_by_month,
@@ -58,6 +59,25 @@ async def _require_dpo_or_deny(request: Request):
             ),
         )
     return identity, None
+
+
+@router.get("/refusals_coverage")
+async def get_refusals_coverage(request: Request):
+    """Sub-stage 1 Seam 3 substrate — refusals coverage marker.
+
+    Returns per-family since-dates (E3.β query-time first-timestamp-per-family
+    per Amendment E), the earliest date across seam-3-covered families, and
+    an honest empty-state note when no refusal-terminal row carries a
+    registered `stamp_audit["refusal_family"]` yet.
+
+    Rendered by the Compliance Console §4.1 Refusals card rider as the
+    Owner-supplied coverage-marker binding-copy (middle-dots `·` per E7).
+    """
+    _, deny = await _require_dpo_or_deny(request)
+    if deny is not None:
+        return deny
+    resp = await compose_coverage_marker()
+    return resp.model_dump(mode="json")
 
 
 @router.get("/retention_config")

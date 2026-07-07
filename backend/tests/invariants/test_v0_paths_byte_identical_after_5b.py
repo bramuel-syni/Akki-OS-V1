@@ -108,7 +108,11 @@ def test_composed_conclusion_synthesis_lines_untouched():
     assert len(lines) >= 321, (
         f"services/service_1/composed_conclusion.py truncated below 321 lines: {len(lines)}"
     )
-    slice_bytes = "".join(lines[315:321]).encode("utf-8")
+    # Phase 8 Seam 3 Sub-stage 1 (2026-07-07): I4 wire-up added a refusal-
+    # ledger emit at ~line 273, which shifted the synthesis-lines slice
+    # from [315:321] to [329:335]. Slice CONTENT is byte-identical
+    # (SHA d2e72653... preserved); only file position changed.
+    slice_bytes = "".join(lines[329:335]).encode("utf-8")
     slice_sha = hashlib.sha256(slice_bytes).hexdigest()
     # SHA captured at Phase 5 Stage B open (2026-07-04). If any Owner-
     # ratified change to the answer_text synthesis is required, update

@@ -17,6 +17,7 @@ import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import api from '../../apiClient';
 import { useAuth } from '../../hooks/useAuth';
 import { AuthDeniedNotice } from '../../components/ui_spec_v1';
+import RefusalsCoverageMarker from './RefusalsCoverageMarker';
 
 const V2_1_HOME_BINDING_COPY =
   "This is the same record every user's audit view reaches \u2014 read-only, nothing reconstructed for display.";
@@ -37,14 +38,17 @@ export default function ComplianceHomePage() {
   const navigate = useNavigate();
   const [refusalsMonth, setRefusalsMonth] = useState(null);
   const [retention, setRetention] = useState(null);
+  const [coverage, setCoverage] = useState(null);
+  const [coverageStatus, setCoverageStatus] = useState(null);
   const [error, setError] = useState(null);
 
   const monthParam = useMemo(_currentMonth, []);
 
   const load = useCallback(async () => {
-    const [r1, r2] = await Promise.all([
+    const [r1, r2, r3] = await Promise.all([
       api.complianceRefusalsByMonth(monthParam),
       api.complianceRetentionConfig(),
+      api.complianceRefusalsCoverage(),
     ]);
     if (r1.status === 200) setRefusalsMonth(r1.body);
     else setError({ what: 'refusals', status: r1.status, body: r1.body });
@@ -52,6 +56,8 @@ export default function ComplianceHomePage() {
     else if (r1.status === 200) {
       setError({ what: 'retention', status: r2.status, body: r2.body });
     }
+    setCoverageStatus(r3.status);
+    if (r3.status === 200) setCoverage(r3.body);
   }, [monthParam]);
 
   useEffect(() => {
@@ -173,6 +179,7 @@ export default function ComplianceHomePage() {
             >
               See what was refused
             </button>
+            <RefusalsCoverageMarker coverage={coverage} status={coverageStatus} />
           </div>
           <div className="border border-rms-line rounded-md p-4 bg-white" data-testid="card-retention-past-due">
             <h2 className="text-sm font-medium text-rms-ink mb-2">Retention windows past due</h2>

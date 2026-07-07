@@ -22,6 +22,7 @@ from contracts.mtafiti_registry import MtafitiRegistryRecord
 from contracts.northena_ledger import LedgerArtifactRef, LedgerRow
 from contracts.targeta_plan import MiningPlan
 from core import db
+from services.compliance.refusal_ledger import emit_refusal_ledger_row
 from services.mtafiti import registry as mtafiti_registry
 from services.northena import ledger as northena_ledger
 from services.service_1 import refusal_hints
@@ -119,11 +120,28 @@ async def run(
     run_id = run_id or f"run-{uuid.uuid4().hex[:12]}"
     trace_id = trace_id or f"trace-{uuid.uuid4().hex[:12]}"
 
+    # Sub-stage 1 Seam 3 (R-1 + R-4): shared artifact_ref for pre-composition
+    # refusal-terminal emission. `composition_below_floor` family per R-4
+    # (classifier authoritative; family from service_1_refusal_reasons scope).
+    _artifact_ref = LedgerArtifactRef(
+        artifact_type="portfolio_mandate",
+        artifact_id=artifact_id,
+        version=artifact_version,
+    )
+
     # 1. Composition-time floor re-assertion (defense-in-depth).
     # A2 D6a: pre-composition refusals — supported_class is None
     # (no aggregate class has been computed yet).
     if floor is None:
         reason = "no_defensibility_floor"
+        # I1 Sub-stage 1: pinned-key refusal-family ledger emission per R-1.
+        await emit_refusal_ledger_row(
+            run_id=run_id, trace_id=trace_id,
+            family="composition_below_floor", reason=reason,
+            artifact_ref=_artifact_ref, lawful_basis_ref=lawful_basis or "unspecified",
+            stage="admit",
+            extra_stamp_audit={"source": "service_1.service.run.sync"},
+        )
         raise Service1Refusal(
             reason, run_id, trace_id,
             asked=objective_text,
@@ -132,6 +150,14 @@ async def run(
         )
     if not lawful_basis or not lawful_basis.strip():
         reason = "no_lawful_basis"
+        # I2 Sub-stage 1: pinned-key refusal-family ledger emission per R-1.
+        await emit_refusal_ledger_row(
+            run_id=run_id, trace_id=trace_id,
+            family="composition_below_floor", reason=reason,
+            artifact_ref=_artifact_ref, lawful_basis_ref="unspecified",
+            stage="admit",
+            extra_stamp_audit={"source": "service_1.service.run.sync"},
+        )
         raise Service1Refusal(
             reason, run_id, trace_id,
             asked=objective_text,
@@ -139,11 +165,7 @@ async def run(
             what_would_raise_it=refusal_hints.hint_for(reason),
         )
 
-    artifact_ref = LedgerArtifactRef(
-        artifact_type="portfolio_mandate",
-        artifact_id=artifact_id,
-        version=artifact_version,
-    )
+    artifact_ref = _artifact_ref
 
     # 2. Admit row.
     await northena_ledger.record(LedgerRow(
@@ -185,6 +207,14 @@ async def run(
     # the INPUT units (read, not recomputed).
     if not eligible:
         reason = "composition_below_floor"
+        # I3 Sub-stage 1: pinned-key refusal-family ledger emission per R-1.
+        await emit_refusal_ledger_row(
+            run_id=run_id, trace_id=trace_id,
+            family="composition_below_floor", reason=reason,
+            artifact_ref=artifact_ref, lawful_basis_ref=lawful_basis,
+            stage="admit",
+            extra_stamp_audit={"source": "service_1.service.run.sync"},
+        )
         raise Service1Refusal(
             reason, run_id, trace_id,
             asked=objective_text,
