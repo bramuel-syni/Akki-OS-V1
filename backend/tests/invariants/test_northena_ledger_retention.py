@@ -8,6 +8,18 @@ The correct discipline is: no deletion code exists at all. When DPO
 lands a retention window, THIS TEST FAILS naturally — forcing the
 deployment ceremony to update the invariant alongside the real deletion
 code.
+
+Retirement note (Phase 8 Seam 3 Sub-stage 2, 2026-07-07):
+    The `test_no_deletion_path_in_northena_services` gate below is now
+    a NARROW-SCOPE PATTERN CHECK — grep-negative on function name shapes
+    `def delete_*` / `def purge_*` / `def expire_*` inside
+    `services/northena/`. The WIDER invariant (all `.py` files under
+    `backend/services/` + `backend/routers/` grep-negative on I/O call
+    site tokens `delete_one(` / `delete_many(` / `.drop(`, whitelist-
+    positive for `services/retention/authorized_deletion.py`) is enforced
+    by `test_no_unauthorized_deletion_path.py` per Stage A §5.1 line 257.
+    This narrow-scope gate is preserved (not deleted) so drift in
+    Northena code specifically remains directly attributable.
 """
 from __future__ import annotations
 

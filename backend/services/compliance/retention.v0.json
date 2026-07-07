@@ -1,0 +1,11 @@
+{
+  "$comment": "Phase 8 Seam 3 Sub-stage 2 initial retention config — 2026-07-07. All-null windows (honest indefinite default per B-5a G3 semantics). Landing means the retention-config surface is now WRITABLE; values remain null until DPO writes. Append-only version bumps: subsequent writes produce retention.v1.json, retention.v2.json, ... immutable snapshots.",
+  "version": 0,
+  "created_at": "2026-07-07T00:00:00Z",
+  "created_by": null,
+  "held_classes": {
+    "ledger_row":         {"window_days": null, "set_by": null, "set_at": null},
+    "wizard_transcript":  {"window_days": null, "set_by": null, "set_at": null},
+    "delivered_artifact": {"window_days": null, "set_by": null, "set_at": null}
+  }
+}

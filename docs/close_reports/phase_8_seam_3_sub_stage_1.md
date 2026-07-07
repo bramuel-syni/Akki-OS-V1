@@ -216,3 +216,7 @@ Playwright chromium totals: **26 → 28 (+2 net; all green)**.
 - All rulings, briefs, close reports, and rationale live on-disk in this file tree; agent's reply body carries only header numbers + one-line dispositions.
 - No inline code paste in reply; no inline verbatim policy text outside authorised verbatim-reads.
 - Landing commit hash + all four canonical SHAs (build brief, rulings, registry, close report) populate the reply header row.
+
+---
+
+R-6 landing-commit reference: 791d5a7; b7df53e is the pre-amend hash, unreachable post-amend.

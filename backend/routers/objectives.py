@@ -165,9 +165,14 @@ async def post_objective(
         await async_worker.enqueue_objective(objective_id)
     except async_worker.QueueSaturatedError as exc:
         # Rollback the accepted doc — infra failure, no state to keep.
-        await async_state.db[async_state.ASYNC_STATE_COLLECTION].delete_one(
-            {"objective_id": objective_id}
+        # Sub-stage 2 (2026-07-07): routed through single-source-of-
+        # deletion module per `no_unauthorized_deletion_path` invariant.
+        # This is an idempotency rollback, NOT a governance deletion;
+        # no ledger row emitted.
+        from services.retention.authorized_deletion import (
+            rollback_saturated_queue_admit,
         )
+        await rollback_saturated_queue_admit(objective_id)
         raise HTTPException(
             status_code=503,
             detail=f"async delivery queue saturated: {exc}",

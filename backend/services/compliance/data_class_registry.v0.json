@@ -1,0 +1,20 @@
+{
+  "$comment": "Phase 8 Seam 3 Sub-stage 2 (2026-07-07) — data-class registry per Stage A §7.2 Amendment C/D + Sub-stage 1 E1.γ registry pattern. Scope-parallel registry for non-refusal governance events (deletions, rule-changes). Retirement: never (extend as append-only additions at Sub-stage 3 dispatch for countersigned_rule_change/tightening_effective/tightening_objected).",
+  "spec_anchor": "Stage A §7.2 (Amendment C/D registry-pattern extension); Sub-stage 2 dispatch §5.1 (data_class=authorized_deletion); rulings record §10 R-3 (unclassified always registered).",
+  "amendment_provenance": "Landed at Sub-stage 2 (2026-07-07) — canonical data-class registry for non-refusal ledger events. Sub-stage 3 will add rule-change classes as append-only.",
+  "version": "v0",
+  "valid_data_classes": [
+    {
+      "data_class": "authorized_deletion",
+      "landed_at_version": "v0",
+      "description": "Authorized deletion event emitted by services/retention/authorized_deletion.py::execute_authorized_deletion. Ledger shape: stage='converge' + decision='continue' + reason=f'authorized_deletion:{held_class}' + stamp_audit={data_class:'authorized_deletion', held_class, keys_deleted:int, retention_rule_ref:'retention.vN', actor}. Held-class enumeration comes from services/compliance/held_class_registry.HELD_CLASSES (ledger_row, wizard_transcript, delivered_artifact).",
+      "spec_anchor": "Stage A §5 (Sub-stage 2 deliverables) + §7.3.C (converge-continue neutral placeholder for non-refusal semantics)."
+    },
+    {
+      "data_class": "unclassified",
+      "landed_at_version": "v0",
+      "description": "Fallback bucket per R-3 discipline (mirrors refusal_families.v0.json::unclassified). Renders honestly on compliance surfaces; never silence. If any non-refusal governance event lands without a registered data_class, it MUST fall to this bucket rather than fail-silent. R-3 anti-silence discipline: unclassified is registered and renderable.",
+      "spec_anchor": "Rulings record §10 R-3 (unclassified is a registered, renderable family) + Stage A §5.1 governance-event fallback semantics."
+    }
+  ]
+}
