@@ -1,0 +1,440 @@
+{
+  "$defs": {
+    "Checkpoint": {
+      "additionalProperties": false,
+      "description": "Unit-level checkpoint (V1-B2). Enables kill-and-restart without duplication.",
+      "properties": {
+        "completed_unit_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completed Unit Ids",
+          "type": "array"
+        },
+        "last_completed_offset_s": {
+          "minimum": 0,
+          "title": "Last Completed Offset S",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "last_completed_offset_s"
+      ],
+      "title": "Checkpoint",
+      "type": "object"
+    },
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    },
+    "DefensibilityRing": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.6: class + score_vector + matrix_rule_ref.\n\n`matrix_rule_ref` ties this unit back to a specific row of the\ngoverned Qualification Matrix. Solva will refuse to stamp a\n`defensibility_class` higher than the matrix row's ceiling.\n\n`runtime_mode` flags whether this stamp was produced by the\ndeclaration baseline (per-feed MEA declaration) or the inference\noverlay (V3-gated content classifier). Until V3 passes, all\nstamps run with `runtime_mode == \"declaration_baseline\"`.",
+      "properties": {
+        "defensibility_class": {
+          "$ref": "#/$defs/DefensibilityClass"
+        },
+        "matrix_rule_ref": {
+          "description": "Foreign key into the Qualification Matrix (matrix_rule_id@rev).",
+          "title": "Matrix Rule Ref",
+          "type": "string"
+        },
+        "runtime_mode": {
+          "default": "declaration_baseline",
+          "description": "Spec: declaration baseline by default; inference overlay once V3 passes.",
+          "enum": [
+            "declaration_baseline",
+            "inference_overlay"
+          ],
+          "title": "Runtime Mode",
+          "type": "string"
+        },
+        "score_vector": {
+          "$ref": "#/$defs/ScoreVector"
+        }
+      },
+      "required": [
+        "defensibility_class",
+        "matrix_rule_ref"
+      ],
+      "title": "DefensibilityRing",
+      "type": "object"
+    },
+    "Modality": {
+      "description": "What kind of raw bytes were the source for this unit.\n\nSpec \u00a74.3: \"parallel per-modality perception pipelines\". This enum is\nthe modality-aware seam between Layer A (Retrieve) and Layer B\n(Perceive). New modalities require an explicit enum extension AND a\nsnapshot bless.",
+      "enum": [
+        "text",
+        "audio",
+        "video",
+        "image",
+        "composite"
+      ],
+      "title": "Modality",
+      "type": "string"
+    },
+    "NormalizedUnit": {
+      "additionalProperties": false,
+      "description": "The single modality-neutral unit produced by Layer C.\n\nEvery Layer-D primitive reads from `NormalizedUnit`s. Services 1 and 2\nnever see the raw bytes \u2014 only this. Spec \u00a74.4 + \u00a75.1.",
+      "properties": {
+        "defensibility": {
+          "$ref": "#/$defs/DefensibilityRing"
+        },
+        "provenance": {
+          "$ref": "#/$defs/ProvenanceRing"
+        },
+        "reextraction_handle": {
+          "$ref": "#/$defs/ReextractionHandleRing"
+        },
+        "relational": {
+          "$ref": "#/$defs/RelationalRing"
+        },
+        "signal": {
+          "$ref": "#/$defs/SignalRing"
+        },
+        "unit_id": {
+          "description": "Stable UUID for this unit; cross-referenced by Relational edges.",
+          "title": "Unit Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "unit_id",
+        "provenance",
+        "reextraction_handle",
+        "defensibility"
+      ],
+      "title": "NormalizedUnit",
+      "type": "object"
+    },
+    "ProvenanceRing": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.2: deterministic, always present.\n\nFields:\n  * source_ref          \u2014 file/feed pointer the raw bytes came from\n  * modality            \u2014 which modality this unit was perceived from\n  * locator             \u2014 modality-native locator (page+span for text,\n                          t_start_ms/t_end_ms for audio/video, bbox\n                          for image). Carried as a free dict so each\n                          modality can declare its own shape; the\n                          schema does not constrain content here.\n  * speaker_or_author   \u2014 attributed person/org if known; None if\n                          perception couldn't attribute.\n  * context             \u2014 free text describing the surrounding\n                          context (programme title, file purpose,\n                          segment label \u2026).",
+      "properties": {
+        "context": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Free-text surrounding context: programme, segment label, file purpose.",
+          "title": "Context"
+        },
+        "locator": {
+          "description": "Modality-native locator. Examples: text \u2192 {page:int, span:[int,int]}; audio/video \u2192 {t_start_ms:int, t_end_ms:int}; image \u2192 {bbox:[x,y,w,h]}.",
+          "title": "Locator",
+          "type": "object"
+        },
+        "modality": {
+          "$ref": "#/$defs/Modality",
+          "description": "Which modality this unit was perceived from."
+        },
+        "source_ref": {
+          "description": "Stable pointer to the source file or feed slice.",
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "speaker_or_author": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Attributed person or organisation. Null if not attributable.",
+          "title": "Speaker Or Author"
+        }
+      },
+      "required": [
+        "source_ref",
+        "modality"
+      ],
+      "title": "ProvenanceRing",
+      "type": "object"
+    },
+    "PurgeAttestation": {
+      "additionalProperties": false,
+      "description": "Purge attestation (V1-D1). REQUIRED field, not optional. Missing \u2192 refused.",
+      "properties": {
+        "purged": {
+          "description": "True iff worker-side raw AV was purged.",
+          "title": "Purged",
+          "type": "boolean"
+        },
+        "purged_at": {
+          "description": "ISO-8601 UTC timestamp of the purge attestation.",
+          "minLength": 1,
+          "title": "Purged At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "purged",
+        "purged_at"
+      ],
+      "title": "PurgeAttestation",
+      "type": "object"
+    },
+    "ReextractionHandleRing": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.5: deterministic re-extraction handle.\n\nCarries enough information to re-run perception against the same raw\nbytes with the same model + params, byte-for-byte reproducible.",
+      "properties": {
+        "extraction_params": {
+          "description": "All inputs that materially affect output (sample-rate, chunk-size, prompt, thresholds, \u2026).",
+          "title": "Extraction Params",
+          "type": "object"
+        },
+        "model_id": {
+          "description": "Identifier of the perception model used.",
+          "title": "Model Id",
+          "type": "string"
+        },
+        "model_version": {
+          "description": "Version of the perception model used.",
+          "title": "Model Version",
+          "type": "string"
+        },
+        "raw_pointer": {
+          "description": "Stable storage key for the raw bytes (S3 / local).",
+          "title": "Raw Pointer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "raw_pointer",
+        "model_id",
+        "model_version"
+      ],
+      "title": "ReextractionHandleRing",
+      "type": "object"
+    },
+    "RelationType": {
+      "description": "Spec \u00a75.4: edge taxonomy. Closed at G0; extension requires bless.",
+      "enum": [
+        "corroborates",
+        "contradicts",
+        "retracts"
+      ],
+      "title": "RelationType",
+      "type": "string"
+    },
+    "RelationalEdge": {
+      "additionalProperties": false,
+      "description": "One edge in the Relational ring graph. Spec \u00a75.4.",
+      "properties": {
+        "evidence_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional pointer to the evidence that grounds this edge.",
+          "title": "Evidence Ref"
+        },
+        "target_unit_ref": {
+          "description": "unit_id of the related NormalizedUnit.",
+          "title": "Target Unit Ref",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/RelationType"
+        }
+      },
+      "required": [
+        "type",
+        "target_unit_ref"
+      ],
+      "title": "RelationalEdge",
+      "type": "object"
+    },
+    "RelationalRing": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.4: edges between units.\n\nA unit may have zero edges (e.g. an isolated utterance). Empty\nRelational ring is valid and expected at V1 timing.",
+      "properties": {
+        "edges": {
+          "items": {
+            "$ref": "#/$defs/RelationalEdge"
+          },
+          "title": "Edges",
+          "type": "array"
+        }
+      },
+      "title": "RelationalRing",
+      "type": "object"
+    },
+    "ScoreVector": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.6: five-dimensional defensibility score.\n\nEach dimension is `float` in [0, 1]. The Solva depth governor (G1)\nwrites these; at G0 they are populated by the synthetic fixture or\nleft at 0.0 default.",
+      "properties": {
+        "contested_status": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Contested Status",
+          "type": "number"
+        },
+        "corroboration": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Corroboration",
+          "type": "number"
+        },
+        "genre_ceiling": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Genre Ceiling",
+          "type": "number"
+        },
+        "recency": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Recency",
+          "type": "number"
+        },
+        "source_standing": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Source Standing",
+          "type": "number"
+        }
+      },
+      "title": "ScoreVector",
+      "type": "object"
+    },
+    "SignalRing": {
+      "additionalProperties": false,
+      "description": "Spec \u00a75.3: Solva-judged depth; modality-native dimensions.\n\nG0 declares the *shape*; the catalogue of valid dimension keys per\nmodality is extensible. The Qualification Matrix and the Solva depth\ngovernor will, at G1, restrict which dimension keys are recognised\nper modality. At G0, dimensions are a free dict.\n\nExamples:\n  * audio   \u2192 {affect: float, prosody: float, vocal_emphasis: float}\n  * text    \u2192 {hedge_density: float, attribution_density: float}\n  * image   \u2192 {salience: float, occlusion: float}\n\n`depth_judged` is the Solva stamp \u2014 only Solva (G1) writes this field.\nTODO[G1]: enforce a catalogue per modality. Currently free.",
+      "properties": {
+        "depth_judged": {
+          "default": false,
+          "description": "True iff Solva has judged this unit's signal depth.",
+          "title": "Depth Judged",
+          "type": "boolean"
+        },
+        "depth_notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional Solva note on depth judgement.",
+          "title": "Depth Notes"
+        },
+        "dimensions": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Modality-native signal dimensions, key \u2192 numeric value.",
+          "title": "Dimensions",
+          "type": "object"
+        }
+      },
+      "title": "SignalRing",
+      "type": "object"
+    },
+    "Telemetry": {
+      "additionalProperties": false,
+      "description": "Per-job telemetry (V1-B4). Missing \u2192 gate failure (V1-G6).",
+      "properties": {
+        "broadcast_hours": {
+          "minimum": 0.0,
+          "title": "Broadcast Hours",
+          "type": "number"
+        },
+        "gpu_hours": {
+          "minimum": 0.0,
+          "title": "Gpu Hours",
+          "type": "number"
+        },
+        "per_modality": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "description": "Modality-keyed unit counts (e.g. {AUDIO: 12, VIDEO: 8}).",
+          "title": "Per Modality",
+          "type": "object"
+        },
+        "unit_yield": {
+          "minimum": 0,
+          "title": "Unit Yield",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "gpu_hours",
+        "broadcast_hours",
+        "unit_yield"
+      ],
+      "title": "Telemetry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Perception result envelope \u2014 worker plane \u2192 control plane.",
+  "properties": {
+    "checkpoint": {
+      "$ref": "#/$defs/Checkpoint"
+    },
+    "job_id": {
+      "minLength": 1,
+      "title": "Job Id",
+      "type": "string"
+    },
+    "purge_attestation": {
+      "$ref": "#/$defs/PurgeAttestation"
+    },
+    "status": {
+      "description": "Two-state honest verdict; partial_failed carries whatever units + telemetry landed.",
+      "enum": [
+        "complete",
+        "partial_failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "telemetry": {
+      "$ref": "#/$defs/Telemetry"
+    },
+    "units": {
+      "description": "May be empty on partial_failed. Intake-validated per unit.",
+      "items": {
+        "$ref": "#/$defs/NormalizedUnit"
+      },
+      "title": "Units",
+      "type": "array"
+    }
+  },
+  "required": [
+    "job_id",
+    "telemetry",
+    "checkpoint",
+    "purge_attestation",
+    "status"
+  ],
+  "title": "PerceptionResult_v0",
+  "type": "object"
+}

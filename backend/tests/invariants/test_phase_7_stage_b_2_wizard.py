@@ -232,10 +232,10 @@ def test_operator_router_untouched_at_7b_2():
     assert n_get == 1, f"Expected 1 GET endpoint on operator router; found {n_get}"
 
 
-def test_frozen_contract_snapshot_parity_still_at_26():
-    """Block C — mechanical parity invariant still maps 26 contracts."""
+def test_frozen_contract_snapshot_parity_now_28_post_9_1():
+    """Block C — parity invariant maps 28 contracts post-9.1 (P9-E1 α + P9-E4 α)."""
     from tests.invariants.test_frozen_contract_snapshot_parity import CONTRACT_TO_SNAPSHOT
-    assert len(CONTRACT_TO_SNAPSHOT) == 26
+    assert len(CONTRACT_TO_SNAPSHOT) == 28
 
 
 def test_no_caller_cancelled_or_async_queue_saturated_code_at_7b_2():

@@ -129,6 +129,14 @@ app.include_router(compliance_router.router, prefix="/api")
 from routers import checker as checker_router  # noqa: E402
 app.include_router(checker_router.router, prefix="/api")
 
+# Phase 9 Sub-stage 9.1 — worker plane (BCR §3.1 V1-I3 capabilities-claim JWT).
+from routers import workers as workers_router  # noqa: E402
+app.include_router(workers_router.router, prefix="/api")
+
+# Phase 9 Sub-stage 9.3 — Extraction Console SM-E1..E3 sample lifecycle.
+from routers import extraction_sample as extraction_sample_router  # noqa: E402
+app.include_router(extraction_sample_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:

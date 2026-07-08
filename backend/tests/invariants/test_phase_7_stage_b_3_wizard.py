@@ -199,10 +199,10 @@ def test_no_new_refusal_codes_at_7b_3():
         assert forbidden not in seen_codes
 
 
-def test_prior_26_contracts_count_at_26_still():
-    """Block C — mechanical parity invariant still maps 26 contracts."""
+def test_prior_contracts_count_now_28_post_9_1():
+    """Block C — parity invariant now maps 28 contracts post-9.1 (P9-E1 α + P9-E4 α)."""
     from tests.invariants.test_frozen_contract_snapshot_parity import CONTRACT_TO_SNAPSHOT
-    assert len(CONTRACT_TO_SNAPSHOT) == 26
+    assert len(CONTRACT_TO_SNAPSHOT) == 28
 
 
 @pytest.mark.parametrize("contract_file", sorted([

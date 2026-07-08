@@ -46,11 +46,17 @@ def test_composed_conclusion_snapshot_parity_at_18():
     Phase 7 Stage B-1 (2026-07-04): parity count bumped 22 → 26 (added
     4 wizard contracts: WizardCommitState_v0 + OperatorTurn_v0 +
     AgentAssumption_v0 + CommittedValue_v0). Same additive pattern.
+
+    Phase 9 Sub-stage 9.1 (2026-07-08): parity count bumped 26 → 28
+    (added PerceptionJob_v0 + PerceptionResult_v0 per Owner P9-E1 α +
+    P9-E4 α). Environment-boundary crossing → FREEZE prior. V1-G7
+    byte-identity assertion set expands additively; the 26 pre-existing
+    remain byte-identical.
     """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 26, (
-        f"Post-Phase-7-Stage-B-1 snapshot count must be exactly 26 "
-        f"(22 pre-7b-1 + 4 wizard contracts). "
+    assert len(snapshots) == 28, (
+        f"Post-Phase-9-Sub-stage-9.1 snapshot count must be exactly 28 "
+        f"(26 pre-9.1 + PerceptionJob_v0 + PerceptionResult_v0). "
         f"Actual: {len(snapshots)}.\nSnapshots: {sorted(p.name for p in snapshots)}"
     )

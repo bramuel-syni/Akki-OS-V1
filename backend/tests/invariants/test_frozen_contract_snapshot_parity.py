@@ -53,6 +53,8 @@ CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "objective_request_v2.py":        "objective_request_v2.contract_snapshot.json",
     "operator_turn.py":               "operator_turn.contract_snapshot.json",
     "outer_gate_receipt.py":          "outer_gate_receipt.contract_snapshot.json",
+    "perception_job_v0.py":           "perception_job_v0.contract_snapshot.json",
+    "perception_result_v0.py":        "perception_result_v0.contract_snapshot.json",
     "qualification_matrix":           "qualification_matrix.contract_snapshot.json",
     "quote_envelope.py":              "quote_envelope.contract_snapshot.json",
     "service_1_refusal.py":           "service_1_refusal.contract_snapshot.json",

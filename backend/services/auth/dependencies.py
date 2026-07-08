@@ -65,16 +65,27 @@ async def get_current_identity_or_none(request: Request) -> Optional[Identity]:
 
 
 async def require_identity(request: Request) -> Identity:
-    """Mandatory identity dependency. Raises AuthDenied with a ready-to-return 401 JSONResponse.
+    """Mandatory identity dependency. Raises AuthDenied with a ready-to-return 401/403 JSONResponse.
 
-    FastAPI's `HTTPException` returns `{"detail": ...}` shape. Per Owner
-    E2 ratification, auth denial body is `{reason, detail}` — so we
-    raise AuthDenied and the router handler catches it (see
-    `require_identity_or_deny` for the direct-return pattern).
+    Owner P9-E3 α (2026-07-08): a `worker_jwt` presented against a
+    non-worker route returns 403 `auth_scope_insufficient` (existing
+    4-code registry). No new codes minted.
     """
     token = extract_bearer_token(request.headers.get("Authorization"))
     if token is None:
         raise AuthDenied(auth_refusal.emit("auth_missing"))
+    # Peek at the token type WITHOUT full validation so we can distinguish
+    # a wrong-type token (worker_jwt on a non-worker route → 403 scope) from
+    # a truly malformed / unknown token (→ 401 missing).
+    try:
+        import jwt as _jwt
+        unverified = _jwt.decode(token, options={"verify_signature": False})
+        if unverified.get("type") == "worker":
+            raise AuthDenied(auth_refusal.emit("auth_scope_insufficient"))
+    except AuthDenied:
+        raise
+    except Exception:
+        pass
     try:
         claims = decode_token(token, expected_type="access")
     except TokenExpired:

@@ -1,0 +1,72 @@
+{
+  "additionalProperties": false,
+  "description": "Perception job envelope \u2014 control plane \u2192 worker plane.",
+  "properties": {
+    "extraction_params_ref": {
+      "description": "Frozen extraction_params contract surface reference.",
+      "minLength": 1,
+      "title": "Extraction Params Ref",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "description": "Retried dispatch of same key returns the same job, never a second (V1-I1).",
+      "minLength": 1,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "issued_at": {
+      "description": "ISO-8601 UTC timestamp at server-side mint.",
+      "minLength": 1,
+      "title": "Issued At",
+      "type": "string"
+    },
+    "job_id": {
+      "description": "Server-minted unique job identifier. Never worker-provided.",
+      "minLength": 1,
+      "title": "Job Id",
+      "type": "string"
+    },
+    "modality": {
+      "description": "GPU-perception modality. TEXT never routes to GPU (V1-I1).",
+      "enum": [
+        "AUDIO",
+        "VIDEO"
+      ],
+      "title": "Modality",
+      "type": "string"
+    },
+    "objective_ref": {
+      "description": "Objective envelope reference (ObjectiveRequest_v2.objective_id).",
+      "minLength": 1,
+      "title": "Objective Ref",
+      "type": "string"
+    },
+    "reextraction_handles": {
+      "description": "Pointers into RMS estate identifying units to perceive.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Reextraction Handles",
+      "type": "array"
+    },
+    "trace_lineage": {
+      "description": "Trace lineage identifier; carried, never minted worker-side.",
+      "minLength": 1,
+      "title": "Trace Lineage",
+      "type": "string"
+    }
+  },
+  "required": [
+    "job_id",
+    "objective_ref",
+    "trace_lineage",
+    "reextraction_handles",
+    "modality",
+    "extraction_params_ref",
+    "idempotency_key",
+    "issued_at"
+  ],
+  "title": "PerceptionJob_v0",
+  "type": "object"
+}
