@@ -138,47 +138,60 @@ Regression on `POST /api/compliance/retention_config` (already landed at Sub-sta
 
 ## §3. Band derivation (matrix-derived, cell-density-applied)
 
-### §3.1 Cell count total
+**Amendment H (2026-07-07) note:** Owner ruling B5b-E1 adds 1 Jest cell + 1 backend Pytest cell; Owner ruling B5b-E4 adds 1 backend LB gate cell + 1 backend Pytest cell + ~55 LoC impl (voiding function + ledger emit wiring). Owner authorized §3.4 pre-execution re-derivation (verbatim: *"Amendment H re-derives for the cells E1 and E4 add using §1's stated rates — this is the §3.4 pre-execution re-derivation the trigger table authorizes, distinct from the prohibited mid-execution restatement"*). Band restated in §3.3 accordingly; pre-Amendment-H band `[2,800, 3,400]` RATIFIED as the ratification-baseline, then re-derived.
 
-| Bucket | Cells |
-|---:|---:|
-| Backend Pytest (writers §2.3 + LB gates §2.2 + regression) | 21 + 17 + 2 = **40** |
-| Frontend Jest structural (§2.5) | **25** |
-| Playwright chromium (§2.6) | **10** |
-| **Total cells** | **75** |
+### §3.1 Cell count total (post-Amendment-H)
 
-### §3.2 LoC derivation (matrix × cell-density per §1)
+| Bucket | Cells (pre-H) | Cells (post-H) | Delta |
+|---|---:|---:|---:|
+| Backend Pytest (writers §2.3 + LB gates §2.2 + regression + E1 + E4) | 40 | **43** | +3 (E1: +1 endpoint cell; E4: +1 LB gate + 1 Pytest cell) |
+| Frontend Jest structural (§2.5 + E1) | 25 | **26** | +1 (E1: +1 banner-button absence-gate) |
+| Playwright chromium (§2.6) | 10 | **10** | 0 |
+| **Total cells** | **75** | **79** | **+4** |
+
+### §3.2 LoC derivation (matrix × cell-density per §1) — post-Amendment-H
 
 | Bucket | Cells | LoC/cell | Subtotal |
 |---:|---:|---:|---:|
 | Backend Pytest endpoint × auth × posture (§2.3) | 21 | 22 | 462 |
 | Backend LB gates B5b-G1..G4 + RT-G1 (§2.2) | 17 | 35 | 595 |
 | Backend regression (§2.3) | 2 | 22 | 44 |
+| **Amendment H add — E1 backend Pytest cell (non-owner suspend 403 regression)** | 1 | 22 | **22** |
+| **Amendment H add — E4 backend LB gate (`test_no_admin_initiated_compliance_pending_survives_retrofit`)** | 1 | 35 | **35** |
+| **Amendment H add — E4 backend Pytest cell (voiding + ledger emit assertion)** | 1 | 22 | **22** |
 | Frontend Jest writer-form structural | 10 | 28 | 280 |
 | Frontend Jest banner button + suspend dialog + admin retrofit + binding copy | 15 | 16 | 240 |
+| **Amendment H add — E1 Jest cell (`test_suspend_button_absent_on_dual_control_rows`)** | 1 | 16 | **16** |
 | Playwright writer smokes | 4 | 48 | 192 |
 | Playwright banner/suspend/admin-retrofit smokes | 6 | 32 | 192 |
-| **Test LoC subtotal** | **75** | | **2,005** |
+| **Test LoC subtotal (post-Amendment-H)** | **79** | | **2,100** |
 | Backend impl (3 writer endpoints × 80) | | | 240 |
 | Backend impl (retention regression touches + shared helpers) | | | 40 |
+| **Amendment H add — E4 impl (voiding function scanning `checker_requests` for admin-initiated compliance-rule pending items ~40L + ledger emit wiring reusing `emit_deletion_ledger_row` ~15L)** | | | **55** |
 | Frontend impl (5 writer components × 120) | | | 600 |
 | Frontend impl (banner button augmentation 45 + owner-suspend UI 90 + admin read-only view 4 tiles × 35 = 140) | | | 275 |
 | Frontend impl (ComplianceRulebookWritePage 100 + apiClient 40 + App.js routes 8) | | | 148 |
-| **Impl LoC subtotal** | | | **1,303** |
-| **Grand total (raw LoC)** | | | **~3,308** |
+| **Impl LoC subtotal (post-Amendment-H)** | | | **1,358** |
+| **Grand total (raw LoC, post-Amendment-H)** | | | **~3,458** |
 
-### §3.3 Owner-anchored band (Standing Correction matrix-enumerated)
+**Pre-Amendment-H point-estimate was 3,308 raw LoC; post-Amendment-H point-estimate is 3,458 raw LoC.** Delta: +150 LoC (E1 +38 + E4 +112).
 
-**Anchored band at Stage A dispatch: `[2,800, 3,400]` raw LoC.**
+### §3.3 Owner-anchored band (post-Amendment-H re-derived per Owner authorization)
 
-Rationale:
-- Bottom-of-band (2,800): 15% shave off the point-estimate accounting for reuse from Sub-stage 3 (checker infra is landed) + shared helpers not double-counted.
-- Top-of-band (3,400): 3% cushion above point-estimate reflects the non-splittable pairing tax (compliance-write + B-4 retrofit in one commit even if writer variants scale unevenly).
-- Point-estimate: 3,308 raw LoC (matrix-derived per §3.2).
+**Pre-Amendment-H anchored band:** `[2,800, 3,400]` — RATIFIED by Owner at Amendment H as the ratification-baseline.
 
-### §3.4 Re-derivation trigger table
+**Post-Amendment-H re-derived band:** `[2,940, 3,560]` raw LoC.
 
-Per Owner projection-noise ruling: any ruling that reshapes cells RE-DERIVES the band, deterministically, using §1's stated rates. Examples:
+Rationale (rates unchanged from pre-Amendment-H §3.3):
+- Bottom-of-band (2,940): 15% shave off the new point-estimate (3,458 × 0.85 = 2,939 → 2,940 rounded). Accounts for Sub-stage 3 reuse + shared helpers not double-counted.
+- Top-of-band (3,560): 3% cushion above new point-estimate (3,458 × 1.03 = 3,562 → 3,560 rounded). Reflects non-splittable pairing tax.
+- New point-estimate: 3,458 raw LoC (matrix-derived per §3.2).
+
+**Interaction with §4.2 split threshold (Ruling B5b-E5):** the pre-authorized split trigger is at **≥3,500 LoC OR ≥90 cells at implementation time** (on ACTUAL delivery, NOT on the band top). New band top (3,560) is above the split trigger by design — the band top is the estimate ceiling; the split trigger is an implementation-time decision. If actual delivery hits ≥3,500 LoC before commit, split executes per Ruling B5b-E5 (no round-trip). If actual delivery lands between 3,500 and 3,560 without a split trigger having been chosen earlier, disclose per Ruling 5 — but the split threshold catches the case first at 3,500. Cell trigger 90 is well above post-Amendment-H cell total 79.
+
+### §3.4 Re-derivation trigger table (unchanged rates; new triggers noted)
+
+Per Owner projection-noise ruling: any ruling that reshapes cells RE-DERIVES the band, deterministically, using §1's stated rates. Amendment H is the second exercise of this pattern (first was Amendment G).
 
 | Ruling shape | Re-derivation direction |
 |---|---|
@@ -186,8 +199,10 @@ Per Owner projection-noise ruling: any ruling that reshapes cells RE-DERIVES the
 | Owner splits disclosure_thresholds into k_anonymity/l_diversity/DP-budget endpoints (3 separate routes) | +14 backend cells (2 × 7) + 2 writer components (240 LoC) → +~640 LoC |
 | Owner removes source_standing from B-5b scope (deferral) | -7 backend cells - 1 writer component (120 LoC) → -~275 LoC |
 | Owner adds an "explicit rule-change confirmation" prompt UI | +1 component (~50 LoC) + 2 Jest cells + 1 Playwright cell → +~130 LoC |
+| **Amendment H — E1 additions (BAKED IN §3.2 ABOVE)** | +1 Jest cell + 1 backend Pytest cell (regression) → +38 LoC (already in post-Amendment-H point-estimate) |
+| **Amendment H — E4 additions (BAKED IN §3.2 ABOVE)** | +1 backend LB gate + 1 backend Pytest cell + 55 LoC impl → +112 LoC (already in post-Amendment-H point-estimate) |
 
-**Discipline preserved:** band is stop-and-judge, not a target. Miss with disclosure per Ruling 5.
+**Discipline preserved:** band is stop-and-judge, not a target. Miss with disclosure per Ruling 5. Owner authorized pre-execution re-derivation at Amendment H per §3.4 (E1+E4 baked); NO mid-execution restatement authorized.
 
 ---
 
@@ -197,22 +212,31 @@ Per Owner dispatch §2.3: **compliance-write enablement (§2.4.1–§2.4.5, §2.
 
 ### §4.1 Baseline recommendation: ONE atomic commit
 
-Recommended per Sub-stage 3 precedent (Ruling 5 verbatim: *"one atomic commit, no split, no band-widening"*). B-5b's ~3,308 LoC / 75 cells is comparable to Sub-stage 3's ~2,582 LoC / 101 cells; one atomic commit remains feasible.
+Recommended per Sub-stage 3 precedent (Ruling 5 verbatim: *"one atomic commit, no split, no band-widening"*). B-5b's post-Amendment-H ~3,458 LoC / 79 cells is comparable to Sub-stage 3's ~2,582 LoC / 101 cells; one atomic commit remains feasible.
 
-### §4.2 Contingency: 2-sub-stage split proposal (if the matrix demands)
+**Per Owner Ruling B5b-E5 (Amendment H):** attempt §4.1 baseline FIRST. If actual implementation exceeds **≥3,500 LoC OR ≥90 cells** before committing, escalate to §4.2 split — PRE-AUTHORIZED, no further Owner round-trip.
 
-If the matrix is judged to exceed atomic-commit budget:
+### §4.2 Contingency: 2-sub-stage split proposal (PRE-AUTHORIZED per Ruling B5b-E5)
+
+Per Owner Ruling B5b-E5 (Amendment H, 2026-07-07): §4.2 split is **PRE-AUTHORIZED** at the stated thresholds. **B-5b.2 dispatches immediately on B-5b.1 close per Owner ruling B5b-E5; no Owner turn between closes for B-5b.2 initiation.** Owner still ratifies each close. Split is a sequencing tool, NOT a deferral. Phase 8 does NOT close until B-5b.2 lands.
+
+If actual implementation exceeds ≥3,500 LoC OR ≥90 cells:
 
 | Sub-stage | Contents | Non-splittable pairing survives? |
 |---|---|---|
-| **B-5b.1** (atomic-commit) | Compliance rulebook-write UI (§2.4.1–§2.4.5) + 3 new backend writer endpoints (§2.1) + B-4 read-only retrofit (§2.4.9) + retrofit gate RT-G1 (§2.2) + writer/read-only smokes (§2.6.1, §2.6.4) | ✅ YES — write enablement + admin read-only marker atomic. |
-| **B-5b.2** (follow-up commit) | Countersign action button on `CounterSignBanner` (§2.4.6) + Owner-suspend workflow UI (§2.4.7 + §2.4.8) + banner-button/suspend smokes (§2.6.2, §2.6.3) | N/A — deferred-UI ruling (x) items; standalone commit. |
+| **B-5b.1** (atomic-commit) | Compliance rulebook-write UI (§2.4.1–§2.4.5) + 3 new backend writer endpoints (§2.1) + B-4 read-only retrofit (§2.4.9) + retrofit gate RT-G1 (§2.2) + **B5b-E4 voiding logic + `test_no_admin_initiated_compliance_pending_survives_retrofit` gate + `data_class_registry.v1→v2` additive bump** + writer/read-only smokes (§2.6.1, §2.6.4) + Sub-stage 3 final-acceptance footer rider (§6). | ✅ YES — write enablement + admin read-only marker + retrofit voiding logic atomic. |
+| **B-5b.2** (immediate dispatch on B-5b.1 close) | Countersign action button on `CounterSignBanner` (§2.4.6) + Owner-suspend workflow UI (§2.4.7 + §2.4.8) + **B5b-E1 gates** (`test_suspend_button_absent_on_dual_control_rows` + non-owner 403 regression) + banner-button/suspend smokes (§2.6.2, §2.6.3). | N/A — deferred-UI ruling (x) items; standalone commit; dispatched IMMEDIATELY on B-5b.1 close, no Owner turn. |
 
 **Sub-stage 1 (B-5b.1) NON-NEGOTIABLES per Owner:**
-- Compliance write UI + `POST /api/checker/initiate` wiring MUST include the B-4 retrofit + RT-G1.
+- Compliance write UI + `POST /api/checker/initiate` wiring MUST include the B-4 retrofit + RT-G1 + B5b-E4 voiding logic.
 - Any proposal violating this pairing is INVALID and gets flagged as a governance-semantic escalation.
 
-**Decision rule (dev-autonomous per §7 discipline, disclosed at Stage A close):** if the point-estimate 3,308 LoC point-estimate is judged manageable in a single atomic commit (based on Sub-stage 3 precedent at 2,582 LoC), recommend **§4.1 baseline (one atomic commit)**. If Owner rules that atomic-commit budget is smaller, execute §4.2 split.
+**Sub-stage 2 (B-5b.2) NON-NEGOTIABLES per Owner Ruling B5b-E5:**
+- Dispatches IMMEDIATELY on B-5b.1 close — no Owner turn between closes for B-5b.2 initiation.
+- Phase 8 does NOT close until B-5b.2 lands.
+- Owner ratifies each close separately (ratification is not the same as dispatch permission).
+
+**Decision rule (dev-autonomous per §7 discipline, disclosed at Stage A close):** attempt §4.1 baseline (one atomic commit). If actual delivery hits ≥3,500 LoC OR ≥90 cells at implementation, execute §4.2 split — no round-trip. Report chosen path in the close.
 
 ---
 
@@ -220,7 +244,19 @@ If the matrix is judged to exceed atomic-commit budget:
 
 Enumerated per Standing Correction with authority-source citations + α/β/γ menu OR "cannot-be-menu, requires Owner semantic ruling".
 
-### §5.1 B5b-E1 — Owner-suspend UI location on Master Admin surface
+### §5.1 B5b-E1 — Owner-suspend UI location on Master Admin surface [**RULED (α) — Amendment H, 2026-07-07**]
+
+> **RULED (Ruling B5b-E1, Amendment H, 2026-07-07 — Owner verbatim):**
+> *"α, two binding gates. Suspend button inline on `CounterSignBanner`, rendered only on `tightening_unilateral` rows — gate: `test_suspend_button_absent_on_dual_control_rows`. Render is role-gated to `master_admin` AND enforced server-side — non-owner call returns 403 access-class, never `outcome=refused`. Label distinct from Countersign per the verbatim's own posture."*
+>
+> **Binding conditions:**
+> - Suspend button lives on `CounterSignBanner`, rendered ONLY on rows where `pending.consequence_class == "tightening_unilateral"`.
+> - Client-side render gated to `master_admin` role.
+> - Server-side enforcement returns HTTP 403 `auth_scope_insufficient` on non-owner call. NEVER an `outcome=refused` response — that would conflate auth with governance decision.
+> - Named gate: `test_suspend_button_absent_on_dual_control_rows` — asserts render absence when row consequence_class is `dual_control`.
+> - Label distinct from Countersign: "Suspend by Owner" (or per canonical UI Spec §6.1 language).
+>
+> Historical α/β/γ menu preserved verbatim below per §7.1 α/β preservation pattern.
 
 **Class:** owner-value contact (visual framing per Ruling 3 distinctness).
 
@@ -235,7 +271,17 @@ Enumerated per Standing Correction with authority-source citations + α/β/γ me
 
 **Recommended:** (α) — matches Sub-stage 3's inline-on-banner posture; still visually distinct via button color/label ("Suspend by Owner" vs. "Countersign"). Owner ruling requested before B-5b dispatch.
 
-### §5.2 B5b-E2 — Rulebook-write validation semantics (client-side vs. server-side)
+### §5.2 B5b-E2 — Rulebook-write validation semantics (client-side vs. server-side) [**RULED (α) — Amendment H, 2026-07-07**]
+
+> **RULED (Ruling B5b-E2, Amendment H, 2026-07-07 — Owner verbatim):**
+> *"α. Server-side only; frontend renders the server's plain-language error verbatim. Client pre-checks become a shadow rulebook that drifts from the server registry. The §6.2 form pattern already guarantees parseability; γ solves a solved problem."*
+>
+> **Binding conditions:**
+> - Frontend renders server error verbatim; §6.2 form pattern (Change-a-rule) guarantees parseability.
+> - NO client-side rulebook validation (no numeric range checks, no semantic branch guards).
+> - Server registry is the single source of truth per §6.2 "the surface is never a bypass" doctrine.
+>
+> Historical α/β/γ menu preserved verbatim below per §7.1 α/β preservation pattern.
 
 **Class:** governance-semantic contact (Standing Correction pattern).
 
@@ -250,7 +296,19 @@ Enumerated per Standing Correction with authority-source citations + α/β/γ me
 
 **Recommended:** (α) — matches the "surface is never a bypass" doctrine. Any client-side check risks becoming stale relative to server registry. Owner ruling requested.
 
-### §5.3 B5b-E3 — disclosure_thresholds sub-class endpoint shape
+### §5.3 B5b-E3 — disclosure_thresholds sub-class endpoint shape [**RULED (γ) — Amendment H, 2026-07-07**]
+
+> **RULED (Ruling B5b-E3, Amendment H, 2026-07-07 — Owner verbatim):**
+> *"γ. `disclosure_type` constrained-str + JSON registry, `consequence_class.v0.json` precedent. α's Literal is legal (request parameter, not frozen field) but disclosure mechanisms are a growing class — Term 2: values version as config. New sub-classes land as registry bumps, never route changes."*
+>
+> **Binding conditions:**
+> - `disclosure_type` is a constrained-str field (regex-backed) on the endpoint payload, NOT a Pydantic Literal.
+> - Backing JSON registry file: `/app/backend/services/compliance/disclosure_types.v0.json` (naming per `consequence_class.v0.json` precedent).
+> - Initial v0 entries: `k_anonymity`, `l_diversity`, `dp_budget`.
+> - New sub-classes land as registry v0→vN additive bumps, NEVER as new endpoints/routes.
+> - Term 2: values version as config — the disclosure-mechanism class is a growing class; the config-bump discipline is doctrine.
+>
+> Historical α/β/γ menu preserved verbatim below per §7.1 α/β preservation pattern.
 
 **Class:** frozen-contract-adjacency + governance-semantic.
 
@@ -263,7 +321,20 @@ Enumerated per Standing Correction with authority-source citations + α/β/γ me
 
 **Recommended:** (γ) — matches Sub-stage 3's E1.γ constrained-str pattern + `consequence_class.v0.json` precedent. Extending the disclosure sub-classes then follows the same registry-bump discipline as `data_class_registry v0→v1` (Ruling 4). Owner ruling requested.
 
-### §5.4 B5b-E4 — Pending-checker-request behavior across B-4 retrofit landing
+### §5.4 B5b-E4 — Pending-checker-request behavior across B-4 retrofit landing [**RULED (semantic) — Amendment H, 2026-07-07**]
+
+> **RULED (Ruling B5b-E4, Amendment H, 2026-07-07 — Owner verbatim):**
+> *"cancel at retrofit landing, ledgered. Authority transfer voids in-flight requests made under the old authority: each voided item emits a ledger row, reason `retrofit_authority_transfer`; anything still wanted is re-initiated by Compliance as the new owner. Grandfathering REJECTED — a grandfathered item is write-effect authority living in both consoles for its lifetime, the RT-R2 violation in miniature. Gate: `test_no_admin_initiated_compliance_pending_survives_retrofit` — trivially green on today's null population, permanent thereafter."*
+>
+> **Binding conditions:**
+> - At B-4 retrofit landing, in-flight admin-initiated compliance-rule checker requests are VOIDED (state transitions from pending → voided; NO grandfathering).
+> - Each voided request emits a ledger row with `data_class = "retrofit_authority_voided"` (new class; requires `data_class_registry.v1.json → v2.json` additive bump at B-5b execution — landed with the retrofit code, NOT in this Amendment H doc-only pass).
+> - Reason field on the ledger row: `retrofit_authority_transfer` (per Owner verbatim).
+> - Anything still needed is re-initiated by Compliance as new owner — NO automatic transfer of pending items across the console-ownership boundary.
+> - Named gate: `test_no_admin_initiated_compliance_pending_survives_retrofit` — trivially green today (null population per §5.4.β preliminary observation); permanent LB thereafter.
+> - Grandfathering REJECTED per Owner: any grandfathered item is write-effect authority in both consoles simultaneously, RT-R2 violation in miniature.
+>
+> Historical preliminary observation preserved below.
 
 **Class:** governance-semantic + Cannot-be-α/β-choice, requires Owner semantic ruling.
 
@@ -280,7 +351,19 @@ Enumerated per Standing Correction with authority-source citations + α/β/γ me
 
 **Preliminary observation (not a proposal):** at Sub-stage 3 close, ZERO admin-initiated compliance-rule checker requests exist in production (checker just landed; no writes yet). Practically, this is a null population at B-5b landing time. But the doctrine needs explicit ruling.
 
-### §5.5 B5b-E5 — Non-splittable pairing implementation
+### §5.5 B5b-E5 — Non-splittable pairing implementation [**RULED (semantic) — Amendment H, 2026-07-07**]
+
+> **RULED (Ruling B5b-E5, Amendment H, 2026-07-07 — Owner verbatim):**
+> *"§4.1 attempt confirmed; §4.2 split PRE-AUTHORIZED at the stated thresholds (≥3,500 LoC or ≥90 cells at implementation), no further round-trip. One binding rider: **B-5b.2 dispatches immediately on B-5b.1 close** — the split is a sequencing tool, not a deferral; Phase 8 does not close until B-5b.2 lands. Band stays fixed either way; overrun above top without split-trigger = disclose per Ruling 5, never restate mid-execution."*
+>
+> **Binding conditions:**
+> - Execute §4.1 baseline (one atomic commit) FIRST.
+> - If actual implementation exceeds **≥3,500 LoC OR ≥90 cells** before committing, escalate to §4.2 split — PRE-AUTHORIZED, no further Owner round-trip.
+> - If split executed: **B-5b.2 dispatches immediately on B-5b.1 close** — no Owner turn between closes for B-5b.2 initiation (Owner still ratifies each close). Split is a sequencing tool, NOT a deferral.
+> - Phase 8 does NOT close until B-5b.2 lands.
+> - Band `[2,940, 3,560]` (post-Amendment-H re-derived per §3.3) stays fixed. Overrun above top without split-trigger = disclose per Ruling 5. NO mid-execution restatement.
+>
+> Historical preliminary observation preserved below.
 
 **Class:** governance-semantic + Cannot-be-α/β-choice, requires Owner semantic ruling if the matrix overrun is severe.
 

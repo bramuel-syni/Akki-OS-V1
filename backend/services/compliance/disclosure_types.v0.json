@@ -1,0 +1,26 @@
+{
+  "$comment": "Phase 8 Stage B-5b (2026-07-07) — disclosure_type registry per Owner Ruling B5b-E3 (Amendment H). E1.γ constrained-str + JSON registry pattern (consequence_class.v0.json precedent). Values version as config; new sub-classes land as registry bumps, never route changes. Term 2 principle.",
+  "spec_anchor": "Rulings §12 B5b-E3 (Amendment H, 2026-07-07) + Sub-stage 3 Stage A §7.1.γ.1 registry+constrained-str pattern.",
+  "amendment_provenance": "Landed at B-5b execution (2026-07-07) per Ruling B5b-E5.",
+  "version": "v0",
+  "valid_disclosure_types": [
+    {
+      "disclosure_type": "k_anonymity",
+      "landed_at_version": "v0",
+      "description": "k-anonymity threshold: minimum equivalence-class size for a released disclosure. Higher k = tighter protection.",
+      "tightening_direction": "increase"
+    },
+    {
+      "disclosure_type": "l_diversity",
+      "landed_at_version": "v0",
+      "description": "l-diversity threshold: minimum distinct sensitive-attribute values per equivalence class. Higher l = tighter protection.",
+      "tightening_direction": "increase"
+    },
+    {
+      "disclosure_type": "dp_budget",
+      "landed_at_version": "v0",
+      "description": "Differential-privacy epsilon budget. Lower epsilon = tighter protection (less privacy leak per query).",
+      "tightening_direction": "decrease"
+    }
+  ]
+}

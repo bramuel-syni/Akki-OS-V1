@@ -402,3 +402,127 @@ async def post_authorized_deletion(request: Request):
             "executed_at": result.executed_at,
         },
     )
+
+
+# ────────────────────────────────────────────────────────────────────
+# Phase 8 Stage B-5b — compliance rulebook writers (per BCR §3.6B B5b-R1)
+# ────────────────────────────────────────────────────────────────────
+
+
+async def _rulebook_write_impl(
+    request: Request,
+    rule_class: str,
+    payload_transformer=None,
+    lawful_basis_ref: str = "compliance:rulebook_write",
+):
+    """Shared implementation for the 3 new compliance rulebook writers.
+
+    Server-side validation only per Owner Ruling B5b-E2 (α). Routes through
+    services/checker/state_machine.initiate; emits ledger row with
+    stamp_audit.consequence_class per Owner Ruling B5b-G4.
+    """
+    from services.compliance.rulebook_writes import (
+        RulebookWriteError,
+        initiate_and_ledger,
+    )
+    identity, deny = await _require_dpo_or_deny(request)
+    if deny is not None:
+        return deny
+    try:
+        payload = await request.json()
+    except Exception:
+        return JSONResponse(
+            status_code=400,
+            content={"reason": "malformed_body", "detail": "Body must be JSON."},
+        )
+    if not isinstance(payload, dict):
+        return JSONResponse(
+            status_code=400,
+            content={"reason": "malformed_payload", "detail": "Body must be an object."},
+        )
+    try:
+        from_ref, to_ref = (
+            payload_transformer(payload) if payload_transformer else (
+                str(payload.get("from_value_ref", "")),
+                str(payload.get("to_value_ref", "")),
+            )
+        )
+    except RulebookWriteError as e:
+        return JSONResponse(
+            status_code=400,
+            content={"reason": "malformed_payload", "detail": str(e)},
+        )
+    if not from_ref or not to_ref:
+        return JSONResponse(
+            status_code=400,
+            content={
+                "reason": "malformed_payload",
+                "detail": "Body must include from_value_ref and to_value_ref (or class-specific equivalents).",
+            },
+        )
+    body = await initiate_and_ledger(
+        rule_class=rule_class,
+        from_value_ref=from_ref,
+        to_value_ref=to_ref,
+        initiator_id=identity.email,
+        initiator_role="compliance",  # capacity role per Ruling 2
+        lawful_basis_ref=lawful_basis_ref,
+    )
+    return JSONResponse(status_code=202, content=body)
+
+
+def _disclosure_payload_transformer(payload: dict):
+    """Validates disclosure_type per B5b-E3 (γ) constrained-str + registry.
+    Returns (from_value_ref, to_value_ref)."""
+    from services.compliance.rulebook_writes import (
+        RulebookWriteError,
+        validate_disclosure_type,
+    )
+    disclosure_type = payload.get("disclosure_type")
+    try:
+        disclosure_type = validate_disclosure_type(disclosure_type)
+    except RulebookWriteError:
+        raise
+    from_val = payload.get("from_value")
+    to_val = payload.get("to_value")
+    if from_val is None or to_val is None:
+        raise RulebookWriteError(
+            "Body must include disclosure_type, from_value, to_value."
+        )
+    return (
+        f"{disclosure_type}={from_val}",
+        f"{disclosure_type}={to_val}",
+    )
+
+
+@router.post("/disclosure_thresholds")
+async def post_disclosure_thresholds(request: Request):
+    """Compliance write: disclosure thresholds (k-anonymity, l-diversity,
+    DP-budget) per BCR §3.6B B5b-R1 + Owner Ruling B5b-E3 (γ)."""
+    return await _rulebook_write_impl(
+        request,
+        rule_class="disclosure_thresholds",
+        payload_transformer=_disclosure_payload_transformer,
+        lawful_basis_ref="compliance:disclosure_thresholds_write",
+    )
+
+
+@router.post("/lawful_basis_registry")
+async def post_lawful_basis_registry(request: Request):
+    """Compliance write: lawful-basis registry per BCR §3.6B B5b-R1."""
+    return await _rulebook_write_impl(
+        request,
+        rule_class="lawful_basis_registry",
+        lawful_basis_ref="compliance:lawful_basis_registry_write",
+    )
+
+
+@router.post("/source_standing_table")
+async def post_source_standing_table(request: Request):
+    """Compliance write: source-standing table per BCR §3.6B B5b-R1.
+    Consequence class tightening_unilateral per consequence_class.v0.json."""
+    return await _rulebook_write_impl(
+        request,
+        rule_class="source_standing_table",
+        lawful_basis_ref="compliance:source_standing_table_write",
+    )

@@ -174,3 +174,18 @@ Per Owner Ruling 1(i)(iii) — Amendment G, 2026-07-07:
 ---
 
 *End of close report. Sub-stage 3 landed as ONE atomic commit per Owner Ruling 5. Amendment G rulings 1–7 all attested. Sub-stage 2 close `c17b578b…` recorded FINAL ACCEPTANCE per Ruling 7. Next dispatch: Owner ratification of this close.*
+
+---
+
+## §10. Sub-stage 3 final-acceptance footer (rider landed at B-5b first execution commit)
+
+**Owner acceptance (2026-07-07, verbatim):**
+> Close 994d2b40…: ACCEPTED. Seam 3 complete — all three sub-stages landed, E2 gate retired on evidence, §12.2 closed by named gate, parity 26 byte-identical, +3.3% disclosed per Ruling 5. Final-acceptance footer per standing pattern.
+
+**Landing commit hash (Sub-stage 3 atomic):** (recorded at Sub-stage 3 landing; supplied by Owner post-push).
+**Push queue status at acceptance:** Owner pushing six accepted closes plus salvage directory. Owner-side operation; no `e1_dev` action.
+**Follow-up surface (Phase 8 completion):** Phase 8 Stage B-5b closes the deferred-UI items surfaced by Sub-stage 3 (countersign action button on `CounterSignBanner`; owner-suspend workflow UI on Master Admin) plus the compliance-rulebook write UI (§4.4-4.5) and the B-4 read-only retrofit (§3.13 / RT-R2). Non-splittable pairing: compliance-write enablement + B-4 retrofit land in one commit.
+**Rider landing commit:** B-5b first execution commit (this rider).
+**Standing Rule v3 preservation:** footer appended at rider commit per pattern; close report §1–§9 UNTOUCHED.
+
+*Sub-stage 3 recorded as FINAL ACCEPTANCE. Seam 3 (Sub-stages 1 + 2 + 3) complete. Phase 8 completion path: B-5b remains.*

@@ -1,0 +1,8 @@
+{
+  "rule_id": "tier_lock",
+  "locked": true,
+  "reason_note": "diff-link",
+  "grantor_id": "6a49d57693e9bb94abab17f4",
+  "idempotency_key": "diff-link-0b0d8200",
+  "at": "2026-07-08T06:34:57.613882+00:00"
+}

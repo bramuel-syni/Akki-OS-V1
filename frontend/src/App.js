@@ -29,6 +29,7 @@ import AuditTrailPage from './pages/master_admin/AuditTrailPage';
 import ComplianceHomePage from './pages/compliance/ComplianceHomePage';
 import ComplianceProveOneRunPage from './pages/compliance/ComplianceProveOneRunPage';
 import ComplianceRetentionRightsPage from './pages/compliance/ComplianceRetentionRightsPage';
+import ComplianceRulebookWritePage from './pages/compliance/ComplianceRulebookWritePage';
 import { AuthProvider } from './hooks/useAuth';
 
 // Phase 8 Stage B-1 — Auth landing (Owner E1 ratified: custom JWT + bcrypt).
@@ -62,6 +63,8 @@ export default function App() {
           <Route path="compliance/prove" element={<ComplianceProveOneRunPage />} />
           <Route path="compliance/prove/:traceId" element={<ComplianceProveOneRunPage />} />
           <Route path="compliance/retention" element={<ComplianceRetentionRightsPage />} />
+          {/* Phase 8 Stage B-5b — Compliance rulebook write UI (§4.4-4.5) */}
+          <Route path="compliance/rulebook" element={<ComplianceRulebookWritePage />} />
           {/* Legacy G5b surfaces — nested under /legacy/* (Phase 8a-lite archival) */}
           <Route path="legacy" element={<AppShell />}>
             <Route index element={<LandingPage />} />

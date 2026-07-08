@@ -344,4 +344,47 @@ Build UN-PAUSES on Amendment G landing. Sub-stage 3 executes autonomously per th
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of rulings record. Build UN-PAUSED on Amendment G landing.*
+## §12. Owner rulings — B-5b Stage A dispatch (2026-07-07 Amendment H pass)
+
+**Ruling date:** 2026-07-07
+**Dispatch class:** Seven rulings resolving B5b-E1..B5b-E5 (Stage A §5 escalations) + band ratification + Sub-stage 3 final-acceptance footer pre-approval. Amendment H carries these rulings into the B-5b Stage A proposal.
+**Anchor SHAs cited by Owner in dispatch:**
+- B-5b Stage A proposal pre-Amendment-H: `417ae6d0c8b0f36d0c803a8778e9523a2c01bb6b92ba3003e0daa30d649b736e`.
+- Rulings record pre-Amendment-H: `30c4af9f9994f0188313d2a2a6de2c68abc16f69deec042c28f38b9bba333f3c`.
+- Sub-stage 3 close (FINAL ACCEPTED at Ruling 7, Amendment G): `994d2b40c117f9363495b7442ff1f7309e7b9abe23e248a8ab5ae3d7cc366c12`.
+**Standing Rule v3:** Owner rulings below are verbatim; no paraphrase.
+
+### §12.1 Rulings verbatim
+
+**Ruling B5b-E1:** α, two binding gates. Suspend button inline on `CounterSignBanner`, rendered only on `tightening_unilateral` rows — gate: `test_suspend_button_absent_on_dual_control_rows`. Render is role-gated to `master_admin` AND enforced server-side — non-owner call returns 403 access-class, never `outcome=refused`. Label distinct from Countersign per the verbatim's own posture.
+
+**Ruling B5b-E2:** α. Server-side only; frontend renders the server's plain-language error verbatim. Client pre-checks become a shadow rulebook that drifts from the server registry. The §6.2 form pattern already guarantees parseability; γ solves a solved problem.
+
+**Ruling B5b-E3:** γ. `disclosure_type` constrained-str + JSON registry, `consequence_class.v0.json` precedent. α's Literal is legal (request parameter, not frozen field) but disclosure mechanisms are a growing class — Term 2: values version as config. New sub-classes land as registry bumps, never route changes.
+
+**Ruling B5b-E4:** cancel at retrofit landing, ledgered. Authority transfer voids in-flight requests made under the old authority: each voided item emits a ledger row, reason `retrofit_authority_transfer`; anything still wanted is re-initiated by Compliance as the new owner. Grandfathering REJECTED — a grandfathered item is write-effect authority living in both consoles for its lifetime, the RT-R2 violation in miniature. Gate: `test_no_admin_initiated_compliance_pending_survives_retrofit` — trivially green on today's null population, permanent thereafter.
+
+**Ruling B5b-E5:** §4.1 attempt confirmed; §4.2 split PRE-AUTHORIZED at the stated thresholds (≥3,500 LoC or ≥90 cells at implementation), no further round-trip. One binding rider: **B-5b.2 dispatches immediately on B-5b.1 close** — the split is a sequencing tool, not a deferral; Phase 8 does not close until B-5b.2 lands. Band stays fixed either way; overrun above top without split-trigger = disclose per Ruling 5, never restate mid-execution.
+
+**Band ratification:** §3 band `[2,800, 3,400]` RATIFIED. Amendment H re-derives for the cells E1 and E4 add using §1's stated rates — this is the §3.4 pre-execution re-derivation the trigger table authorizes, distinct from the prohibited mid-execution restatement.
+
+**Footer pre-approval:** §6 footer PRE-APPROVED as drafted, verbatim. Appended after §9 of Sub-stage 3 close, §1–§9 byte-identical, new close SHA recorded in B-5b close + `rule2_accounting.json`. Landing-commit hash fills post-push.
+
+### §12.2 Amendment H disposition (this pass)
+
+Amendment H is doc-only. Two files touched:
+- **This rulings record** — §12 appended verbatim (Rulings B5b-E1..B5b-E5 + band ratification + footer pre-approval).
+- **B-5b Stage A proposal** (`/app/docs/stage_a_proposals/phase_8_b_5b.md`) — §5.1 marked RULED (α); §5.2 marked RULED (α); §5.3 marked RULED (γ); §5.4 marked RULED (semantic); §5.5 marked RULED (semantic); §3 band re-derived per E1+E4 cell additions using §1 stated rates (Owner-authorized pre-execution restatement per §3.4 trigger table); §2.3/§2.5 matrix updated for new cells; §4 pairing-enforcement updated with pre-authorized split threshold verbatim + "B-5b.2 dispatches immediately on B-5b.1 close" binding rider.
+- **No code changes.** B-5b execution proceeds only after Amendment H lands with confirmed SHAs.
+
+### §12.3 B-5b execution posture post-Amendment-H
+
+Build UN-PAUSES on Amendment H landing. B-5b executes autonomously per the Amendment-H-corrected Stage A, all seven rulings pre-carried. Escalation triggers narrowed per dispatch §3.4: frozen-contract contact, Owner-value contact, governance-semantic contact. §4.2 split trigger (≥3,500 LoC or ≥90 cells at implementation) is NOT an escalation — it is a pre-authorized dev decision at implementation threshold; B-5b.2 dispatches immediately on B-5b.1 close if triggered, no Owner round-trip between closes.
+
+### §12.4 `data_class_registry` disposition for E4 ledger emission
+
+Ruling B5b-E4 requires each voided in-flight request to emit a ledger row with `data_class` set to a canonical event class (name proposed: `retrofit_authority_voided`; reason field: `retrofit_authority_transfer`). Sub-stage 3 landed `data_class_registry.v1.json` with 6 valid_data_classes. `retrofit_authority_voided` is NOT in v1. Amendment H notes that a v1→v2 additive registry bump lands at B-5b execution (NOT this doc-only pass) if the retrofit voiding executes any rows. Trivially green on today's null population per Owner; the registry bump itself is permanent and covers future retrofit-driven authority transfers.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of rulings record. Build UN-PAUSED on Amendment H landing.*

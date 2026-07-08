@@ -24,10 +24,16 @@ export const MIDDLE_DOT = '\u00B7';
  * @param {Object} props
  * @param {'compliance' | 'admin'} props.role - The console's capacity role.
  * @param {string} props.token - Auth token; parent passes.
+ * @param {boolean} [props.canSuspend] - Whether the current user has
+ *   master_admin capacity (per B5b-E1 α: server-side enforcement is the
+ *   authority; this flag is a client-side render gate).
  */
-export const CounterSignBanner = ({ role, token }) => {
+export const CounterSignBanner = ({ role, token, canSuspend = false }) => {
   const [items, setItems] = useState(null);
   const [error, setError] = useState(null);
+  const [reload, setReload] = useState(0);
+  const [actionBusy, setActionBusy] = useState(null);
+  const [actionError, setActionError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -54,7 +60,48 @@ export const CounterSignBanner = ({ role, token }) => {
     return () => {
       cancelled = true;
     };
-  }, [role, token]);
+  }, [role, token, reload]);
+
+  const doCountersign = async (requestId) => {
+    setActionBusy(requestId);
+    setActionError(null);
+    try {
+      await axios.post(
+        `${API}/checker/countersign/${requestId}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReload((n) => n + 1);
+    } catch (e) {
+      setActionError(e.response?.data?.detail || 'Countersign failed.');
+    } finally {
+      setActionBusy(null);
+    }
+  };
+
+  const doSuspend = async (requestId) => {
+    // Owner Ruling B5b-E1 (α): render inline, master_admin gated
+    // client-side; server-side enforcement is the authority (returns
+    // 403 access-class on non-owner call, NEVER outcome=refused).
+    const reason = window.prompt('Reason for owner-suspend (recorded on ledger):');
+    if (!reason || !reason.trim()) {
+      return;
+    }
+    setActionBusy(requestId);
+    setActionError(null);
+    try {
+      await axios.post(
+        `${API}/master_admin/tightening/suspend`,
+        { request_id: requestId, reason: reason.trim() },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReload((n) => n + 1);
+    } catch (e) {
+      setActionError(e.response?.data?.detail || 'Suspend failed.');
+    } finally {
+      setActionBusy(null);
+    }
+  };
 
   if (error) {
     return (
@@ -112,13 +159,47 @@ export const CounterSignBanner = ({ role, token }) => {
           <li
             key={item.request_id}
             data-testid={`counter-sign-banner-item-${item.request_id}`}
-            className="text-sm"
+            className="text-sm flex items-center justify-between gap-2 flex-wrap"
           >
-            {item.rule_class} {MIDDLE_DOT} initiated by {item.initiator_role}{' '}
-            {MIDDLE_DOT} state {item.state}
+            <span>
+              {item.rule_class} {MIDDLE_DOT} initiated by {item.initiator_role}{' '}
+              {MIDDLE_DOT} state {item.state}
+            </span>
+            <span className="flex gap-2">
+              <button
+                data-testid={`counter-sign-btn-${item.request_id}`}
+                onClick={() => doCountersign(item.request_id)}
+                disabled={actionBusy === item.request_id}
+                className="px-2 py-1 rounded bg-amber-700 text-white text-xs disabled:opacity-50"
+              >
+                Countersign
+              </button>
+              {/* Owner Ruling B5b-E1 (α, Amendment H): Suspend button
+                  renders ONLY on tightening_unilateral rows AND only for
+                  master_admin capacity. Server enforces on non-owner
+                  call with HTTP 403 access-class (never outcome=refused). */}
+              {canSuspend && item.consequence_class === 'tightening_unilateral' && (
+                <button
+                  data-testid={`suspend-by-owner-btn-${item.request_id}`}
+                  onClick={() => doSuspend(item.request_id)}
+                  disabled={actionBusy === item.request_id}
+                  className="px-2 py-1 rounded bg-slate-900 text-white text-xs disabled:opacity-50"
+                >
+                  Suspend by Owner
+                </button>
+              )}
+            </span>
           </li>
         ))}
       </ul>
+      {actionError && (
+        <div
+          data-testid="counter-sign-banner-action-error"
+          className="mt-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900"
+        >
+          {actionError}
+        </div>
+      )}
     </div>
   );
 };

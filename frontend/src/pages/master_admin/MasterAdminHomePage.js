@@ -21,6 +21,7 @@ import { ArrowLeft, ShieldCheck } from 'lucide-react';
 import api from '../../apiClient';
 import { useAuth } from '../../hooks/useAuth';
 import { CounterSignBanner } from '../../components/ui_spec_v1';
+import AdminComplianceReadOnlyView from './AdminComplianceReadOnlyView';
 
 const ACTION_BUTTONS = [
   { id: 'assign-a-role', label: 'Assign a role', target: '/master-admin/change-a-rule/tier-lock' },
@@ -93,11 +94,17 @@ export default function MasterAdminHomePage() {
 
       <main className="max-w-4xl mx-auto px-6 py-8 space-y-8">
         {/* Phase 8 Seam 3 Sub-stage 3 — CounterSignBanner (Owner Ruling 2,
-            Amendment G, 2026-07-07: capacity-role render). */}
+            Amendment G, 2026-07-07: capacity-role render).
+            Phase 8 Stage B-5b — Owner Ruling B5b-E1 (α, Amendment H):
+            inline Suspend button rendered only on tightening_unilateral
+            rows AND only for master_admin capacity. */}
         <CounterSignBanner
           role="admin"
           token={identity?.token || localStorage.getItem('rms_auth_token') || ''}
+          canSuspend={Array.isArray(identity?.roles) && identity.roles.includes('master_admin')}
         />
+        {/* Phase 8 Stage B-5b — B-4 read-only retrofit (BCR §3.13 RT-R1) */}
+        <AdminComplianceReadOnlyView />
         {/* §6.1 Pending banner — plural-aware, count-substituted, plain language. */}
         {pendingCount != null && pendingCount > 0 && (
           <section
