@@ -1,0 +1,54 @@
+{
+  "version": "v3",
+  "notes": " | v2->v3 additive per Owner P8E-E7 \u03b1 (2026-07-08): +engineer_onboarding_approved (Phase 8-EXT onboarding).",
+  "valid_data_classes": [
+    {
+      "data_class": "authorized_deletion",
+      "landed_at_version": "v0",
+      "description": "Authorized deletion event emitted by services/retention/authorized_deletion.py::execute_authorized_deletion.",
+      "spec_anchor": "Stage A \u00a75 (Sub-stage 2 deliverables) + \u00a77.3.C (converge-continue neutral placeholder for non-refusal semantics)."
+    },
+    {
+      "data_class": "unclassified",
+      "landed_at_version": "v0",
+      "description": "Fallback bucket per R-3 discipline. R-3 anti-silence: unclassified is registered and renderable.",
+      "spec_anchor": "Rulings record \u00a710 R-3 + Stage A \u00a75.1 governance-event fallback semantics."
+    },
+    {
+      "data_class": "countersigned_rule_change",
+      "landed_at_version": "v1",
+      "description": "Dual-control rule-change event emitted by services/checker/countersign_ledger.py::emit_countersign_ledger_row.",
+      "spec_anchor": "Stage A \u00a76.1 CK-B1 + rulings \u00a711.2 Ruling 2 (capacity-role rendering)."
+    },
+    {
+      "data_class": "tightening_effective",
+      "landed_at_version": "v1",
+      "description": "Unilateral tightening becomes effective at delay expiry. Ruling 3: emits UNCONDITIONALLY even with active objection.",
+      "spec_anchor": "Stage A \u00a76.1 tightening-effective + rulings \u00a711.2 Ruling 3."
+    },
+    {
+      "data_class": "tightening_objected",
+      "landed_at_version": "v1",
+      "description": "Objection annotation event. Ruling 3: annotates + escalates; does NOT halt.",
+      "spec_anchor": "Stage A \u00a76.1 tightening_objected + rulings \u00a711.2 Ruling 3."
+    },
+    {
+      "data_class": "owner_suspended_tightening",
+      "landed_at_version": "v1",
+      "description": "Owner-suspend action; the ONLY action that halts a tightening.",
+      "spec_anchor": "Stage A \u00a76 owner-suspend endpoint + rulings \u00a711.2 Ruling 3."
+    },
+    {
+      "data_class": "retrofit_authority_voided",
+      "landed_at_version": "v2",
+      "description": "In-flight admin-initiated compliance-rule checker request voided at B-4 retrofit landing per Owner Ruling B5b-E4 (Amendment H). Emits with reason='retrofit_authority_transfer'. Grandfathering REJECTED \u2014 voiding preserves RT-R2 invariant (write authority never exists in both consoles simultaneously). stamp_audit sidecar pinned keys: {data_class, rule_class, request_id, voided_at, reason, prior_state, prior_initiator_id, prior_initiator_role}. Trivially green on today's null population; permanent thereafter.",
+      "spec_anchor": "Rulings \u00a712 B5b-E4 (Amendment H, 2026-07-07) + BCR v1.4.1 \u00a73.13 RT-R2."
+    },
+    {
+      "data_class": "engineer_onboarding_approved",
+      "landed_at_version": "v3",
+      "description": "Onboarding-approval event emitted by services/auth/engineer_invites.py::emit_onboarding_approved_ledger_row when an internal_engineer approves a pending_invite; introduces an external_engineer identity to the system. Distinct from B-3 engineer_key_grant_event (grant issuance) \u2014 onboarding-approval is the introduction, grant-issuance is the subsequent capability delegation. Ruling P8E-E7 \u03b1 (Owner 2026-07-08): additive versioned bump v2->v3, NEVER in-place, per Ruling-4/B-5b pattern.",
+      "spec_anchor": "Rulings \u00a7Phase 8-EXT P8E-E7 \u03b1 + BCR \u00a73.9 EE-R3 [STAKED]."
+    }
+  ]
+}

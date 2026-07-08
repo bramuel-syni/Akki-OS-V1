@@ -18,6 +18,7 @@ import CommitReviewPage from './pages/operator/CommitReviewPage';
 import EngineerRegisterAppPage from './pages/engineer/EngineerRegisterAppPage';
 import EngineerFirstCallPage from './pages/engineer/EngineerFirstCallPage';
 import EngineerAdministerPage from './pages/engineer/EngineerAdministerPage';
+import OnboardingInvitePage from './pages/engineer/OnboardingInvitePage';
 // Commercial-cut 2026-07-06 (BCR v1.4 §12): buyer §5 surface (BuyerShape/
 // Acquire/Receive) cut whole — buyer wizard variant is not built on this
 // tree post-cut. Salvage location:
@@ -54,6 +55,8 @@ export default function App() {
           <Route path="engineer/register" element={<EngineerRegisterAppPage />} />
           <Route path="engineer/first-call" element={<EngineerFirstCallPage />} />
           <Route path="engineer/administer" element={<EngineerAdministerPage />} />
+          {/* Phase 8-EXT — external-engineer onboarding (UI Spec v2.1 §5.4) */}
+          <Route path="engineer/onboarding" element={<OnboardingInvitePage />} />
           {/* Phase 8 Stage B-3 — Buyer surface (UI Spec §5) CUT at
               commercial cut 2026-07-06 (BCR v1.4 §12); no live routes. */}
           {/* Phase 8 Stage B-4 — Master Admin surface (UI Spec §6) */}

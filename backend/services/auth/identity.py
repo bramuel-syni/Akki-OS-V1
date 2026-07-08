@@ -27,6 +27,7 @@ RoleName = Literal[
     "dpo",
     "ask_console_user",
     "admin",
+    "external_engineer",
 ]
 
 
