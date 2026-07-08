@@ -52,11 +52,14 @@ def test_composed_conclusion_snapshot_parity_at_18():
     P9-E4 α). Environment-boundary crossing → FREEZE prior. V1-G7
     byte-identity assertion set expands additively; the 26 pre-existing
     remain byte-identical.
+
+    Artifact Store (2026-07-08): parity count bumped 28 → 29 (added
+    OuterGateReceipt_v1 per Owner AS-E1 α). v0 remains byte-identical.
     """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 28, (
-        f"Post-Phase-9-Sub-stage-9.1 snapshot count must be exactly 28 "
-        f"(26 pre-9.1 + PerceptionJob_v0 + PerceptionResult_v0). "
+    assert len(snapshots) == 29, (
+        f"Post-Artifact-Store snapshot count must be exactly 29 "
+        f"(28 pre-existing + OuterGateReceipt_v1 additive per AS-E1 α). "
         f"Actual: {len(snapshots)}.\nSnapshots: {sorted(p.name for p in snapshots)}"
     )

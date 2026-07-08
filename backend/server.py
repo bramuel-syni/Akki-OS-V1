@@ -137,6 +137,13 @@ app.include_router(workers_router.router, prefix="/api")
 from routers import extraction_sample as extraction_sample_router  # noqa: E402
 app.include_router(extraction_sample_router.router, prefix="/api")
 
+# Artifact Store (BCR §3.2) — V3 last mile. Three-op adapter behind
+# a router: GET/HEAD durable-download endpoints (AS-U1, AS-B3). No
+# POST/DELETE: writes ride the internal outer-gate atomic-write path;
+# deletion routes via Seam 3 authorized_deletion only (AS-H1).
+from routers import artifact_store as artifact_store_router  # noqa: E402
+app.include_router(artifact_store_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:

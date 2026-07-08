@@ -199,9 +199,9 @@ def test_v1_g7_byte_identity_all_prior_frozen_contracts() -> None:
     for src_name, snap_name in CONTRACT_TO_SNAPSHOT.items():
         snap_path = INVARIANTS_DIR / snap_name
         assert snap_path.exists(), f"V1-G7: missing snapshot {snap_name}"
-    # Parity count 28 post-9.1 (Owner P9-E1 α + P9-E4 α).
-    assert len(CONTRACT_TO_SNAPSHOT) == 28, (
-        "V1-G7 parity: expected 28 declared-frozen contracts post-9.1 landing."
+    # Parity count 29 post-Artifact-Store (Owner AS-E1 α additive OuterGateReceipt_v1).
+    assert len(CONTRACT_TO_SNAPSHOT) == 29, (
+        "V1-G7 parity: expected 29 declared-frozen contracts post-Artifact-Store."
     )
 
 

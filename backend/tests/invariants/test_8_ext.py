@@ -286,16 +286,20 @@ def test_engineer_router_has_no_inline_owner_comparisons() -> None:
         )
 
 
-# --- V1-G7 attestation: 28 pre-existing frozen contracts byte-identical ---
+# --- V1-G7 attestation: pre-8-EXT contracts byte-identical (post-Artifact-Store parity 29) ---
 
 def test_v1_g7_attestation_28_contracts_byte_identical_at_8_ext_close() -> None:
-    """P8E-E1 α + BCR §3.9 EE-R1: no frozen contract touched; V1-G7 assertion
-    set remains 28 post-8-EXT (Identity unfrozen; no parity bump)."""
+    """P8E-E1 α + BCR §3.9 EE-R1: no frozen contract touched by 8-EXT itself.
+
+    Note: post-Artifact-Store the total snapshot count is 29 (28 pre-existing
+    + `OuterGateReceipt_v1` additive per AS-E1 α, 2026-07-08). The 8-EXT
+    itself did not touch parity; the count moved at Artifact Store.
+    """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 28, (
-        f"V1-G7 8-EXT: expected 28 snapshots (unchanged from Phase 9 close). "
-        f"Actual: {len(snapshots)}."
+    assert len(snapshots) == 29, (
+        f"Post-Artifact-Store: expected 29 snapshots (28 pre-existing + "
+        f"OuterGateReceipt_v1 additive per AS-E1 α). Actual: {len(snapshots)}."
     )
 
 
