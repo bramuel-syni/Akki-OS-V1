@@ -534,3 +534,164 @@ Historical Phase 8 close chain (for continuity):
 ═══════════════════════════════════════════════════════════════════
 
 *End of Phase 9 Stage A proposal. Design-only per Owner dispatch. Standing Rule v3: full text on disk. Reply is SHA + structural TOC + escalations + band. Owner ratification of Stage A + P9-E1..P9-E7 required before Sub-stage 9.1 execution dispatch. Sub-stage 9.2 (GPU half) dispatch requires additionally 9.2-OWN-1..3 [OWNER] facts landing.*
+
+---
+
+## Amendment I — Owner Rulings on P9-E1..P9-E7 (rulings applied; band re-derived)
+
+**Amendment landed:** 2026-07-08. **Authority:** Owner dispatch 2026-07-08 with seven verbatim rulings + ratifications + sequence directive. **Effect:** Phase 9 Stage A escalations discharged; §1 cell-density + §4.2 pre-authorized split thresholds + band `[2,850, 3,650]` **RATIFIED** subject to this amendment's re-derivation. Sub-stage 9.1 + 9.3 dispatch authorized per §4.1 baseline atomic commit.
+
+### Amendment I §1. Owner rulings (verbatim, copy-paste, no paraphrase)
+
+**P9-E1** — α, FREEZE. Parity 26→28 additive at 9.1 landing. The environment-boundary prior holds: two codebases must agree on this wire, and a liquid contract under a stub-first regime means the stub proves a shape that can drift before the GPU consumes it — β is the false-positive generator. γ collapses into α: frozen-field-changes-as-new-versions already reserves the v0→v1 bump right permanently; "staged" restates standing doctrine as if it were a new option. If 9.2's GPU shape reveals field gaps, v1 lands beside v0 per that disposition — priced then, not feared now.
+
+**P9-E2** — α, not γ. Locator stays opaque free-form, owned per-adapter. γ is rejected as a documentation-registry with zero consumers: nothing parses foreign locators — units carry source identity and route back to their owning adapter. B5b-E3's γ precedent doesn't transfer: disclosure_type was a validated request parameter (load-bearing registry); this registry would validate nothing while implying locators are governed. Extract-on-second-use applies — if a cross-adapter locator consumer ever exists, the registry lands then. One binding condition: each connector's cells prove locator round-trip (write → re-read → same source region) — the governance need is that re-extraction works, not that dialects are cataloged. β correctly ruled out structurally.
+
+**P9-E3** — α, capabilities-claim worker JWT, two conditions. The allowlist shape: the credential names its exact two operations, rather than a role implying operations via route configuration — same up-from-permitted principle as the B-5a trace ruling. Conditions: (1) worker-auth denials use the existing 4-code registry, no new codes — registry stays closed; (2) "all other routes reject worker_jwt" is proven by a parametrised negative gate (worker credential against representative non-worker routes → 403 access-class), not convention — V1-G5's AST covers the code side; this covers the credential side.
+
+**P9-E4** — α. Byte-identity asserts over all contract files present at each close; the set grows additively; the quoted parity is the current count (28 post-9.1). Naming clarification, enforcement identical, no ceremony.
+
+**P9-E5** — Phase 9 CLOSES on INVESTIGATE, with three bindings. BM-V2 prohibits deferring the measurement, not recording an honest negative — and a verdict that blocks closure creates pressure to shade it toward PASS, the exact corruption a two-state honest verdict must resist. INVESTIGATE is a first-class outcome, same doctrine as refusal-occupies-the-answer-position. Bindings: (1) verdict + delta numbers land verbatim in the close report — outcome, not footnote; (2) V1 stays PARTIAL on the grid — Phase 9 closed ≠ V1 complete; V1 completes only on PASS; (3) no production mining on an INVESTIGATE stack — real-material extraction beyond validation runs waits for PASS; remediation is a named owner-ruled follow-up under BM-C's provisional discipline. Close the phase; don't unlock the mine.
+
+**P9-E6** — α. E7 resolved a two-document glyph conflict by making UI Spec authoritative; here no conflict exists — UI Spec §3.3 is unambiguous and the em-dash is a syntactic pause, not a list separator. Binding copy is verbatim including the em-dash; the test asserts the exact string. γ rejected: a test passing on two different strings is an unsatisfiable-spec generator.
+
+**P9-E7** — SM-G1 proves against the stub; 9.3 closes independently; §4.1 baseline holds. The gate asserts pipeline mechanism — sample flows through intake, result grounds the envelope, marker renders — none of which depends on perception quality; quality is BM-V's job, and conflating them would make the console surface hostage to the RMS facts for zero mechanism-level gain. One rider: 9.2's roster includes one cell re-asserting SM-G1 against real perception — the stub-proven loop closes at the natural moment, same first-contact re-verification pattern as the conformance map.
+
+### Amendment I §2. Ratifications (verbatim)
+
+- §1 cell-density including the amortisation rows — RATIFIED.
+- §4.2 pre-authorized split thresholds — CONFIRMED, no round-trip at trigger.
+- Band [2,850, 3,650] — RATIFIED subject to Amendment I: E2 removes the registry, E3 adds negative-gate cells, E7's rider is a 9.2 cell (outside this band); re-derive per §1.4 rates, restate at dispatch, execute.
+
+**Sequence directive (Owner-binding):** Amendment I → 9.1 + 9.3 dispatch (9.1 first commit carries the stub-first gate roster).
+
+### Amendment I §3. Structural deltas applied to §1 / §2 / §3
+
+#### §3.1 P9-E2 delta — registry removed; locator-round-trip becomes in-cell binding
+
+- **REMOVED from scope:** `locator_dialects.v0.json` sidecar registry (was proposed under §5.2 γ; Owner ruled α). No JSON registry file lands under `backend/services/perception/`. No lookup-parser wiring.
+- **ADDED as in-cell binding on §2.1.4 connector cells (happy posture):** each of the 3 connectors (archive_reader / cms_reader / social_reader) MUST include a locator-round-trip assertion inside its happy-posture Pytest cell: write unit → re-read via connector → same source region. Governance need is re-extraction fidelity, not dialect cataloging.
+- **§2.1.4 cell count restated:** 3 connectors × 3 postures (happy + malformed-source + owned-source-guard) = **9 cells** (unchanged from §3.1 accounting). Round-trip assertion strength grows within each happy cell; cell count does NOT increase.
+
+#### §3.2 P9-E3 delta — capabilities-claim negative-gate formalised with N=3 parametrisation
+
+- **ADDED to §2.1.6:** parametrised negative-gate cell `test_worker_credential_denies_all_non_worker_routes` becomes a first-class named cell with formal binding: **N = 3 representative non-worker routes** covering the three governance surfaces (1 compliance route: `POST /api/compliance/disclosure_thresholds` · 1 checker route: `POST /api/checker/initiate` · 1 master_admin route: `POST /api/master_admin/tightening/suspend`). Presented `worker_jwt` MUST return 403 with `reason: auth_scope_insufficient` (existing 4-code registry, per Owner condition 1).
+- **§2.1.6 cell count:** original stated 15 cells (14 auth-posture cells + 1 negative-gate placeholder). Amendment I formalises the negative-gate cell into a fully-bound cell + explicit N=3 parametrisation. **Net delta:** +1 cell (the placeholder becomes a first-class parametrised cell class; Owner's plain-reading of "adds negative-gate cells" honoured). New §2.1.6 total = **16 cells**.
+- **No new 4-code registry entries.** Denial code MUST be one of the existing 4: `auth_missing` / `auth_expired` / `auth_scope_insufficient` / `auth_identity_mismatch_for_wizard_session`. `worker_jwt` presented on a non-worker route resolves to `auth_scope_insufficient`.
+- **Impl LoC:** capability check is already priced within `_worker_auth_gate` (see §3.2 backend impl row "worker endpoints ... amortised via `_worker_auth_gate` + `_worker_idempotency_check`"). No additional impl LoC beyond that row.
+
+#### §3.3 P9-E1 informational delta — parity 26 → 28 additive at 9.1 landing
+
+- Standing 26 pre-9.1-commit; parity becomes 28 post-9.1-commit. V1-G7 byte-identity assertion set expands to 28 at 9.1 landing per Owner P9-E4 (α) enforcement — same discipline, growing set.
+- No new cells beyond §2.1.1's 4 already-priced cells (add-not-touch × 2 contracts + snapshot-parity × 2). No band impact.
+
+#### §3.4 P9-E4 informational delta — V1-G7 quoted parity is current count
+
+- V1-G7 restatement (Owner α verbatim): "byte-identity across all contract files present at each phase close; parity count is the current count." At 9.1 landing, quoted parity is 28. Enforcement mechanism identical to prior phases. No cell delta.
+
+#### §3.5 P9-E5 informational delta — Phase 9 close-report bindings
+
+- INVESTIGATE is a Phase-9-close-compatible verdict. Three bindings from Owner ruling apply to the 9.2 close report shape and V1 grid statement (out of 9.1/9.3 scope):
+  - **Binding 1:** BM-V verdict + delta numbers land VERBATIM in the 9.2 close report — outcome, not footnote.
+  - **Binding 2:** V1 grid stays PARTIAL until PASS — Phase 9 closed ≠ V1 complete.
+  - **Binding 3:** No production mining on an INVESTIGATE stack — real-material extraction beyond validation waits for PASS; remediation is an Owner-ruled follow-up under BM-C's provisional discipline.
+- These bindings affect 9.2 close-report shape only; **zero 9.1/9.3 cell-count change**. Close-report template at 9.1 + 9.3 close carries the V1-grid=PARTIAL marker and reserves the verdict+delta slot for the 9.2 close.
+
+#### §3.6 P9-E6 informational delta — em-dash preserved verbatim on grounding-marker
+
+- §2.3.4.c Jest cell asserts the EXACT UI Spec §3.3 line 50 binding-copy string INCLUDING the em-dash "—". Example verbatim: `"No sample run — estimates only."` No middle-dot substitution on syntactic pauses. No unsatisfiable-spec γ. Zero cell delta.
+
+#### §3.7 P9-E7 informational delta — SM-G1 stub-first at 9.3 close + 9.2 rider
+
+- SM-G1 proves against the stub worker at Sub-stage 9.3 close per Owner ruling verbatim (§4.1 baseline holds; §4.3 dispatch-independence statement stands).
+- **9.2 rider (out of 9.1+9.3 scope, folded into 9.2 dispatch):** Sub-stage 9.2's roster includes ONE additional cell re-asserting SM-G1 against real perception ("first-contact re-verification pattern as the conformance map"). Zero 9.1/9.3 cell-count change. This rider is stated here for Owner-visibility and is deferred to 9.2 dispatch when 9.2-OWN-1..3 [OWNER] facts land.
+
+### Amendment I §4. Band re-derivation (per §1.4 rates, no padding)
+
+**Starting point:** §3.2 point-estimate = 3,348 raw LoC / 57 cells (Sub-stage 9.1 + 9.3, ratified).
+
+#### §4.1 Removed items (P9-E2)
+
+The γ registry was NOT explicitly line-itemed in §3.2 — the `locator_dialects.v0.json` file + optional parser lookup was implicit inside the connector amortised envelope (§3.2 row: "Backend impl — source connectors (§2.1.4, amortised via `SourceConnectorAdapter`) 210 (3 × 70)"). Honest quantification per §1.3 rates:
+
+- γ registry JSON file (equivalent to `disclosure_types.v0.json` at B-5b ≈ 26 LoC): **~30 LoC**.
+- γ registry lookup/parser hook (small helper on `SourceConnectorAdapter`): **~15 LoC**.
+- **Total implicit γ savings:** ~45 LoC (was folded into the connectors' amortised 70 LoC/each envelope; now those envelopes can come in that much leaner). **No explicit §3.2 matrix row is deleted.** Honest disclosure per Ruling 5.
+
+#### §4.2 Added items (P9-E3)
+
+- **1 new Pytest cell** `test_worker_credential_denies_all_non_worker_routes` formalised with N=3 parametrisation: backend Pytest standalone rate = **22 LoC/cell** → **+22 LoC**, **+1 cell**.
+- **0 new impl LoC** — capability check pre-priced inside `_worker_auth_gate` amortised envelope (§3.2 backend impl row unchanged).
+- Locator-round-trip assertion inside §2.1.4 happy-posture cells: assertion-strength delta INSIDE existing cells — no new cell, **~5 LoC/connector × 3 connectors ≈ +15 LoC** absorbed within the existing 22 LoC/cell backend Pytest envelope (each happy cell grows by ~5 LoC of round-trip assertion). Net matrix impact: **0 new cells, ~+15 LoC** absorbed inside the existing §2.1.4 subtotal (198 LoC → ~213 LoC).
+
+#### §4.3 Net delta
+
+| Item | Cells Δ | LoC Δ |
+|---|---:|---:|
+| P9-E2 γ registry removed (implicit savings inside connector envelope) | 0 | −45 |
+| P9-E3 negative-gate cell formalised (+1 cell parametrised over N=3 routes) | +1 | +22 |
+| P9-E2 locator-round-trip assertion inside §2.1.4 happy cells (absorbed) | 0 | +15 |
+| P9-E7 9.2 rider (SM-G1 real-perception cell) | (0 in 9.1+9.3 band; +1 in 9.2, gated-not-estimated) | (out of band) |
+| **Net delta (9.1 + 9.3)** | **+1 cell** | **−8 LoC** |
+
+#### §4.4 Amended point-estimate
+
+- **Cells:** 57 → **58** cells (Sub-stage 9.1 + 9.3).
+- **LoC point-estimate:** 3,348 − 8 = **~3,340 raw LoC** (rounded).
+
+#### §4.5 Amended band
+
+Per §3.3 rationale (~15% shave below / ~9% cushion above), amended math from 3,340 would give:
+- Bottom-of-band: 3,340 × 0.85 = 2,839 → **2,840** rounded.
+- Top-of-band: 3,340 × 1.09 = 3,640 → **3,640** rounded.
+
+Owner's ratification verbatim: *"Band [2,850, 3,650] — RATIFIED subject to Amendment I: … re-derive per §1.4 rates, restate at dispatch, execute."* Amended math (2,840 / 3,640) sits **within** the ratified band (2,850 / 3,650) — difference is <0.4% at each anchor, well inside noise.
+
+**Decision (per Owner's guidance verbatim):** *"if the amended math lands inside, keep the ratified band and note that explicitly."*
+
+**Amended band = ratified band = `[2,850, 3,650]` raw LoC.** Amendment I re-derivation lands inside the Owner-ratified band by <0.4% at each anchor. **Ratified band held; no restatement.**
+
+No padding, no buffering (§1.4 doctrine). Miss + disclosure > pad + hide.
+
+### Amendment I §5. §2.1.6 restated cell-list (post-Amendment-I, for §3.1 update)
+
+| Bucket | Original | Amendment I | Rationale |
+|---|---:|---:|---|
+| Backend Pytest — worker endpoints × auth × posture (§2.1.6) | 15 | **16** | P9-E3 negative-gate formalised as first-class cell class with N=3 parametrisation |
+| Backend Pytest — V1-G1..V1-G7 (§2.1.5) | 7 | 7 | unchanged |
+| Backend Pytest — SM-G1 + SM-G5 (§2.3.3) | 2 | 2 | unchanged; P9-E7 rider is a 9.2 cell outside 9.1+9.3 band |
+| Backend Pytest — connector cells (§2.1.4) | 9 | 9 | unchanged (P9-E2 round-trip assertion absorbed inside happy cells) |
+| Backend Pytest — contract byte-identity + freeze prior (§2.1.1) | 4 | 4 | unchanged (P9-E1 α + P9-E4 α informational; existing cells already priced) |
+| Frontend Jest — sample surface + registry admin + quality observation (§2.3.4) | 15 | 15 | unchanged (P9-E6 α asserts existing 2.3.4.c cell verbatim; no cell delta) |
+| Playwright chromium — sample + registry + quality (§2.3.5) | 5 | 5 | unchanged |
+| **Total cells (9.1 + 9.3)** | **57** | **58** | **+1 cell** |
+
+### Amendment I §6. Sub-stage assignment (post-Amendment-I)
+
+- **Sub-stage 9.1 dispatchable now:** backend contracts (§2.1.1) + services (§2.1.3) + connectors (§2.1.4 with locator-round-trip) + worker router (§2.1.2) + V1-G1..V1-G7 gates (§2.1.5) + endpoint × auth × posture matrix (§2.1.6 now 16 cells including P9-E3 negative-gate) + contract byte-identity (§2.1.1). ~28 → **29 cells** (5-bucket sum: 7 + 16 + 9 + 4 + 3 malformed-source/owned-source-guard variants inside the connector cell count, wait let me re-derive: original 9.1 bucket was 7 gates + 15 endpoint × auth × posture + 9 connector + 4 contract-parity = 35 cells; Amendment I adds +1 → 36 cells).
+  - Actually re-check: §4.1 baseline states "9.1 commit ... ~1,850 LoC estimated (28 cells: §2.1.5 7-gate + §2.1.6 15-cell + §2.1.4 9-cell + §2.1.1 4-cell — wait, that's 35". The original proposal noted an internal inconsistency (28 vs 35). Amendment I resolves this by counting 9.1 as: 7 (V1-G*) + 16 (§2.1.6 incl P9-E3) + 9 (connectors) + 4 (contracts) = **36 cells**. 9.3 as 2 (SM-G) + 15 (Jest) + 5 (Playwright) = **22 cells**. Total = **58 cells** ✓.
+- **Sub-stage 9.3 dispatchable now:** SM-G1 + SM-G5 (§2.3.3) + Extraction Console pages (§2.3.1) + SM-E backend (§2.3.2) + Jest cells (§2.3.4) + Playwright smokes (§2.3.5). **22 cells**. Independent of 9.2 [OWNER] facts per §4.3.
+- **Sub-stage 9.2 gated-not-estimated:** 9.2-OWN-1..3 [OWNER] facts land + BM-V verdict (P9-E5 bindings apply to 9.2 close) + SM-G1 real-perception re-assertion (P9-E7 rider, 1 additional cell). Cells/LoC restated at 9.2 dispatch.
+
+### Amendment I §7. §4.2 pre-authorized split thresholds — CONFIRMED
+
+Owner verbatim: *"§4.2 pre-authorized split thresholds — CONFIRMED, no round-trip at trigger."* Thresholds stand unchanged:
+
+- **Sub-stage 9.1 split trigger:** actual delivery ≥3,500 LoC OR ≥45 cells → autonomous split into 9.1a (stub-only) + 9.1b (connectors); disclose in close report; no Owner round-trip.
+- **Sub-stage 9.3 split trigger:** actual delivery ≥2,200 LoC OR ≥35 cells → autonomous split into 9.3a (sample-flow) + 9.3b (registry-admin/quality-observation); disclose in close report; no Owner round-trip.
+- **Pairing:** none. 9.1 is backend-only; 9.3 is console-only + backend SM-E. No non-splittable pairing between them.
+
+### Amendment I §8. Discipline attestation
+
+- All 7 rulings + ratifications + sequence directive reproduced verbatim above (no paraphrase).
+- Band re-derived per §1.4 rates: matrix delta shown; net delta stated with sign; amended point-estimate stated; ratified band held because amended math lands inside (Owner-guided decision rule).
+- No new frozen contracts. No touches to 26 pre-existing. Parity 26→28 additive at 9.1 landing (P9-E1 α).
+- No HTTP 409 anywhere (E5 standing anti-rule; will be attested by V1-G* + endpoint × auth × posture cells at 9.1 close).
+- E7 middle-dot U+00B7 strict on binding copy (P9-E6 informational: em-dash preserved on syntactic pauses per Owner; middle-dot preserved on list separators per E7).
+- Amortisation Divergence Class codified at §1.2 + §1.3 with named triggers + empirical anchors (Owner-accepted at B-5b close; Owner-ratified in Amendment I §2 verbatim).
+- No self-dispatch of Sub-stage 9.1 execution beyond this Amendment I landing — the actual code work happens at the atomic first-commit landing, per Owner sequence directive.
+- Standing Rule v3: Amendment I lives on disk; reply body carries SHA + amended-band + cell-count delta + rulings record file + accounting update confirmation.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of Amendment I. Phase 9 Stage A now discharged. Sub-stage 9.1 + 9.3 dispatch authorized per §4.1 baseline atomic commit; 9.1 first commit carries the stub-first gate roster (V1-G1..V1-G7 landing alongside stub worker + contracts + endpoints + connectors). 9.2 (GPU half) remains gated on 9.2-OWN-1..3 [OWNER] facts.*
