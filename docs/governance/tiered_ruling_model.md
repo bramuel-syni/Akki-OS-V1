@@ -125,13 +125,63 @@ Format for a yielding rule (in close report):
 - **Standing Rule v3** — on-disk canonical is the record. Reply body carries SHA + one-line quotes / tier tags.
 - **§4.1 baseline atomic first-commit discipline.**
 - **§4.2 pre-authorized split thresholds** (LoC and cell numbers; the threshold values themselves are Tier 2 per this model — miss disclosure not blocking).
-- **28 frozen contracts + 28 snapshot bijection (V1-G7).**
+- **28 frozen contracts + 28 snapshot bijection (V1-G7).** (Post-Artifact-Store bumped additively to 29/29; V1-G7 assertion set at 29.)
 - **4-code auth-refusal registry closure.**
 - **BCR §5.1 sequence + [OWNER] gate lines.**
 
 ---
 
-## §6. Backlog correction (Owner verbatim carrier)
+## §6. Codified rate ledger
+
+Rates below are the on-disk canonical record; Stage A proposals cite this section rather than restating.
+
+### §6.1 Backend Pytest — shared-helper amortised · **12 LoC/cell**
+
+Empirical basis: multiple prior closes (9.1, 9.3, 8-EXT).
+Trigger: cells in the "classic shared-helper class" (sync client, shared fixture, ~3-5 assertions per cell).
+
+### §6.2 Backend endpoint impl — amortised 3-share · **40 LoC/endpoint**
+
+Empirical basis: 8-EXT actual (3 grant endpoints via `require_own_scope_or_deny`).
+
+### §6.3 Backend service module — standalone · **100 LoC/module**
+
+Empirical basis: 8-EXT `engineer_scope.py` (84) + `engineer_invites.py` (170) 2-share.
+
+### §6.4 Frontend Jest structural — standalone fallback · **16 LoC/cell**
+
+Empirical basis: pre-9.1 codification; 8-EXT observed −50 delta on `renderHook` micro-cells (rate-composition finding, not rate-shift).
+
+### §6.5 Playwright chromium data-testid amortised · **9 LoC/cell**
+
+Empirical basis: codified at 9.1/9.3.
+
+### §6.6 Frozen Pydantic contract class · **60 LoC/class**
+
+Empirical basis: `OuterGateReceipt_v1` at AS close (103 LoC actual; 60 LoC class body + ~40 LoC docstrings/verbatim-Owner-carriers). Rate cites the class-only shape; verbatim docstrings are one-off overhead.
+
+### §6.7 Frozen contract snapshot JSON — standalone · **~155 LoC/snapshot**
+
+**Codified at 2026-07-08 post-Artifact-Store close.**
+
+- **Class label:** *"snapshot = schema size"* — the LoC of a snapshot reflects the Pydantic-auto-generated JSON Schema's expansion of nested `$defs`, `enum`, and field-description shape. It is a mechanical function of the contract's field graph, NOT of developer effort.
+- **Empirical basis:** `OuterGateReceipt_v1` snapshot at AS close — **155 LoC actual vs 20 planned (+735%).** The contract inherits `LedgerArtifactRef` + transitive types; those get spelled out under `$defs` in the JSON Schema.
+- **Amortisation trigger:** NONE. Standalone class. Snapshots do not share code with other cells; each frozen contract emits exactly one snapshot; the size is a byte-cost of schema honesty on disk.
+- **Named trigger:** *"Any Stage A adding a new frozen contract MUST price its snapshot at ~155 LoC/snapshot standalone in §3 band derivation. No hidden buffering; no padding; explicit line-item."*
+- **Deviation clause:** if a specific contract's snapshot lands materially above or below 155 LoC (>±30%), disclose the delta at close per Tier-2 discipline (governance §2.2 — cost/rework class).
+
+### §6.8 Watched rate classes (NOT YET codified — require second observation)
+
+Per Ruling 5 discipline: a rate class is codified only after two observations. The following are candidates:
+
+- **Async httpx backend Pytest cells** — ~25 LoC/cell empirical at AS (vs 22 standalone / 12 amortised). Auth-overhead class (`AsyncClient` + token minting + trace/artifact provisioning per cell). **Requires second observation to codify.**
+- **AST/reflection gate cells** — ~40 LoC/cell empirical at AS (AS-G6 grep-negative walker + whitelist + violation formatting). Reflection-gate class. **Requires second observation to codify.**
+
+If either class recurs at Transform Forms or beyond with similar per-cell LoC, it becomes eligible for codification via a companion Stage A rate note.
+
+---
+
+## §7. Backlog correction (Owner verbatim carrier)
 
 > Backlog correction: strike "§5.4 Dual-actor Integration Console" — 8-EXT was §5.4; done, not queued.
 
