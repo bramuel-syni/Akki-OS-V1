@@ -189,4 +189,15 @@ If either class recurs at Transform Forms or beyond with similar per-cell LoC, i
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward. On-disk canonical per Standing Rule v3.*
+## §8. Data-blind posture (Owner, 2026-07-09) — verbatim carrier
+
+> Data-blind posture (Owner, 2026-07-09). The build makes no assumptions about the content, genre, composition, or shape of the RMS estate. The product is built against fixtures and closed against gates — no RMS material in the build path at any phase, and no pre-build data request to RMS exists. First contact with real data is the census, at scale, on grant compute, after the product exists. The census discovers the estate; nothing pre-describes it. All downstream activities — validation slices, training baselines, opportunity analysis, product prioritization — draw from measured census composition, never from any prior picture of "what RMS airs." Any fixture, example, binding copy, or spec text that encodes a content-type assumption as if it were the estate's shape is a defect against this posture, corrected on sight, Tier-3, no escalation.
+
+**Effect (governance-tier mapping):**
+- Fixture / example / binding-copy content-type assumptions presented as estate shape → **Tier-3 defect · correct-on-sight · no escalation.**
+- Downstream activities (validation slices, training baselines, opportunity analysis, product prioritization) MUST cite measured census composition, never prior estate assumptions → **Tier-1 (honesty grammar · no fabricated values, applied to estate description).**
+- Pre-build data request to RMS is prohibited by this posture. First contact = census.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09. On-disk canonical per Standing Rule v3.*

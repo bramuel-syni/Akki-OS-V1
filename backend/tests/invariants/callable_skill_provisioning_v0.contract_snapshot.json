@@ -1,0 +1,71 @@
+{
+  "additionalProperties": false,
+  "description": "BCR \u00a73.7 annex line 228-233 verbatim shape. TF-E2 \u03b1 frozen contract.\n\nSlice-freeze mechanism (TF-E4 (b) \u03b1 + \u03b2):\n  * (\u03b2) `ConfigDict(frozen=True)` \u2014 in-memory hardening; post-load\n    mutation raises TypeError.\n  * (\u03b1) write-once persistence enforced structurally at the\n    `callable_skill_persistence` service; grep-negative TF-G9 gate\n    asserts NO `update_one({..., \"corpus_slice_ref\": ...})` in the\n    codebase.\n\nPer-call inner gate (TF-E4 (a) \u03b1) reads this record and enforces\nscope + floor at every skill query.",
+  "properties": {
+    "corpus_slice_ref": {
+      "description": "Artifact-store key (`artifacts/{trace_id}/{artifact_id}.{ext}`) of the corpus slice this skill is bound to. Immutable post-provisioning per TF-E4 (b): 'new slice = new skill_id'. Enforced by (\u03b2) in-memory frozen + (\u03b1) persistence write-once.",
+      "minLength": 1,
+      "title": "Corpus Slice Ref",
+      "type": "string"
+    },
+    "endpoint_path": {
+      "description": "Router path where this skill is exposed (e.g., `/api/callable_skill/{skill_id}/query`).",
+      "minLength": 1,
+      "title": "Endpoint Path",
+      "type": "string"
+    },
+    "floor": {
+      "description": "Defensibility floor label; per-call inner gate refuses responses below this floor.",
+      "minLength": 1,
+      "title": "Floor",
+      "type": "string"
+    },
+    "key_grant_id": {
+      "description": "Foreign key into the key-grant registry; drives per-call scope check via `services.auth.key_grants.check_scope`.",
+      "minLength": 1,
+      "title": "Key Grant Id",
+      "type": "string"
+    },
+    "provisioned_at": {
+      "description": "ISO-8601 UTC timestamp of provisioning.",
+      "minLength": 1,
+      "title": "Provisioned At",
+      "type": "string"
+    },
+    "revoked_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ISO-8601 UTC timestamp of revocation; None while active. Revocation is the ONLY governed lifecycle change on a provisioning record \u2014 corpus_slice_ref is never mutated.",
+      "title": "Revoked At"
+    },
+    "scope": {
+      "description": "Scope identifier (matches the scope tuple's free-form field). Reused by per-call scope check.",
+      "minLength": 1,
+      "title": "Scope",
+      "type": "string"
+    },
+    "skill_id": {
+      "minLength": 1,
+      "title": "Skill Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "skill_id",
+    "corpus_slice_ref",
+    "key_grant_id",
+    "floor",
+    "scope",
+    "endpoint_path",
+    "provisioned_at"
+  ],
+  "title": "CallableSkillProvisioningV0",
+  "type": "object"
+}

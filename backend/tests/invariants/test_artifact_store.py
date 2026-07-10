@@ -478,12 +478,19 @@ def test_as_g6_get_raw_has_no_external_callers() -> None:
 
 def test_v1_g7_attestation_parity_29_byte_identical_at_artifact_store_close() -> None:
     """V1-G7 parity assertion at Artifact Store close: 28 pre-existing snapshots
-    byte-identical + 1 additive (`outer_gate_receipt_v1.contract_snapshot.json`) = 29."""
+    byte-identical + 1 additive (`outer_gate_receipt_v1.contract_snapshot.json`) = 29.
+
+    Post-Transform-Forms: parity is 31 (29 + KA v0 + CallableSkillProvisioning v0
+    per Owner TF-E1 α + TF-E2 α). The AS-close moment is preserved in
+    docstring; the assertion tracks the running total for byte-identity
+    across all pre-AS snapshots.
+    """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 29, (
-        f"V1-G7 Artifact Store: expected 29 snapshots (28 pre-existing + 1 v1 additive). "
-        f"Actual: {len(snapshots)}."
+    assert len(snapshots) == 31, (
+        f"V1-G7 Artifact Store: expected 31 snapshots (28 pre-existing + "
+        f"OuterGateReceipt_v1 + KA v0 + CallableSkillProvisioning v0 additive "
+        f"per AS-E1 α + TF-E1 α + TF-E2 α). Actual: {len(snapshots)}."
     )
     # v1 present.
     v1_names = [s.name for s in snapshots]

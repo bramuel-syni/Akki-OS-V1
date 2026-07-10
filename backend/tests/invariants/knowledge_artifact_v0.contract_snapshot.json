@@ -1,0 +1,146 @@
+{
+  "$defs": {
+    "KnowledgeArtifactEdge": {
+      "additionalProperties": false,
+      "description": "One edge in the KA (BCR \u00a73.7 annex line 225-226 verbatim shape).\n\n`relation` is closed at 3 values per BCR \u00a73.7 annex verbatim \u2014 a\nLiteral here matches the RelationType shape already at\n`contracts/five_rings.py:RelationType`. Widening requires a bless.",
+      "properties": {
+        "from_claim_id": {
+          "minLength": 1,
+          "title": "From Claim Id",
+          "type": "string"
+        },
+        "relation": {
+          "enum": [
+            "corroborates",
+            "contradicts",
+            "retracts"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "to_claim_id": {
+          "minLength": 1,
+          "title": "To Claim Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "from_claim_id",
+        "to_claim_id",
+        "relation"
+      ],
+      "title": "KnowledgeArtifactEdge",
+      "type": "object"
+    },
+    "KnowledgeArtifactNode": {
+      "additionalProperties": false,
+      "description": "One claim in the KA (BCR \u00a73.7 annex line 220-225 verbatim shape).\n\nProvenance preservation invariant (Owner Tier-1 line): every node\ncarries `defensibility.class` + `trace_id` inline. Both are required\n(no `Optional`, no default) \u2014 the promise is enforced at contract-\nconstruction time.",
+      "properties": {
+        "claim_id": {
+          "minLength": 1,
+          "title": "Claim Id",
+          "type": "string"
+        },
+        "claim_text": {
+          "minLength": 1,
+          "title": "Claim Text",
+          "type": "string"
+        },
+        "defensibility": {
+          "$ref": "#/$defs/KnowledgeArtifactNodeDefensibility"
+        },
+        "provenance": {
+          "$ref": "#/$defs/KnowledgeArtifactNodeProvenance"
+        },
+        "trace_id": {
+          "description": "Trace ID inline on each claim \u2014 provenance preservation invariant (BCR \u00a73.7 line 216 + Owner Tier-1 line 'every claim in a KA carries class + trace_id inline').",
+          "minLength": 1,
+          "title": "Trace Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "claim_id",
+        "claim_text",
+        "defensibility",
+        "trace_id",
+        "provenance"
+      ],
+      "title": "KnowledgeArtifactNode",
+      "type": "object"
+    },
+    "KnowledgeArtifactNodeDefensibility": {
+      "additionalProperties": false,
+      "description": "Per-node defensibility carrier (BCR \u00a73.7 annex line 222 verbatim shape).\n\n`class` is a constrained-str per TF-E3 \u03b1 (never a widening Literal;\nsingle-sourced from `defensibility_classes.v0.json`).",
+      "properties": {
+        "class": {
+          "description": "Defensibility class label. Constrained-str per TF-E3 \u03b1; validated at construction against `defensibility_classes.v0.json` by the loader \u2014 the JSON registry is the single source of vocabulary (governance \u00a76.7 / B-5b Ruling E3 \u03b3 precedent).",
+          "minLength": 1,
+          "title": "Class",
+          "type": "string"
+        },
+        "contested": {
+          "description": "True if the claim is contested per the matrix contested-status stamp.",
+          "title": "Contested",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "class",
+        "contested"
+      ],
+      "title": "KnowledgeArtifactNodeDefensibility",
+      "type": "object"
+    },
+    "KnowledgeArtifactNodeProvenance": {
+      "additionalProperties": false,
+      "description": "Per-node provenance carrier (BCR \u00a73.7 annex line 224 verbatim shape).",
+      "properties": {
+        "source_ref": {
+          "minLength": 1,
+          "title": "Source Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_ref"
+      ],
+      "title": "KnowledgeArtifactNodeProvenance",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Knowledge Artifact export (`ka.v0`) \u2014 TF-R1 landed per TF-E1 \u03b1.\n\nSingle top-level frozen contract with nested sub-models emitted under\n`$defs` in the JSON schema. One snapshot at\n`backend/tests/invariants/knowledge_artifact_v0.contract_snapshot.json`.\n\nParity 29 \u2192 30 (this contract is the +1 additive; v0 pre-existing\nsnapshots preserved byte-identical).",
+  "properties": {
+    "edges": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeArtifactEdge"
+      },
+      "title": "Edges",
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/KnowledgeArtifactNode"
+      },
+      "title": "Nodes",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "ka.v0",
+      "default": "ka.v0",
+      "description": "Wire version tag (BCR \u00a73.7 annex line 220 verbatim). Closed Literal \u2014 a new schema version requires a new frozen contract (`KnowledgeArtifactV1`).",
+      "enum": [
+        "ka.v0"
+      ],
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "nodes",
+    "edges"
+  ],
+  "title": "KnowledgeArtifactV0",
+  "type": "object"
+}

@@ -64,6 +64,8 @@ CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "trace_lens.py":                  "trace_lens_envelope.contract_snapshot.json",
     "v2_refusal.py":                  "v2_refusal_envelope.contract_snapshot.json",
     "wizard_commit_state.py":         "wizard_commit_state.contract_snapshot.json",
+    "knowledge_artifact_v0.py":       "knowledge_artifact_v0.contract_snapshot.json",
+    "callable_skill_provisioning_v0.py": "callable_skill_provisioning_v0.contract_snapshot.json",
 }
 
 

@@ -1,5 +1,5 @@
 {
   "uncensused_scope_ref": "uncensused_pilot_studio_placeholder",
   "note": "This scope_ref is deliberately NOT represented in any Registry population path. Honesty-under-absence gate uses this to exercise the unknown-return contract without polluting the shipping adversarial fixture. Distinct from rms_adversarial_synthetic_v1.json (fixture.json under services/data_source/synthetic_assets/rms_adversarial_v1/) which remains untouched per Item 4 HAZARD-STOP posture (2026-07-02 Docs-Pass).",
-  "documented_censused_regions": ["citizen_tv_news", "wire_kna", "aggregator_blog", "citizen_archive", "citizen_drama", "radio_jambo_callin", "unclassified", "x_ingest"]
+  "documented_censused_regions": ["region_a", "region_b", "region_c", "region_d", "region_e", "region_f", "unclassified", "region_g"]
 }

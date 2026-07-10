@@ -144,6 +144,11 @@ app.include_router(extraction_sample_router.router, prefix="/api")
 from routers import artifact_store as artifact_store_router  # noqa: E402
 app.include_router(artifact_store_router.router, prefix="/api")
 
+# Transform Forms (BCR §3.7) — Knowledge Artifact + Callable Skill.
+# TF-E1..TF-E4 α + conditions per Owner rulings (2026-07-08). Parity 31.
+from routers import transform_forms as transform_forms_router  # noqa: E402
+app.include_router(transform_forms_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:

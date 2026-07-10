@@ -1,0 +1,19 @@
+{
+  "version": "v0",
+  "codified_at": "2026-07-09",
+  "authority_source": "Owner ruling TF-E3 α + condition (2026-07-08): seeded verbatim from the live composition path's class vocabulary at `backend/contracts/five_rings.py::DefensibilityClass` (str Enum). Becomes canonical registry going forward — no second vocabulary may diverge from this one.",
+  "classes": {
+    "fact": {
+      "description": "The unit asserts something the matrix permits as fact.",
+      "since_version": "v0"
+    },
+    "utterance": {
+      "description": "Someone said it; the system stands by the saying, not the substance.",
+      "since_version": "v0"
+    },
+    "non_factual": {
+      "description": "Opinion / interpretation / rhetorical content.",
+      "since_version": "v0"
+    }
+  }
+}
