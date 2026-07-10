@@ -174,13 +174,16 @@ Empirical basis: `OuterGateReceipt_v1` at AS close (103 LoC actual; 60 LoC class
 
 Per Ruling 5 discipline: a rate class is codified only after two observations. The following are candidates:
 
-- **Async httpx backend Pytest cells** — ~25 LoC/cell empirical at AS (vs 22 standalone / 12 amortised). Auth-overhead class (`AsyncClient` + token minting + trace/artifact provisioning per cell). **Requires second observation to codify.**
+*(No entries as of 2026-07-10.)*
 
-If this class recurs at a future dispatch with similar per-cell LoC, it becomes eligible for codification via a companion Stage A rate note.
+**Watched list is empty as of 2026-07-10; new watched classes admitted per Ruling 5 on first observation.**
 
 **Codification retirements 2026-07-09 (post-TF ratification · Owner Message 565):**
 - ~~**AST/reflection gate cells**~~ — second observation confirmed at TF-G9 (`services/transform_forms/callable_skill_persistence.py` write-once slice-freeze grep-negative walker) matching AS-G6 magnitude (~40 LoC/cell). CODIFIED at §6.10 below.
 - **NEW:** **Verbatim-carrier overhead** — three-observation retrospective (AS Owner-verbatim docstrings · TF Owner-verbatim TF-E1..E4 α/β/γ carriers · TF governance §8 data-blind posture carrier). CODIFIED at §6.9 below — Owner Message 565 dispatched the codification by retrospective across three datapoints rather than waiting for a fourth.
+
+**Codification retirements 2026-07-10 (post-Census-dimensions ratification · Owner post-CD dispatch):**
+- ~~**Async httpx backend Pytest cells**~~ — second observation confirmed at CD-G4 E2E cells (`test_census_dimensions.py::test_cd_g4_e2e_*`) matching AS-close magnitude (~25 LoC/cell). CODIFIED at §6.11 below.
 
 ### §6.9 Verbatim-carrier overhead — per carrying module · **~100-150 LoC/carrier**
 
@@ -209,6 +212,19 @@ If this class recurs at a future dispatch with similar per-cell LoC, it becomes 
 - **Named trigger:** *"Any Stage A adding a reflection/AST gate cell MUST price it at ~40 LoC/cell standalone in §3 band derivation. No hidden amortisation into §6.1; no shared-helper wishing. Explicit line-item."*
 - **Deviation clause:** if a specific reflection gate lands materially above or below 40 LoC (>±30% → below ~28 or above ~52), disclose the delta at close per Tier-2 discipline. Reflection gates with unusually complex whitelist logic (cross-module regex fusion, multi-file AST parse) may run higher — disclose, do not hide.
 
+### §6.11 Async httpx auth-overhead cell class — standalone · **~25 LoC/cell**
+
+**Codified at 2026-07-10 post-Census-dimensions ratification (second observation satisfied · Owner post-CD dispatch).**
+
+- **Class label:** *"async httpx auth-overhead cell = multi-step auth setup performing at least 3 auth-overhead lines per cell (mint token + inject header + assert on protected endpoint response)."* Any Pytest cell that spins up an `AsyncClient` (or equivalent async HTTP client) and performs multi-step auth setup as a fixture-owned per-cell operation carries a standalone per-cell LoC cost that does NOT amortise into classic shared-helper cells (§6.1).
+- **Empirical basis (two-observation set):**
+  - **AS close (2026-07-08):** async httpx cells performing token-mint + Authorization header injection + trace/artifact provisioning + response assertion — ~25 LoC/cell empirical (vs ~22 standalone / ~12 amortised for a classic §6.1 shared-helper cell). Cell count: 4 async httpx cells.
+  - **CD close (2026-07-10):** CD-G4 E2E cells (`test_cd_g4_e2e_record_census_dimension_registers_and_persists` + `test_cd_g4_e2e_manifest_declared_novel_hard_fails` + `test_cd_g4_e2e_manifest_declared_existing_value_writes`) performing motor test-db fixture + Mongo unique-index assertion + upsert + read-back at ~25 LoC/cell empirical.
+- **Named trigger:** *"async httpx cells performing multi-step auth setup (mint token + inject header + assert) — 3+ auth-overhead lines per cell."* Applied strictly: cells NOT performing auth-overhead (e.g., a service-level unit test with in-process fixtures) continue to amortise per §6.1.
+- **Trigger:** any Stage A introducing async httpx cells with the auth-overhead pattern MUST price them at ~25 LoC/cell standalone in §3 band derivation. This overrides the classic §6.1 12 LoC/cell amortisation for the specific auth-overhead cell(s).
+- **Amortisation trigger:** NONE. Standalone class per cell. Shared fixtures reduce cell-body LoC by ~5-8 but the per-cell auth-overhead lines are not shareable without collapsing the invariant coverage.
+- **Deviation clause:** if a specific cell lands materially above or below 25 LoC (>±30% → below ~17 or above ~33), disclose the delta at close per Tier-2 discipline. Cells performing multi-endpoint auth flows (register + login + protected + refresh) may run heavier — disclose, do not hide.
+
 ---
 
 ## §7. Backlog correction (Owner verbatim carrier)
@@ -230,4 +246,31 @@ If this class recurs at a future dispatch with similar per-cell LoC, it becomes 
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09. On-disk canonical per Standing Rule v3.*
+## §9. Metric-verdict-in-derivation-unit ruling (Owner, 2026-07-10) — verbatim carrier
+
+> Metric ruling, binding on all closes (Owner, 2026-07-10): a band's compliance verdict is rendered in the unit the band was derived in — currently raw LoC. LLoC (or any alternate unit) is welcome as a disclosure line, never as the verdict. A builder who believes a different unit is honester proposes it at the next Stage A, where derivation and verdict move together.
+
+Corollaries (builder disclosure, not Owner text):
+
+- **Current unit:** raw LoC. Bands are derived from §6 rate ledger against raw wc-l counts; verdicts are rendered against raw wc-l counts.
+- **Disclosure lines allowed:** LLoC, cell count, cyclomatic complexity, docstring density, and any other unit a builder finds informative. These appear as disclosure lines in the close report; they do NOT overturn the raw-LoC verdict.
+- **Unit change discipline:** any builder proposing a different unit MUST land the proposal at the next Stage A, with derivation and verdict both in the proposed unit. Mid-close unit-substitution is prohibited.
+- **Prior CD close (2026-07-10):** the census-dimensions +45% raw miss is accepted as disclosed under this rule; LLoC 89%-of-top-of-band recorded as disclosure line, not verdict.
+
+═══════════════════════════════════════════════════════════════════
+
+## §10. 9.2 split ruling (Owner, 2026-07-10) — verbatim carrier
+
+> 9.2 split (Owner, 2026-07-10). 9.2a = real perception workers, built and closed on fixtures, venue-agnostic. 9.2b = deployment + census-at-scale + BM-V, gated on 9.2-OWN-1 (topology — owner decision, staked default compute-to-data per the extraction architecture; no external agreement pre-answers it), 9.2-OWN-2 (archive access path — follows OWN-1), 9.2-OWN-3 (post-census validation slice, as restated). P9-E5 bindings carry to 9.2b unchanged: BM-V verdict inside Phase 9, closes on INVESTIGATE, V1 stays PARTIAL until PASS, no production mining on INVESTIGATE.
+
+Applied structural consequences (builder disclosure, not Owner text):
+
+- **9.2a scope:** real perception workers (ASR Whisper-class + diarization) + GPU execution layer + CPU-mode CI + full V1-G roster re-asserted against real workers + P9-E7 rider cell. Data-blind CI (synthetic/public-domain audio fixtures only).
+- **9.2a dispatch-independence:** 9.2a is NOT gated on 9.2-OWN-1..3 facts (venue-agnostic build). 9.2b IS gated.
+- **9.2b scope:** deployment + census-at-scale + BM-V execution + venue configuration + P9-E5 bindings.
+- **9.2b [OWNER] gates carry as originally cited:** 9.2-OWN-1 (topology; owner decision, staked default compute-to-data per extraction architecture; no external agreement pre-answers it) → 9.2-OWN-2 (archive access path; follows OWN-1) → 9.2-OWN-3 (post-census validation slice; restated per 2026-07-09 Owner amendment carrier).
+- **P9-E5 bindings** land at 9.2b unchanged: BM-V verdict inside Phase 9, closes on INVESTIGATE, V1 stays PARTIAL until PASS, no production mining on INVESTIGATE.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10. On-disk canonical per Standing Rule v3.*

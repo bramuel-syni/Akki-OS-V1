@@ -40,3 +40,26 @@ All raw `.docx` files preserved at `/app/docs/mandates/source/<filename>.docx` f
 - `/app/docs/mandates/RMS_UI_Specification_v1.md` — retained on-disk at current path (NOT relocated under `archive/`; Owner directive at Part 1 ingest was to mark SUPERSEDED at file top, not delete or move). SHA-256 `9053a4c451954cca1dc2f2b10216bef2058411a1911136581251e395d5bdcbf3` (post-SUPERSEDED-banner state, prepended by Owner Part 1 dispatch, 2026-07-05). **Status: SUPERSEDED-BY-v2.1 as of 2026-07-05; NO-LONGER-CONSUMED as of conformance-map dispatch 2026-07-06 — all phase pointers redirected to `RMS_UI_Specification_v2_1.md` in `phase_source_requirements.yaml`.** Retained for archive/reference; not gate-verified going forward (archive-block bullet, not `Specs filed` table row).
 
 Archive-lineage SHAs above are recorded as bullet items (not table rows) so `test_substrate_drop_gate` does not gate-verify them at top-level. Files remain on disk at `archive/` (or in-place for v1 per Owner directive) for provenance.
+
+## Rate ledger cross-reference (Owner post-CD housekeeping, 2026-07-10)
+
+Downstream Stage A authors: consult `/app/docs/governance/tiered_ruling_model.md` §6 for the codified rate ledger. The ledger is the authoritative source; this block is a wayfinding index only.
+
+| Rate class | Rate | Applies to | Ledger section |
+|---|---:|---|---|
+| Backend Pytest shared-helper amortised | 12 LoC/cell | Classic Pytest cells with shared fixtures | §6.1 |
+| Backend endpoint impl 3-share amortised | 40 LoC/endpoint | FastAPI endpoint additions (min 3-share) | §6.2 |
+| Backend service module standalone | 100 LoC/module | New service modules | §6.3 |
+| Frontend Jest structural fallback | 16 LoC/cell | Frontend structural Jest cells | §6.4 |
+| Playwright chromium data-testid | 9 LoC/cell | Chromium data-testid cells | §6.5 |
+| Frozen Pydantic contract class | 60 LoC/class | New frozen contracts (parity++) | §6.6 |
+| Frozen contract snapshot JSON | ~155 LoC/snapshot | New snapshot files (parity++) | §6.7 |
+| Verbatim-carrier overhead | ~100-150 LoC/carrier | Owner-verbatim ruling/posture text in modules | §6.9 |
+| AST/reflection gate class | ~40 LoC/cell | AST walker + whitelist + violation formatter | §6.10 |
+| Async httpx auth-overhead cell | ~25 LoC/cell | Async httpx cells with 3+ auth-overhead lines | §6.11 |
+
+**Watched list:** §6.8 (empty as of 2026-07-10; new watched classes admitted per Ruling 5 on first observation).
+
+**Metric-verdict discipline:** §9 — bands derived and verdicts rendered in raw LoC. Alternate-unit disclosures welcome; unit change proposed at next Stage A.
+
+**9.2 split ruling:** §10 — 9.2a (real perception workers, venue-agnostic build) vs 9.2b (deployment + census-at-scale + BM-V, gated on 9.2-OWN-1..3).
