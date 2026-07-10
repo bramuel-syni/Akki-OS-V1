@@ -400,7 +400,7 @@ async def test_positive_external_request_warm_fork_populated_registry():
     `services.service_1.qualified_data.package_qualified_data`.
     (Condition-5 migration analogous to Phase 3's MODEL → refusal migration.)
 
-    To keep license-class filter passing, `feed_id=citizen_tv_news`
+    To keep license-class filter passing, `feed_id=feed_a`
     maps to `editorial_use`; the default commissioner="test_commissioner"
     derives to `editorial_use` (config's `default_class`).
     """
@@ -415,9 +415,9 @@ async def test_positive_external_request_warm_fork_populated_registry():
         form=OutputForm.QUALIFIED_DATA,
         minimum_class=DefensibilityClass.UTTERANCE,
     )
-    # Override feed_id on all rows to citizen_tv_news (editorial_use).
+    # Override feed_id on all rows to feed_a (editorial_use).
     from contracts.mtafiti_registry import MTAFITI_REGISTRY_COLLECTION as _C
-    await db[_C].update_many({}, {"$set": {"feed_id": "citizen_tv_news"}})
+    await db[_C].update_many({}, {"$set": {"feed_id": "feed_a"}})
 
     result = await dispatch_module.dispatch(req)
 

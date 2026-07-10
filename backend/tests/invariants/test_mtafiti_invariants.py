@@ -50,8 +50,8 @@ SNAPSHOT_PATH = (
 )
 
 
-def _test_unit(feed_id: str = "citizen_tv_news",
-               source_ref: str = "synthetic://citizen_tv_news/test.raw",
+def _test_unit(feed_id: str = "feed_a",
+               source_ref: str = "synthetic://feed_a/test.raw",
                modality: Modality = Modality.TEXT) -> NormalizedUnit:
     ctx = json.dumps({
         "programme": "test",

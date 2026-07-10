@@ -7,6 +7,16 @@ top level. Adversarial-intent + fixture flags travel in `provenance.context`
 as a JSON envelope (context is Optional[str] — the frozen contract allows
 free text).
 
+Data-blind posture (governance §8 · Fixture Refresh 2026-07-10):
+All feed_ids, programme names, speakers, embedded assertions, and
+language-mix arrays use content-neutral placeholders (`feed_a..feed_h`,
+`programme_a..programme_j`, `speaker_x*`, `lang_a..lang_c`, plus
+"placeholder"-prefixed assertion bodies). No broadcaster names, no
+region names, no dialectal markers leak in as pre-descriptions of the
+RMS estate. Contract shape (five_rings@v0) preserved byte-identical.
+Neutralized aliases → real classes resolved via
+`services/service_1/license_classes.v1.json` at consumer read time.
+
 Post-regenerate contract fits (see BUILD_JOURNAL 2026-07-01T12:30Z):
   #1 Modality — 'social' recategorised to 'text'; source_type surfaced in
      provenance.context envelope.
@@ -170,75 +180,75 @@ def make_unit(spec):
 SPECS = []
 
 SPECS.append(dict(  # 1. code-switch
-    intent="code-switch: sw+en+sheng in one utterance; ASR + genre must survive",
+    intent="code-switch: multi-language mix in one utterance; ASR + genre must survive",
     genre="report", standing="accountable_tier1", modality="audio",
-    programme="Citizen Nipashe", feed_id="citizen_tv_news", speaker="anchor_1",
-    lang=["sw", "en", "sheng"],
-    text="Serikali imesema the fuel prices zita-drop next month, lakini wenye magari wanasema hiyo ni story tu — mtaskia venye mambo iko.",
+    programme="programme_a", feed_id="feed_a", speaker="speaker_a1",
+    lang=["lang_a", "lang_b", "lang_c"],
+    text="Placeholder utterance mixing language_a and language_b tokens with dialectal markers — content-neutral for pipeline mechanics only.",
     signal=[{"dimension": "stance_intensity", "value": 0.4}], corroboration=0.6,
 ))
 SPECS.append(dict(  # 2. genre-boundary ambiguity
     intent="genre boundary: starts as report, drifts to opinion; classifier must not over-call 'fact'",
     genre="opinion", standing="accountable_tier1", modality="audio",
-    programme="Morning Cross-fire", feed_id="citizen_tv_news", speaker="host_2",
-    text="The Treasury released the figures today — and frankly, anyone who believes them hasn't been paying attention. This is the same trick every year.",
+    programme="programme_b", feed_id="feed_a", speaker="speaker_a2",
+    text="Placeholder report-drifts-to-opinion body — factual framing at open, editorial framing at close; content-neutral.",
     signal=[{"dimension": "stance_intensity", "value": 0.85},
             {"dimension": "hedging_density", "value": 0.1}],
 ))
 SPECS.append(dict(  # 3. native-ad-as-news
     intent="ad mimicking news read; must NOT be admitted as fact regardless of anchor voice",
     genre="advertisement", standing="accountable_tier1", modality="audio",
-    programme="Citizen Nipashe", feed_id="citizen_tv_news", speaker="anchor_1",
-    text="Na sasa habari njema — SafiSasa detergent imethibitishwa kuwa bora zaidi, inapatikana kila duka. Nunua leo.",
+    programme="programme_a", feed_id="feed_a", speaker="speaker_a1",
+    text="Placeholder advertisement copy read in news-anchor cadence — content-neutral commercial disclosure.",
 ))
 
 # 4-7. Contested chain
 claim_id, corrob_id, contra_id = uid(), uid(), uid()
 SPECS.append(dict(intent="contested chain [1/4]: original claim (call-in, unverified)",
     genre="call_in", standing="ugc", modality="audio",
-    programme="Jambo Kenya", feed_id="radio_jambo_callin", speaker="caller_anon",
-    text="Mimi niko site, nasema hakuna maji imefika hapa Kayole for two weeks now.",
+    programme="programme_c", feed_id="feed_e", speaker="speaker_e1",
+    text="Placeholder call-in assertion about region_a service outage; unverified.",
     _id=claim_id))
 SPECS.append(dict(intent="contested chain [2/4]: corroborating report (accountable, attributed)",
     genre="report", standing="accountable_tier1", modality="video",
-    programme="Citizen Nipashe", feed_id="citizen_tv_news", speaker="reporter_3",
-    text="Our team in Kayole confirmed water supply has been cut since the 14th, affecting several estates.",
+    programme="programme_a", feed_id="feed_a", speaker="speaker_a3",
+    text="Placeholder corroborating report from field crew — region_a service outage confirmed since date_x.",
     corroboration=0.8,
     edges=[{"edge_type": "corroborates", "target_unit_id": claim_id}],
     _id=corrob_id))
 SPECS.append(dict(intent="contested chain [3/4]: contradiction (wire, different figure)",
     genre="report", standing="licensed_wire", modality="text",
-    programme="Wire Feed", feed_id="wire_kna", speaker=None,
-    text="The county water authority stated supply was restored on the 20th.",
+    programme="programme_d", feed_id="feed_d", speaker=None,
+    text="Placeholder wire report stating service was restored on date_y — contradicts prior claim.",
     contested="contested", corroboration=0.4,
     edges=[{"edge_type": "contradicts", "target_unit_id": corrob_id}],
     _id=contra_id))
 SPECS.append(dict(intent="contested chain [4/4]: retraction of the original claim",
     genre="report", standing="accountable_tier1", modality="text",
-    programme="Citizen Correction", feed_id="citizen_tv_news", speaker="editor",
-    text="Correction: an earlier report on Kayole water supply overstated the duration of the outage.",
+    programme="programme_a", feed_id="feed_a", speaker="speaker_a4",
+    text="Placeholder correction body — earlier region_a report overstated outage duration.",
     contested="retracted",
     edges=[{"edge_type": "retracts", "target_unit_id": claim_id}]))
 
 SPECS.append(dict(  # 8. authority-blind ceiling (speech)
     intent="authority-blind ceiling: speech on tier-1 feed stays utterance, not fact",
     genre="speech", standing="accountable_tier1", modality="video",
-    programme="Live Address", feed_id="citizen_tv_news", speaker="official_A",
-    text="I want to assure wananchi that the economy is now fully recovered and prices will fall by December.",
+    programme="programme_e", feed_id="feed_a", speaker="speaker_a5",
+    text="Placeholder speech transcript — declarative claims about future economic outcomes.",
     signal=[{"dimension": "vocal_emphasis", "value": 0.7}],
 ))
 SPECS.append(dict(  # 9. source-standing lowering + Hazard#1: was 'social', now 'text' + source_type=social_post
     intent="source-standing lowers ceiling: unattributed UGC 'report' -> utterance (was modality=social; post-HAZARD-STOP #1 recategorised as text, source_type=social_post)",
     genre="report", standing="ugc", modality="text", source_type="social_post",
-    programme="Social Ingest", feed_id="x_ingest", speaker="handle_xyz",
-    text="BREAKING: bridge on Thika road imeanguka, cars stuck everywhere!!",
+    programme="programme_f", feed_id="feed_g", speaker="handle_placeholder",
+    text="Placeholder social-post assertion about incident at location_a — unverified, high-virality.",
     signal=[{"dimension": "virality", "value": 0.9}], contested="contested",
 ))
 SPECS.append(dict(  # 10. diarization stress
     intent="diarization stress: sub-30s speaker, overlapping turns",
     genre="call_in", standing="ugc", modality="audio",
-    programme="Jambo Kenya", feed_id="radio_jambo_callin", speaker="caller_short",
-    text="Ha! Si hiyo ni-- [overlap] --hapana, wewe sikiza.",
+    programme="programme_c", feed_id="feed_e", speaker="speaker_e2",
+    text="Placeholder short overlapping-speaker turn — sub-30s duration with turn-conflict marker.",
     locator={"timestamp_ms": 1_200_000, "duration_ms": 8_500},
 ))
 
@@ -246,29 +256,29 @@ onscreen_id = uid()
 SPECS.append(dict(  # 11. cross-modal conflict
     intent="cross-modal: chyron (on-screen text) disagrees with anchor audio",
     genre="report", standing="accountable_tier1", modality="video",
-    programme="Citizen Nipashe", feed_id="citizen_tv_news", speaker="anchor_1",
-    text="Anchor says 'three counties affected' while the chyron reads 'five counties'.",
+    programme="programme_a", feed_id="feed_a", speaker="speaker_a1",
+    text="Placeholder cross-modal conflict — audio-track count differs from on-screen-text count.",
     edges=[{"edge_type": "contradicts", "target_unit_id": onscreen_id}],
     signal=[{"dimension": "on_screen_text_conflict", "value": 1.0}],
 ))
 SPECS.append(dict(  # 12. recency stress
-    intent="recency stress: documentary fact, but 12 years old — recency lowers score",
+    intent="recency stress: documentary fact, but ~12 years old — recency lowers score",
     genre="documentary", standing="accountable_tier1", modality="video",
-    programme="Archive Doc", feed_id="citizen_archive", speaker="narrator",
-    text="At the time of filming in 2014, the lake covered roughly 68 square kilometres.",
+    programme="programme_g", feed_id="feed_b", speaker="speaker_b1",
+    text="Placeholder archival documentary claim about a measured geographic feature at time_t_minus_12y.",
     corroboration=0.7,
 ))
 SPECS.append(dict(  # 13. drama-as-fact
     intent="drama stating a 'fact' — must floor to non_factual",
     genre="drama", standing="accountable_tier1", modality="video",
-    programme="Tahidi High", feed_id="citizen_drama", speaker="character_omosh",
-    text="In the script: 'The minister has fled the country with the money.'",
+    programme="programme_h", feed_id="feed_c", speaker="character_placeholder",
+    text="Placeholder dramatic-fiction dialogue asserting a public-figure event.",
 ))
 SPECS.append(dict(  # 14. malformed ingestion
     intent="ingestion robustness: partial/malformed content, missing speaker",
     genre="report", standing="unknown", modality="text",
-    programme="Unknown Feed", feed_id="unclassified", speaker=None,
-    text="...supply chain ??? [transcription gap] ... prices ...",
+    programme="programme_i", feed_id="feed_h", speaker=None,
+    text="Placeholder malformed transcript ??? [transcription gap] ... placeholder ...",
 ))
 
 # 15-18. Opinion-dominant cluster
@@ -276,16 +286,16 @@ for i in range(4):
     SPECS.append(dict(
         intent=f"defensibility skew: opinion-dominant segment [{i+1}/4] — distribution must not gate",
         genre="opinion", standing="aggregator", modality="text",
-        programme="Panel Debate", feed_id="aggregator_blog", speaker=f"panelist_{i}",
-        text=f"If you ask me, the whole policy is misguided — point number {i+1}.",
+        programme="programme_j", feed_id="feed_f", speaker=f"speaker_f{i+1}",
+        text=f"Placeholder opinion segment [{i+1}/4] — non-factual editorial framing.",
         signal=[{"dimension": "stance_intensity", "value": 0.8}],
     ))
 
 SPECS.append(dict(  # 19. clean positive
     intent="clean positive: attributed wire report, uncontested fact",
     genre="report", standing="licensed_wire", modality="text",
-    programme="Wire Feed", feed_id="wire_kna", speaker=None,
-    text="The Central Bank held the benchmark rate at 10.75 percent, according to its published statement.",
+    programme="programme_d", feed_id="feed_d", speaker=None,
+    text="Placeholder attributed wire report of a numeric policy rate held constant per published statement.",
     corroboration=0.75,
 ))
 
@@ -308,7 +318,7 @@ def main(out_path=None):
             "regenerated_after_hazard_stop_1": True,
             "genres_note": "author-labels in provenance.context.author_labels",
             "adversarial_coverage": [
-                "code-switching (sw/en/sheng)", "genre-boundary ambiguity",
+                "code-switching (multi-language mix)", "genre-boundary ambiguity",
                 "native-ad-as-news", "contested chain (claim/corroborate/contradict/retract)",
                 "authority-blind genre ceiling", "source-standing lowering",
                 "sub-30s + overlapping speakers", "cross-modal conflict",

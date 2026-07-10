@@ -22,13 +22,13 @@ SNAPSHOT_PATH = (
 
 def _fake_registry_rows() -> list:
     return [
-        {"source_ref": "synthetic://a", "region": "citizen_tv_news",
+        {"source_ref": "synthetic://a", "region": "feed_a",
          "defensibility_class": "fact", "sensitivity": "standard"},
-        {"source_ref": "synthetic://b", "region": "wire_kna",
+        {"source_ref": "synthetic://b", "region": "feed_d",
          "defensibility_class": "fact", "sensitivity": "standard"},
-        {"source_ref": "synthetic://c", "region": "x_ingest",
+        {"source_ref": "synthetic://c", "region": "feed_g",
          "defensibility_class": "utterance", "sensitivity": "elevated"},
-        {"source_ref": "synthetic://d", "region": "aggregator_blog",
+        {"source_ref": "synthetic://d", "region": "feed_f",
          "defensibility_class": "non_factual", "sensitivity": "standard"},
     ]
 
@@ -79,7 +79,7 @@ def test_yield_layer_imports_only_interface_types():
 # ------- §13 #1: yield output is a permutation -----------------------------
 def test_yield_output_is_permutation_raises_on_drop():
     eligible = core.eligible_and_rank(
-        _fake_registry_rows(), DefensibilityClass.FACT, "citizen_tv_news"
+        _fake_registry_rows(), DefensibilityClass.FACT, "feed_a"
     )
 
     def bad_yield_drops(inp):
@@ -91,7 +91,7 @@ def test_yield_output_is_permutation_raises_on_drop():
 
 def test_yield_output_is_permutation_raises_on_duplicate():
     eligible = core.eligible_and_rank(
-        _fake_registry_rows(), DefensibilityClass.FACT, "citizen_tv_news"
+        _fake_registry_rows(), DefensibilityClass.FACT, "feed_a"
     )
     if len(eligible) < 2:
         pytest.skip("need >= 2 eligible for duplicate test")
@@ -130,7 +130,7 @@ def test_floor_is_hard_filter_excludes_below_floor():
 # ------- §13 #4: fallback to core when gate not admitted --------------------
 def test_fallback_to_core_when_yield_thresholds_none():
     eligible = core.eligible_and_rank(
-        _fake_registry_rows(), DefensibilityClass.FACT, "citizen_tv_news"
+        _fake_registry_rows(), DefensibilityClass.FACT, "feed_a"
     )
     ordered, version = gate.compose_ordering(eligible, thresholds=None)
     assert version == "core-only"
@@ -151,7 +151,7 @@ def test_gate_closed_seam_returns_admitted_false():
 def test_plan_reproducible_byte_identical():
     """Same Registry state + artifact + yield-layer version → same plan_id."""
     eligible = core.eligible_and_rank(
-        _fake_registry_rows(), DefensibilityClass.FACT, "citizen_tv_news"
+        _fake_registry_rows(), DefensibilityClass.FACT, "feed_a"
     )
     ordered, version = gate.compose_ordering(eligible, thresholds=None)
     ref = LedgerArtifactRef(
@@ -179,7 +179,7 @@ def test_targeta_core_complete_alone():
     """§14 verbatim: `core is a complete targeter and the fallback the yield
     layer degrades to.`"""
     eligible = core.eligible_and_rank(
-        _fake_registry_rows(), DefensibilityClass.FACT, "citizen_tv_news"
+        _fake_registry_rows(), DefensibilityClass.FACT, "feed_a"
     )
     assert len(eligible) > 0, "core-alone must produce a non-empty eligible set"
     for i, c in enumerate(eligible):

@@ -42,7 +42,12 @@ PRE_PHASE_4A_SHA = {
         "e68a1e383042835c8104d140e39469615c5f4a81461defaa7d13f098f68acf6f"
     ),
     "services/outer_gate/transform.py": (
-        "90907d22be8124b7e07efe0e33027d2ef3ded67e06158f20243a6b33d126707e"
+        # Fixture Refresh 2026-07-10 · FR-E2 α re-bless: distributed
+        # `_FEED_ID_BUCKET` DELETED (not shadowed); feed_id generalisation
+        # now reads from centralized `license_classes.v1.json`. Owner
+        # ruling authorises the SHA update per FR-E2 α condition 2.
+        # See /app/docs/close_reports/fixture_refresh.md §Rebless-Log.
+        "bb8ec05d1e24fefe42c437e73c66a803c1ab3b712bdd983ffe5a44181c95228b"
     ),
     "services/outer_gate/mint.py": (
         "01cfe0e0fe8762e4b4c0421db89668f7eb88e3a3caf9eae57719ad496129ebbf"

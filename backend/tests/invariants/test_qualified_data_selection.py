@@ -106,25 +106,25 @@ def _base_body(
 @pytest.mark.asyncio
 async def test_license_class_selection_filters_registry_reads():
     """Mixed feed_ids across one reach; commissioner derives editorial_use;
-    only citizen_tv_news (editorial_use) survives the license-class axis."""
+    only feed_a (editorial_use) survives the license-class axis."""
     await _clear_registry()
-    # Two editorial_use rows (feed_id=citizen_tv_news) + two syndication
-    # rows (feed_id=ktn_news), all in region=mixed_region.
+    # Two editorial_use rows (feed_id=feed_a) + two syndication
+    # rows (feed_id=feed_i), all in region=mixed_region.
     await _seed_row(
         source_ref="s://a/e1.raw", region="mixed_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
     await _seed_row(
         source_ref="s://a/e2.raw", region="mixed_region",
-        feed_id="citizen_tv_news", klass="utterance",
+        feed_id="feed_a", klass="utterance",
     )
     await _seed_row(
         source_ref="s://a/s1.raw", region="mixed_region",
-        feed_id="ktn_news", klass="fact",
+        feed_id="feed_i", klass="fact",
     )
     await _seed_row(
         source_ref="s://a/s2.raw", region="mixed_region",
-        feed_id="ktn_news", klass="utterance",
+        feed_id="feed_i", klass="utterance",
     )
 
     transport = ASGITransport(app=app)
@@ -143,7 +143,7 @@ async def test_license_class_selection_filters_registry_reads():
     )
     body = resp.json()
     assert body["unit_count"] == 2, (
-        f"license filter should keep only citizen_tv_news editorial_use rows; "
+        f"license filter should keep only feed_a editorial_use rows; "
         f"got unit_count={body['unit_count']}"
     )
     # Every surviving unit's identifier field is pseudonymised (hex) — the
@@ -151,7 +151,7 @@ async def test_license_class_selection_filters_registry_reads():
     # feed_id was generalised via outer_gate transform to broadcast_news.
     for unit in body["units"]:
         assert unit["feed_id"] == "broadcast_news", (
-            f"citizen_tv_news feed_id generalised via outer-gate — expected "
+            f"feed_a feed_id generalised via outer-gate — expected "
             f"'broadcast_news'; got {unit['feed_id']!r}"
         )
 
@@ -168,14 +168,14 @@ async def test_license_class_absence_below_floor_route():
     @422.
     """
     await _clear_registry()
-    # Seed rows with feed_id=wire_kna (training_data) in region=lonely_region.
+    # Seed rows with feed_id=feed_d (training_data) in region=lonely_region.
     await _seed_row(
         source_ref="s://tr/x.raw", region="lonely_region",
-        feed_id="wire_kna", klass="fact",
+        feed_id="feed_d", klass="fact",
     )
     await _seed_row(
         source_ref="s://tr/y.raw", region="lonely_region",
-        feed_id="wire_kna", klass="utterance",
+        feed_id="feed_d", klass="utterance",
     )
 
     transport = ASGITransport(app=app)
@@ -229,17 +229,17 @@ async def test_qualified_data_standard_hard_input_filter():
     directly).
     """
     await _clear_registry()
-    # 3 utterance-class + 2 non_factual-class rows, all citizen_tv_news
+    # 3 utterance-class + 2 non_factual-class rows, all feed_a
     # (editorial_use license → matches operator_internal commissioner).
     for i in range(3):
         await _seed_row(
             source_ref=f"s://f/u{i}.raw", region="mixed_std_region",
-            feed_id="citizen_tv_news", klass="utterance",
+            feed_id="feed_a", klass="utterance",
         )
     for i in range(2):
         await _seed_row(
             source_ref=f"s://f/n{i}.raw", region="mixed_std_region",
-            feed_id="citizen_tv_news", klass="non_factual",
+            feed_id="feed_a", klass="non_factual",
         )
 
     transport = ASGITransport(app=app)
@@ -290,15 +290,15 @@ async def test_qualified_data_per_claim_provenance_intact():
     await _clear_registry()
     await _seed_row(
         source_ref="s://p/f1.raw", region="prov_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
     await _seed_row(
         source_ref="s://p/f2.raw", region="prov_region",
-        feed_id="citizen_tv_news", klass="utterance",
+        feed_id="feed_a", klass="utterance",
     )
     await _seed_row(
         source_ref="s://p/f3.raw", region="prov_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
 
     transport = ASGITransport(app=app)

@@ -1,7 +1,7 @@
 {
   "canonical_input": {
     "defensibility_class": "fact",
-    "feed_id": "citizen_tv_news",
+    "feed_id": "feed_a",
     "load_bearing_unit_ids": [
       "unit-snap-1",
       "unit-snap-2"

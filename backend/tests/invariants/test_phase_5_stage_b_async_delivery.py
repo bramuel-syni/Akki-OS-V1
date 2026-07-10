@@ -557,7 +557,7 @@ async def test_warm_fork_at_admission_uses_sync_pathway_not_async():
     await db[MTAFITI_REGISTRY_COLLECTION].insert_one({
         "source_ref": "s://warm/x.raw",
         "region": "warm_fork_scope",
-        "feed_id": "citizen_tv_news",
+        "feed_id": "feed_a",
         "modality": "text",
         "score_vector": {"corroboration": 0.0, "recency_validity": 0.5, "contested": False},
         "defensibility_runtime_mode": "declaration_baseline",

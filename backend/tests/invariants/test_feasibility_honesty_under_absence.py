@@ -11,7 +11,7 @@ Four gates:
   4. Regression sweep: no response ever mixes `unknown` freshness with
      non-NULL data (or vice versa).
 
-Uses the existing adversarial fixture v1 (19 units, feed_id=citizen_tv_news +
+Uses the existing adversarial fixture v1 (19 units, feed_id=feed_a +
 7 other feed_ids) as the censused substrate. Distinct un-censused scope_ref
 lives in `feasibility_fixture_augmentation.json` — does NOT modify the
 shipping adversarial fixture (Item 4 HAZARD-STOP posture preserved).
@@ -89,11 +89,11 @@ async def test_feasibility_uncensused_scope_returns_unknown():
 async def test_feasibility_censused_scope_returns_real_distribution():
     """Positive path — populated Registry returns real numbers."""
     await _clear_registry()
-    await _seed_fresh_row("synthetic://citizen_tv_news/a.raw", "citizen_tv_news", "fact")
-    await _seed_fresh_row("synthetic://citizen_tv_news/b.raw", "citizen_tv_news", "utterance")
-    await _seed_fresh_row("synthetic://citizen_tv_news/c.raw", "citizen_tv_news", "utterance")
-    await _seed_fresh_row("synthetic://citizen_tv_news/d.raw", "citizen_tv_news", "non_factual")
-    reach = Reach(scope_refs=["citizen_tv_news"], exclusions=[], depth="baseline")
+    await _seed_fresh_row("synthetic://feed_a/a.raw", "feed_a", "fact")
+    await _seed_fresh_row("synthetic://feed_a/b.raw", "feed_a", "utterance")
+    await _seed_fresh_row("synthetic://feed_a/c.raw", "feed_a", "utterance")
+    await _seed_fresh_row("synthetic://feed_a/d.raw", "feed_a", "non_factual")
+    reach = Reach(scope_refs=["feed_a"], exclusions=[], depth="baseline")
     result = await compute_feasibility(reach)
     assert result.freshness == Freshness.FRESH
     assert result.qualifying_volume == 4
@@ -112,9 +112,9 @@ async def test_feasibility_stale_region_returns_stale_with_provenance():
     """Stale positive path — real numbers, freshness=STALE, snapshot_ref non-null."""
     await _clear_registry()
     # 30 days old — well past the v0-provisional 7-day threshold.
-    await _seed_fresh_row("synthetic://wire_kna/x.raw", "wire_kna", "fact", days_ago=30)
-    await _seed_fresh_row("synthetic://wire_kna/y.raw", "wire_kna", "utterance", days_ago=30)
-    reach = Reach(scope_refs=["wire_kna"], exclusions=[], depth="baseline")
+    await _seed_fresh_row("synthetic://feed_d/x.raw", "feed_d", "fact", days_ago=30)
+    await _seed_fresh_row("synthetic://feed_d/y.raw", "feed_d", "utterance", days_ago=30)
+    reach = Reach(scope_refs=["feed_d"], exclusions=[], depth="baseline")
     result = await compute_feasibility(reach)
     assert result.freshness == Freshness.STALE, \
         f"stale-past-threshold reach must return STALE; got {result.freshness}"

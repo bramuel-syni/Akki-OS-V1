@@ -1,0 +1,8 @@
+{
+  "rule_id": "tier_lock",
+  "locked": false,
+  "reason_note": "Path A versioned-file test \u2014 unlock.",
+  "grantor_id": "6a49d57693e9bb94abab17f4",
+  "idempotency_key": "tier-lock-file-94407d69",
+  "at": "2026-07-10T18:58:26.637533+00:00"
+}

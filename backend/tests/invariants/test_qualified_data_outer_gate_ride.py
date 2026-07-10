@@ -32,9 +32,20 @@ BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent  # /app/backend
 
 # Pre-Phase-4a canonical SHA-256s of the three outer-gate files.
 # Condition B3 asserts these stay byte-identical.
+#
+# Note (Fixture Refresh 2026-07-10 · FR-E2 α re-bless): the
+# `services/outer_gate/transform.py` SHA was re-blessed at Fixture
+# Refresh close per Owner ruling FR-E2 α condition 2 (distributed
+# tables DELETED not shadowed — `_FEED_ID_BUCKET` removed, feed_id
+# generalisation now reads from centralized
+# `services/service_1/license_classes.v1.json`). Mint.py + receipt.py
+# preserved byte-identical. The gate's intent (guard against
+# unauthorized outer-gate reinvention) unchanged; only the pinned
+# transform.py SHA is refreshed with disclosure. See
+# `/app/docs/close_reports/fixture_refresh.md` §Rebless-Log.
 OUTER_GATE_PRE_4A_SHA = {
     "services/outer_gate/transform.py": (
-        "90907d22be8124b7e07efe0e33027d2ef3ded67e06158f20243a6b33d126707e"
+        "bb8ec05d1e24fefe42c437e73c66a803c1ab3b712bdd983ffe5a44181c95228b"
     ),
     "services/outer_gate/mint.py": (
         "01cfe0e0fe8762e4b4c0421db89668f7eb88e3a3caf9eae57719ad496129ebbf"
@@ -155,11 +166,11 @@ async def test_qualified_data_wire_shape_pins_governance_keys():
     await _clear_registry()
     await _seed_row(
         source_ref="s://w/a.raw", region="wire_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
     await _seed_row(
         source_ref="s://w/b.raw", region="wire_region",
-        feed_id="citizen_tv_news", klass="utterance",
+        feed_id="feed_a", klass="utterance",
     )
 
     transport = ASGITransport(app=app)

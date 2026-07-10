@@ -132,11 +132,11 @@ async def test_composed_conclusion_below_floor_returns_service_1_refusal_v0():
     await _clear()
     await _seed_row(
         source_ref="s://bf/f.raw", region="bf_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
     await _seed_row(
         source_ref="s://bf/u.raw", region="bf_region",
-        feed_id="citizen_tv_news", klass="utterance",
+        feed_id="feed_a", klass="utterance",
     )
 
     transport = ASGITransport(app=app)
@@ -177,11 +177,11 @@ async def test_composed_conclusion_composition_below_floor_at_fact_floor():
     await _clear()
     await _seed_row(
         source_ref="s://cbf/u.raw", region="cbf_region",
-        feed_id="citizen_tv_news", klass="utterance",
+        feed_id="feed_a", klass="utterance",
     )
     await _seed_row(
         source_ref="s://cbf/f.raw", region="cbf_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
 
     from contracts.objective_request_v2 import ObjectiveRequest_v2
@@ -216,11 +216,11 @@ async def test_composed_conclusion_below_floor_route_serialises_to_service_1_ref
     await _clear()
     await _seed_row(
         source_ref="s://bfr/u.raw", region="bfr_region",
-        feed_id="citizen_tv_news", klass="utterance",
+        feed_id="feed_a", klass="utterance",
     )
     await _seed_row(
         source_ref="s://bfr/f.raw", region="bfr_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
 
     transport = ASGITransport(app=app)
@@ -257,15 +257,15 @@ async def test_composed_conclusion_load_bearing_retrievable_by_trace_id():
     await _clear()
     await _seed_row(
         source_ref="s://lb/f1.raw", region="lb_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
     await _seed_row(
         source_ref="s://lb/f2.raw", region="lb_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
     await _seed_row(
         source_ref="s://lb/f3.raw", region="lb_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
 
     transport = ASGITransport(app=app)
@@ -330,11 +330,11 @@ async def test_composed_conclusion_live_path_returns_class_inline():
     await _clear()
     await _seed_row(
         source_ref="s://live/f.raw", region="live_region",
-        feed_id="citizen_tv_news", klass="fact",
+        feed_id="feed_a", klass="fact",
     )
     await _seed_row(
         source_ref="s://live/u.raw", region="live_region",
-        feed_id="citizen_tv_news", klass="utterance",
+        feed_id="feed_a", klass="utterance",
     )
 
     transport = ASGITransport(app=app)

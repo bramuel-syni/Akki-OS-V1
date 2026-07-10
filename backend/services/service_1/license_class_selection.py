@@ -5,14 +5,23 @@ Spec authority: RMS Product & Engineering Spec v3 §6.1.2 verbatim (line 89):
 export (rights check, irreversibility, cumulative-disclosure, license issue,
 receipt).'
 
-Single-source-of-truth for license-class derivation + selection filter.
+Single-source-of-truth for license-class derivation + selection filter +
+per-feed_id source_standing and bucket_category (post-Fixture-Refresh
+2026-07-10 · FR-E2 α: centralized single-source registry; distributed
+tables in mtafiti/source_standing.py and outer_gate/transform.py DELETED).
 Consumed at 4a by:
   * `services.service_1.qualified_data.package_qualified_data` — reach-side
     filter at admission-time selection.
+  * `services.mtafiti.source_standing.table()` — MEA source-standing
+    declaration table (v1 loader-backed).
+  * `services.outer_gate.transform._generalise_feed_id` — k-anonymity
+    bucket generalisation (v1 loader-backed).
 
 Taxonomy governance: Ruling 3 config-as-versioned-not-frozen. All class
-names + commissioner-mappings live in `license_classes.v0.json` (this
-directory). No class names in Python literals (grep-negative enforced by
+names + commissioner-mappings + per-feed_id attributes live in
+`license_classes.v(N).json` (this directory). Highest-version file wins.
+`v0.json` preserved byte-identical for parity attest; runtime reads v1.
+No class names in Python literals (grep-negative enforced by
 `test_license_class_config_governs_taxonomy`).
 
 Ruling 8 (Phase 4a Stage B, 2026-07-03): class names in
@@ -47,14 +56,39 @@ from contracts.objective_request_v2 import Envelope
 from contracts.wizard_commit_state import WizardCommitState_v0
 
 
-_CONFIG_PATH = Path(__file__).parent / "license_classes.v0.json"
+_CONFIG_DIR = Path(__file__).parent
+
+
+def _resolve_highest_version_path() -> Path:
+    """Return the highest-version `license_classes.v(N).json` path present.
+
+    Convention matches models_registry.v0.json highest-version discovery
+    pattern (Phase 9 Sub-stage 9.2a E1 α). File presence + numeric sort
+    on the `v(N)` suffix; missing files fall back gracefully to the
+    lowest-known bless.
+    """
+    candidates = sorted(
+        _CONFIG_DIR.glob("license_classes.v*.json"),
+        key=lambda p: int(p.stem.split(".v")[1]),
+        reverse=True,
+    )
+    if not candidates:
+        raise FileNotFoundError(
+            "no license_classes.v(N).json config present in "
+            f"{_CONFIG_DIR}"
+        )
+    return candidates[0]
+
+
+_CONFIG_PATH = _resolve_highest_version_path()
 
 
 def _load_config() -> Dict:
-    """Read `license_classes.v0.json` — Ruling 3 versioned config.
+    """Read the current-bless `license_classes.v(N).json` — Ruling 3
+    versioned config. Highest-version file wins.
 
-    Master Admin bumps to `v1.json` on taxonomy update; this function
-    reads the CURRENT bless.
+    Master Admin bumps to `v(N+1).json` on taxonomy update; this function
+    reads the CURRENT bless (highest version present).
     """
     return json.loads(_CONFIG_PATH.read_text(encoding="utf-8"))
 
@@ -88,6 +122,66 @@ def derive_license_class_from_commissioner(envelope: Envelope) -> str:
     return mapping.get(envelope.commissioner, default_class)
 
 
+def _feed_entries() -> Dict[str, Dict[str, str]]:
+    """Return the v1 `feed_entries` map — per-feed_id 3-column attributes
+    (`license_class` + `source_standing` + `bucket_category`).
+
+    Data-blind posture (governance §8): keys are neutralized aliases
+    (`feed_a..feed_k`). No broadcaster names leak.
+    """
+    cfg = _load_config()
+    return cfg.get("feed_entries", {})
+
+
+def feed_id_to_license_class_map() -> Dict[str, str]:
+    """Projection: {feed_id -> license_class} derived from `feed_entries`.
+
+    Single-source; v0-format `feed_id_to_license_class` field is no
+    longer read at runtime (v0.json preserved for parity only).
+    """
+    return {
+        feed_id: entry["license_class"]
+        for feed_id, entry in _feed_entries().items()
+    }
+
+
+def get_source_standing_name(feed_id: str) -> str:
+    """Return the `source_standing` string for a `feed_id`; unknown
+    feeds fall back to the config's `default_source_standing`.
+
+    Callers: `services.mtafiti.source_standing.table()`.
+    """
+    cfg = _load_config()
+    entries = cfg.get("feed_entries", {})
+    default = cfg.get("default_source_standing", "unknown")
+    entry = entries.get(feed_id)
+    if entry is None:
+        return default
+    return entry.get("source_standing", default)
+
+
+def get_bucket_category(feed_id: str) -> str:
+    """Return the `bucket_category` for a `feed_id`; unknown feeds fall
+    back to the config's `default_bucket_category`.
+
+    Callers: `services.outer_gate.transform._generalise_feed_id`.
+    """
+    cfg = _load_config()
+    entries = cfg.get("feed_entries", {})
+    default = cfg.get("default_bucket_category", "unknown_broadcast_category")
+    entry = entries.get(feed_id)
+    if entry is None:
+        return default
+    return entry.get("bucket_category", default)
+
+
+def known_feed_ids() -> List[str]:
+    """Return the sorted list of known feed_id aliases in the current
+    bless. Callers: mtafiti source_standing invariant tests.
+    """
+    return sorted(_feed_entries().keys())
+
+
 def select_by_class(
     registry_rows: List[Dict],
     class_name: str,
@@ -95,14 +189,15 @@ def select_by_class(
     """Filter registry rows to only those whose `feed_id` maps to
     the selected license class.
 
-    Reads `feed_id_to_license_class` from config. Rows whose `feed_id`
-    is not in the mapping (or maps to a different class) are EXCLUDED
-    — hard filter per v3 §6.1.2 intersection semantics.
+    Reads the projection {feed_id -> license_class} from
+    `feed_id_to_license_class_map()` (derived from v1 `feed_entries`).
+    Rows whose `feed_id` is not in the mapping (or maps to a different
+    class) are EXCLUDED — hard filter per v3 §6.1.2 intersection
+    semantics.
 
     Returns a new list; does not mutate input.
     """
-    cfg = _load_config()
-    feed_map: Dict[str, str] = cfg.get("feed_id_to_license_class", {})
+    feed_map = feed_id_to_license_class_map()
     return [
         row for row in registry_rows
         if feed_map.get(row.get("feed_id", ""), None) == class_name

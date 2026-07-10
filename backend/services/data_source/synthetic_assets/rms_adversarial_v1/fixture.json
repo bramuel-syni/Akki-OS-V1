@@ -11,7 +11,7 @@
     "regenerated_after_hazard_stop_1": true,
     "genres_note": "author-labels in provenance.context.author_labels",
     "adversarial_coverage": [
-      "code-switching (sw/en/sheng)",
+      "code-switching (multi-language mix)",
       "genre-boundary ambiguity",
       "native-ad-as-news",
       "contested chain (claim/corroborate/contradict/retract)",
@@ -28,15 +28,15 @@
   },
   "units": [
     {
-      "unit_id": "994abf0a-e9ac-497c-95b9-b776d062b288",
+      "unit_id": "ef20e6ad-c057-4825-932d-ca2b66b3c52e",
       "provenance": {
-        "source_ref": "synthetic://citizen_tv_news/16db02fa113aa1d7.raw",
+        "source_ref": "synthetic://feed_a/86d4f5a4c7f64b54.raw",
         "modality": "audio",
         "locator": {
           "timestamp_ms": 2189359
         },
-        "speaker_or_author": "anchor_1",
-        "context": "{\"programme\": \"Citizen Nipashe\", \"feed_id\": \"citizen_tv_news\", \"assertion\": \"Serikali imesema the fuel prices zita-drop next month, lakini wenye magari wanasema hiyo ni story tu — mtaskia venye mambo iko.\", \"language_mix\": [\"sw\", \"en\", \"sheng\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"16db02fa113aa1d7\", \"adversarial_intent\": \"code-switch: sw+en+sheng in one utterance; ASR + genre must survive\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_a1",
+        "context": "{\"programme\": \"programme_a\", \"feed_id\": \"feed_a\", \"assertion\": \"Placeholder utterance mixing language_a and language_b tokens with dialectal markers — content-neutral for pipeline mechanics only.\", \"language_mix\": [\"lang_a\", \"lang_b\", \"lang_c\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"86d4f5a4c7f64b54\", \"adversarial_intent\": \"code-switch: multi-language mix in one utterance; ASR + genre must survive\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -49,13 +49,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_tv_news/16db02fa113aa1d7.raw",
+        "raw_pointer": "synthetic://feed_a/86d4f5a4c7f64b54.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "66cec80e-5fe8-41c5-9912-a3236c0b3743",
+          "extraction_run_id": "62fff941-a695-4151-b7d8-7812204aa646",
           "extracted_at": "2026-06-30T18:00:00Z",
           "sample_rate_hz": 16000,
           "chunk_ms": 1000,
@@ -81,15 +81,15 @@
       }
     },
     {
-      "unit_id": "e546fa12-2b5d-4100-90ae-82ea25147e4a",
+      "unit_id": "06e80ddf-cbb6-47db-aa9a-ed25c7e1b507",
       "provenance": {
-        "source_ref": "synthetic://citizen_tv_news/b48f5f16cfb4d893.raw",
+        "source_ref": "synthetic://feed_a/bc21c3813546a36a.raw",
         "modality": "audio",
         "locator": {
           "timestamp_ms": 1272650
         },
-        "speaker_or_author": "host_2",
-        "context": "{\"programme\": \"Morning Cross-fire\", \"feed_id\": \"citizen_tv_news\", \"assertion\": \"The Treasury released the figures today — and frankly, anyone who believes them hasn't been paying attention. This is the same trick every year.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"b48f5f16cfb4d893\", \"adversarial_intent\": \"genre boundary: starts as report, drifts to opinion; classifier must not over-call 'fact'\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_a2",
+        "context": "{\"programme\": \"programme_b\", \"feed_id\": \"feed_a\", \"assertion\": \"Placeholder report-drifts-to-opinion body — factual framing at open, editorial framing at close; content-neutral.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"bc21c3813546a36a\", \"adversarial_intent\": \"genre boundary: starts as report, drifts to opinion; classifier must not over-call 'fact'\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -103,13 +103,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_tv_news/b48f5f16cfb4d893.raw",
+        "raw_pointer": "synthetic://feed_a/bc21c3813546a36a.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "615e1765-1e4a-41eb-a718-16a1460ea0b7",
+          "extraction_run_id": "5ea42317-0554-4b0a-b80d-3c445ec0204f",
           "extracted_at": "2026-06-30T18:00:00Z",
           "sample_rate_hz": 16000,
           "chunk_ms": 1000,
@@ -135,15 +135,15 @@
       }
     },
     {
-      "unit_id": "fac21dc8-6cd8-42fc-8c79-7d8c8a03a571",
+      "unit_id": "ae30e44a-7f1e-48be-93ba-7da6a36b6fd0",
       "provenance": {
-        "source_ref": "synthetic://citizen_tv_news/fc5cf22ba701bfc0.raw",
+        "source_ref": "synthetic://feed_a/b31c99fde05e7c39.raw",
         "modality": "audio",
         "locator": {
           "timestamp_ms": 1214776
         },
-        "speaker_or_author": "anchor_1",
-        "context": "{\"programme\": \"Citizen Nipashe\", \"feed_id\": \"citizen_tv_news\", \"assertion\": \"Na sasa habari njema — SafiSasa detergent imethibitishwa kuwa bora zaidi, inapatikana kila duka. Nunua leo.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"fc5cf22ba701bfc0\", \"adversarial_intent\": \"ad mimicking news read; must NOT be admitted as fact regardless of anchor voice\", \"author_labels\": {\"claim_genre\": \"advertisement\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_a1",
+        "context": "{\"programme\": \"programme_a\", \"feed_id\": \"feed_a\", \"assertion\": \"Placeholder advertisement copy read in news-anchor cadence — content-neutral commercial disclosure.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"b31c99fde05e7c39\", \"adversarial_intent\": \"ad mimicking news read; must NOT be admitted as fact regardless of anchor voice\", \"author_labels\": {\"claim_genre\": \"advertisement\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -154,13 +154,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_tv_news/fc5cf22ba701bfc0.raw",
+        "raw_pointer": "synthetic://feed_a/b31c99fde05e7c39.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "ddcda083-fd60-49b1-80de-8f98b2ee9525",
+          "extraction_run_id": "4fcd2f18-9a56-4a05-bfd1-4a2ab27cb2d1",
           "extracted_at": "2026-06-30T18:00:00Z",
           "sample_rate_hz": 16000,
           "chunk_ms": 1000,
@@ -186,15 +186,15 @@
       }
     },
     {
-      "unit_id": "de140180-34d8-4a43-87f8-c2aa625fd8a7",
+      "unit_id": "0a414b5e-128c-454e-8aa5-9d24f77a2e73",
       "provenance": {
-        "source_ref": "synthetic://radio_jambo_callin/786a79510018e185.raw",
+        "source_ref": "synthetic://feed_e/211e81db7fcfa247.raw",
         "modality": "audio",
         "locator": {
           "timestamp_ms": 2957582
         },
-        "speaker_or_author": "caller_anon",
-        "context": "{\"programme\": \"Jambo Kenya\", \"feed_id\": \"radio_jambo_callin\", \"assertion\": \"Mimi niko site, nasema hakuna maji imefika hapa Kayole for two weeks now.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"786a79510018e185\", \"adversarial_intent\": \"contested chain [1/4]: original claim (call-in, unverified)\", \"author_labels\": {\"claim_genre\": \"call_in\", \"source_standing\": \"ugc\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_e1",
+        "context": "{\"programme\": \"programme_c\", \"feed_id\": \"feed_e\", \"assertion\": \"Placeholder call-in assertion about region_a service outage; unverified.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"211e81db7fcfa247\", \"adversarial_intent\": \"contested chain [1/4]: original claim (call-in, unverified)\", \"author_labels\": {\"claim_genre\": \"call_in\", \"source_standing\": \"ugc\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -205,13 +205,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://radio_jambo_callin/786a79510018e185.raw",
+        "raw_pointer": "synthetic://feed_e/211e81db7fcfa247.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "cf1b0ebc-7911-4f6b-bea6-fd114882d444",
+          "extraction_run_id": "9b81f68f-dcae-4dbd-8ab4-f62e38b5b2e8",
           "extracted_at": "2026-06-30T18:00:00Z",
           "sample_rate_hz": 16000,
           "chunk_ms": 1000,
@@ -237,15 +237,15 @@
       }
     },
     {
-      "unit_id": "72680f01-8561-44a1-bdc2-5c3290e6ccd1",
+      "unit_id": "f0e5c414-18dd-441a-a40b-020672551f51",
       "provenance": {
-        "source_ref": "synthetic://citizen_tv_news/aea1ad4f56972e00.raw",
+        "source_ref": "synthetic://feed_a/ee2cd6c58d6277f7.raw",
         "modality": "video",
         "locator": {
           "timestamp_ms": 2774041
         },
-        "speaker_or_author": "reporter_3",
-        "context": "{\"programme\": \"Citizen Nipashe\", \"feed_id\": \"citizen_tv_news\", \"assertion\": \"Our team in Kayole confirmed water supply has been cut since the 14th, affecting several estates.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"aea1ad4f56972e00\", \"adversarial_intent\": \"contested chain [2/4]: corroborating report (accountable, attributed)\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_a3",
+        "context": "{\"programme\": \"programme_a\", \"feed_id\": \"feed_a\", \"assertion\": \"Placeholder corroborating report from field crew — region_a service outage confirmed since date_x.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"ee2cd6c58d6277f7\", \"adversarial_intent\": \"contested chain [2/4]: corroborating report (accountable, attributed)\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -256,19 +256,19 @@
         "edges": [
           {
             "type": "corroborates",
-            "target_unit_ref": "de140180-34d8-4a43-87f8-c2aa625fd8a7",
+            "target_unit_ref": "0a414b5e-128c-454e-8aa5-9d24f77a2e73",
             "evidence_ref": null
           }
         ]
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_tv_news/aea1ad4f56972e00.raw",
+        "raw_pointer": "synthetic://feed_a/ee2cd6c58d6277f7.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "e56909c7-47c4-4a67-8db4-4c3b286c2f4e",
+          "extraction_run_id": "374ced2d-78e4-45d6-8ba1-56cf5a2faaf6",
           "extracted_at": "2026-06-30T18:00:00Z",
           "keyframe_strategy": "every_n_seconds",
           "keyframe_interval_ms": 1000,
@@ -293,15 +293,15 @@
       }
     },
     {
-      "unit_id": "12ea59d9-e1ce-4350-b9bb-72a74a1b4d16",
+      "unit_id": "0d0f86a3-127e-4c7f-8fd3-f49bd636675d",
       "provenance": {
-        "source_ref": "synthetic://wire_kna/d7439f21508518b1.raw",
+        "source_ref": "synthetic://feed_d/b62a1de334957438.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 112981
         },
         "speaker_or_author": null,
-        "context": "{\"programme\": \"Wire Feed\", \"feed_id\": \"wire_kna\", \"assertion\": \"The county water authority stated supply was restored on the 20th.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"d7439f21508518b1\", \"adversarial_intent\": \"contested chain [3/4]: contradiction (wire, different figure)\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"licensed_wire\", \"contested_status\": \"contested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "context": "{\"programme\": \"programme_d\", \"feed_id\": \"feed_d\", \"assertion\": \"Placeholder wire report stating service was restored on date_y — contradicts prior claim.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"b62a1de334957438\", \"adversarial_intent\": \"contested chain [3/4]: contradiction (wire, different figure)\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"licensed_wire\", \"contested_status\": \"contested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -312,19 +312,19 @@
         "edges": [
           {
             "type": "contradicts",
-            "target_unit_ref": "72680f01-8561-44a1-bdc2-5c3290e6ccd1",
+            "target_unit_ref": "f0e5c414-18dd-441a-a40b-020672551f51",
             "evidence_ref": null
           }
         ]
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://wire_kna/d7439f21508518b1.raw",
+        "raw_pointer": "synthetic://feed_d/b62a1de334957438.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "88cd67f1-34c1-473c-b1fb-db272cb6c6f7",
+          "extraction_run_id": "22536adc-8e62-4bae-b4d3-433002046cb8",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -345,15 +345,15 @@
       }
     },
     {
-      "unit_id": "fff2ec33-dc9e-4ab7-838a-55a7cea1e3d9",
+      "unit_id": "a394daa6-5261-4c13-9aa2-9e3482386478",
       "provenance": {
-        "source_ref": "synthetic://citizen_tv_news/d3fcc85674bb32df.raw",
+        "source_ref": "synthetic://feed_a/e27cfa1406dadb14.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 3419138
         },
-        "speaker_or_author": "editor",
-        "context": "{\"programme\": \"Citizen Correction\", \"feed_id\": \"citizen_tv_news\", \"assertion\": \"Correction: an earlier report on Kayole water supply overstated the duration of the outage.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"d3fcc85674bb32df\", \"adversarial_intent\": \"contested chain [4/4]: retraction of the original claim\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"retracted\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_a4",
+        "context": "{\"programme\": \"programme_a\", \"feed_id\": \"feed_a\", \"assertion\": \"Placeholder correction body — earlier region_a report overstated outage duration.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"e27cfa1406dadb14\", \"adversarial_intent\": \"contested chain [4/4]: retraction of the original claim\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"retracted\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -364,19 +364,19 @@
         "edges": [
           {
             "type": "retracts",
-            "target_unit_ref": "de140180-34d8-4a43-87f8-c2aa625fd8a7",
+            "target_unit_ref": "0a414b5e-128c-454e-8aa5-9d24f77a2e73",
             "evidence_ref": null
           }
         ]
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_tv_news/d3fcc85674bb32df.raw",
+        "raw_pointer": "synthetic://feed_a/e27cfa1406dadb14.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "71be8693-b0d6-40bb-acee-d8c348b8b61b",
+          "extraction_run_id": "9cb26d1a-92be-429e-9c6f-335525eb244a",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -397,15 +397,15 @@
       }
     },
     {
-      "unit_id": "ee3cde8b-5898-4883-af6f-6a42b2e28243",
+      "unit_id": "4b624fb1-a35b-430d-9f57-89ee71a35867",
       "provenance": {
-        "source_ref": "synthetic://citizen_tv_news/cf8e20b55f523a51.raw",
+        "source_ref": "synthetic://feed_a/9388e40b1a56daa8.raw",
         "modality": "video",
         "locator": {
           "timestamp_ms": 1058574
         },
-        "speaker_or_author": "official_A",
-        "context": "{\"programme\": \"Live Address\", \"feed_id\": \"citizen_tv_news\", \"assertion\": \"I want to assure wananchi that the economy is now fully recovered and prices will fall by December.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"cf8e20b55f523a51\", \"adversarial_intent\": \"authority-blind ceiling: speech on tier-1 feed stays utterance, not fact\", \"author_labels\": {\"claim_genre\": \"speech\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_a5",
+        "context": "{\"programme\": \"programme_e\", \"feed_id\": \"feed_a\", \"assertion\": \"Placeholder speech transcript — declarative claims about future economic outcomes.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"9388e40b1a56daa8\", \"adversarial_intent\": \"authority-blind ceiling: speech on tier-1 feed stays utterance, not fact\", \"author_labels\": {\"claim_genre\": \"speech\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -418,13 +418,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_tv_news/cf8e20b55f523a51.raw",
+        "raw_pointer": "synthetic://feed_a/9388e40b1a56daa8.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "4aea3595-dc8a-4f9f-9249-298dde919fe1",
+          "extraction_run_id": "45e74dcc-0fc9-4833-a6e5-fb868ac6c19e",
           "extracted_at": "2026-06-30T18:00:00Z",
           "keyframe_strategy": "every_n_seconds",
           "keyframe_interval_ms": 1000,
@@ -449,15 +449,15 @@
       }
     },
     {
-      "unit_id": "b5bd0898-a750-4fd3-9d5f-a3f8c5c389a0",
+      "unit_id": "06e920d8-ad50-45a6-a68b-2a9487c8b3c4",
       "provenance": {
-        "source_ref": "synthetic://x_ingest/903c8e359f3c7242.raw",
+        "source_ref": "synthetic://feed_g/df419a9db724bd56.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 3365400
         },
-        "speaker_or_author": "handle_xyz",
-        "context": "{\"programme\": \"Social Ingest\", \"feed_id\": \"x_ingest\", \"assertion\": \"BREAKING: bridge on Thika road imeanguka, cars stuck everywhere!!\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"903c8e359f3c7242\", \"adversarial_intent\": \"source-standing lowers ceiling: unattributed UGC 'report' -> utterance (was modality=social; post-HAZARD-STOP #1 recategorised as text, source_type=social_post)\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"ugc\", \"contested_status\": \"contested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}, \"source_type\": \"social_post\"}"
+        "speaker_or_author": "handle_placeholder",
+        "context": "{\"programme\": \"programme_f\", \"feed_id\": \"feed_g\", \"assertion\": \"Placeholder social-post assertion about incident at location_a — unverified, high-virality.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"df419a9db724bd56\", \"adversarial_intent\": \"source-standing lowers ceiling: unattributed UGC 'report' -> utterance (was modality=social; post-HAZARD-STOP #1 recategorised as text, source_type=social_post)\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"ugc\", \"contested_status\": \"contested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}, \"source_type\": \"social_post\"}"
       },
       "signal": {
         "dimensions": {
@@ -470,13 +470,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://x_ingest/903c8e359f3c7242.raw",
+        "raw_pointer": "synthetic://feed_g/df419a9db724bd56.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "1aaa8237-15ed-40c7-b0b3-6817afbaa42e",
+          "extraction_run_id": "3583779c-692f-4c5f-bbd0-af331bdd3ef7",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -497,16 +497,16 @@
       }
     },
     {
-      "unit_id": "e55c8d85-2088-453a-b94b-a036f7622a8c",
+      "unit_id": "cb56a632-d960-42db-826a-c994f91af74e",
       "provenance": {
-        "source_ref": "synthetic://radio_jambo_callin/b74cd02ecf8aa528.raw",
+        "source_ref": "synthetic://feed_e/8f8e9a8bf72aa4a5.raw",
         "modality": "audio",
         "locator": {
           "timestamp_ms": 1200000,
           "duration_ms": 8500
         },
-        "speaker_or_author": "caller_short",
-        "context": "{\"programme\": \"Jambo Kenya\", \"feed_id\": \"radio_jambo_callin\", \"assertion\": \"Ha! Si hiyo ni-- [overlap] --hapana, wewe sikiza.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"b74cd02ecf8aa528\", \"adversarial_intent\": \"diarization stress: sub-30s speaker, overlapping turns\", \"author_labels\": {\"claim_genre\": \"call_in\", \"source_standing\": \"ugc\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_e2",
+        "context": "{\"programme\": \"programme_c\", \"feed_id\": \"feed_e\", \"assertion\": \"Placeholder short overlapping-speaker turn — sub-30s duration with turn-conflict marker.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"8f8e9a8bf72aa4a5\", \"adversarial_intent\": \"diarization stress: sub-30s speaker, overlapping turns\", \"author_labels\": {\"claim_genre\": \"call_in\", \"source_standing\": \"ugc\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -517,13 +517,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://radio_jambo_callin/b74cd02ecf8aa528.raw",
+        "raw_pointer": "synthetic://feed_e/8f8e9a8bf72aa4a5.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "11e14666-baa4-47d8-8a01-5b1fef386c25",
+          "extraction_run_id": "7c7a35e9-b24f-4ae3-8ca6-255afce14a03",
           "extracted_at": "2026-06-30T18:00:00Z",
           "sample_rate_hz": 16000,
           "chunk_ms": 1000,
@@ -549,15 +549,15 @@
       }
     },
     {
-      "unit_id": "75a549a1-d8b6-4249-aa4a-1e77520bbbaa",
+      "unit_id": "3973e8ae-42e8-4a0d-b4e1-4c9ffe5161cb",
       "provenance": {
-        "source_ref": "synthetic://citizen_tv_news/12ea5191c11822af.raw",
+        "source_ref": "synthetic://feed_a/8f23695a00785c17.raw",
         "modality": "video",
         "locator": {
           "timestamp_ms": 3037819
         },
-        "speaker_or_author": "anchor_1",
-        "context": "{\"programme\": \"Citizen Nipashe\", \"feed_id\": \"citizen_tv_news\", \"assertion\": \"Anchor says 'three counties affected' while the chyron reads 'five counties'.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"12ea5191c11822af\", \"adversarial_intent\": \"cross-modal: chyron (on-screen text) disagrees with anchor audio\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_a1",
+        "context": "{\"programme\": \"programme_a\", \"feed_id\": \"feed_a\", \"assertion\": \"Placeholder cross-modal conflict — audio-track count differs from on-screen-text count.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"8f23695a00785c17\", \"adversarial_intent\": \"cross-modal: chyron (on-screen text) disagrees with anchor audio\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -570,19 +570,19 @@
         "edges": [
           {
             "type": "contradicts",
-            "target_unit_ref": "1ba27474-563d-4049-9d9d-5c2d68a8ff80",
+            "target_unit_ref": "4f20e267-4345-413a-a8c7-654295c647eb",
             "evidence_ref": null
           }
         ]
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_tv_news/12ea5191c11822af.raw",
+        "raw_pointer": "synthetic://feed_a/8f23695a00785c17.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "01318dd1-9d6e-4059-bcb4-173d6db59214",
+          "extraction_run_id": "af35c11b-0467-4626-ba6a-8a7508a8bfad",
           "extracted_at": "2026-06-30T18:00:00Z",
           "keyframe_strategy": "every_n_seconds",
           "keyframe_interval_ms": 1000,
@@ -607,15 +607,15 @@
       }
     },
     {
-      "unit_id": "7d7500ef-5d60-42bf-adfb-fe71887c868a",
+      "unit_id": "d1d33214-159e-4671-9cc7-4f285cac9fa7",
       "provenance": {
-        "source_ref": "synthetic://citizen_archive/85a2ec94abd94f7f.raw",
+        "source_ref": "synthetic://feed_b/c57f84061abb021f.raw",
         "modality": "video",
         "locator": {
           "timestamp_ms": 2311834
         },
-        "speaker_or_author": "narrator",
-        "context": "{\"programme\": \"Archive Doc\", \"feed_id\": \"citizen_archive\", \"assertion\": \"At the time of filming in 2014, the lake covered roughly 68 square kilometres.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"85a2ec94abd94f7f\", \"adversarial_intent\": \"recency stress: documentary fact, but 12 years old — recency lowers score\", \"author_labels\": {\"claim_genre\": \"documentary\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_b1",
+        "context": "{\"programme\": \"programme_g\", \"feed_id\": \"feed_b\", \"assertion\": \"Placeholder archival documentary claim about a measured geographic feature at time_t_minus_12y.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"c57f84061abb021f\", \"adversarial_intent\": \"recency stress: documentary fact, but ~12 years old — recency lowers score\", \"author_labels\": {\"claim_genre\": \"documentary\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -626,13 +626,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_archive/85a2ec94abd94f7f.raw",
+        "raw_pointer": "synthetic://feed_b/c57f84061abb021f.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "448d905a-e1b5-422e-b9d7-35fa32753beb",
+          "extraction_run_id": "ceb26e3e-1798-412f-a541-710cacb64fd2",
           "extracted_at": "2026-06-30T18:00:00Z",
           "keyframe_strategy": "every_n_seconds",
           "keyframe_interval_ms": 1000,
@@ -657,15 +657,15 @@
       }
     },
     {
-      "unit_id": "44cdc6cf-5344-449b-9c57-a8320316c440",
+      "unit_id": "bd7e42d4-7162-4eda-9846-d7182bca3b69",
       "provenance": {
-        "source_ref": "synthetic://citizen_drama/d415d1c128a4756e.raw",
+        "source_ref": "synthetic://feed_c/b207b4b6a080853c.raw",
         "modality": "video",
         "locator": {
           "timestamp_ms": 3408329
         },
-        "speaker_or_author": "character_omosh",
-        "context": "{\"programme\": \"Tahidi High\", \"feed_id\": \"citizen_drama\", \"assertion\": \"In the script: 'The minister has fled the country with the money.'\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"d415d1c128a4756e\", \"adversarial_intent\": \"drama stating a 'fact' — must floor to non_factual\", \"author_labels\": {\"claim_genre\": \"drama\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "character_placeholder",
+        "context": "{\"programme\": \"programme_h\", \"feed_id\": \"feed_c\", \"assertion\": \"Placeholder dramatic-fiction dialogue asserting a public-figure event.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"b207b4b6a080853c\", \"adversarial_intent\": \"drama stating a 'fact' — must floor to non_factual\", \"author_labels\": {\"claim_genre\": \"drama\", \"source_standing\": \"accountable_tier1\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -676,13 +676,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://citizen_drama/d415d1c128a4756e.raw",
+        "raw_pointer": "synthetic://feed_c/b207b4b6a080853c.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "18e69c76-c845-4490-b4ed-5466ed49f577",
+          "extraction_run_id": "57b5e4bf-941a-44a0-9c70-301632111ee1",
           "extracted_at": "2026-06-30T18:00:00Z",
           "keyframe_strategy": "every_n_seconds",
           "keyframe_interval_ms": 1000,
@@ -707,15 +707,15 @@
       }
     },
     {
-      "unit_id": "a7420696-5a36-4fa6-99b8-97847f202f0a",
+      "unit_id": "302619d9-42a1-4115-9ab6-af62f26c7052",
       "provenance": {
-        "source_ref": "synthetic://unclassified/9cfd364267cf2bd9.raw",
+        "source_ref": "synthetic://feed_h/26ce27d45f775ca9.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 824453
         },
         "speaker_or_author": null,
-        "context": "{\"programme\": \"Unknown Feed\", \"feed_id\": \"unclassified\", \"assertion\": \"...supply chain ??? [transcription gap] ... prices ...\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"9cfd364267cf2bd9\", \"adversarial_intent\": \"ingestion robustness: partial/malformed content, missing speaker\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"unknown\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "context": "{\"programme\": \"programme_i\", \"feed_id\": \"feed_h\", \"assertion\": \"Placeholder malformed transcript ??? [transcription gap] ... placeholder ...\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"26ce27d45f775ca9\", \"adversarial_intent\": \"ingestion robustness: partial/malformed content, missing speaker\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"unknown\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -726,13 +726,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://unclassified/9cfd364267cf2bd9.raw",
+        "raw_pointer": "synthetic://feed_h/26ce27d45f775ca9.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "afc09450-fcde-4df6-8e13-a9b4949db2a0",
+          "extraction_run_id": "314056a3-6885-47bb-8503-a58ba9bd038a",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -753,15 +753,15 @@
       }
     },
     {
-      "unit_id": "760b36d1-c888-41dd-adb5-20eb20c049e2",
+      "unit_id": "b591e50a-b5c0-431b-9660-eb42ac2a0a73",
       "provenance": {
-        "source_ref": "synthetic://aggregator_blog/909dd71ea47f5da1.raw",
+        "source_ref": "synthetic://feed_f/55e36ce8f87708b6.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 2959369
         },
-        "speaker_or_author": "panelist_0",
-        "context": "{\"programme\": \"Panel Debate\", \"feed_id\": \"aggregator_blog\", \"assertion\": \"If you ask me, the whole policy is misguided — point number 1.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"909dd71ea47f5da1\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [1/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_f1",
+        "context": "{\"programme\": \"programme_j\", \"feed_id\": \"feed_f\", \"assertion\": \"Placeholder opinion segment [1/4] — non-factual editorial framing.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"55e36ce8f87708b6\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [1/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -774,13 +774,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://aggregator_blog/909dd71ea47f5da1.raw",
+        "raw_pointer": "synthetic://feed_f/55e36ce8f87708b6.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "8ab540ba-16aa-4b87-b6e7-be2fdd56a8bb",
+          "extraction_run_id": "0f1ba37c-819a-4440-a670-8f88a07296f9",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -801,15 +801,15 @@
       }
     },
     {
-      "unit_id": "8fdffb28-6e9b-40e6-9d65-bab981d206dd",
+      "unit_id": "e92faa63-b2b7-4cc3-b0e7-9f866ba4b8a9",
       "provenance": {
-        "source_ref": "synthetic://aggregator_blog/f4786af0c98bb38f.raw",
+        "source_ref": "synthetic://feed_f/a27d422fbb25a81c.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 3362967
         },
-        "speaker_or_author": "panelist_1",
-        "context": "{\"programme\": \"Panel Debate\", \"feed_id\": \"aggregator_blog\", \"assertion\": \"If you ask me, the whole policy is misguided — point number 2.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"f4786af0c98bb38f\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [2/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_f2",
+        "context": "{\"programme\": \"programme_j\", \"feed_id\": \"feed_f\", \"assertion\": \"Placeholder opinion segment [2/4] — non-factual editorial framing.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"a27d422fbb25a81c\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [2/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -822,13 +822,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://aggregator_blog/f4786af0c98bb38f.raw",
+        "raw_pointer": "synthetic://feed_f/a27d422fbb25a81c.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "8a6165ed-62ac-4a66-925a-a21cf01cc4c0",
+          "extraction_run_id": "f319b213-9e73-4d97-9374-9a2179137092",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -849,15 +849,15 @@
       }
     },
     {
-      "unit_id": "32fa1bca-071f-404f-9223-fc1d4eedf6b5",
+      "unit_id": "38bb9074-8bcd-4c56-b278-eed6dab01690",
       "provenance": {
-        "source_ref": "synthetic://aggregator_blog/c77414bbc140dff8.raw",
+        "source_ref": "synthetic://feed_f/deda065fca80f35f.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 880845
         },
-        "speaker_or_author": "panelist_2",
-        "context": "{\"programme\": \"Panel Debate\", \"feed_id\": \"aggregator_blog\", \"assertion\": \"If you ask me, the whole policy is misguided — point number 3.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"c77414bbc140dff8\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [3/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_f3",
+        "context": "{\"programme\": \"programme_j\", \"feed_id\": \"feed_f\", \"assertion\": \"Placeholder opinion segment [3/4] — non-factual editorial framing.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"deda065fca80f35f\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [3/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -870,13 +870,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://aggregator_blog/c77414bbc140dff8.raw",
+        "raw_pointer": "synthetic://feed_f/deda065fca80f35f.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "32f3b702-7a7a-40be-9d15-fbbbaee1bd28",
+          "extraction_run_id": "bd8eb11c-50aa-4f59-960a-8e024136efb4",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -897,15 +897,15 @@
       }
     },
     {
-      "unit_id": "e52be21d-b9f7-46ed-af61-6c1b5c6de56e",
+      "unit_id": "f0ddd8f2-c740-4e9f-9cab-8d9f3705e2a0",
       "provenance": {
-        "source_ref": "synthetic://aggregator_blog/255b82c10dbc146d.raw",
+        "source_ref": "synthetic://feed_f/0d415e674c62f516.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 517998
         },
-        "speaker_or_author": "panelist_3",
-        "context": "{\"programme\": \"Panel Debate\", \"feed_id\": \"aggregator_blog\", \"assertion\": \"If you ask me, the whole policy is misguided — point number 4.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"255b82c10dbc146d\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [4/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "speaker_or_author": "speaker_f4",
+        "context": "{\"programme\": \"programme_j\", \"feed_id\": \"feed_f\", \"assertion\": \"Placeholder opinion segment [4/4] — non-factual editorial framing.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"0d415e674c62f516\", \"adversarial_intent\": \"defensibility skew: opinion-dominant segment [4/4] — distribution must not gate\", \"author_labels\": {\"claim_genre\": \"opinion\", \"source_standing\": \"aggregator\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {
@@ -918,13 +918,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://aggregator_blog/255b82c10dbc146d.raw",
+        "raw_pointer": "synthetic://feed_f/0d415e674c62f516.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "f218a18c-fc3f-4c59-9bc5-22b2da849bf2",
+          "extraction_run_id": "19d49d5b-76f1-4851-bd0f-e2f2098e9beb",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,
@@ -945,15 +945,15 @@
       }
     },
     {
-      "unit_id": "5d1e349e-ba34-42de-bba4-eb6304d9cc21",
+      "unit_id": "91764490-9945-4635-820e-d5990f2908f5",
       "provenance": {
-        "source_ref": "synthetic://wire_kna/ae01c353cd4ba780.raw",
+        "source_ref": "synthetic://feed_d/cc507d5bd98f382e.raw",
         "modality": "text",
         "locator": {
           "timestamp_ms": 2679208
         },
         "speaker_or_author": null,
-        "context": "{\"programme\": \"Wire Feed\", \"feed_id\": \"wire_kna\", \"assertion\": \"The Central Bank held the benchmark rate at 10.75 percent, according to its published statement.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"ae01c353cd4ba780\", \"adversarial_intent\": \"clean positive: attributed wire report, uncontested fact\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"licensed_wire\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
+        "context": "{\"programme\": \"programme_d\", \"feed_id\": \"feed_d\", \"assertion\": \"Placeholder attributed wire report of a numeric policy rate held constant per published statement.\", \"language_mix\": [\"sw\", \"en\"], \"logged_date\": \"2026-06-30T18:00:00Z\", \"structural_signature\": \"cc507d5bd98f382e\", \"adversarial_intent\": \"clean positive: attributed wire report, uncontested fact\", \"author_labels\": {\"claim_genre\": \"report\", \"source_standing\": \"licensed_wire\", \"contested_status\": \"uncontested\", \"unit_type\": \"claim\"}, \"_fixture\": {\"synthetic\": true, \"plumbing_only\": true, \"v1_v3_valid\": false}}"
       },
       "signal": {
         "dimensions": {},
@@ -964,13 +964,13 @@
         "edges": []
       },
       "reextraction_handle": {
-        "raw_pointer": "synthetic://wire_kna/ae01c353cd4ba780.raw",
+        "raw_pointer": "synthetic://feed_d/cc507d5bd98f382e.raw",
         "model_id": "synthetic-fixture",
         "model_version": "0.0.0",
         "extraction_params": {
           "provider_id": "synthetic-fixture",
           "provider_version": "1.0.0",
-          "extraction_run_id": "b16fe6c9-e0cd-4f55-aa30-3f1d269ea60f",
+          "extraction_run_id": "319d67c5-99ca-40b7-9317-3cd94a2a15c8",
           "extracted_at": "2026-06-30T18:00:00Z",
           "source_format": "txt",
           "max_chars": 100000,

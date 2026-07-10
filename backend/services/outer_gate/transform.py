@@ -15,12 +15,20 @@ mint, k-anonymity / l-diversity / generalisation"):
   → HMAC-SHA256 pseudonymisation
 - `feed_id`, `structural_signature` → generalisation (category collapse)
 - numeric signal scores → optional DP noise (v0: no noise, closed-seam)
+
+Post-Fixture-Refresh 2026-07-10 (FR-E2 α): distributed `_FEED_ID_BUCKET`
+table DELETED. Feed_id → bucket_category mapping is now read from the
+centralized single-source-of-truth `services/service_1/license_classes.v1.json`
+via `services.service_1.license_class_selection.get_bucket_category`.
+Default bucket returned by that helper is `unknown_broadcast_category`
+(preserved for behavior parity with the pre-refresh _FEED_ID_BUCKET_DEFAULT).
 """
 from __future__ import annotations
 
 from typing import Any, Dict, List
 
 from services.outer_gate.mint import MintWindow, pseudonymise
+from services.service_1.license_class_selection import get_bucket_category
 
 
 PSEUDONYMISED_FIELDS = (
@@ -37,21 +45,17 @@ GENERALISED_FIELDS = (
     "structural_signature",
 )
 
-# Generalisation buckets — v0 collapses feed_ids into
-# broadcaster-category buckets. Real k-anonymity generalisation is a
-# DPO/Owner policy decision at G6 close (see cumulative_disclosure closed seam).
-_FEED_ID_BUCKET = {
-    # citizen_tv_news → broadcast_news
-    "citizen_tv_news": "broadcast_news",
-    "ktn_news": "broadcast_news",
-    "ntv_news": "broadcast_news",
-    "print_edition": "broadcast_print",
-}
-_FEED_ID_BUCKET_DEFAULT = "unknown_broadcast_category"
-
 
 def _generalise_feed_id(value: str) -> str:
-    return _FEED_ID_BUCKET.get(value, _FEED_ID_BUCKET_DEFAULT)
+    """Generalisation into broadcaster-category buckets.
+
+    Reads the mapping from central v1 registry via
+    `get_bucket_category(value)`. Unknown feed_ids resolve to the
+    registry's `default_bucket_category` (currently
+    `unknown_broadcast_category`, preserved from the pre-refresh
+    `_FEED_ID_BUCKET_DEFAULT`).
+    """
+    return get_bucket_category(value)
 
 
 def _generalise_structural_signature(value: str) -> str:

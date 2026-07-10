@@ -1,0 +1,87 @@
+{
+  "config_version": "v1",
+  "notes": "Master Admin config v1 (additive per Ruling 3 append-only). Single-source-of-truth for per-feed_id attributes: license_class + source_standing + bucket_category. v0 preserved byte-identical at license_classes.v0.json (retained for parity attest; no longer read by runtime). Neutralized aliases feed_a..feed_k per Fixture Refresh (data-blind posture governance §8; Owner Ancillary 2, 2026-07-10). Extension: add entry OR bump v1.json -> v2.json per Ruling 3 append-only config policy. Never modifies any frozen contract.",
+  "authority_source_verbatim": "Owner Ancillary 2 (2026-07-10) — 'correctly escalated, and the answer is a scoped mini-phase after 9.2a close, not a ride-along. The builder's instinct to stop was right — a HAZARD-STOP-protected fixture plus a v0->v1 registry bump plus a ~10-file cascade is a coordinated change, and coordinated changes don't ride housekeeping commits. It queues as a named mini-phase post-9.2a: one Stage A (small), the HAZARD-STOP posture question surfaced there as its Tier-1 item, license_class_map v0->v1 additive per standing pattern.' + Owner ruling FR-E2 alpha with two conditions: (1) v0 preserved byte-identical, (2) distributed tables (_PLACEHOLDER_TABLE in mtafiti/source_standing.py + _FEED_ID_BUCKET in outer_gate/transform.py) DELETED (not shadowed) — FR-G4 AST gate enforces no shadow sources in NEW code.",
+  "valid_classes": [
+    {
+      "class_name": "editorial_use",
+      "since_version": "v0",
+      "description": "ILLUSTRATIVE: Internal editorial + reporting use; no redistribution."
+    },
+    {
+      "class_name": "syndication",
+      "since_version": "v0",
+      "description": "ILLUSTRATIVE: Redistribution to identified third-party outlets."
+    },
+    {
+      "class_name": "training_data",
+      "since_version": "v0",
+      "description": "ILLUSTRATIVE: Model training corpus use (ingredient-manifest scope per §6.5)."
+    }
+  ],
+  "commissioner_to_default_class": {
+    "operator_internal": "editorial_use",
+    "buyer_syndication_partner": "syndication",
+    "buyer_ml_partner": "training_data"
+  },
+  "default_class": "editorial_use",
+  "default_source_standing": "unknown",
+  "default_bucket_category": "unknown_broadcast_category",
+  "feed_entries": {
+    "feed_a": {
+      "license_class": "editorial_use",
+      "source_standing": "accountable_tier1",
+      "bucket_category": "broadcast_news"
+    },
+    "feed_b": {
+      "license_class": "editorial_use",
+      "source_standing": "accountable_tier1",
+      "bucket_category": "broadcast_news"
+    },
+    "feed_c": {
+      "license_class": "editorial_use",
+      "source_standing": "aggregator",
+      "bucket_category": "broadcast_news"
+    },
+    "feed_d": {
+      "license_class": "training_data",
+      "source_standing": "licensed_wire",
+      "bucket_category": "broadcast_wire"
+    },
+    "feed_e": {
+      "license_class": "editorial_use",
+      "source_standing": "ugc",
+      "bucket_category": "broadcast_call_in"
+    },
+    "feed_f": {
+      "license_class": "editorial_use",
+      "source_standing": "aggregator",
+      "bucket_category": "aggregator_category"
+    },
+    "feed_g": {
+      "license_class": "editorial_use",
+      "source_standing": "ugc",
+      "bucket_category": "social_post"
+    },
+    "feed_h": {
+      "license_class": "editorial_use",
+      "source_standing": "unknown",
+      "bucket_category": "unknown_broadcast_category"
+    },
+    "feed_i": {
+      "license_class": "syndication",
+      "source_standing": "accountable_tier1",
+      "bucket_category": "broadcast_news"
+    },
+    "feed_j": {
+      "license_class": "syndication",
+      "source_standing": "accountable_tier1",
+      "bucket_category": "broadcast_news"
+    },
+    "feed_k": {
+      "license_class": "editorial_use",
+      "source_standing": "accountable_tier1",
+      "bucket_category": "broadcast_print"
+    }
+  }
+}

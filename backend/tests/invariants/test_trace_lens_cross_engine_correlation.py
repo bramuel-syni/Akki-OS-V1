@@ -85,7 +85,7 @@ def _fact_unit() -> NormalizedUnit:
             modality=Modality.TEXT,
             locator={}, speaker_or_author="anchor",
             context=json.dumps({
-                "feed_id": "citizen_tv_news",
+                "feed_id": "feed_a",
                 "logged_date": "2026-07-01T12:00:00Z",
                 "structural_signature": "0123456789abcdef",
                 "author_labels": {
