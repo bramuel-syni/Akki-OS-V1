@@ -175,9 +175,39 @@ Empirical basis: `OuterGateReceipt_v1` at AS close (103 LoC actual; 60 LoC class
 Per Ruling 5 discipline: a rate class is codified only after two observations. The following are candidates:
 
 - **Async httpx backend Pytest cells** — ~25 LoC/cell empirical at AS (vs 22 standalone / 12 amortised). Auth-overhead class (`AsyncClient` + token minting + trace/artifact provisioning per cell). **Requires second observation to codify.**
-- **AST/reflection gate cells** — ~40 LoC/cell empirical at AS (AS-G6 grep-negative walker + whitelist + violation formatting). Reflection-gate class. **Requires second observation to codify.**
 
-If either class recurs at Transform Forms or beyond with similar per-cell LoC, it becomes eligible for codification via a companion Stage A rate note.
+If this class recurs at a future dispatch with similar per-cell LoC, it becomes eligible for codification via a companion Stage A rate note.
+
+**Codification retirements 2026-07-09 (post-TF ratification · Owner Message 565):**
+- ~~**AST/reflection gate cells**~~ — second observation confirmed at TF-G9 (`services/transform_forms/callable_skill_persistence.py` write-once slice-freeze grep-negative walker) matching AS-G6 magnitude (~40 LoC/cell). CODIFIED at §6.10 below.
+- **NEW:** **Verbatim-carrier overhead** — three-observation retrospective (AS Owner-verbatim docstrings · TF Owner-verbatim TF-E1..E4 α/β/γ carriers · TF governance §8 data-blind posture carrier). CODIFIED at §6.9 below — Owner Message 565 dispatched the codification by retrospective across three datapoints rather than waiting for a fourth.
+
+### §6.9 Verbatim-carrier overhead — per carrying module · **~100-150 LoC/carrier**
+
+**Codified at 2026-07-09 post-Transform-Forms ratification (Owner Message 565).**
+
+- **Class label:** *"verbatim = one-off overhead per Owner-supplied text carrier."* Any module, ruling, docstring, gate, or governance section that must reproduce Owner-supplied text VERBATIM (no paraphrase, no shortening, no glyph-substitution) carries an amortisation-immune LoC cost roughly equal to the text's on-disk footprint plus a small structural frame (docstring quotes, sentinel comments, section headers).
+- **Empirical basis (three-observation set):**
+  - **AS close (2026-07-08):** `OuterGateReceipt_v1` module carried ~40 LoC of Owner-verbatim docstring/rationale text alongside the 60 LoC class body (103 LoC total; verbatim overhead ~40). Additional AS-close rulings-record carriers (`docs/rulings/artifact_store_as_e1_to_e4.md`) landed at ~120 LoC across four rulings.
+  - **TF close (2026-07-09):** `KnowledgeArtifactV0` + `CallableSkillProvisioningV0` + `callable_skill_gate.py` collectively carried ~110 LoC of Owner-verbatim TF-E1..E4 ruling-condition text embedded as docstrings/module comments; `docs/rulings/transform_forms_tf_e1_to_e4.md` landed at ~108 LoC.
+  - **TF governance §8 carrier (2026-07-09):** data-blind posture Owner text landed verbatim at ~9 LoC prose + ~5 LoC framing = ~14 LoC in this file's §8 (single carrier; light-end of range because the Owner text was compact).
+- **Trigger:** any dispatch containing at least one Owner-supplied verbatim condition, ruling, or posture statement that must land on-disk without paraphrase MUST price a verbatim-carrier line-item at ~100-150 LoC per carrying module in the §3 band derivation. Multiple verbatim blocks WITHIN a module amortise into that band; distinct modules each carry their own line-item.
+- **Amortisation trigger:** NONE across modules. WITHIN a module, multiple verbatim blocks amortise into the ~100-150 LoC range regardless of block count.
+- **Named trigger:** *"Any Stage A whose Owner-supplied verbatim text will land inside a source module, contract file, service module, gate module, ruling record, or governance section MUST price a verbatim-carrier line-item at ~100-150 LoC per carrier in §3 band derivation. No hidden buffering; no padding; explicit line-item."*
+- **Deviation clause:** if a specific carrier lands materially above or below the 100-150 LoC band (>±30% of band midpoint 125 → below ~87 or above ~163), disclose the delta at close per Tier-2 discipline (governance §2.2 — cost/rework class). Compact-text carriers (single-paragraph postures) may land ~15-40 LoC honestly — disclose as under-band on the light side; multi-ruling carriers stacking 4+ verbatim blocks in one module may land ~180-220 LoC — disclose as over-band on the heavy side.
+
+### §6.10 AST/reflection gate class — standalone · **~40 LoC/cell**
+
+**Codified at 2026-07-09 post-Transform-Forms ratification (second observation satisfied · Owner Message 565).**
+
+- **Class label:** *"reflection-gate = walker + whitelist + violation formatter."* Any Pytest gate that uses `ast.walk` / `ast.parse` / `inspect.signature` / regex-over-parsed-code / other codebase-reflective techniques to enforce a grep-negative or grep-positive invariant carries a standalone per-cell LoC cost that does NOT amortise into classic shared-helper cells (§6.1).
+- **Empirical basis (two-observation set):**
+  - **AS-G6 (2026-07-08):** grep-negative AST walker over `services/artifact_store/adapter.py` enforcing `_get_raw` privacy (whitelist of allowed callers + AST walker + violation formatting) — ~40 LoC/cell.
+  - **TF-G9 (2026-07-09):** grep-negative AST walker over `services/transform_forms/callable_skill_persistence.py` enforcing write-once slice-freeze — verifying `update_one({..., corpus_slice_ref: ...})` never appears (whitelist + AST walker + violation formatting) — ~40 LoC/cell.
+- **Trigger:** any Stage A introducing a reflection/AST-based gate MUST price the gate cell at ~40 LoC/cell standalone in §3 band derivation. This overrides the classic §6.1 12 LoC/cell amortisation for the specific reflection cell(s); non-reflection cells in the same test file continue to amortise per §6.1.
+- **Amortisation trigger:** NONE. Standalone class per cell. Multiple reflection gates in the same file each carry their own ~40 LoC baseline (walker structure + violation formatting are not shareable across distinct invariants without collapsing the invariants themselves, which is unacceptable per Tier-1 honesty grammar).
+- **Named trigger:** *"Any Stage A adding a reflection/AST gate cell MUST price it at ~40 LoC/cell standalone in §3 band derivation. No hidden amortisation into §6.1; no shared-helper wishing. Explicit line-item."*
+- **Deviation clause:** if a specific reflection gate lands materially above or below 40 LoC (>±30% → below ~28 or above ~52), disclose the delta at close per Tier-2 discipline. Reflection gates with unusually complex whitelist logic (cross-module regex fusion, multi-file AST parse) may run higher — disclose, do not hide.
 
 ---
 
