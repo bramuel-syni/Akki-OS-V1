@@ -149,6 +149,12 @@ app.include_router(artifact_store_router.router, prefix="/api")
 from routers import transform_forms as transform_forms_router  # noqa: E402
 app.include_router(transform_forms_router.router, prefix="/api")
 
+# Census-dimensions mini-phase (Owner Message 565 · rulings 2026-07-10).
+# CD-E1..CD-E4 α + conditions. Read-only endpoints; sidecar writes ride
+# in-process census-run path. Parity 31 preserved (CD-E2 α ↔ CD-E4 coupling).
+from routers import census_dimensions as census_dimensions_router  # noqa: E402
+app.include_router(census_dimensions_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:
@@ -167,6 +173,8 @@ async def _startup() -> None:
         # Phase 8 Stage B-1 — auth users + wizard session binding indexes.
         await auth_user_store.ensure_indexes()
         await auth_session_binding.ensure_indexes()
+        # Census-dimensions mini-phase (Owner Message 565) — unique index on feed_id.
+        await db["census_content_dimensions"].create_index("feed_id", unique=True)
         # Idempotent admin seed for local/dev + testing agent.
         import os as _os
         _admin_email = _os.environ.get("ADMIN_EMAIL")

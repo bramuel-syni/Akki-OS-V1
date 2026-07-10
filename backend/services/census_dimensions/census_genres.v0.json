@@ -1,0 +1,6 @@
+{
+  "version": "v0",
+  "seeded_at": "2026-07-10",
+  "authority_source": "Owner ruling CD-E3 α + register-before-validate mechanism (2026-07-10). Data-blind posture governance §8: 'The build makes no assumptions about the content, genre, composition, or shape of the RMS estate.' Registry seeded EMPTY; population is census-run-only via additive versioned bump (v0 → vN). manifest_declared values MUST pre-exist in the registry — 'a manifest cannot invent vocabulary, only observation can.'",
+  "genres": []
+}
