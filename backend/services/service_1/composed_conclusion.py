@@ -83,6 +83,20 @@ from services.service_1.admission_refusal import (
 from services.service_1.refusal_hints import hint_for as _refusal_hint_for
 from contracts.admission_refusal import AdmissionRefusal_v0
 
+# Answer Fluency §3.8 (AF-E1..AF-E4 · 2026-07-10) — two-arm dispatcher.
+from services.service_1.mechanical_composer import (
+    synthesise_mechanical_answer_text,
+)
+from services.service_1.answer_grounding import verify_grounding
+from services.service_1.fluency_mode_telemetry import annotate_result
+from services.synisense.shield.fluency_synthesizer import (
+    EmergentKeyMissingError,
+    LLMParseFailureError,
+    LLMTimeoutError,
+    LLMUnavailableError,
+    synthesise_fluent_answer,
+)
+
 
 @dataclass(frozen=True)
 class _DefensibilityView:
@@ -111,9 +125,17 @@ class _UnitView:
     `extraction_params@v0` model validation (Ring 4 requires modality-
     specific keys), which the Registry rows don't carry. This view is
     the honest minimal shape.
+
+    Answer Fluency §3.8 (AF-E1 β + conditions): `text` field carries
+    the unit's Ring-1 body when available on the source row (for the
+    fluent-arm LLM prompt + grounding-gate numeric verification).
+    Defaults to "" for rows that don't surface Ring-1 text (synthetic
+    fixtures, Registry-only reads); in that case the fluent arm's
+    output naturally trips the grounding gate → mechanical arm.
     """
     unit_id: str
     defensibility: _DefensibilityView
+    text: str = ""
 
 
 class Service1Refusal(Exception):
@@ -169,6 +191,7 @@ def _rows_to_unit_views(rows: List[Dict]) -> List[_UnitView]:
         out.append(_UnitView(
             unit_id=f"cc-unit-{unit_id}",
             defensibility=_DefensibilityView(defensibility_class=kls),
+            text=str(row.get("text") or row.get("content") or ""),
         ))
     return out
 
@@ -323,15 +346,34 @@ async def package_composed_conclusion(
         at=datetime.now(timezone.utc),
     ))
 
-    # 8. Build the ComposedConclusion_v0 envelope — Solva-threaded class
-    # UNCHANGED. Answer_text is a governance-honest scaffold stub for
-    # Phase 4b (real synthesis is downstream; this phase lands the
-    # frozen envelope + governance path, not the LLM composition).
-    answer_text = (
-        f"Composed conclusion over {len(load_bearing_unit_ids)} "
-        f"load-bearing unit(s) at defensibility class "
-        f"'{computed_class.value}'. Load-bearing set retrievable "
-        f"via Northena Ledger by trace_id."
+    # 8. Build the ComposedConclusion_v0 envelope — Solva-threaded class.
+    # Answer Fluency §3.8 (AF-E1..AF-E4 · 2026-07-10): `answer_text`
+    # is produced via a two-arm dispatcher — LLM arm (Shield-side
+    # fluent synthesis with per-sentence anchor grounding) with the
+    # mechanical arm as regression baseline + graceful-degradation
+    # fallback per AF-E2 amended boundary set.
+    #
+    # AF-E4 α: mechanical composer is a byte-identical extraction of
+    # the pre-3.8 f-string (see `mechanical_composer.py`); AF-G1
+    # attests via goldens captured at STEP A.
+    #
+    # AF-E2 amended: runtime transients (LLM unavailable / timeout /
+    # parse failure / grounding reject) degrade gracefully to the
+    # mechanical arm. NEVER a refusal envelope on any transient.
+    # Config defect (Emergent key missing) → 503 propagates to caller.
+    answer_text, fluency_mode, fluency_reason, grounding_reject_detail = \
+        await _synthesise_answer_text(
+            load_bearing_unit_ids=load_bearing_unit_ids,
+            computed_class=computed_class,
+            unit_views=unit_views,
+        )
+    # Fluency-mode telemetry sidecar (AF-E3 α · envelope untouched).
+    _ = annotate_result(
+        trace_id=trace_id,
+        telemetry_dict={},
+        fluency_mode=fluency_mode,
+        fluency_reason=fluency_reason,
+        grounding_reject_detail=grounding_reject_detail,
     )
     return ComposedConclusion_v0(
         conclusion_class=computed_class,
@@ -341,3 +383,71 @@ async def package_composed_conclusion(
         objective_ref=objective_ref,
         computed_at=datetime.now(timezone.utc).isoformat(),
     )
+
+
+async def _synthesise_answer_text(
+    *,
+    load_bearing_unit_ids: List[str],
+    computed_class: DefensibilityClass,
+    unit_views: List[_UnitView],
+):
+    """Two-arm dispatcher for `answer_text` — Answer Fluency §3.8.
+
+    Returns a 4-tuple:
+      (answer_text, fluency_mode, fluency_reason, grounding_reject_detail)
+
+    Behaviour per AF-E2 amended boundary set + AF-E1 β + conditions:
+
+      * Try LLM arm (Shield-side fluent synthesis).
+        - If Emergent key missing → EmergentKeyMissingError propagates
+          (upstream router surfaces 503).
+        - On LLMUnavailable/Timeout/ParseFailure → fall through to
+          mechanical arm; fluency_mode="mechanical", fluency_reason
+          names the specific transient.
+      * On successful LLM output → run grounding gate.
+        - Grounding gate FAIL → fall through to mechanical arm;
+          fluency_mode="mechanical", fluency_reason="grounding_reject",
+          grounding_reject_detail names the sub-gate that failed.
+        - Grounding gate PASS → return LLM prose; fluency_mode="llm".
+    """
+    unit_id_to_text = {v.unit_id: v.text for v in unit_views}
+
+    try:
+        payload = await synthesise_fluent_answer(
+            load_bearing_unit_ids=list(unit_id_to_text.keys()),
+            unit_id_to_text=unit_id_to_text,
+            defensibility_class=computed_class.value,
+            timeout_seconds=30.0,
+        )
+    except EmergentKeyMissingError:
+        # AF-E2 amended: CONFIG DEFECT → fail loud upstream (503).
+        raise
+    except LLMTimeoutError:
+        return (
+            synthesise_mechanical_answer_text(load_bearing_unit_ids, computed_class),
+            "mechanical", "llm_timeout", None,
+        )
+    except LLMUnavailableError:
+        return (
+            synthesise_mechanical_answer_text(load_bearing_unit_ids, computed_class),
+            "mechanical", "llm_unavailable", None,
+        )
+    except LLMParseFailureError:
+        return (
+            synthesise_mechanical_answer_text(load_bearing_unit_ids, computed_class),
+            "mechanical", "llm_parse_failure", None,
+        )
+
+    # Grounding gate — AF-E1 β + conditions.
+    result = verify_grounding(
+        prose=payload["prose"],
+        per_sentence=payload["per_sentence"],
+        load_bearing_unit_ids=list(unit_id_to_text.keys()),
+        unit_id_to_text=unit_id_to_text,
+    )
+    if not result.passed:
+        return (
+            synthesise_mechanical_answer_text(load_bearing_unit_ids, computed_class),
+            "mechanical", "grounding_reject", result.reject_detail,
+        )
+    return (payload["prose"], "llm", None, None)

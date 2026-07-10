@@ -1,0 +1,8 @@
+{
+  "rule_id": "tier_lock",
+  "locked": true,
+  "reason_note": "idem-1",
+  "grantor_id": "6a49d57693e9bb94abab17f4",
+  "idempotency_key": "tier-lock-idempotent-cbcc471e",
+  "at": "2026-07-10T20:00:49.679515+00:00"
+}

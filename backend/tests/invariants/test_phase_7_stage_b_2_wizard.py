@@ -211,14 +211,15 @@ def test_prior_contract_file_exists_and_stable_at_7b_2(rel_path: str):
 
 
 def test_composed_conclusion_synthesis_lines_untouched_at_7b_2():
-    """Block C — Verdict A regression at 7b-2."""
-    p = _BACKEND_ROOT / "services" / "service_1" / "composed_conclusion.py"
+    """Block C — mechanical composer preservation re-blessed at Answer
+    Fluency close (Owner AF-E4 α, 2026-07-10). Repointed at the
+    extracted `mechanical_composer.py`; byte-identical slice.
+    """
+    p = _BACKEND_ROOT / "services" / "service_1" / "mechanical_composer.py"
     lines = p.read_text().splitlines(keepends=True)
-    # Sub-stage 1 (2026-07-07): synthesis-lines slice shifted [315:321]→[329:335]
-    # after I4 wire-up; slice content SHA d2e72653 byte-identical.
-    slice_bytes = "".join(lines[329:335]).encode("utf-8")
+    slice_bytes = "".join(lines[35:40]).encode("utf-8")
     slice_sha = hashlib.sha256(slice_bytes).hexdigest()
-    EXPECTED = "d2e72653f84c4772796a6fb71b61fb70345f057cfd3451d60bbfb15bc2d58159"
+    EXPECTED = "7475be407cf35e1d87f2d6712a262d58fe26aac00897a4475f0cb88180565f4d"
     assert slice_sha == EXPECTED
 
 

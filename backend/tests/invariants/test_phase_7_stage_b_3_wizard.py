@@ -217,20 +217,22 @@ def test_prior_contract_file_exists_and_stable_at_7b_3(contract_file: str):
 
 
 def test_composed_conclusion_synthesis_lines_untouched_at_7b_3():
-    """Block C — synthesis lines slice byte-identity anchor."""
-    p = _ROOT / "services" / "service_1" / "composed_conclusion.py"
+    """Block C — synthesis lines slice re-blessed at Answer Fluency
+    close (Owner AF-E4 α, 2026-07-10). Mechanical composer extracted
+    to `mechanical_composer.py`; byte-identical.
+    """
+    p = _ROOT / "services" / "service_1" / "mechanical_composer.py"
     if not p.exists():
-        pytest.skip("composed_conclusion.py not present")
+        pytest.skip("mechanical_composer.py not present")
     text = p.read_text()
     lines = text.splitlines()
-    if len(lines) < 335:
-        pytest.skip("composed_conclusion.py too short for slice check")
-    # Sub-stage 1 (2026-07-07): synthesis lines shifted [315:321]→[329:335]
-    # after I4 wire-up; content byte-identical.
-    slice_text = "\n".join(lines[329:335])
+    if len(lines) < 41:
+        pytest.skip("mechanical_composer.py too short for slice check")
+    slice_text = "\n".join(lines[35:40])
     slice_sha = hashlib.sha256(slice_text.encode("utf-8")).hexdigest()
-    assert slice_sha.startswith("9e4e6152"), (
-        f"composed_conclusion.py:316-321 slice drifted; got SHA {slice_sha[:16]}"
+    # Post-AF re-bless: extracted composer slice SHA prefix.
+    assert slice_sha.startswith("47ed1ea8"), (
+        f"mechanical_composer.py:36-41 slice drifted; got SHA {slice_sha[:16]}"
     )
 
 

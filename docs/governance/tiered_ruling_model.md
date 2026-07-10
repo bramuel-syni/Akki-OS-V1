@@ -273,4 +273,28 @@ Applied structural consequences (builder disclosure, not Owner text):
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10. On-disk canonical per Standing Rule v3.*
+## §11. 9.2-OWN resolution (Owner, 2026-07-10) — verbatim carrier
+
+> 9.2-OWN resolution (Owner, 2026-07-10). The extraction topology question is closed on the architecture's own staked default — it was designed, not open.
+>
+> OWN-1 — RESOLVED: compute-to-data. GPU workers deploy adjacent to the archive, within RMS custody. Raw material never leaves the estate; extracted NormalizedUnits are the only thing that travels. This is the posture the extraction architecture was built around (pull-based seam, purge-per-job with attestation, raw-never-egresses) and it stands as the ruling, not a default awaiting confirmation.
+>
+> OWN-2 — RESOLVED by consequence: local access at the archive. Workers read RMS storage directly at the venue (mount or local transfer on premises). The physical mechanics — what the archive sits on, what the deployment machines can mount — are day-one deployment findings, not pre-decisions. Same pattern as format/codec verification.
+>
+> OWN-3 — already satisfied by sequencing. Post-census slice, as restated; nothing exists to do early. Correction riding this ruling: the on-disk OWN-3 wording "on grant compute" is replaced with "at ingest, wherever the run occurs" — venue-neutral, removing a residue of an earlier conflation between an external compute grant and this architecture. No other OWN-3 text changes.
+>
+> Consequence — 9.2b's gate list collapses to two external actions, both owner-side, neither a design decision: (1) the RMS licensing/access agreement permitting deployment at the archive and read access to it; (2) GPU hardware physically arranged at that venue. When both exist, 9.2b dispatches: deploy → census at scale → BM-V per P9-E5 (closes on PASS or INVESTIGATE; no production mining until PASS). Nothing else gates it.
+>
+> Update PHASE_STATE and PRD to match: strike "9.2-OWN-1..3 pending owner decisions"; replace with "9.2b awaits: RMS agreement + hardware at venue (owner-side actions). Topology ruled: compute-to-data (§11)."
+
+Applied structural consequences (builder disclosure · not Owner text):
+
+- **9.2-OWN-1 topology:** compute-to-data. Design default; ruled, not open.
+- **9.2-OWN-2 archive access path:** local at venue; day-one deployment findings replace pre-decisions.
+- **9.2-OWN-3 wording correction:** on-disk carriers replace "on grant compute" with "at ingest, wherever the run occurs" per Owner ruling. Other OWN-3 text unchanged.
+- **9.2b gate collapse:** two owner-side external actions remain (RMS agreement + hardware at venue). No design decisions gating 9.2b.
+- **P9-E5 bindings unchanged** at 9.2b: BM-V verdict inside Phase 9, closes on PASS or INVESTIGATE, no production mining until PASS.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10. On-disk canonical per Standing Rule v3.*

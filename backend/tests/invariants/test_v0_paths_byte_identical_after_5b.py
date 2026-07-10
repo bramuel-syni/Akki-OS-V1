@@ -102,22 +102,24 @@ def test_composed_conclusion_synthesis_lines_untouched():
     layer; the contract file is separately guarded by the SHA row above.
     """
     backend_root = Path(__file__).resolve().parent.parent.parent
-    p = backend_root / "services" / "service_1" / "composed_conclusion.py"
+    # Answer Fluency AF-E4 α re-bless (Owner 2026-07-10): the pre-3.8
+    # answer_text f-string was extracted byte-identically to
+    # `services/service_1/mechanical_composer.py::synthesise_mechanical_answer_text`
+    # per the capture-then-refactor ordering condition. AF-G1 attests
+    # against goldens at `tests/goldens/answer_fluency/pre_3_8/mechanical_baseline.json`;
+    # this legacy anchor is repointed at the extracted composer for
+    # backward-compat continuity. Byte-identical slice — SHA re-blessed.
+    # See docs/rulings/answer_fluency_af_e1_to_e4.md §1.4.
+    p = backend_root / "services" / "service_1" / "mechanical_composer.py"
     lines = p.read_text().splitlines(keepends=True)
-    # 1-indexed lines 316-321 inclusive; ensure the file has enough lines.
-    assert len(lines) >= 321, (
-        f"services/service_1/composed_conclusion.py truncated below 321 lines: {len(lines)}"
+    assert len(lines) >= 40, (
+        f"services/service_1/mechanical_composer.py truncated below 40 lines: {len(lines)}"
     )
-    # Phase 8 Seam 3 Sub-stage 1 (2026-07-07): I4 wire-up added a refusal-
-    # ledger emit at ~line 273, which shifted the synthesis-lines slice
-    # from [315:321] to [329:335]. Slice CONTENT is byte-identical
-    # (SHA d2e72653... preserved); only file position changed.
-    slice_bytes = "".join(lines[329:335]).encode("utf-8")
+    slice_bytes = "".join(lines[35:40]).encode("utf-8")
     slice_sha = hashlib.sha256(slice_bytes).hexdigest()
-    # SHA captured at Phase 5 Stage B open (2026-07-04). If any Owner-
-    # ratified change to the answer_text synthesis is required, update
-    # this constant AS PART OF the Verdict close-report.
-    EXPECTED = "d2e72653f84c4772796a6fb71b61fb70345f057cfd3451d60bbfb15bc2d58159"
+    # SHA re-blessed at Answer Fluency close (2026-07-10) per AF-E4 α
+    # extraction to mechanical_composer.py. Byte-identical f-string.
+    EXPECTED = "7475be407cf35e1d87f2d6712a262d58fe26aac00897a4475f0cb88180565f4d"
     assert slice_sha == EXPECTED, (
         f"HAZARD-STOP — services/service_1/composed_conclusion.py:316-321 "
         f"answer_text synthesis lines drifted post-Phase-5-Stage-B.\n"

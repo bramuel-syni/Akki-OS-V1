@@ -23,6 +23,17 @@ import os
 # `services/perception/gpu_execution/cuda_runtime.py` imports cleanly.
 os.environ.setdefault("PERCEPTION_EXECUTION_MODE", "cpu")
 
+# Answer Fluency AF-E2 amended (Owner, 2026-07-10): hermetic tests opt
+# into mock LLM mode via `SYNISENSE_LLM_MODE=mock`. In this mode the
+# fluent-arm synthesis produces echo output (not valid JSON) which
+# trips LLMParseFailureError → mechanical arm falls through. CI never
+# performs a live LLM call for fluency; tests that specifically need
+# the LLM-succeeds path monkey-patch the fluency_synthesizer seams.
+# Without this default, missing EMERGENT_LLM_KEY would surface as 503
+# EmergentKeyMissingError (which is the correct production behaviour
+# for a misconfigured deployment, but wrong for hermetic CI).
+os.environ.setdefault("SYNISENSE_LLM_MODE", "mock")
+
 import pytest
 
 

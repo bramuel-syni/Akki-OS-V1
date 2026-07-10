@@ -38,6 +38,7 @@ from services.service_1 import composed_conclusion as composed_conclusion_module
 from services.service_1 import dispatch as dispatch_module
 from services.service_1 import qualified_data as qualified_data_module
 from services.service_1 import service
+from services.synisense.shield import fluency_synthesizer as fluency_synthesizer_module
 
 
 router = APIRouter(prefix="/service_1", tags=["service_1"])
@@ -285,6 +286,16 @@ async def v2_dispatch_endpoint(request: ObjectiveRequest_v2, http_request: Reque
         raise HTTPException(
             status_code=503,
             detail=f"async delivery queue saturated: {exc}",
+        )
+    except fluency_synthesizer_module.EmergentKeyMissingError as exc:
+        # Answer Fluency AF-E2 amended boundary (Owner 2026-07-10):
+        # CONFIG DEFECT → fail loud. Emergent LLM key missing/invalid
+        # is a misconfigured deployment, not a runtime transient.
+        # Standing Disposition `Infra-not-refusal` — NEVER a refusal
+        # envelope. See docs/rulings/answer_fluency_af_e1_to_e4.md §1.2.
+        raise HTTPException(
+            status_code=503,
+            detail=f"answer_fluency: emergent_key_missing: {exc}",
         )
     # Isinstance branch — five arms including the new 202:
     if isinstance(result, qualified_data_module.QualifiedDataPayload):

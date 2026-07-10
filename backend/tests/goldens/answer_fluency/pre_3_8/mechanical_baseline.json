@@ -1,0 +1,170 @@
+{
+  "_note": "Pre-3.8 mechanical composer baseline. Captured 2026-07-10 per AF-E4 α ordering condition (capture-then-refactor). Byte-identical lift of composed_conclusion.py:330-335 (pre-refactor). Any drift in the post-refactor mechanical composer against these strings = AF-G1 FAIL.",
+  "capture_source_module": "backend/services/service_1/composed_conclusion.py",
+  "capture_source_lines": "330-335",
+  "cases": [
+    {
+      "load_bearing_unit_ids": [
+        "u1"
+      ],
+      "computed_class": "fact",
+      "expected_answer_text": "Composed conclusion over 1 load-bearing unit(s) at defensibility class 'fact'. Load-bearing set retrievable via Northena Ledger by trace_id."
+    },
+    {
+      "load_bearing_unit_ids": [
+        "u1",
+        "u2"
+      ],
+      "computed_class": "fact",
+      "expected_answer_text": "Composed conclusion over 2 load-bearing unit(s) at defensibility class 'fact'. Load-bearing set retrievable via Northena Ledger by trace_id."
+    },
+    {
+      "load_bearing_unit_ids": [
+        "u1",
+        "u2",
+        "u3"
+      ],
+      "computed_class": "utterance",
+      "expected_answer_text": "Composed conclusion over 3 load-bearing unit(s) at defensibility class 'utterance'. Load-bearing set retrievable via Northena Ledger by trace_id."
+    },
+    {
+      "load_bearing_unit_ids": [
+        "ua",
+        "ub",
+        "uc",
+        "ud"
+      ],
+      "computed_class": "utterance",
+      "expected_answer_text": "Composed conclusion over 4 load-bearing unit(s) at defensibility class 'utterance'. Load-bearing set retrievable via Northena Ledger by trace_id."
+    },
+    {
+      "load_bearing_unit_ids": [
+        "u1"
+      ],
+      "computed_class": "non_factual",
+      "expected_answer_text": "Composed conclusion over 1 load-bearing unit(s) at defensibility class 'non_factual'. Load-bearing set retrievable via Northena Ledger by trace_id."
+    },
+    {
+      "load_bearing_unit_ids": [
+        "unit-0000",
+        "unit-0001",
+        "unit-0002",
+        "unit-0003",
+        "unit-0004",
+        "unit-0005",
+        "unit-0006",
+        "unit-0007",
+        "unit-0008",
+        "unit-0009"
+      ],
+      "computed_class": "fact",
+      "expected_answer_text": "Composed conclusion over 10 load-bearing unit(s) at defensibility class 'fact'. Load-bearing set retrievable via Northena Ledger by trace_id."
+    },
+    {
+      "load_bearing_unit_ids": [
+        "unit-0000",
+        "unit-0001",
+        "unit-0002",
+        "unit-0003",
+        "unit-0004",
+        "unit-0005",
+        "unit-0006",
+        "unit-0007",
+        "unit-0008",
+        "unit-0009",
+        "unit-0010",
+        "unit-0011",
+        "unit-0012",
+        "unit-0013",
+        "unit-0014",
+        "unit-0015",
+        "unit-0016",
+        "unit-0017",
+        "unit-0018",
+        "unit-0019",
+        "unit-0020",
+        "unit-0021",
+        "unit-0022",
+        "unit-0023",
+        "unit-0024",
+        "unit-0025",
+        "unit-0026",
+        "unit-0027",
+        "unit-0028",
+        "unit-0029",
+        "unit-0030",
+        "unit-0031",
+        "unit-0032",
+        "unit-0033",
+        "unit-0034",
+        "unit-0035",
+        "unit-0036",
+        "unit-0037",
+        "unit-0038",
+        "unit-0039",
+        "unit-0040",
+        "unit-0041",
+        "unit-0042",
+        "unit-0043",
+        "unit-0044",
+        "unit-0045",
+        "unit-0046",
+        "unit-0047",
+        "unit-0048",
+        "unit-0049",
+        "unit-0050",
+        "unit-0051",
+        "unit-0052",
+        "unit-0053",
+        "unit-0054",
+        "unit-0055",
+        "unit-0056",
+        "unit-0057",
+        "unit-0058",
+        "unit-0059",
+        "unit-0060",
+        "unit-0061",
+        "unit-0062",
+        "unit-0063",
+        "unit-0064",
+        "unit-0065",
+        "unit-0066",
+        "unit-0067",
+        "unit-0068",
+        "unit-0069",
+        "unit-0070",
+        "unit-0071",
+        "unit-0072",
+        "unit-0073",
+        "unit-0074",
+        "unit-0075",
+        "unit-0076",
+        "unit-0077",
+        "unit-0078",
+        "unit-0079",
+        "unit-0080",
+        "unit-0081",
+        "unit-0082",
+        "unit-0083",
+        "unit-0084",
+        "unit-0085",
+        "unit-0086",
+        "unit-0087",
+        "unit-0088",
+        "unit-0089",
+        "unit-0090",
+        "unit-0091",
+        "unit-0092",
+        "unit-0093",
+        "unit-0094",
+        "unit-0095",
+        "unit-0096",
+        "unit-0097",
+        "unit-0098",
+        "unit-0099"
+      ],
+      "computed_class": "utterance",
+      "expected_answer_text": "Composed conclusion over 100 load-bearing unit(s) at defensibility class 'utterance'. Load-bearing set retrievable via Northena Ledger by trace_id."
+    }
+  ]
+}

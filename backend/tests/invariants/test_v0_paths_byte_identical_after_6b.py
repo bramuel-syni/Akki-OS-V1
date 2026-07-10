@@ -92,20 +92,21 @@ def test_composed_conclusion_synthesis_lines_untouched_at_6b():
     """Verdict A protection regression — `services/service_1/composed_conclusion.py:316-321`
     UNTOUCHED at Phase 6 Stage B. Same SHA slice as 5b's Q4.c gate."""
     backend_root = Path(__file__).resolve().parent.parent.parent
-    p = backend_root / "services" / "service_1" / "composed_conclusion.py"
+    # Answer Fluency AF-E4 α re-bless (Owner 2026-07-10): mechanical
+    # composer extracted byte-identically to mechanical_composer.py.
+    p = backend_root / "services" / "service_1" / "mechanical_composer.py"
     lines = p.read_text().splitlines(keepends=True)
-    assert len(lines) >= 321, (
-        f"services/service_1/composed_conclusion.py truncated below 321 lines: {len(lines)}"
+    assert len(lines) >= 40, (
+        f"services/service_1/mechanical_composer.py truncated below 40 lines: {len(lines)}"
     )
-    # Sub-stage 1 (2026-07-07): synthesis-lines slice shifted [315:321]→[329:335]
-    # after I4 wire-up; slice content SHA d2e72653 byte-identical.
-    slice_bytes = "".join(lines[329:335]).encode("utf-8")
+    slice_bytes = "".join(lines[35:40]).encode("utf-8")
     slice_sha = hashlib.sha256(slice_bytes).hexdigest()
-    EXPECTED = "d2e72653f84c4772796a6fb71b61fb70345f057cfd3451d60bbfb15bc2d58159"
+    EXPECTED = "7475be407cf35e1d87f2d6712a262d58fe26aac00897a4475f0cb88180565f4d"
     assert slice_sha == EXPECTED, (
-        f"HAZARD-STOP — services/service_1/composed_conclusion.py:316-321 "
-        f"synthesis lines drifted post-Phase-6-Stage-B.\n"
+        f"HAZARD-STOP — services/service_1/mechanical_composer.py:36-41 "
+        f"synthesis lines drifted post-Answer-Fluency.\n"
         f"  Expected: {EXPECTED}\n"
         f"  Actual  : {slice_sha}\n"
-        f"Owner Q4.c ratification (5b) + Verdict A regression at 6b: untouched."
+        f"AF-E4 α mechanical composer preservation — golden diff against "
+        f"pre_3_8/mechanical_baseline.json is the primary attest (AF-G1)."
     )
