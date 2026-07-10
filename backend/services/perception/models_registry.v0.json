@@ -1,0 +1,19 @@
+{
+  "version": "v0",
+  "seeded_at": "2026-07-10",
+  "authority_source": "Owner ruling 9.2a-E1 α + seed-with-CI-fixture correction (2026-07-10). Verbatim: 'the registry does NOT seed empty — it seeds with the CI fixture model's entry. Empty per data-blind misapplies the posture: data-blind governs assumptions about the estate's content, not tool provenance — a model registry entry is tooling attestation, and an empty registry plus a provenance gate is the CD-E3 deadlock again (nothing can pass). Seed models_registry.v0.json with whisper-tiny pinned (SHA + license + origin URL) as the CI fixture model; production models land additively at 9.2b via the registry bump, selected then.'",
+  "models": {
+    "whisper-tiny": {
+      "model_id": "whisper-tiny",
+      "family": "Whisper-class",
+      "role": "ci_fixture_asr",
+      "backend": "faster-whisper (ctranslate2)",
+      "weights_sha256": "dcb76c6586fc06cbdac6dd21f14cfd129cc4cdd9dce19bf4ffa62e59cbe6e6d1",
+      "weights_file": "model.bin",
+      "license": "MIT (OpenAI Whisper original release · Systran faster-whisper conversion)",
+      "origin_url": "https://huggingface.co/Systran/faster-whisper-tiny",
+      "hf_snapshot_revision": "d90ca5fe260221311c53c58e660288d3deb8d356",
+      "purpose": "CI CPU-mode ASR fixture model. NOT for production use. Production model lands additively at 9.2b via v0 -> v1 registry bump per Owner ruling."
+    }
+  }
+}

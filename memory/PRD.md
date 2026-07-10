@@ -3,7 +3,20 @@
 ## Original problem statement
 Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence System on top of the `Akki-Executive-New-Arch` legacy substrate (now `/reference/akki-legacy/`). Phases G0 → G6 with strict doctrine: frozen contracts via Pydantic + JSON snapshots, all LLM calls through the SyniSense Shield chokepoint, spike vs production hours kept distinct, Rule-2 STOP if net-new code outgrows lifted-substrate lines.
 
-## Current gate status (2026-07-10 · post-CD-ratification + STEP A housekeeping)
+## Current gate status (2026-07-10 · post-9.2a-close)
+- **Latest gate:** **Phase 9 Sub-stage 9.2a CLOSED 2026-07-10 — atomic execution commit per Owner rulings 9.2a-E1..E4 α + conditions (2026-07-10).**
+- **Landed:** Real ASR worker (Whisper-class via faster-whisper CTranslate2) + real diarization worker (Silero VAD via bundled ONNX runtime) + GPU execution layer (CPU-mode CI · destination-agnostic; env-var `PERCEPTION_EXECUTION_MODE={cpu,gpu}` import-time-fail on unset per E2 α cond 1) + `execution_mode` sidecar telemetry (E2 α cond 2 · frozen contract PRESERVED) + `models_registry.v0.json` seeded with whisper-tiny CI fixture (E1 α seed-with-CI-fixture correction) + purge-attestation §6.10 AST gate (E4 α · 4 reflection cells; matches AS-G6/TF-G9/CD-G3 lineage) + P9-E7 rider cells with discriminator (a) non-empty units (E3 α · stub verified emitting 0 units on fixture audio, real worker emits ≥1 unit).
+- **Ancillary rulings applied inline at this commit's STEP A:** (1) `CD-9.2a-E*` → `9.2a-E*` mechanical rename in `docs/stage_a_proposals/9_2a.md` (0 remaining `CD-9.2a-` references); (2) Fixture Refresh mini-phase queued as post-9.2a active lane.
+- **Backend CI 1143/1143 (+29). Jest 137/137 unchanged. Playwright chromium 44/44 unchanged. Parity 31/31 byte-identical.**
+- **Rule 2 verdict (raw LoC per governance §9):** 1,431 raw vs band [820, 1,230] → **+16.3% ABOVE TOP** (Tier-2 miss disclosed per governance §2.2 · NOT blocking). LLoC 877 disclosure-line only per §9. `snapshot_raw_in_band=no`. §4.2 threshold NOT hit (1,431 < 1,500 raw · 29 cells < 60).
+- **Zero new §0.1 dispositions. Zero new §0.2 debts.**
+- **§3.8 answer fluency status:** STILL_QUEUED at BCR §5.1 line 336 (unchanged).
+- **Close:** `/app/docs/close_reports/9_2a.md`. Rulings: `/app/docs/rulings/9_2a_e1_to_e4.md`.
+- **Previous gate:** Census-dimensions RATIFIED 2026-07-10 at STEP A commit `b3ac048`; §9 + §10 governance amendments + §6.11 async-httpx codification landed there.
+- **Awaiting:** Owner ratification of 9.2a close.
+- **Sequenced work:** **[9.2a close · awaiting ratification] → Fixture Refresh mini-phase (small Stage A · HAZARD-STOP posture Tier-1 · license_class_map v0→v1 additive · ~10-file test cascade) → §3.8 Answer fluency (STILL_QUEUED · post-B-5b · rides existing envelopes and gates) → Opportunity Briefs (§3.15 · fixture-census permitted per AS-U2) → production housing (§3.4). Grant/owner-gated remainder: 9.2b only (deployment + census-at-scale + BM-V, gated on 9.2-OWN-1..3).**
+
+## Prior gate status (2026-07-10 · post-CD-ratification + STEP A housekeeping)
 - **Latest gate:** **Census-dimensions mini-phase RATIFIED 2026-07-10 (Owner post-CD dispatch).** CD close of 2026-07-10 accepted; +45% raw miss disclosed and accepted under new §9 metric-verdict-in-derivation-unit ruling.
 - **STEP A housekeeping commit landing now** (doc-only; no code; parity 31 unchanged):
   - **§9 Metric-verdict-in-derivation-unit ruling** codified verbatim in `docs/governance/tiered_ruling_model.md` — bands derived and verdicts rendered in raw LoC; alternate-unit disclosures welcome; unit change proposed at next Stage A.

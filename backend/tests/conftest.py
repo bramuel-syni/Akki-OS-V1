@@ -10,8 +10,18 @@ finishes, breaking subsequent async Mongo writes with
 Session-scoped loop shares one loop across all async tests in the
 session, matching the runtime posture (long-lived FastAPI app with a
 single event loop).
+
+9.2a-E2 α condition 1 (Owner, 2026-07-10): env var
+`PERCEPTION_EXECUTION_MODE` unset → import-time failure. CI sets `cpu`
+explicitly; setting happens HERE at conftest top-level (before any
+perception module import at test-collection time).
 """
 import asyncio
+import os
+
+# 9.2a-E2 α condition 1: CI mode. Set BEFORE any perception import so
+# `services/perception/gpu_execution/cuda_runtime.py` imports cleanly.
+os.environ.setdefault("PERCEPTION_EXECUTION_MODE", "cpu")
 
 import pytest
 
