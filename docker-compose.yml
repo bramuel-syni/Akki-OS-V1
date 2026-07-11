@@ -1,0 +1,64 @@
+# §3.4 Production Housing PH-R1 — dev-parity harness
+# Owner ruling PH-E2 α (2026-07-10): single multi-stage image; deploy
+# topology chooses how to serve. This compose file is the dev-parity
+# harness only — production deploys use K8s / cloud-native orchestration
+# with vault-class secret injection (owner-side per PH-R4).
+#
+# Usage:
+#   docker compose up --build
+#   docker compose down
+#
+# Environment: create a `.env.dev` file in the repo root with
+# MONGO_URL / JWT_SECRET / EMERGENT_LLM_KEY (dev values ONLY);
+# NEVER commit that file. Docker compose reads it via env_file below.
+
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ping:1}).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Owner enhancement promotion 2026-07-10 · /api/system/build_info.
+        # Dev-parity: read from local git; production sets these via CI/CD.
+        GIT_SHA: ${GIT_SHA:-dev-local}
+        BUILD_TIMESTAMP: ${BUILD_TIMESTAMP:-dev-local}
+        REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL:-http://localhost:8001}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "8001:8001"
+    env_file:
+      # PH-E1 α: vault-class secrets stay OUT of the image; this file is
+      # dev-only + git-ignored + lives on the developer's disk.
+      - .env.dev
+    environment:
+      # Non-secret runtime config (config-class per BCR annex).
+      DB_NAME: ${DB_NAME:-rms_dev}
+      # Overrides MONGO_URL from .env.dev if you want to point at the
+      # compose-managed mongo:
+      #   MONGO_URL=mongodb://mongo:27017
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8001/api/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  mongo_data:

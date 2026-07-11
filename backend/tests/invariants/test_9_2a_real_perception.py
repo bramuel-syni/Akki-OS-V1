@@ -398,13 +398,20 @@ def test_v1_g6_real_worker_telemetry_fields_present_per_job() -> None:
 
 
 def test_v1_g7_attestation_parity_31_at_9_2a_close() -> None:
-    """V1-G7: 31 pre-existing snapshots byte-identical (no new contracts at 9.2a)."""
-    invariants_dir = Path(__file__).parent
-    snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 31, (
+    """V1-G7: 31 pre-existing snapshots byte-identical (no new contracts at 9.2a).
+
+    PH-R1 (2026-07-10) · PH-E3 α: uses the shared parity counter so
+    readiness (/api/readyz) and this gate never disagree about parity.
+    """
+    from services.health import count_frozen_contract_snapshots, EXPECTED_PARITY
+
+    parity = count_frozen_contract_snapshots()
+    assert parity == 31, (
         f"V1-G7 at 9.2a close: expected 31 snapshots (unchanged). "
-        f"Actual: {len(snapshots)}."
+        f"Actual: {parity}."
     )
+    # Cross-attest: shared counter's canonical expected value matches.
+    assert EXPECTED_PARITY == 31
 
 
 # ===== Standing constraints re-attest =====

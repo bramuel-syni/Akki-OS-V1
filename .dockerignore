@@ -1,0 +1,65 @@
+# PH-R1 · Owner ruling PH-E1 α · secret externalization audit.
+# ".env" and any secret-carrying dotfile MUST NEVER land in the image.
+# Vault-class binding lands at deploy time (owner-side per PH-R4).
+
+# Secrets and env files (Tier-1 · non-negotiable per PH-E1 α)
+.env
+.env.*
+*.env
+.envrc
+secrets/
+*.pem
+*.key
+*.p12
+
+# Version control + platform metadata
+.git
+.gitignore
+.gitattributes
+.github
+.emergent
+
+# Node / frontend build artifacts (rebuilt inside the image)
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+frontend/node_modules
+frontend/build
+frontend/.eslintcache
+
+# Python caches
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+venv
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# Test outputs (not runtime artifacts)
+test-results
+playwright-report
+coverage
+.nyc_output
+
+# IDE / OS scratch
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Docs, memory, salvage — on-disk canonical for the repo but not
+# needed at runtime. Container image is source-plane only.
+docs
+memory
+salvage
+
+# Local dev files
+docker-compose.yml
+Dockerfile
+.dockerignore
+supervisord.conf
+*.md

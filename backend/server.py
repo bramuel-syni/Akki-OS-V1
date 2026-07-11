@@ -155,6 +155,18 @@ app.include_router(transform_forms_router.router, prefix="/api")
 from routers import census_dimensions as census_dimensions_router  # noqa: E402
 app.include_router(census_dimensions_router.router, prefix="/api")
 
+# §3.4 Production Housing PH-R1 (Owner rulings 2026-07-10 · all α + build_info
+# enhancement promoted). Adds BCR §3.4 annex endpoints:
+#   /api/healthz  liveness  · no auth · no DB touch
+#   /api/readyz   readiness · DB ping + frozen-contract parity count
+#   /api/system/build_info  git SHA + build timestamp + parity (no secrets)
+# Shared FS-enumeration parity counter at services/health/parity_counter.py
+# (PH-E3 α · same source as V1-G7 gate).
+from routers import health as health_router  # noqa: E402
+app.include_router(health_router.router, prefix="/api")
+from routers import system_info as system_info_router  # noqa: E402
+app.include_router(system_info_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:
