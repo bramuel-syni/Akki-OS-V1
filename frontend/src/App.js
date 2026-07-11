@@ -33,6 +33,8 @@ import ComplianceRetentionRightsPage from './pages/compliance/ComplianceRetentio
 import ComplianceRulebookWritePage from './pages/compliance/ComplianceRulebookWritePage';
 import ExtractionConsoleHomePage from './pages/extraction/ExtractionConsoleHomePage';
 import RegistryAdminView from './pages/extraction/RegistryAdminView';
+// §3.15 Opportunity Briefs — UI Spec v2.2 §3.7 · advisory · Registry-read grounded.
+import OpportunityBriefsPage from './pages/opportunity_briefs/OpportunityBriefsPage';
 import { AuthProvider } from './hooks/useAuth';
 
 // Phase 8 Stage B-1 — Auth landing (Owner E1 ratified: custom JWT + bcrypt).
@@ -72,6 +74,8 @@ export default function App() {
           <Route path="compliance/rulebook" element={<ComplianceRulebookWritePage />} />
           <Route path="extraction/console" element={<ExtractionConsoleHomePage />} />
           <Route path="extraction/registry-admin" element={<RegistryAdminView />} />
+          {/* §3.15 Opportunity Briefs — advisory surface (UI Spec v2.2 §3.7) */}
+          <Route path="opportunity-briefs" element={<OpportunityBriefsPage />} />
           {/* Legacy G5b surfaces — nested under /legacy/* (Phase 8a-lite archival) */}
           <Route path="legacy" element={<AppShell />}>
             <Route index element={<LandingPage />} />

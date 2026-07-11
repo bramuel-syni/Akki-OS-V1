@@ -1,0 +1,8 @@
+{
+  "rule_id": "tier_lock",
+  "locked": false,
+  "reason_note": "gate-16",
+  "grantor_id": "6a49d57693e9bb94abab17f4",
+  "idempotency_key": "gate-16-b4",
+  "at": "2026-07-11T03:16:04.874973+00:00"
+}
