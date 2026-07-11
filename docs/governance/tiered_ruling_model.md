@@ -297,4 +297,18 @@ Applied structural consequences (builder disclosure · not Owner text):
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10. On-disk canonical per Standing Rule v3.*
+## §12 · Close-ratification discipline (Owner, 2026-07-10)
+
+A close whose named gates are green and whose rulings are attested as applied ratifies on its own text. Post-close evidence questions are permitted only where a specific Tier-1 gate is alleged defective, with the allegation named. Conditions attach at ruling time, never at close time. No conditional ratifications on meta-evidence.
+
+## §12.1 · Remaining gates (Owner, 2026-07-10) — complete list
+
+- Tier-1 verbatim ruling loop (frozen contracts, security boundaries, honesty grammar, client promises) — the product itself.
+- P9-E5 BM-V bindings (no production mining until PASS) — client-facing quality claim.
+- 9.2b's two owner actions (RMS access, hardware at venue) — physical reality, not process.
+- §4.2 thresholds and band disclosures — Tier-2, disclosure-only, never blocking.
+- Nothing else blocks anything.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10. On-disk canonical per Standing Rule v3.*
