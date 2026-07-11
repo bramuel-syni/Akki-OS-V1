@@ -30,7 +30,8 @@
  * Backend contracts untouched at Phase 8a-lite.
  */
 import React, { useState } from 'react';
-import { Send, Loader2, Search } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Send, Loader2, Search, Menu, X } from 'lucide-react';
 import api from '../apiClient';
 import ClassBadge from '../components/ClassBadge';
 import RefusalCard from '../components/RefusalCard';
@@ -152,6 +153,87 @@ function AskInput({ value, onChange, onSubmit, busy }) {
         </button>
       </p>
     </form>
+  );
+}
+
+// Console navigation menu — discoverability aid on the Ask Console header.
+// UI Spec v1 §3.1 preserved: Ask Console remains the `/` ingress; this is
+// a discoverability augmentation only. Auth-gated entries stay visible
+// when unauth'd (clicking bounces to `/auth/login` per AuthProvider).
+// Class-honesty: no Opportunity Brief content leaks here — this is a
+// hyperlink list only; brief content only renders inside `/opportunity-briefs`.
+const CONSOLE_NAV_ITEMS = [
+  { path: '/operator', label: 'Operator Home', gate: 'auth' },
+  { path: '/engineer/register', label: 'Engineer', gate: 'auth' },
+  { path: '/master-admin', label: 'Master Admin', gate: 'auth' },
+  { path: '/compliance', label: 'Compliance', gate: 'auth' },
+  { path: '/extraction/console', label: 'Extraction Console', gate: 'auth' },
+  { path: '/extraction/registry-admin', label: 'Registry Admin', gate: 'auth' },
+  { path: '/opportunity-briefs', label: 'Opportunity Briefs', gate: 'public' },
+  { path: '/auth/login', label: 'Sign in', gate: 'public' },
+];
+
+function ConsoleNavMenu() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        data-testid="console-nav-toggle"
+        aria-label="Open consoles menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="p-2 rounded-md text-rms-ink hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-rms-accent"
+      >
+        {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+      </button>
+      {open && (
+        <>
+          {/* Click-outside overlay */}
+          <div
+            data-testid="console-nav-overlay"
+            className="fixed inset-0 z-10"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            data-testid="console-nav-menu"
+            role="menu"
+            className="absolute right-0 mt-2 w-64 bg-white border border-rms-line rounded-md shadow-lg z-20"
+          >
+            <div className="px-3 py-2 border-b border-rms-line">
+              <p className="text-[10px] font-mono uppercase tracking-wider text-rms-mute">
+                Consoles
+              </p>
+            </div>
+            <ul className="py-1">
+              {CONSOLE_NAV_ITEMS.map((item) => (
+                <li key={item.path}>
+                  <Link
+                    to={item.path}
+                    data-testid={`console-nav-link-${item.path.replace(/[/]/g, '-').replace(/^-/, '')}`}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center justify-between px-3 py-2 text-sm text-rms-ink hover:bg-gray-50 focus:outline-none focus:bg-gray-50"
+                    role="menuitem"
+                  >
+                    <span>{item.label}</span>
+                    <span
+                      className={
+                        item.gate === 'public'
+                          ? 'text-[10px] font-mono uppercase text-rms-mute'
+                          : 'text-[10px] font-mono uppercase text-rms-mute'
+                      }
+                    >
+                      {item.gate}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -549,12 +631,15 @@ export default function AskConsolePage() {
               Ask Console
             </span>
           </div>
-          <span
-            data-testid="header-gate-badge"
-            className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded bg-rms-ink text-white"
-          >
-            8a-lite
-          </span>
+          <div className="flex items-center gap-3">
+            <span
+              data-testid="header-gate-badge"
+              className="px-2.5 py-1 text-[10px] font-mono uppercase tracking-wider rounded bg-rms-ink text-white"
+            >
+              8a-lite
+            </span>
+            <ConsoleNavMenu />
+          </div>
         </div>
       </header>
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-16">
