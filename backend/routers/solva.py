@@ -36,7 +36,22 @@ async def get_trace(trace_id: str) -> List[Dict[str, Any]]:
     Solva writes to the Ledger's `stamp_audit` field (spec §13). This
     endpoint reads the field back, oldest first. Empty list if the
     trace_id is unknown (honest empty answer, HTTP 200 []).
+
+    OB-E2 Seam-2 α (Owner 2026-07-10): brief-scoped ids (prefix
+    `brief_`) MUST be rejected 404 — briefs are ADVISORY output and
+    are excluded from trace/receipt resolution per OB-R3.
     """
+    from fastapi import HTTPException
+    from services.opportunity_briefs import BRIEF_ID_PREFIX
+    if trace_id.startswith(BRIEF_ID_PREFIX):
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                f"trace_id {trace_id!r} is in the brief namespace "
+                f"({BRIEF_ID_PREFIX!r}); briefs are advisory and "
+                f"excluded from trace/receipt resolution per OB-R3."
+            ),
+        )
     cursor = db[NORTHENA_LEDGER_COLLECTION].find(
         {"trace_id": trace_id, "stage": "converge"}, {"_id": 0}
     ).sort("at", 1)
