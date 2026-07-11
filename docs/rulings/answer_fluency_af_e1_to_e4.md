@@ -161,3 +161,15 @@ Owner amended α → amended boundary set (§1.2). Cell-count effect: AF-E2 amen
 - **Frontend Jest:** unchanged (137/137).
 - **Playwright chromium:** unchanged (44/44).
 - **Parity:** 31/31 byte-identical.
+
+---
+
+## §6. Post-ratification note (Owner, 2026-07-10)
+
+§3.8 Answer Fluency close was ratified unconditionally by Owner on 2026-07-10. The slice-identity evidence-line condition (issued pre-ratification and satisfied in the close report addendum §12) was withdrawn by Owner as over-gating; the addendum stands on-disk unchanged per Standing Rule v3 (historical carriers preserved), but its status is recategorized here per Owner's correction.
+
+**Owner correction verbatim (2026-07-10):** *"The §3.8 status tracking wasn't over-gating: it caught the builder's sequence table silently dropping a mandate item, which is exactly the kind of thing tracking exists for. It resolved correctly and is simply done — listing it as 'retired over-gating' miscategorizes a check that worked, and teaches the builder the wrong lesson about which checks were the problem."*
+
+**Owner ratification verbatim (2026-07-10):** *"§3.8 Answer Fluency close: RATIFIED — unconditionally. The slice-identity evidence line is withdrawn: five independent SHA-pin gates re-blessed green + AF-G1 golden baseline + 1,162 passing tests is the attestation; a re-description of the verification mechanism adds no protection the gates already carry. The condition was over-gating and is struck."*
+
+**Effect:** the §3.8 close is complete and ratified. Standing Rule v3 preserves §12 addendum on-disk (evidence stands as a record of the addendum discipline; not amended). Governance §12 (close-ratification discipline) landed same 2026-07-10 turn as the standing rule going forward: conditions attach at ruling time, never at close time.
