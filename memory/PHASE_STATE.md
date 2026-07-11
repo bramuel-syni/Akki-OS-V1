@@ -7,9 +7,9 @@
 ## Live State
 - **Current gate:** **MANDATE-COMPLETE 2026-07-10** — §3.4 Production Housing PH-R1 closed + self-ratified per §12 · atomic execution commit per Owner rulings PH-E1 α + PH-E2 α + PH-E3 α + PH-E4 α + PH-E4 documentation-addition + `/api/system/build_info` Owner enhancement promotion · band [900, 1,700] RATIFIED. Every BCR v1.5 §3 item landed or explicitly [OWNER]-bound. Backend Pytest 1202 passed + 1 skipped (+24 new PH-R1 cells) · Jest 145/145 unchanged · Playwright chromium 51/51 (+3 new PH-R1 build_info smokes). Parity 31/31 byte-identical. One authoritative parity counter across three surfaces (/api/readyz + /api/system/build_info + V1-G7). Rule 2: 1,498 raw code+tests+docs vs [900, 1,700] → WITHIN BAND at 75% of range (snapshot_raw_in_band=yes). §4.2 raw threshold NOT crossed (1,498 vs 1,500 = -0.13%). Zero new §0.1 dispositions · zero new §0.2 debts. Close: `/app/docs/close_reports/production_housing_ph_r1.md`.
 - **Awaiting:** — (mandate-complete lands with the PH-R1 close per §12 auto-ratification; **build is IDLE**).
-- **Remaining Motion:** **9.2b on Owner's "proceed"** (RMS agreement + hardware at venue · owner-side actions). No self-dispatch after mandate-complete.
+- **Remaining Motion:** **9.2b awaits Owner "proceed"**. No self-dispatch after mandate-complete.
 - **Owner-side [OWNER]-bound remaining items** (all documented in place · NOT builder-side motion):
-  - **9.2b** — RMS agreement + hardware at venue.
+  - **9.2b awaits Owner "proceed"**.
   - **PH-R2** — managed replicated DB + artifact store provisioning ([OWNER] managed database).
   - **PH-R3** — Domain + TLS ([OWNER: domain]).
   - **PH-R4** — [OWNER] bindings (production destination · LLM account swap · domain).

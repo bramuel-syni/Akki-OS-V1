@@ -1,0 +1,8 @@
+{
+  "rule_id": "tier_lock",
+  "locked": true,
+  "reason_note": "auth taxonomy master pass",
+  "grantor_id": "6a49d57693e9bb94abab17f4",
+  "idempotency_key": "ma-auth-08a26f7e69",
+  "at": "2026-07-11T04:42:04.886462+00:00"
+}

@@ -22,7 +22,7 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - **§12 close-ratification-on-own-text criteria met:** (a) named gates green (PH-G1..G6 + auxiliary all pass), (b) rulings + Owner-addition + enhancement attested as applied, (c) no new Tier-1 escalation surfaced during execution → close ratifies on its own text. **Zero new §0.1 dispositions. Zero new §0.2 debts.**
 - **MANDATE-COMPLETE (Owner-declared 2026-07-10):** Every BCR v1.5 §3 item landed on-disk OR explicitly [OWNER]-bound with the specific binding named. See §10 of PH-R1 close report for the full BCR §3 landing matrix.
 - **Close:** `/app/docs/close_reports/production_housing_ph_r1.md`. Rulings: `/app/docs/rulings/production_housing_ph_r1_ph_e1_to_e4.md`.
-- **Remaining Motion:** **9.2b on Owner's "proceed"** — RMS agreement + hardware at venue (owner-side actions). No self-dispatch after mandate-complete. Build is IDLE.
+- **Remaining Motion:** **9.2b awaits Owner "proceed"**. No self-dispatch after mandate-complete. Build is IDLE.
 - **Owner-side [OWNER]-bound remaining items:** PH-R2 (managed replicated DB + artifact store · [OWNER]) · PH-R3 (Domain + TLS · [OWNER: domain]) · PH-R4 ([OWNER] LLM account swap + production destination + domain).
 
 ## Prior gate status (2026-07-10 · post-§3.15-Opportunity-Briefs-close)
@@ -34,7 +34,7 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - **Close:** `/app/docs/close_reports/opportunity_briefs.md` SHA `8e8448c51bda77a7dec6018dfe29c328c971b75317b3327736dd030eda0d199d`. Rulings: `/app/docs/rulings/opportunity_briefs_ob_e1_to_e3.md` SHA `91532c04cae050ea85e6b25f3d56d0b0db1c611b3c39450529b69fbe53e35bf2`. Salvage carrier: `/app/backend/services/opportunity_briefs/README.md` SHA `8fb3201a87b64fcc797e33519dfa633536d755f2999fc28efa270224d4acdd56`.
 - **Previous gate:** §3.8 Answer Fluency RATIFIED 2026-07-10 (unconditional per §12).
 - **Awaiting:** — (§3.15 self-ratified per §12; PH-R1 Stage A auto-dispatched on this close-landing per Owner pre-clearance).
-- **Sequenced work:** **[§3.15 Opportunity Briefs RATIFIED 2026-07-10 · self-ratifying per §12] → §3.4 Production Housing PH-R1 Stage A (auto-dispatched this close-landing per Owner pre-clearance · builder-side dispatchable half · PH-R2/PH-R3/PH-R4 [OWNER] bindings gate full production landing) → mandate-complete gate. 9.2b awaits: RMS agreement + hardware at venue (owner-side actions). Topology ruled: compute-to-data (§11). Governance §12 close-ratification discipline in force since 2026-07-10.**
+- **Sequenced work:** **[§3.15 Opportunity Briefs RATIFIED 2026-07-10 · self-ratifying per §12] → §3.4 Production Housing PH-R1 Stage A (auto-dispatched this close-landing per Owner pre-clearance · builder-side dispatchable half · PH-R2/PH-R3/PH-R4 [OWNER] bindings gate full production landing) → mandate-complete gate. 9.2b awaits Owner "proceed". Topology ruled: compute-to-data (§11). Governance §12 close-ratification discipline in force since 2026-07-10.**
 
 ## Prior gate status (2026-07-10 · post-§3.8-Answer-Fluency-close)
 - **Latest gate:** **§3.8 Answer Fluency CLOSED 2026-07-10 — atomic execution commit per Owner rulings AF-E1 β + 2 conditions + AF-E2 amended boundary set + AF-E3 α + AF-E4 α + 1 ordering condition.**
@@ -46,7 +46,7 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - **Close:** `/app/docs/close_reports/answer_fluency.md`. Rulings: `/app/docs/rulings/answer_fluency_af_e1_to_e4.md`. Governance §11: `/app/docs/governance/tiered_ruling_model.md`.
 - **Previous gate:** Fixture Refresh mini-phase CLOSED 2026-07-10 (RATIFIED by Owner).
 - **Awaiting:** Owner ratification of Answer Fluency close.
-- **Sequenced work:** **[§3.8 Answer Fluency close · awaiting ratification] → Opportunity Briefs (§3.15 · fixture-census permitted per AS-U2) → production housing (§3.4). 9.2b awaits: RMS agreement + hardware at venue (owner-side actions). Topology ruled: compute-to-data (§11).**
+- **Sequenced work:** **[§3.8 Answer Fluency close · awaiting ratification] → Opportunity Briefs (§3.15 · fixture-census permitted per AS-U2) → production housing (§3.4). 9.2b awaits Owner "proceed". Topology ruled: compute-to-data (§11).**
 
 ## Prior gate status (2026-07-10 · post-Fixture-Refresh-close)
 - **Latest gate:** **Fixture Refresh mini-phase CLOSED 2026-07-10 — atomic execution commit per Owner rulings FR-E1 α + FR-E2 α + 2 conditions + FR-E3 α (2026-07-10).**
@@ -58,7 +58,7 @@ Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence Sy
 - **Close:** `/app/docs/close_reports/fixture_refresh.md`. Rulings: `/app/docs/rulings/fixture_refresh_fr_e1_to_e3.md`.
 - **Previous gate:** Phase 9 Sub-stage 9.2a CLOSED 2026-07-10 (atomic execution commit per Owner rulings 9.2a-E1..E4 α + conditions).
 - **Awaiting:** Owner ratification of Fixture Refresh close.
-- **Sequenced work:** **[Fixture Refresh close · awaiting ratification] → §3.8 Answer fluency (STILL_QUEUED · post-B-5b · rides existing envelopes and gates) → Opportunity Briefs (§3.15 · fixture-census permitted per AS-U2) → production housing (§3.4). 9.2b awaits: RMS agreement + hardware at venue (owner-side actions). Topology ruled: compute-to-data (§11).**
+- **Sequenced work:** **[Fixture Refresh close · awaiting ratification] → §3.8 Answer fluency (STILL_QUEUED · post-B-5b · rides existing envelopes and gates) → Opportunity Briefs (§3.15 · fixture-census permitted per AS-U2) → production housing (§3.4). 9.2b awaits Owner "proceed". Topology ruled: compute-to-data (§11).**
 
 ## Prior gate status (2026-07-10 · post-9.2a-close)
 - **Latest gate:** **Phase 9 Sub-stage 9.2a CLOSED 2026-07-10 — atomic execution commit per Owner rulings 9.2a-E1..E4 α + conditions (2026-07-10).**
