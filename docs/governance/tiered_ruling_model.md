@@ -311,4 +311,12 @@ A close whose named gates are green and whose rulings are attested as applied ra
 
 ═══════════════════════════════════════════════════════════════════
 
+## §13 · Registry Doctrine v1.0 in force
+
+§13 — Registry Doctrine v1.0 in force; R4 applies to all subsequent Stage A proposals; defect classes D1–D7 reportable on sight; D-10 self-audit required on every proposal.
+
+Artifact: `/app/docs/governance/registry_doctrine_v1.md` · SHA-256 `0bfe65c47e2c55f35e2a860fec405c05b8ed32b3473bcb63a0a259fb810ab471`.
+
+═══════════════════════════════════════════════════════════════════
+
 *End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10. On-disk canonical per Standing Rule v3.*
