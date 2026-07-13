@@ -309,6 +309,16 @@ A close whose named gates are green and whose rulings are attested as applied ra
 - §4.2 thresholds and band disclosures — Tier-2, disclosure-only, never blocking.
 - Nothing else blocks anything.
 
+## §12.2 · Supersession note (Owner, 2026-07-11)
+
+§12.2 — Supersession note (Owner, 2026-07-11). Two lines of the §12.1 carrier are superseded by later rulings; the carrier above remains byte-identical as historical record.
+
+(a) Line 308 ("9.2b's two owner actions (RMS access, hardware at venue)") is superseded by the §11 correction: 9.2b's gate is the single Owner signal "proceed." The enumeration of owner-side items is struck from all live readings; §11 is authoritative.
+
+(b) Line 310 ("Nothing else blocks anything") is superseded in scope by Registry Doctrine v1.0: from doctrine ratification forward, R4 (Registry row as part of the Tier-1 ruling surface) and D-10 (proposal-time self-audit against D1–D7) are standing submission requirements on every Stage A proposal. They are process obligations, not blocks on the build state — mandate-complete status and the exhaustivity of §12.1's gate list at its time of writing are unaffected.
+
+PBK-1b is discharged by this note.
+
 ═══════════════════════════════════════════════════════════════════
 
 ## §13 · Registry Doctrine v1.0 in force
