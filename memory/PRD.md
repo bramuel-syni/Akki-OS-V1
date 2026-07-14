@@ -3,7 +3,22 @@
 ## Original problem statement
 Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence System on top of the `Akki-Executive-New-Arch` legacy substrate (now `/reference/akki-legacy/`). Phases G0 → G6 with strict doctrine: frozen contracts via Pydantic + JSON snapshots, all LLM calls through the SyniSense Shield chokepoint, spike vs production hours kept distinct, Rule-2 STOP if net-new code outgrows lifted-substrate lines.
 
-## Current gate status (2026-07-10 · **MANDATE-COMPLETE**)
+## Current gate status (2026-07-11 · **MANDATE-COMPLETE held · Registry Population §3.5 SELF-RATIFIED via §12**)
+- **Latest gate:** **§3.5 Registry Population CLOSED + SELF-RATIFIED (§12) 2026-07-11** — atomic doc commit per Owner rulings RP-E1 α + tie-break-toward-distinct + RP-E2 α + RP-E3 α-amended + RP-E4 α + RP-E5 α · band `[1,300, 2,900]` RATIFIED · Registry Doctrine v1.0's first live archaeology landing (doctrine §3.5).
+- **Landed:**
+  - `/app/docs/registry/function_promise_registry_v0.md` (deliverable · 301 LoC · SHA `78af70fdaf195029ae55ecf5a325d63374f6d439636974f1e529c83571b54ea2`) — **46 promises + 66 function rows + 5 Q2 orphans + 6 Q3 gaps**; 4 governors + Named-surfaces + reflexive §3.g populated per doctrine R1..R4.
+  - `/app/docs/registry/consolidation_log_v0.md` (sidecar · 157 LoC · SHA `2c60425599afbd59cb083cc8a391a94b717598a796a8028ca28ca4176ab26062`) — 4 merges executed + 4 `TIE-BROKE-TOWARD-DISTINCT` decisions applied per RP-E1 α condition.
+  - `/app/docs/rulings/registry_population_rp_e1_to_e5.md` (rulings record · 106 LoC · SHA `33bc16df75f6c8952bf67f610bd7bb739e3b8c1537df87dc89c96edbab66b10f`).
+  - `/app/docs/close_reports/registry_population.md` (close · 252 LoC · SHA `0399957c8c685da8e7a693b23b8a3952ced1764f67a44f7a5813b968ce93b2e7`).
+- **Test triad held (doc-only commit · not re-run):** Pytest 1,202 passed + 1 skipped · Jest 151/151 · Playwright chromium 55/55 · **Parity 31/31 byte-identical** (RP-G-Parity attested).
+- **Rule 2 verdict (raw LoC per §9 band-relative trichotomy):** 458 raw LoC (deliverable 301 + sidecar 157) vs ratified band `[1,300, 2,900]` → **BELOW-BOTTOM by -65% vs floor 1,300** (`snapshot_raw_in_band=no`). **Tier-2 driver disclosure landed at close §4.3 · non-blocking per §12.1** (Owner 2026-07-10 verbatim: "§4.2 thresholds and band disclosures — Tier-2, disclosure-only, never blocking"). Drivers: format density (pipe-tables vs schema-block-per-function · ~13× compression on §3 rows) + Tier-3 default choice + honest population (123 rows total; no content shortfall). Fixture Refresh precedent applies (782 vs `[1,200, 1,800]` accepted-as-disclosed).
+- **D-10 self-audit rides the close:** D1–D7 all PASS (close §8) — D1 orphan · D2 NL-only · D3 curated verdict · D4 rung inflation · D5 meta-spiral · D6 service conflation · D7 invented scope. Zero deferred defects.
+- **§12 close-ratification-on-own-text criteria met:** (a) 10 named gates green (RP-G1..RP-G6 + auxiliary), (b) rulings + RP-E1 tie-break + RP-E3 amendment attested as applied, (c) no new Tier-1 escalation surfaced during execution → close ratifies on its own text. **Zero new §0.1 dispositions. Zero new §0.2 debts.**
+- **Post-close Owner ruling surface (per RP-E2 α · findings-as-deliverable · zero builder-retirement):** **8 client-promise-touching Q2/Q3 items** + **3 optional-Owner-discretion items** enumerated verbatim at deliverable §7 + close §6 — Owner rules retirement/gap-fill at a subsequent turn.
+- **Doctrine:** `/app/docs/governance/registry_doctrine_v1.md` (SHA `0bfe65c47e2c55f35e2a860fec405c05b8ed32b3473bcb63a0a259fb810ab471`) in force · R4 reflexive applied · Defect D7 held (no code / no CI / no query automation / no harness / no worker wiring / no Playbook / no Thesis / no machine-readable form).
+- **State post-close:** **IDLE · no self-dispatch · MANDATE-COMPLETE 2026-07-10 held**. Await Owner ruling on the 8-item client-promise-touching surface; 9.2b Phase awaits Owner "proceed".
+
+## Prior gate status (2026-07-10 · **MANDATE-COMPLETE reached**)
 - **Latest gate:** **§3.4 Production Housing PH-R1 CLOSED + SELF-RATIFIED (§12) 2026-07-10 → MANDATE-COMPLETE gate reached** — atomic execution commit per Owner rulings PH-E1 α + PH-E2 α + PH-E3 α + PH-E4 α + PH-E4 documentation-addition + `/api/system/build_info` Owner enhancement promotion + band `[900, 1,700]` RATIFIED.
 - **Landed:**
   - `Dockerfile` at repo root — multi-stage (node:20-alpine frontend build → python:3.11-slim backend runtime · non-root `app` user · `EXPOSE 8001` · `HEALTHCHECK CMD curl -fsS http://localhost:8001/api/healthz` · `CMD uvicorn` preserves supervisor entry verbatim · build-args `GIT_SHA` + `BUILD_TIMESTAMP` + `REACT_APP_BACKEND_URL`).
