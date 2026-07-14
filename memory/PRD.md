@@ -3,7 +3,28 @@
 ## Original problem statement
 Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence System on top of the `Akki-Executive-New-Arch` legacy substrate (now `/reference/akki-legacy/`). Phases G0 → G6 with strict doctrine: frozen contracts via Pydantic + JSON snapshots, all LLM calls through the SyniSense Shield chokepoint, spike vs production hours kept distinct, Rule-2 STOP if net-new code outgrows lifted-substrate lines.
 
-## Current gate status (2026-07-11 · **MANDATE-COMPLETE held · Registry Population §3.5 SELF-RATIFIED via §12**)
+## Current gate status (2026-07-11 · **MANDATE-COMPLETE held · Registry Doctrine §8.1.d Machine-Readable Registry SELF-RATIFIED via §12 · Governance §14 admitted**)
+- **Latest gate:** **Registry Doctrine §8.1.d Machine-Readable Registry CLOSED + SELF-RATIFIED (§12) 2026-07-11** — atomic doc + code commit per Owner rulings MRR-E1 α (+ source-SHA condition) + MRR-E2 γ + MRR-E3 β+addition + MRR-E4 β. First code-adjacent Registry Doctrine additive-surface landing.
+- **Landed artifacts:**
+  - `/app/docs/rulings/machine_readable_registry_mrr_e1_to_e4.md` (Owner rulings verbatim carrier · 92 LoC · SHA `1e30cac7…`).
+  - `/app/docs/governance/tiered_ruling_model.md` (+§14 standing consequence · SHA `2a1cb0c6…`).
+  - `/app/docs/registry/function_promise_registry_v0.1_supplement.md` (R4 reflexive sidecar per MRR-E4 β · 7 rows · 48 LoC · SHA `2822f99e…`).
+  - `/app/docs/registry/machine/registry.yaml` (parser-derived machine form · MRR-E1 α · 1,863 LoC · SHA `226c298a…` · embeds `source_of_truth` block pinning v0.md SHA).
+  - `/app/backend/services/registry/parser.py` (490 LoC · SHA `f132f2e7…`).
+  - `/app/backend/services/registry/validator.py` (`PART_II_JOURNEY_STEPS` frozenset · MRR-G1..MRR-G-SourceSHA · 366 LoC · SHA `7ac8b790…`).
+  - `/app/tools/registry/regenerate.py` (58 LoC · SHA `e3295b5b…`).
+  - `/app/backend/tests/registry/test_machine_readable_registry_mrr_g1_to_g6.py` (14 pytest cells · 196 LoC · SHA `1430572e…`).
+  - `/app/docs/close_reports/machine_readable_registry.md` (close report).
+- **Source-of-truth lock verified:** `/app/docs/registry/function_promise_registry_v0.md` @ SHA `598a7ad4d326dd5c0fc003fe8091a52fd215fb63e76d5c04befd1aa4c25584b0` **byte-identical throughout** (pre + post commit).
+- **Gate roster GREEN (7/7):** MRR-G1 schema · MRR-G2 vocab (β+addition · foreign-key promise + PART_II_JOURNEY_STEPS constant) · MRR-G3 round-trip over `(v0.md + supplements)` ↔ machine form · MRR-G4 findings coverage (11/11 dual-surface archival per MRR-E2 γ) · MRR-G-Parity (31/31) · MRR-G-DataBlind · MRR-G-SourceSHA (embed pinned to Owner-locked SHA).
+- **Test triad:** **Pytest 1,216 passed + 1 skipped** (+14 new cells · zero regression) · Jest/Playwright NOT re-run (backend-only per Owner). Parity 31/31 byte-identical.
+- **Band actual:** Owner-enumeration (machine + supplement + parser + validator + tests) = **2,964 raw LoC · WITHIN band `[1,600, 3,000]`** by 36 LoC. Broad view (incl. regen CLI + inits) = 3,030 LoC · +1.0% above ceiling · Tier-2 disclosure per §12.1 non-blocking (close §4.3).
+- **D-10 self-audit:** D1–D7 all PASS (close §8) — zero deferred defects.
+- **§12 close-ratification-on-own-text criteria met:** (a) 7 gates GREEN · (b) rulings + E1 condition + E3 addition + E4 β + §14 attested as applied · (c) no new Tier-1 mid-execution → close ratifies on own text.
+- **Governance §14 admitted (2026-07-11 · from MRR-E4 β):** R4 reflexive placement standing consequence — future phases' R4 rows land as additive supplements beside locked source. MRR-G3's round-trip operates over `(v0.md + supplements)` ↔ machine form as one set.
+- **State post-close:** **IDLE · no self-dispatch · MANDATE-COMPLETE 2026-07-10 held**. Await Owner dispatch on doctrine §8.1 remaining items (executable queries · sequencing harness · worker context-harnessing · far-endpoint mandates-as-specs · Playbook · Thesis — Owner-side parallel).
+
+## Prior gate status (2026-07-11 · Registry Population §3.5 SELF-RATIFIED via §12)
 - **Latest gate:** **§3.5 Registry Population CLOSED + SELF-RATIFIED (§12) 2026-07-11** — atomic doc commit per Owner rulings RP-E1 α + tie-break-toward-distinct + RP-E2 α + RP-E3 α-amended + RP-E4 α + RP-E5 α · band `[1,300, 2,900]` RATIFIED · Registry Doctrine v1.0's first live archaeology landing (doctrine §3.5).
 - **Landed:**
   - `/app/docs/registry/function_promise_registry_v0.md` (deliverable · 301 LoC · SHA `78af70fdaf195029ae55ecf5a325d63374f6d439636974f1e529c83571b54ea2`) — **46 promises + 66 function rows + 5 Q2 orphans + 6 Q3 gaps**; 4 governors + Named-surfaces + reflexive §3.g populated per doctrine R1..R4.

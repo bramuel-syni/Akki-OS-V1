@@ -1,0 +1,1863 @@
+# GENERATED FROM function_promise_registry_v0.md + v0.1_supplement.md
+# DO NOT HAND-EDIT · regenerate via tools/registry/regenerate.py
+# Owner rulings MRR-E1 α · E2 γ · E3 β+addition · E4 β (2026-07-11)
+# Doctrine: Registry Doctrine v1.0 §8.1.d machine-readable form
+
+schema_version: "machine_registry_v0"
+generated_by: "backend/services/registry/parser.py"
+
+source_of_truth:
+  path: docs/registry/function_promise_registry_v0.md
+  sha256: 598a7ad4d326dd5c0fc003fe8091a52fd215fb63e76d5c04befd1aa4c25584b0
+
+supplements:
+  - path: docs/registry/function_promise_registry_v0.1_supplement.md
+    sha256: 2822f99e0c20da6f8d02c1f33233965c90df37aeb6939e711da8df2ebd991092
+
+# Row totals: promises=47 · functions=86 · findings=11
+
+promises:
+  - promise_id: PROM-S1-provable-envelope-inheritance
+    text: Answers, skills, and artifacts arrive with class, receipt, and refusal semantics intact — so the integrating app inherits provability instead of building it.
+    active: true
+    functions_that_cite: 8
+    source_citations:
+      - doctrine §Part II S1 (Layer 0)
+      - P9-E5
+      - AF-E1
+  - promise_id: PROM-S1-external-scoped-access
+    text: "External integrators see only their own assets, enforced server-side. BCR §3.9 EE-R2 verbatim: *\"View scoping: an external_engineer sees Register / First call / Administer scoped to their own apps, keys, usage, and refusal health — and NEVER other parties' apps, estate contents, fleet, pricing, or any master-admin control.\"* BCR §3.9 EE-R4 verbatim: *\"Every externally reachable endpoint enforces scope server-side — view-layer filtering alone fails review. Enforcement rides the existing B-1 scope primitive; no parallel mechanism.\"*"
+    active: true
+    functions_that_cite: 4
+    source_citations:
+      - BCR §3.9 EE-R2 line 240
+      - BCR §3.9 EE-R4 line 242
+      - 8-EXT close report EE-G2
+      - Q2-01 ruling 2026-07-11 (rulings/registry_findings_01_to_11.md §1)
+  - promise_id: PROM-S1-shield-single-source
+    text: The Shield is the single chokepoint for LLM invocation; no call site outside the Shield may import an LLM SDK — the swap seam is one module.
+    active: false
+    functions_that_cite: 3
+    source_citations:
+      - AF-E1 β
+      - OB-E1 α
+      - PH-E4 α
+  - promise_id: PROM-S1-refusal-taxonomy-closed
+    text: "Refusal codes are a bounded 4-code set (`auth_missing` · `auth_expired` · `auth_scope_insufficient` · `auth_identity_mismatch_for_wizard_session`); infra 503s and runtime transients are NEVER routed via refusal envelope."
+    active: true
+    functions_that_cite: 4
+    source_citations:
+      - P9-E5
+      - AF-E2 amended (Standing Disposition 2026-07-10)
+      - PH-E3 α
+  - promise_id: PROM-S1-frozen-wire-contract
+    text: External parties consume a stable schema over time; frozen contracts are byte-identical; parity is attested at every close.
+    active: true
+    functions_that_cite: 6
+    source_citations:
+      - V1-G7
+      - TF-E1 α
+      - CD-E2 α
+      - doctrine §Part VIII
+  - promise_id: PROM-S1-additive-versioning
+    text: New contracts land by additive versioning (v0 preserved byte-identical when v1 lands); parity bumps with the new snapshot; V1-G7 assertion set bumps with it.
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - AS-E1 α
+      - V1-G7
+  - promise_id: PROM-S1-honesty-grammar-source-labels
+    text: "Every value in a client-facing envelope carries its provenance source label; values not observed by the census carry a non-`census_observed` source label OR are null; NO fabricated values."
+    active: true
+    functions_that_cite: 5
+    source_citations:
+      - CD-E1 α
+      - 9.2a-E1 α
+      - doctrine D-3
+  - promise_id: PROM-S1-byte-verbatim-anchor-grounding
+    text: Every quantitative anchor in an LLM-synthesized advisory or answer must appear byte-verbatim in a Registry-read text; whole-envelope REJECT on any failure; gate NEVER patches prose.
+    active: true
+    functions_that_cite: 3
+    source_citations:
+      - AF-E1 β
+      - OB-E1 α
+      - doctrine §Part IV D-3 D-5
+  - promise_id: PROM-S1-no-semantic-scoring
+    text: Grounding gates are mechanical byte-substring checks; semantic scoring is FORBIDDEN.
+    active: true
+    functions_that_cite: 3
+    source_citations:
+      - AF-E1 β cond 1
+      - OB-E1 α
+      - doctrine D-3
+  - promise_id: PROM-S1-registry-native-aggregate
+    text: A Combined-scope aggregate = Registry-exposed native (the Registry computes; the brief/answer quotes byte-verbatim); synthesis-time computation is FORBIDDEN.
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - OB-E3 α
+      - doctrine §Part VII
+  - promise_id: PROM-S1-class-honesty-render-time
+    text: Class-honesty is enforced at render time — no render path strips the advisory marker; no governed-response import path touches advisory content; namespace boundaries surfaced via distinct id prefixes.
+    active: true
+    functions_that_cite: 4
+    source_citations:
+      - OB-E2 α × 3 seams
+      - AS-G6
+      - TF-G9
+      - FR-G4
+      - AF-G6b
+  - promise_id: PROM-S1-runtime-transient-never-refusal
+    text: Runtime transients (llm_unavailable · llm_timeout · llm_parse_failure · grounding_reject) surface as sidecar telemetry with mechanical fallback arm; they are NEVER a refusal envelope.
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - AF-E2 amended
+      - OB-runtime-transient-precedent
+  - promise_id: PROM-S1-config-defect-fail-loud
+    text: Config defects (missing Emergent key · invalid key) fail loud 503 at startup; NEVER routed via refusal envelope.
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - AF-E2 amended
+  - promise_id: PROM-S2-estate-onboarded-and-mapped
+    text: The Operator's estate is onboarded, mapped, and turned into qualified intelligence they can commit with confidence.
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - doctrine §Part II S2
+      - BCR v1.5 §3.4 (housing)
+  - promise_id: PROM-S2-census-dimension-integrity
+    text: Census-dimension values are Registry-vocabulary iff the value appears in the disclosure_types/content_surface/etc. registry; hard-coded values not in the registry are honesty violations.
+    active: true
+    functions_that_cite: 4
+    source_citations:
+      - CD-E1 α
+      - CD-E2 α
+      - CD-E4 α
+  - promise_id: PROM-S2-slice-freeze-at-commission
+    text: Slice selection at commission is frozen at wizard-lock time; downstream perception + composition run against the frozen slice; no silent slice-drift.
+    active: false
+    functions_that_cite: 2
+    source_citations:
+      - TF-E2 α
+      - 9.2a-E2 α
+  - promise_id: PROM-S2-shape-as-objective-reach-only
+    text: "The \"shape-as-objective\" handoff pre-fills wizard REACH only; wizard mandatory-field flow untouched; the handoff never overrides operator commit decisions."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - OB-R4
+      - UI Spec v2.2 §3.7
+  - promise_id: PROM-S2-fixture-census-sample-rules
+    text: Registry-live census requires 9.2b; until then, fixture-census demo is permitted with explicit AS-U2 fixture-notice on every rendered surface.
+    active: false
+    functions_that_cite: 2
+    source_citations:
+      - AS-U2
+      - OB-R5
+      - UI Spec v2.2 §3.7
+  - promise_id: PROM-S3-prove-any-operation
+    text: Compliance can prove any operation on demand — receipts, traces, and rule-source chains are surfaced end-to-end.
+    active: true
+    functions_that_cite: 4
+    source_citations:
+      - doctrine §Part II S3
+      - P9-E5
+      - Seam-3 sub-stage 3
+  - promise_id: PROM-S3-append-only-ledger
+    text: Northena's ledger is append-only; no in-place mutation; historical rows preserved byte-identical.
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - doctrine northena.md
+      - V1-G7
+  - promise_id: PROM-S3-retention-held-class-no-delete
+    text: Retention respects held-class rules — no direct DELETE handlers over held rows; retention state visible via Compliance UI.
+    active: true
+    functions_that_cite: 3
+    source_citations:
+      - AS-H1
+      - Phase 8 Stage B-5a
+      - Seam-3 stage-A E7
+  - promise_id: PROM-S3-audit-trail-immutable
+    text: Master Admin audit trail is immutable; every rule change carries ceremony (dual-control where required); rules-writer surface preserves rule-source chain.
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - Phase 8 Stage B-5b
+      - master-admin ruling
+  - promise_id: PROM-S3-brief-namespace-distinct-from-trace
+    text: "Trace resolution and receipt resolution NEVER surface brief content; brief IDs use a distinct `brief_` namespace; `/api/solva/trace/{brief_*}` returns 404."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - OB-E2 α Seam-2
+  - promise_id: PROM-S3-governance-doc-on-disk
+    text: Governance stack is on-disk canonical (Standing Rule v3); historical carriers immutable; amendments append (§12.2 supersession pattern).
+    active: true
+    functions_that_cite: 3
+    source_citations:
+      - Standing Rule v3
+      - §12.2 supersession
+      - Registry Doctrine v1.0
+  - promise_id: PROM-S3-mechanical-audit-of-promotion
+    text: "Container promotion (git SHA + build timestamp + parity) is verifiable via a live `/api/system/build_info` endpoint — the \"promotion-not-rebuild\" claim is mechanically attested."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - PH-R1 owner enhancement 2026-07-10
+      - PH-G5
+  - promise_id: PROM-S3-frozen-contract-parity-attest
+    text: "Readiness (`/api/readyz`) + build_info (`/api/system/build_info`) + V1-G7 test all read parity from ONE authoritative counter; the three surfaces cannot disagree."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - PH-E3 α
+      - PH-G6
+  - promise_id: PROM-S4-receipt-alone-suffices
+    text: Buyer receives intelligence products verifiable independently of Akki's live API — the receipt alone suffices to verify the artifact.
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - AS-E1 α (OuterGateReceipt_v1)
+      - doctrine §Part II S4
+  - promise_id: PROM-S4-provenance-audit-integrity
+    text: Every artifact carries a receipt; orphan artifacts are prohibited (AS-B2); destructive disposition is a Tier-1 surface via Seam 3.
+    active: true
+    functions_that_cite: 3
+    source_citations:
+      - AS-E4 α
+      - AS-B2
+      - Seam-3 stage-A E7
+  - promise_id: PROM-S4-artifact-signature-bound
+    text: Artifact + receipt are signature-bound; the buyer can verify signature independently.
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - AS-E1 α β posture
+      - Northena signing
+  - promise_id: PROM-S5-substrate-not-optimized-against
+    text: Akki's extraction and governance capacity as a substrate for future ventures; no platform function may cite S5 as sole anchor without Owner ruling.
+    active: false
+    functions_that_cite: 0
+    source_citations:
+      - doctrine §Part II S5
+  - promise_id: PROM-registry-taxonomy-canonical
+    text: Every function belongs to SyniSense · Northena · Mtafiti · Targeta · Solva OR a named surface; no new top-level categories without Owner ruling.
+    active: false
+    functions_that_cite: 6
+    source_citations:
+      - doctrine §3.1
+  - promise_id: PROM-registry-schema-conformance
+    text: "Every function row populates all 11 §3.2 schema fields; `unknown` is legal only for `cost` (and per RP-E4 α for `ladder_rung` where source silent)."
+    active: false
+    functions_that_cite: 1
+    source_citations:
+      - doctrine §3.2 R1
+      - RP-E4 α
+  - promise_id: PROM-registry-service-trace-integrity
+    text: Every promise cites at least one S1..S5 sentence + journey step; empty/invalid trace = D1 orphan finding.
+    active: false
+    functions_that_cite: 1
+    source_citations:
+      - doctrine R2
+      - RP-G4
+  - promise_id: PROM-registry-rent-paying
+    text: The Registry itself is subject to §3.4 queries (Q1/Q2/Q3); if it stops retiring gates, finding gaps, or cheapening sequences over sustained time it is itself retired or restructured.
+    active: false
+    functions_that_cite: 1
+    source_citations:
+      - doctrine §3.6
+      - doctrine D-8
+  - promise_id: PROM-fixture-refresh-source-of-truth
+    text: Multiple sources of truth for the same fact create disclosure fragmentation; the fixture is the seed for many downstream test-consumers — centralized source of truth is mandatory.
+    active: false
+    functions_that_cite: 2
+    source_citations:
+      - FR-E2
+      - doctrine §Part IV D-8
+  - promise_id: PROM-tf-transform-form-per-call-provisioning
+    text: Transform Forms per-call provisioning drives per-call scope enforcement + slice-freeze but is NOT an external wire contract on the query surface.
+    active: false
+    functions_that_cite: 1
+    source_citations:
+      - TF-E3
+  - promise_id: PROM-tf-class-with-claim-invariant
+    text: "Class widening in disclosure-types is accommodated by additive versioned registry (`disclosure_types.v0.json` pattern); Literal freeze on class would force contract mutations."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - TF-E5
+      - Phase 8 Stage B-5b
+  - promise_id: PROM-9-2a-real-worker-provenance
+    text: A real ASR/diarization worker without pinned model provenance is a fabricated-claim risk; downstream telemetry attributes work to models; unlabeled attribution is fabricated.
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - 9.2a-E1 α
+      - doctrine D-3
+  - promise_id: PROM-9-2a-mode-selection-evident
+    text: Perception mode selection (real vs mock, CPU vs GPU) is evident at read-time; a GPU-only code path leaking into CPU-mode CI would silently expose paths that aren't proven green.
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - 9.2a-E2 α
+  - promise_id: PROM-9-2a-first-contact-reverification
+    text: The 9.2a first-contact rider closes an intentional first-contact re-verification loop; its semantics must be evident to reviewers.
+    active: false
+    functions_that_cite: 1
+    source_citations:
+      - 9.2a-E3 α
+  - promise_id: PROM-9-2a-never-rule-v1-d1-raw-never-egresses
+    text: A real worker holding a long-lived reference to audio bytes IS the never-rule violation; structural proof required; convention insufficient.
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - 9.2a-E4 α
+      - governance §1.1 never-rule V1-D1
+  - promise_id: PROM-ph-r1-secret-externalization
+    text: "No secret value in the container image or in a repo-committed `.env` at production time; vault-class binding at deploy time."
+    active: true
+    functions_that_cite: 2
+    source_citations:
+      - PH-E1 α
+      - BCR §3.4 annex
+  - promise_id: PROM-ph-r1-fe-be-serve-separable
+    text: Frontend build is separable from backend serve at deploy time; multi-stage single image; deploy topology chooses how to serve.
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - PH-E2 α
+      - BCR §3.4
+  - promise_id: PROM-ph-r1-readiness-parity-real
+    text: "`/readyz` surface reflects TRUE frozen-contract parity, not a stale constant; readiness fails 503 if parity drifts."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - PH-E3 α
+      - PH-G3
+  - promise_id: PROM-ph-r1-llm-swap-shape-stable
+    text: The LLM swap seam is one module and its public shape is stable across provider swaps; call sites never change.
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - PH-E4 α
+      - BCR §3.4 annex
+  - promise_id: PROM-ui-single-ingress-ask-console
+    text: "UI Spec v1 §3.1 · Ask Console is the `/` single-ingress landing surface for the platform's first-party reference application."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - UI Spec v1 §3.1
+      - doctrine §Part II Ask Console reclassification
+  - promise_id: PROM-ui-console-discoverability
+    text: "From `/`, sibling consoles are discoverable via a nav menu without hiding auth-gated entries per role."
+    active: true
+    functions_that_cite: 1
+    source_citations:
+      - Ask Console nav landing 2026-07-11
+      - Tier-3 hygiene
+
+functions:
+  - function_id: synisense.shield.llm_single_source_boundary
+    governor: SyniSense
+    mandate: "Built to enforce that no non-Shield module imports an LLM SDK; the swap seam is one module (`llm_router.py`)."
+    promise:
+      - PROM-S1-shield-single-source
+    service_trace:
+      - S1.call
+      - S1.pass-receipts-through
+    surface: "`backend/services/synisense/shield/llm_router.py` + AST gate"
+    enforcement: AST/reflection walk
+    cost: "1 cell · §6.10 rate class (attested at `test_no_direct_llm_calls_outside_shield`)"
+    dependencies: Contract-immutability at frozen envelope
+    ladder_rung: 1 · Deterministic (AST walk)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.grounding_gate_answer_fluency
+    governor: SyniSense
+    mandate: Built to REJECT the whole answer_text if any per-sentence structured anchor fails byte-verbatim substring against its unit_id or numeric verification.
+    promise:
+      - PROM-S1-byte-verbatim-anchor-grounding
+      - PROM-S1-no-semantic-scoring
+    service_trace:
+      - S1.call
+    surface: "`backend/services/service_1/answer_grounding.py`"
+    enforcement: "Runtime check + AST negative-scan for `sum/mean/statistics`"
+    cost: 13 cells (AF-G2a..d + AF-G3a..c + AF-G-Grounding-Fail) · §6.11 rate class
+    dependencies: AF-G-Grounding-Fail (green) · AF-G-E1-No-Semantic-Scoring
+    ladder_rung: 1 · Deterministic + rung-4 upstream synthesis
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.grounding_gate_opportunity_briefs
+    governor: SyniSense
+    mandate: Built to REJECT any brief where a quantitative anchor's value fails byte-verbatim against its Registry-read reference. Whole-brief reject on any failure.
+    promise:
+      - PROM-S1-byte-verbatim-anchor-grounding
+      - PROM-S1-registry-native-aggregate
+    service_trace:
+      - S1.call (as briefs are advisory to S1's app-facing surface)
+    surface: "`backend/services/opportunity_briefs/brief_grounding.py`"
+    enforcement: Runtime check + AST no-synthesis-compute
+    cost: OB-G1 · OB-G-Grounding-Fail · OB-G-E3-No-Synth-Compute · §6.11
+    dependencies: ""
+    ladder_rung: 1 · Deterministic + rung-4 upstream
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.fluency_synthesizer
+    governor: SyniSense
+    mandate: "Built to compose the fluent `answer_text` behind the Shield chokepoint using Sonnet 4.6 via Emergent LLM key; caller cannot bypass."
+    promise:
+      - PROM-S1-shield-single-source
+      - PROM-S1-runtime-transient-never-refusal
+    service_trace:
+      - S1.call
+    surface: "`backend/services/synisense/shield/fluency_synthesizer.py:L182`"
+    enforcement: Runtime chokepoint + AST single-source (piggyback)
+    cost: AF-G6a · §6.11 · 4 async cells
+    dependencies: ""
+    ladder_rung: 4 · Frontier LLM (with mechanical fallback per AF-E2 amended)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.brief_synthesizer
+    governor: SyniSense
+    mandate: "Built to compose the brief text behind the Shield chokepoint using Sonnet 4.6 via `_provider_for(\"analytical\")` reuse of Phase 7 Stage B-2 seed."
+    promise:
+      - PROM-S1-shield-single-source
+      - PROM-S1-runtime-transient-never-refusal
+    service_trace:
+      - S1.call (advisory to S1's app-facing)
+    surface: "`backend/services/synisense/shield/brief_synthesizer.py:L116`"
+    enforcement: Runtime chokepoint
+    cost: OB-G1 async cells · §6.11
+    dependencies: ""
+    ladder_rung: 4 · Frontier LLM (Registry-anchor grounding gate mechanically fallback)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.per_sentence_anchor_map
+    governor: SyniSense
+    mandate: "Built to produce `{prose, per_sentence: [{sentence_text, unit_ids}]}` structured mapping so the grounding gate runs anchor-by-sentence, not fuzzy match."
+    promise:
+      - PROM-S1-byte-verbatim-anchor-grounding
+    service_trace:
+      - S1.call
+    surface: "`backend/services/synisense/shield/fluency_synthesizer.py` (structured output block)"
+    enforcement: Runtime schema validate
+    cost: AF-E1 β per-sentence structured mapping cells
+    dependencies: ""
+    ladder_rung: 4 · Frontier LLM (structured output)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.data_blind_prompt_template
+    governor: SyniSense
+    mandate: Built to attest LLM prompt templates never carry secret env vars, credentials, or masked data.
+    promise:
+      - PROM-S1-shield-single-source
+      - governance §8
+    service_trace:
+      - S1.call
+    surface: "`backend/services/synisense/shield/{fluency_prompt.v0,brief_prompt.v0}.txt`"
+    enforcement: Grep-negative on prompt files
+    cost: AF-G-DB · OB-G-DB · §6.1 · 2 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.advisory_marker_write_time_attach
+    governor: SyniSense
+    mandate: Built to attach the advisory marker at brief-registry write time; render-surface reads verbatim from sidecar; no strip path exists.
+    promise:
+      - PROM-S1-class-honesty-render-time
+    service_trace:
+      - S1.call (advisory route)
+      - S3.prove
+    surface: "`backend/services/opportunity_briefs/advisory_marker.py` + AST no-strip walk"
+    enforcement: Write-time attach + §6.10 reflection walk
+    cost: OB-G2 · OB-G2-Seam1-No-Strip · §6.10
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.advisory_marker_render_time_visible
+    governor: SyniSense (render surface class)
+    mandate: "Built to render the advisory marker verbatim on every card via `data-testid=\"opportunity-brief-advisory-marker\"`."
+    promise:
+      - PROM-S1-class-honesty-render-time
+    service_trace:
+      - S1.call (advisory route)
+    surface: "`frontend/src/pages/opportunity_briefs/OpportunityBriefCard.jsx`"
+    enforcement: Jest render assertion
+    cost: OB-Jest-marker cells · 2 Jest
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.class_honesty_governed_response_boundary
+    governor: SyniSense
+    mandate: "Built to enforce that governed-response synthesis (service_1) never imports opportunity_briefs; §6.10 AST walk over service_1/**."
+    promise:
+      - PROM-S1-class-honesty-render-time
+    service_trace:
+      - S1.call (governed response path)
+    surface: "`backend/services/service_1/**` + AST negative-scan"
+    enforcement: AST/reflection walk (grep-negative)
+    cost: OB-G-Seam3 · §6.10 · 1 cell
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.fluency_mode_telemetry_sidecar
+    governor: SyniSense
+    mandate: Built to emit fluency-mode telemetry via sidecar; envelope byte-identical; parity preserved.
+    promise:
+      - PROM-S1-frozen-wire-contract
+      - PROM-S1-runtime-transient-never-refusal
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/service_1/fluency_mode_telemetry.py`"
+    enforcement: Contract-shape lint
+    cost: AF-G-Sidecar cells · §6.1 · 4 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.brief_telemetry_sidecar
+    governor: SyniSense
+    mandate: Built to emit brief-generation telemetry via sidecar following AF-E3 α precedent; envelope byte-identical.
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/opportunity_briefs/brief_telemetry.py`"
+    enforcement: Contract-shape lint
+    cost: OB-G-Telemetry · §6.1 · 1 cell
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.mechanical_composer_baseline
+    governor: SyniSense
+    mandate: Built to preserve the pre-fluency f-string mechanical composer byte-identically to goldens for regression-check.
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/service_1/mechanical_composer.py` + `backend/tests/goldens/answer_fluency/pre_3_8/mechanical_baseline.json`"
+    enforcement: Byte-identity lock (SHA-pin)
+    cost: AF-G1 · 5 legacy SHA-pin gates repointed · §6.6
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.brief_id_namespace_boundary
+    governor: SyniSense
+    mandate: "Built to mint brief IDs in a distinct `brief_` namespace; `/api/solva/trace/{brief_*}` returns 404."
+    promise:
+      - PROM-S3-brief-namespace-distinct-from-trace
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/opportunity_briefs/brief_registry.new_brief_id` + `backend/routers/solva.py:get_trace`"
+    enforcement: Runtime 404 + namespace grep
+    cost: OB-G3 · OB-G3-Seam2-Namespace-Distinct · §6.11 · 2 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.shield.refusal_taxonomy_closed
+    governor: SyniSense
+    mandate: Built to enforce the 4-code auth-refusal registry; runtime transients and infra 503s never routed via refusal envelope.
+    promise:
+      - PROM-S1-refusal-taxonomy-closed
+    service_trace:
+      - S1.call
+      - S3.prove
+    surface: "`backend/services/auth/refusal_envelope.py` + AST negative on health.py"
+    enforcement: Type-level wall + AST scan
+    cost: AF-G-Never-Refusal-Envelope · OB-G-Runtime-Transient-Never-Refusal-Envelope · PH-G-Refusal-Closed · §6.10 · 3 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.contracts.frozen_31
+    governor: SyniSense
+    mandate: Built to enforce 31 frozen contracts byte-identical + 31 snapshot files byte-identical; parity attest at every close.
+    promise:
+      - PROM-S1-frozen-wire-contract
+      - PROM-S1-additive-versioning
+    service_trace:
+      - S1.call
+      - S3.prove
+    surface: "`backend/contracts/**/*.py` + `backend/tests/invariants/*.contract_snapshot.json`"
+    enforcement: Byte-identity lock (SHA-pin) + fs-count
+    cost: V1-G7 · PH-G-Parity · OB-G-Parity · every phase close · §6.1 · 3+ cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: synisense.contracts.parity_counter_shared
+    governor: SyniSense
+    mandate: "Built to expose ONE authoritative parity counter (`services/health/parity_counter.count_frozen_contract_snapshots`); readiness + build_info + V1-G7 all consume it."
+    promise:
+      - PROM-S3-frozen-contract-parity-attest
+    service_trace:
+      - S1.call
+      - S3.prove
+    surface: "`backend/services/health/parity_counter.py`"
+    enforcement: Fs-count + reference-check
+    cost: PH-G6 · V1-G7 refactor · §6.1 · 4 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: northena.ledger.append_only_gate
+    governor: Northena
+    mandate: Built to enforce that Northena's ledger accepts only INSERT; UPDATE/DELETE handlers over historical rows are prohibited.
+    promise:
+      - PROM-S3-append-only-ledger
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/northena/ledger.py`"
+    enforcement: Type-level wall (no update methods) + AST
+    cost: Attested via Northena test cells · unknown per-cell rate
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: northena.artifact.outer_gate_receipt_v1
+    governor: Northena
+    mandate: "Built to emit `OuterGateReceipt_v1` for every artifact export; receipt-alone-suffices for buyer verification (β posture rejected in favour of α)."
+    promise:
+      - PROM-S4-receipt-alone-suffices
+      - PROM-S1-additive-versioning
+    service_trace:
+      - S4.receive
+      - S4.verify
+      - S4.license
+    surface: "`backend/contracts/outer_gate_receipt_v1.py`"
+    enforcement: Frozen contract + byte-identity lock
+    cost: AS-G1..AS-G6 (6 cells) · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: northena.artifact.orphan_prohibition_as_b2
+    governor: Northena
+    mandate: Built to prevent artifact-without-receipt state; step-5 failure window is disposition-mandatory.
+    promise:
+      - PROM-S4-provenance-audit-integrity
+    service_trace:
+      - S4.receive
+      - S3.prove
+    surface: "`backend/services/artifact_store/**` + orphan-check E2E"
+    enforcement: Runtime check (post-write disposition)
+    cost: AS-E4 α · AS-G4 · §6.11
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: northena.artifact.signature_bound
+    governor: Northena
+    mandate: Built to bind artifact + receipt via signature; buyer verifies signature without live API dependency.
+    promise:
+      - PROM-S4-artifact-signature-bound
+    service_trace:
+      - S4.verify
+    surface: Northena signing surface
+    enforcement: Runtime signature check
+    cost: AS-G-Signature · unknown per-cell
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: northena.retention.held_class_no_delete
+    governor: Northena
+    mandate: Built to enforce that held-class rows have no DELETE handler; retention state visible via Compliance UI.
+    promise:
+      - PROM-S3-retention-held-class-no-delete
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/retention/**` + Seam-3 stage-A E7"
+    enforcement: Type-level wall + AST
+    cost: AS-H1 · Seam-3 E7 · §6.1/§6.10 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: northena.retention.seam3_authorized_deletion
+    governor: Northena
+    mandate: Built to enforce that authorized-deletion (Seam 3) is Tier-1 dual-control ceremony; destructive dispositions are attested end-to-end.
+    promise:
+      - PROM-S3-retention-held-class-no-delete
+      - PROM-S4-provenance-audit-integrity
+    service_trace:
+      - S3.prove
+    surface: "`docs/close_reports/phase_8_seam_3_sub_stage_{1,2,3}.md` implementations"
+    enforcement: Runtime dual-control + audit-trail entry
+    cost: Seam-3 gate roster · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic + type-level wall
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: northena.audit_trail.master_admin_immutable
+    governor: Northena
+    mandate: Built to expose immutable Master Admin audit trail; every rule change carries ceremony + preserved rule-source chain.
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`frontend/src/pages/master_admin/AuditTrailPage.jsx` + backend audit endpoint"
+    enforcement: Runtime append-only + Jest render assertion
+    cost: MAN-G1..G3 · Phase 8 B-3/B-4 · §6.1 · 3 cells + Jest
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.perception.pinned_model_provenance
+    governor: Mtafiti
+    mandate: "Built to require every real ASR/diarization pass emit `transcript_v0` with pinned model provenance; unlabeled attribution is a fabricated claim."
+    promise:
+      - PROM-9-2a-real-worker-provenance
+      - PROM-S1-honesty-grammar-source-labels
+    service_trace:
+      - S2.integrate-sources
+      - S3.prove
+    surface: "`backend/services/mtafiti/**` real worker pass + telemetry"
+    enforcement: Contract field required (model_id + weights_sha)
+    cost: 9.2a-E1 α cells · §6.11 · unknown
+    dependencies: ""
+    ladder_rung: 3 · Owned model (real workers) OR 1 · Deterministic (fixture)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.perception.mode_selection_evident_at_read
+    governor: Mtafiti
+    mandate: Built to make perception mode (real vs mock, CPU vs GPU) evident at read-time; no silent GPU-code-path in CPU-mode CI.
+    promise:
+      - PROM-9-2a-mode-selection-evident
+    service_trace:
+      - S2.integrate-sources
+      - S3.prove
+    surface: "`backend/services/mtafiti/execution_mode_telemetry.py` + read-time metadata"
+    enforcement: Contract field required (execution_mode)
+    cost: 9.2a-E2 α cells · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.perception.first_contact_reverification
+    governor: Mtafiti
+    mandate: Built to close the intentional first-contact re-verification loop with semantics evident to reviewers.
+    promise:
+      - PROM-9-2a-first-contact-reverification
+    service_trace:
+      - S2.integrate-sources
+    surface: "`backend/services/mtafiti/first_contact_reverification.py`"
+    enforcement: Runtime check + comment carrier
+    cost: 9.2a-E3 α cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.perception.raw_bytes_no_long_lived_ref
+    governor: Mtafiti
+    mandate: Built to structurally prove no long-lived reference to raw audio bytes exists (never-rule V1-D1); module-level cache / class attribute / closure capture all forbidden.
+    promise:
+      - PROM-9-2a-never-rule-v1-d1-raw-never-egresses
+    service_trace:
+      - S2.integrate-sources
+      - S3.prove
+    surface: "`backend/services/mtafiti/**` + AST/reflection walk"
+    enforcement: AST/reflection walk (byte-reference scan)
+    cost: 9.2a-E4 α cells · §6.10 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.extraction_console.slice_scoped_intel
+    governor: Mtafiti
+    mandate: "Built to render extraction-console surfaces (`/extraction/console`) with slice-scoped intelligence and Registry-vocabulary aggregation."
+    promise:
+      - PROM-S2-slice-freeze-at-commission
+    service_trace:
+      - S2.commission
+      - S2.integrate-sources
+    surface: "`frontend/src/pages/extraction/ExtractionConsoleHomePage.jsx`"
+    enforcement: Jest render + auth-gate
+    cost: SM-E1..SM-E3 · Phase 9.3 close · Jest cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic (render)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.extraction_console.registry_admin
+    governor: Mtafiti
+    mandate: "Built to expose Registry admin surface (`/extraction/registry-admin`) for named-vocabulary maintenance by Compliance."
+    promise:
+      - PROM-S2-census-dimension-integrity
+    service_trace:
+      - S2.commission
+      - S3.prove
+    surface: "`frontend/src/pages/extraction/RegistryAdminView.jsx`"
+    enforcement: Jest render + auth-gate
+    cost: SM-Registry-Admin cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings:
+      - finding_id: Q3-05
+        tag: "[RULED · Q3-05-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §7 · candidate-direct-S1.scoped-key-cell · sub-coverage-via-Engineer-surface-real-but-indirect.]"
+        ref: rulings/registry_findings_01_to_11.md §7
+  - function_id: mtafiti.census.dimension_registry_vocabulary
+    governor: Mtafiti
+    mandate: Built to enforce that any census-observed dimension value appears in the disclosure_types/content_surface Registry; hard-coded values not in the vocabulary are honesty violations.
+    promise:
+      - PROM-S2-census-dimension-integrity
+      - PROM-S1-honesty-grammar-source-labels
+    service_trace:
+      - S2.integrate-sources
+    surface: "`backend/services/census/dimension_registry.py` + sidecar"
+    enforcement: Vocabulary-set membership check
+    cost: CD-G1..G4 · §6.11 · 4 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.census.sidecar_record_shape
+    governor: Mtafiti
+    mandate: Built to freeze the sidecar record shape (source label attribution) even though sidecar is INTERNAL — analogous to TF-E2 β but ruled α at TF; here ruled INTERNAL.
+    promise:
+      - PROM-S2-census-dimension-integrity
+    service_trace:
+      - S2.integrate-sources
+    surface: "`backend/services/census/sidecar.py`"
+    enforcement: Load-bearing wire-shape gate
+    cost: CD-E2 α · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: mtafiti.census.no_fabricated_content_surface
+    governor: Mtafiti
+    mandate: "Built to prevent silent `content_surface=\"hard_coded_value_not_in_registry\"` writes at census-run time; the registry IS the vocabulary."
+    promise:
+      - PROM-S2-census-dimension-integrity
+      - PROM-S1-honesty-grammar-source-labels
+    service_trace:
+      - S2.integrate-sources
+    surface: "`backend/services/census/**` + write-time validation"
+    enforcement: Runtime schema validate
+    cost: CD-E3 α · §6.11
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: targeta.commission_wizard.slice_freeze
+    governor: Targeta
+    mandate: Built to freeze slice selection at wizard-lock time; downstream perception + composition run against the frozen slice; no silent drift.
+    promise:
+      - PROM-S2-slice-freeze-at-commission
+    service_trace:
+      - S2.commission
+      - S2.integrate-sources
+    surface: "`frontend/src/pages/operator/CommissionWizardPage.jsx` + `backend/services/targeta/slice_freeze.py`"
+    enforcement: Runtime write-once at lock time
+    cost: TF-E2 α · 9.2a-E2 α · Playwright wizard cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: targeta.commission_wizard.mandatory_fields
+    governor: Targeta
+    mandate: Built to enforce wizard mandatory-field completion before session-commit; shape-as-objective handoff cannot override.
+    promise:
+      - PROM-S2-shape-as-objective-reach-only
+    service_trace:
+      - S2.commission
+    surface: "`frontend/src/pages/operator/CommissionWizardPage.jsx` mandatory-field logic"
+    enforcement: Runtime field validation + Playwright
+    cost: Playwright wizard cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: targeta.commission_wizard.shape_as_objective_prefill
+    governor: Targeta
+    mandate: "Built to accept \"shape-as-objective\" handoff and pre-fill wizard REACH only; contributing_slices + brief_id populated; mandatory-field flow untouched."
+    promise:
+      - PROM-S2-shape-as-objective-reach-only
+    service_trace:
+      - S2.commission
+    surface: "`backend/services/opportunity_briefs/shape_as_objective_prefill.build_prefill` + wizard useEffect"
+    enforcement: Runtime pre-fill contract
+    cost: OB-G4 · §6.11 · 1 cell
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: targeta.commission_wizard.commit_review
+    governor: Targeta
+    mandate: "Built to expose commit-review surface (`/operator/commit-review/:sessionId`) with pre-commit attestations visible to operator."
+    promise:
+      - PROM-S2-estate-onboarded-and-mapped
+    service_trace:
+      - S2.commit
+    surface: "`frontend/src/pages/operator/OperatorCommitReviewPage.jsx`"
+    enforcement: Jest + Playwright cells
+    cost: Phase 8 B-2 close · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: targeta.transform_form.per_call_provisioning
+    governor: Targeta
+    mandate: Built to route per-call scope enforcement + slice-freeze via Transform Forms' internal provisioning record; not exposed as external wire contract on the query surface.
+    promise:
+      - PROM-tf-transform-form-per-call-provisioning
+    service_trace:
+      - S2.commit
+      - S1.call
+    surface: "`backend/services/targeta/transform_forms.py` provisioning record"
+    enforcement: Load-bearing internal contract (no snapshot)
+    cost: TF-E3 · §6.11
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: targeta.transform_form.class_registry_additive
+    governor: Targeta
+    mandate: "Built to accommodate class widening via additive versioned registry (`disclosure_types.v0.json` → v1.json pattern); Literal freeze rejected."
+    promise:
+      - PROM-tf-class-with-claim-invariant
+    service_trace:
+      - S2.commit
+      - S3.prove
+    surface: "`backend/data/disclosure_types.v0.json` + registry loader"
+    enforcement: Versioned-registry load + additive-only gate
+    cost: TF-E5 · Phase 8 B-5b · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: targeta.transform_form.frozen_wire_contract
+    governor: Targeta
+    mandate: "Built to freeze the KA JSON export shape as a client-promise wire contract; sub-model choice affects `$defs` shape but not the wire."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call (KA export path)
+    surface: "`backend/contracts/transform_form_v0.py` + JSON schema"
+    enforcement: Frozen contract + JSON-schema regression
+    cost: TF-G1..G5 (5 cells) · §6.6
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: solva.trace.receipt_resolution
+    governor: Solva
+    mandate: "Built to resolve `/api/solva/trace/{trace_id}` → end-to-end receipt chain for the operation."
+    promise:
+      - PROM-S3-prove-any-operation
+    service_trace:
+      - S3.prove
+    surface: "`backend/routers/solva.py::get_trace`"
+    enforcement: Runtime endpoint + integration test
+    cost: Solva trace cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: solva.trace.brief_id_exclusion
+    governor: Solva
+    mandate: "Built to REJECT `brief_`-prefixed trace_ids with HTTP 404; briefs are advisory and never receipt-bearing."
+    promise:
+      - PROM-S3-brief-namespace-distinct-from-trace
+      - PROM-S1-class-honesty-render-time
+    service_trace:
+      - S3.prove
+    surface: "`backend/routers/solva.py::get_trace` (lines 40-54)"
+    enforcement: Runtime 404
+    cost: OB-G3 · §6.11 · 2 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: solva.compliance.prove_one_run
+    governor: Solva
+    mandate: "Built to render Compliance's \"prove any run\" surface at `/compliance/prove/:traceId`; end-to-end proof visible."
+    promise:
+      - PROM-S3-prove-any-operation
+    service_trace:
+      - S3.prove
+    surface: "`frontend/src/pages/compliance/CompliancePro veOneRunPage.jsx`"
+    enforcement: Jest + Playwright
+    cost: Phase 8 B-5a close · Jest cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: solva.compliance.retention_ui
+    governor: Solva
+    mandate: "Built to render retention state per row at `/compliance/retention`; held-class + retention decisions visible."
+    promise:
+      - PROM-S3-retention-held-class-no-delete
+    service_trace:
+      - S3.prove
+    surface: "`frontend/src/pages/compliance/ComplianceRetentionPage.jsx`"
+    enforcement: Jest + Playwright
+    cost: Phase 8 B-5a cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: solva.compliance.rulebook_write
+    governor: Solva
+    mandate: "Built to render Compliance rulebook write surface at `/compliance/rulebook`; rule ownership + change-ceremony surface."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`frontend/src/pages/compliance/ComplianceRulebookPage.jsx`"
+    enforcement: Jest + Playwright + audit-trail hooks
+    cost: Phase 8 B-5b cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: solva.master_admin.change_a_rule
+    governor: Solva
+    mandate: "Built to render Master Admin `/master-admin/change-a-rule/:ruleId` with dual-control ceremony for rule mutation."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`frontend/src/pages/master_admin/ChangeARulePage.jsx`"
+    enforcement: Jest + Playwright + dual-control gate
+    cost: Phase 8 B-3 cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: solva.master_admin.audit_trail_view
+    governor: Solva
+    mandate: "Built to render Master Admin `/master-admin/audit-trail` with immutable event stream."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`frontend/src/pages/master_admin/AuditTrailPage.jsx`"
+    enforcement: Jest + Playwright
+    cost: Phase 8 B-3/B-4 cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings:
+      - finding_id: Q3-06
+        tag: "[RULED · Q3-06-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §8 · candidate-walk-side-audit-ledger-cell · view-side-covered · half-surface-tested-is-precisely-what-Q3-exists-to-show.]"
+        ref: rulings/registry_findings_01_to_11.md §8
+  - function_id: ui.ask_console.single_ingress
+    governor: "(named surface: UI Spec v1 §3.1)"
+    mandate: "Built to mount Ask Console at `/` as the platform's first-party reference application (Registry Doctrine Part II reclassification)."
+    promise:
+      - PROM-ui-single-ingress-ask-console
+    service_trace:
+      - S1.call (Ask app is app-layer, demonstrating S1)
+    surface: "`frontend/src/pages/AskConsolePage.js` + `App.js` route 49"
+    enforcement: Jest render + Playwright landing
+    cost: AskConsole cells + landing smoke · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: ui.ask_console.console_nav_menu
+    governor: "(named surface: UI Spec)"
+    mandate: Built to expose a discoverability nav menu on Ask Console header (2026-07-11 Tier-3 hygiene); all sibling routes visible; class-honesty preserved (no OB content leaks).
+    promise:
+      - PROM-ui-console-discoverability
+      - PROM-S1-class-honesty-render-time
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/pages/AskConsolePage.js` ConsoleNavMenu component"
+    enforcement: Jest render + Playwright smoke
+    cost: Console nav Jest × 6 · Playwright × 4 · §6.11
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: ui.opportunity_briefs.render_surface
+    governor: "(named surface: UI Spec v2.2 §3.7)"
+    mandate: Built to render three fixture-census briefs per AS-U2 with scope-chip + advisory-marker + stale-indicator + shape-as-objective handoff.
+    promise:
+      - PROM-S1-class-honesty-render-time
+      - PROM-S2-fixture-census-sample-rules
+    service_trace:
+      - S1.call (advisory)
+      - S2.commission (handoff)
+    surface: "`frontend/src/pages/opportunity_briefs/{OpportunityBriefsPage,OpportunityBriefCard}.jsx`"
+    enforcement: Jest render × 8 + Playwright smoke × 4
+    cost: OB Jest + OB Playwright · §6.11 · 12 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: ui.compliance_console.home
+    governor: "(named surface: UI Spec Phase 8 B-5a)"
+    mandate: "Built to render Compliance Home at `/compliance` with sub-surface links (prove · retention · rulebook)."
+    promise:
+      - PROM-S3-prove-any-operation
+    service_trace:
+      - S3.prove
+    surface: "`frontend/src/pages/compliance/ComplianceHomePage.jsx`"
+    enforcement: Jest render + auth-gate + Playwright
+    cost: Phase 8 B-5a cells · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: ui.extraction_console.home
+    governor: "(named surface: SM-E1)"
+    mandate: "Built to render Extraction Console at `/extraction/console` with SM-E1..SM-E3 sub-surfaces."
+    promise:
+      - PROM-S2-estate-onboarded-and-mapped
+      - PROM-S2-slice-freeze-at-commission
+    service_trace:
+      - S2.integrate-sources
+      - S2.commission
+    surface: "`frontend/src/pages/extraction/ExtractionConsoleHomePage.jsx`"
+    enforcement: Jest + Playwright
+    cost: Phase 9.3 close · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: ui.engineer.onboarding
+    governor: "(named surface: 8-EXT dual-actor)"
+    mandate: "Built to render Engineer onboarding surface at `/engineer/onboarding` for dual-actor invite flow."
+    promise:
+      - PROM-S1-refusal-taxonomy-closed
+      - PROM-S1-external-scoped-access
+    service_trace:
+      - S1.register
+      - S1.scoped-key
+    surface: "`frontend/src/pages/engineer/EngineerOnboardingPage.jsx`"
+    enforcement: Jest + Playwright + auth-gate
+    cost: 8-EXT close · P8E-E1..E7 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: production_housing.dockerfile_multi_stage
+    governor: "(named surface: PH-R1)"
+    mandate: Built to package the platform as a multi-stage single image (node build → python runtime · non-root · EXPOSE 8001 · HEALTHCHECK curl /api/healthz · CMD uvicorn).
+    promise:
+      - PROM-ph-r1-secret-externalization
+      - PROM-ph-r1-fe-be-serve-separable
+    service_trace:
+      - S2.commission (Operator gets to deploy)
+      - S3.prove
+    surface: "`/app/Dockerfile` · `/app/.dockerignore`"
+    enforcement: Constraint-architecture (layer boundary) + PH-G2 grep-negative on COPY .env
+    cost: PH-G2 · §6.7 · 4 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: production_housing.env_findings_audit
+    governor: "(named surface: PH-R1)"
+    mandate: Built to classify every current .env var per BCR §3.4 annex as vault/config/finding; no secret VALUES in the audit file.
+    promise:
+      - PROM-ph-r1-secret-externalization
+    service_trace:
+      - S3.prove
+    surface: "`/app/docs/production_housing/env_findings_v0.md`"
+    enforcement: Grep-negative on secret patterns + file-attest
+    cost: PH-G1 · §6.1 · 2 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: production_housing.healthz_liveness
+    governor: "(named surface: PH-R1)"
+    mandate: "Built to expose `/api/healthz` returning 200 `{status: alive}` with no auth + no DB touch."
+    promise:
+      - PROM-S1-refusal-taxonomy-closed
+    service_trace:
+      - S1.call
+      - S3.prove
+    surface: "`backend/routers/health.py::healthz`"
+    enforcement: Runtime endpoint + AST no-DB-call
+    cost: PH-G3 · §6.10/§6.11 · 1 cell
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: production_housing.readyz_readiness
+    governor: "(named surface: PH-R1)"
+    mandate: "Built to expose `/api/readyz` returning 200 with parity=31 when Mongo + FS both green; 503 on either fail; refusal taxonomy untouched."
+    promise:
+      - PROM-ph-r1-readiness-parity-real
+      - PROM-S3-frozen-contract-parity-attest
+    service_trace:
+      - S3.prove
+    surface: "`backend/routers/health.py::readyz`"
+    enforcement: Runtime endpoint + parity_counter
+    cost: PH-G3 (3 cells) + PH-G-Refusal-Closed · §6.11 · 4 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: production_housing.build_info
+    governor: "(named surface: PH-R1 · Owner enhancement 2026-07-10)"
+    mandate: "Built to expose `/api/system/build_info` returning `{git_sha, build_timestamp, parity_count}`; no secrets in payload; parity uses shared counter."
+    promise:
+      - PROM-S3-mechanical-audit-of-promotion
+      - PROM-S3-frozen-contract-parity-attest
+    service_trace:
+      - S3.prove
+    surface: "`backend/routers/system_info.py::build_info`"
+    enforcement: Runtime endpoint + grep-negative on payload
+    cost: PH-G5 · Playwright build_info smoke · §6.11 · 5 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: production_housing.llm_swap_seam_doc
+    governor: "(named surface: PH-R1)"
+    mandate: "Built to document the current `invoke_with_metering(...)` seam + BCR annex target shape `complete(messages, temperature, model)` + 2-post-cut call-site inventory."
+    promise:
+      - PROM-ph-r1-llm-swap-shape-stable
+      - PROM-S1-shield-single-source
+    service_trace:
+      - S1.call
+    surface: "`/app/docs/production_housing/llm_swap_seam.md`"
+    enforcement: Grep-positive (target shape recorded + call sites match repo)
+    cost: PH-G4 · §6.1 · 2 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: production_housing.promotion_audit
+    governor: "(named surface: PH-R1 STAKED)"
+    mandate: "Built to attest promotion-not-rebuild via `/api/system/build_info` mechanical surface + 14 pod-specific findings classified NOT-A-FINDING / FIXED / DEFERRED."
+    promise:
+      - PROM-S3-mechanical-audit-of-promotion
+    service_trace:
+      - S3.prove
+    surface: "`/app/docs/production_housing/promotion_audit_v0.md`"
+    enforcement: File-attest + grep-positive for build_info reference
+    cost: PH-G-Docs · §6.1 · 3 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.doctrine_v1_reference
+    governor: "(named surface: Registry Doctrine)"
+    mandate: Built to enforce that every Registry row cites the doctrine SHA by path in §1 preamble.
+    promise:
+      - PROM-S3-governance-doc-on-disk
+    service_trace:
+      - S3.prove
+    surface: This file §1
+    enforcement: Grep-positive on doctrine SHA
+    cost: RP-G-DoctrineRef · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.reflexive_gates
+    governor: "(named surface: Registry)"
+    mandate: Built to attest the phase's own gates carry Registry rows per R4 reflexive; RP-G1..G6 + auxiliary + RP-E-carriers land in this deliverable §7.
+    promise:
+      - PROM-registry-taxonomy-canonical
+      - PROM-registry-schema-conformance
+    service_trace:
+      - S3.prove
+    surface: This file §7 + Stage A §7
+    enforcement: R4 self-attest
+    cost: RP-G1..G6 + aux (10 rows) · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: governance.tiered_ruling_model
+    governor: "(named surface: governance)"
+    mandate: Built to enforce 3-tier ruling model (§§1-13); every Stage A pre-tiers escalations; §12 close-ratification-on-own-text; §13 Registry Doctrine in force.
+    promise:
+      - PROM-S3-governance-doc-on-disk
+    service_trace:
+      - S3.prove
+    surface: "`/app/docs/governance/tiered_ruling_model.md`"
+    enforcement: On-disk canonical + append-only amendments
+    cost: Every close · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: governance.standing_rule_v3
+    governor: "(named surface: governance)"
+    mandate: Built to enforce all deliverables land on-disk (no inline dumps); historical carriers immutable; SHAs in reply body.
+    promise:
+      - PROM-S3-governance-doc-on-disk
+    service_trace:
+      - S3.prove
+    surface: Every reply-body SHA + every landed file
+    enforcement: Standing convention + reply-body SHA discipline
+    cost: Every reply · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: governance.registry_doctrine_v1
+    governor: "(named surface: governance §13)"
+    mandate: Built to enforce doctrine v1.0 (S1..S5 · R1..R4 · D-1..D-10 · D1..D7).
+    promise:
+      - PROM-S3-governance-doc-on-disk
+      - PROM-registry-rent-paying
+    service_trace:
+      - S3.prove
+    surface: "`/app/docs/governance/registry_doctrine_v1.md`"
+    enforcement: On-disk canonical + doctrine-ratification
+    cost: §13 pointer · RP phase · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.g1_promise_set_completeness
+    governor: "(named surface: Registry)"
+    mandate: "Attest every \"Promise protected\" source line resolves to a §2 promise-row OR §4 Q2 orphan."
+    promise:
+      - PROM-registry-service-trace-integrity
+    service_trace:
+      - S3.prove
+    surface: This file §2 + §4
+    enforcement: grep-negative (source-line vs promise-row citation)
+    cost: RP-G1 · §6.1 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.g2_function_attachment_completeness
+    governor: "(named surface: Registry)"
+    mandate: Attest every named-gate identifier in CI roster has a function row OR appears in §4 Q2.
+    promise:
+      - PROM-registry-service-trace-integrity
+    service_trace:
+      - S3.prove
+      - S1.call
+    surface: This file §3 + §4
+    enforcement: grep-negative
+    cost: RP-G2 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.g3_schema_conformance
+    governor: "(named surface: Registry)"
+    mandate: "Attest every §3 row populates all 11 §3.2 fields; `unknown` legal only for `cost` + `ladder_rung` (per RP-E4 α)."
+    promise:
+      - PROM-registry-schema-conformance
+    service_trace:
+      - S3.prove
+    surface: This file §3
+    enforcement: table-shape lint
+    cost: RP-G3 · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.g4_service_trace_integrity
+    governor: "(named surface: Registry)"
+    mandate: "Attest every `service_trace` cites S1..S5 + journey step from doctrine Part II verbatim."
+    promise:
+      - PROM-registry-service-trace-integrity
+    service_trace:
+      - S1..S5
+      - S3.prove
+    surface: This file §3
+    enforcement: reference-check
+    cost: RP-G4 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.g5_q2_orphan_coverage
+    governor: "(named surface: Registry)"
+    mandate: Attest every unrecoverable-promise gate appears in §4 Q2 list.
+    promise:
+      - PROM-registry-rent-paying
+    service_trace:
+      - S3.prove
+    surface: This file §4
+    enforcement: inclusion-check
+    cost: RP-G5 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.g6_q3_gap_coverage
+    governor: "(named surface: Registry)"
+    mandate: "Attest every doctrine-Part-II journey step with zero registered functions appears in §5 Q3 list. Per RP-E3 α-amended: also every (i)∧¬(ii) mandate-named-but-untestable behavior."
+    promise:
+      - PROM-registry-rent-paying
+    service_trace:
+      - S3.prove
+      - S1..S5
+    surface: This file §5
+    enforcement: inclusion-check
+    cost: RP-G6 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.promise_consolidation_judgment
+    governor: "(named surface: Registry)"
+    mandate: "Per RP-E1 α + tie-break-toward-distinct: consolidate iff ≥60% core-token overlap AND same governor/surface; keep DISTINCT at borderline."
+    promise:
+      - PROM-registry-rent-paying
+      - PROM-S1-honesty-grammar-source-labels
+    service_trace:
+      - S3.prove
+    surface: This file §2 + consolidation_log_v0.md
+    enforcement: grep-negative + inclusion-check
+    cost: RP-E1 α landing · §6.11 · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic (token-overlap check)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.q2_q3_client_promise_escalation
+    governor: "(named surface: Registry)"
+    mandate: "Per RP-E2 α: route every client-promise-touching Q2/Q3 finding to `[CLIENT-PROMISE · ESCALATE-AT-CLOSE]` marker in §4/§5 + surface at close."
+    promise:
+      - PROM-registry-rent-paying
+      - PROM-S1-provable-envelope-inheritance
+    service_trace:
+      - S1.call
+      - S3.prove
+      - S4.receive
+    surface: This file §4 + §5 + §7
+    enforcement: grep-negative on client-promise class keywords
+    cost: RP-E2 α · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.governor_scope_boundary_ruling
+    governor: "(named surface: Registry)"
+    mandate: "Per RP-E3 α-amended: (i)∧(ii) → §3 row; (i)∧¬(ii) → §5 Q3 gap finding, never dropped; sub-steps fold into parent's mandate."
+    promise:
+      - PROM-registry-taxonomy-canonical
+    service_trace:
+      - S2.commission
+      - S3.prove
+    surface: This file §3 + §5
+    enforcement: grep-positive on §-clause citations
+    cost: RP-E3 α-amended · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic (mandate-clause match)
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.ladder_rung_unknown_honesty
+    governor: "(named surface: Registry)"
+    mandate: "Per RP-E4 α: `ladder_rung: unknown` is the honest value where source is silent; NO builder-guessed rungs."
+    promise:
+      - PROM-S1-honesty-grammar-source-labels
+      - PROM-registry-schema-conformance
+    service_trace:
+      - S3.prove
+    surface: This file §3
+    enforcement: "grep-positive on `unknown` where evidence absent"
+    cost: RP-E4 α · unknown
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.gaux_parity_31_preserved
+    governor: "(named surface: Registry · SyniSense)"
+    mandate: Attest 31 frozen contracts + 31 snapshots byte-identical at Registry Population close.
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+      - S3.prove
+    surface: "`backend/contracts/**` + `*.contract_snapshot.json`"
+    enforcement: fs-count (shared parity_counter)
+    cost: RP-G-Parity · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.gaux_data_blind
+    governor: "(named surface: Registry)"
+    mandate: "Attest zero secret values in the Registry deliverable (grep-negative on MongoDB URI · JWT · sk-* · AKIA*)."
+    promise:
+      - PROM-S1-honesty-grammar-source-labels
+      - governance §8
+    service_trace:
+      - S3.prove
+    surface: This file (whole)
+    enforcement: grep-negative on secret patterns
+    cost: RP-G-DataBlind · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.gaux_docs_on_disk
+    governor: "(named surface: Registry · Standing Rule v3)"
+    mandate: Attest deliverable + rulings + close + consolidation-log all land on Standing Rule v3 canonical paths.
+    promise:
+      - PROM-S3-governance-doc-on-disk
+    service_trace:
+      - S3.prove
+    surface: "4 canonical paths under `docs/`"
+    enforcement: file-existence
+    cost: RP-G-Docs · §6.1 · 4 cells
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: registry.population.gaux_doctrine_ref
+    governor: "(named surface: Registry)"
+    mandate: Attest this file §1 cites the doctrine SHA verbatim.
+    promise:
+      - PROM-S3-governance-doc-on-disk
+    service_trace:
+      - S3.prove
+    surface: This file §1
+    enforcement: "grep-positive on doctrine SHA `0bfe65c4…`"
+    cost: RP-G-DoctrineRef · §6.1
+    dependencies: ""
+    ladder_rung: 1 · Deterministic
+    owner: builder-Tier-3
+    source: v0.md
+    rulings: []
+  - function_id: registry.machine_form.schema_conformance
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest every mandatory §3.2 field is present in every row of the machine form and every value matches the schema type.
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/validator.py::check_mrr_g1_schema_conformance` + `backend/tests/registry/test_machine_readable_registry_mrr_g1_to_g6.py::test_mrr_g1_schema_conformance`"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: v0.md source · v0.1_supplement · schema formalization per doctrine §3.2
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+  - function_id: registry.machine_form.vocabulary_lock
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest (a) foreign-key promise integrity — every function row's `promise` field resolves to an existing top-level `promises` array `promise_id` (β lock) — AND (b) `service_trace` step values are members of `PART_II_JOURNEY_STEPS` constant sourced verbatim from doctrine Part II (addition lock)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/validator.py::check_mrr_g2_vocabulary_lock` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: v0.md §2 promises · doctrine Part II lines 32-36 verbatim · governance-amendment-only
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+  - function_id: registry.machine_form.round_trip
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest byte-identical round-trip integrity over combined `(v0.md + v0.1_supplement.md)` ↔ machine form per Owner-explicit MRR-E1 α + MRR-E4 β + governance §14 (round-trip operates over supplements-plus-source as one set)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/validator.py::check_mrr_g3_round_trip` + test cell"
+    enforcement: byte-identity lock
+    cost: 1 cell · µs class
+    dependencies: parser · MRR-E1 α direction
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+  - function_id: registry.machine_form.findings_coverage
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest all 11 findings from `/app/docs/rulings/registry_findings_01_to_11.md` are carried in machine form with `[RULED · …]` disposition tags byte-identical AND `[OWNER: …]` markers preserved verbatim AND dual-surface archival posture (inline rulings + findings_supersession_ledger) landed per MRR-E2 γ."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/registry/validator.py::check_mrr_g4_findings_coverage` + test cell"
+    enforcement: grep-negative + structured-path check
+    cost: 1 cell · µs class
+    dependencies: "`rulings/registry_findings_01_to_11.md` · v0.md §4/§5/§7 · MRR-E2 γ ruling"
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+  - function_id: registry.machine_form.parity_31
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest V1-G7 parity 31/31 byte-identical is unaffected by this phase (contract count preserved + snapshot count preserved).
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/validator.py::check_mrr_g_parity` + test cell"
+    enforcement: fs-count + hash-diff
+    cost: 1 cell · µs class
+    dependencies: "existing V1-G7 parity gate · `backend/contracts/` · `backend/tests/invariants/`"
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+  - function_id: registry.machine_form.data_blind
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest no secrets, keys, tokens, or credential material appear in machine form or supplement (regex-negative on standard secret patterns).
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/registry/validator.py::check_mrr_g_data_blind` + test cell"
+    enforcement: grep-negative
+    cost: 1 cell · µs class
+    dependencies: governance §8 data-blind posture · v0.md convention
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+  - function_id: registry.machine_form.source_sha_pin
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest machine form embeds top-level `source_of_truth: {path, sha256}` referencing v0.md at its ruled SHA `598a7ad4…` per MRR-E1 α integrity-binding condition. Machine form that cannot name its source fails this gate (Owner-verbatim: \"an unattributed claim\")."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/validator.py::check_mrr_g_source_sha` + test cell"
+    enforcement: runtime check + byte-identity lock
+    cost: 1 cell · µs class
+    dependencies: MRR-E1 α condition · parser embed-sha logic
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+
+findings:
+  - finding_id: Q2-01
+    subject: "`EE-G1`..`EE-G4` (Engineer surface gates)"
+    source: "`docs/close_reports/phase_8_b_3.md` gate roster"
+    observation: "Close report cites gates by name but does not carry explicit \"Promise protected:\" line for the Engineer-facing surface. Best-recoverable promise (`PROM-S1-provable-envelope-inheritance`) attached tentatively; source-line-verbatim missing from the phase-8 pre-Registry-Doctrine close. Not a defect of the extraction; a defect of the pre-doctrine close reports. **[RULED · Q2-01-CORRECTED 2026-07-11 · rulings/registry_findings_01_to_11.md §1 · attach to new PROM-S1-external-scoped-access (BCR §3.9 EE-R2 + EE-R4 verbatim); strike tentative PROM-S1-provable-envelope-inheritance; trace S1.register + S1.scoped-key confirmed.]**"
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q2-01-CORRECTED 2026-07-11 · rulings/registry_findings_01_to_11.md §1 · attach to new PROM-S1-external-scoped-access (BCR §3.9 EE-R2 + EE-R4 verbatim); strike tentative PROM-S1-provable-envelope-inheritance; trace S1.register + S1.scoped-key confirmed.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §1
+    owner_markers: []
+  - finding_id: Q2-02
+    subject: "`MAN-G1`..`MAN-G3` (Master Admin gates)"
+    source: "`docs/close_reports/phase_8_b_3.md` + `phase_8_b_4.md`"
+    observation: "Same shape as Q2-01 — gates named but no verbatim \"Promise protected:\" line in pre-doctrine close. Best-recoverable promise (`PROM-S3-audit-trail-immutable`) attached tentatively. **[RULED · Q2-02-ACCEPTED 2026-07-11 · rulings/registry_findings_01_to_11.md §2 · correct promise, correct trace.]**"
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q2-02-ACCEPTED 2026-07-11 · rulings/registry_findings_01_to_11.md §2 · correct promise, correct trace.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §2
+    owner_markers: []
+  - finding_id: Q2-03
+    subject: "`RT-*` gate identifiers (retention)"
+    source: "`docs/close_reports/phase_8_seam_3_sub_stage_*.md`"
+    observation: "Seam-3 close reports cite retention behaviors but the promise text is embedded in policy prose rather than a \"Promise protected:\" line format. `PROM-S3-retention-held-class-no-delete` attached as best-recoverable. **[RULED · Q2-03-ACCEPTED 2026-07-11 · rulings/registry_findings_01_to_11.md §3 · policy-prose-recovery-is-legitimate-archaeology · format-of-source-doesn't-diminish-the-promise.]**"
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q2-03-ACCEPTED 2026-07-11 · rulings/registry_findings_01_to_11.md §3 · policy-prose-recovery-is-legitimate-archaeology · format-of-source-doesn't-diminish-the-promise.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §3
+    owner_markers: []
+  - finding_id: Q2-04
+    subject: "`V1-G[0-6]` (contract snapshot integrity gates, non-G7)"
+    source: invariant test file naming pattern
+    observation: "The V1-G family predates the doctrine; V1-G7 has a clear promise (parity attest) but V1-G0..G6 are internal snapshot-integrity walks whose promise text lives in the invariant module docstring rather than a close-report \"Promise protected:\" line. **[RULED · Q2-04-ATTACHED-NOT-RETIRED 2026-07-11 · rulings/registry_findings_01_to_11.md §9 · attach to existing PROM-S1-frozen-wire-contract (frozen-wire-contract integrity, recovered from docstrings, load-bearing); Q1-candidate-flag-stands-for-future-automation.]**"
+    escalation_marker: ""
+    ruling_tag: "[RULED · Q2-04-ATTACHED-NOT-RETIRED 2026-07-11 · rulings/registry_findings_01_to_11.md §9 · attach to existing PROM-S1-frozen-wire-contract (frozen-wire-contract integrity, recovered from docstrings, load-bearing); Q1-candidate-flag-stands-for-future-automation.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §9
+    owner_markers: []
+  - finding_id: Q2-05
+    subject: "Various `*_ext` legacy gates (phase 4a/4b/5/6/7 pre-doctrine gates)"
+    source: 8 pre-doctrine close reports (phase_4a_stage_b, phase_4b, phase_5_stage_b, phase_6_stage_b, phase_7_stage_b_{1,2,3})
+    observation: "Pre-doctrine closes did not carry the \"Promise protected:\" discipline uniformly; some phase-7 SHA-pin gates now trace to `PROM-S1-frozen-wire-contract` via AF-G1 re-pointing but the original close-line is oblique. **[RULED · Q2-05-HOLD 2026-07-11 · rulings/registry_findings_01_to_11.md §10 · no-bulk-disposition · individual-read-at-future-Registry-maintenance-turn · AF-G1-repointed-rows-keep-attachment · no-retirement-without-reading · archaeology-discipline-applies-to-endings-too.]**"
+    escalation_marker: ""
+    ruling_tag: "[RULED · Q2-05-HOLD 2026-07-11 · rulings/registry_findings_01_to_11.md §10 · no-bulk-disposition · individual-read-at-future-Registry-maintenance-turn · AF-G1-repointed-rows-keep-attachment · no-retirement-without-reading · archaeology-discipline-applies-to-endings-too.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §10
+    owner_markers: []
+  - finding_id: Q3-01
+    subject: S1.pass-receipts-through
+    source: "The integrating app's downstream propagation of receipts is a client-promise (\"my app inherits provability\") but no CI cell attests that receipts survive the integrator's downstream chain (this is outside our test surface). Doctrine journey step exists; enforcement is client-side after handoff. **[RULED · Q3-01-RECLASSIFIED 2026-07-11 · rulings/registry_findings_01_to_11.md §4 · narrowed-scope · integrator's-downstream-behavior-outside-platform-scope · platform's-obligation-is-that-receipts-arrive-machine-passable · envelope-completeness-such-that-pass-through-is-possible · envelope-completeness-cell-is-legitimate-future-check.]**"
+    observation: "Q3-01 | S1.pass-receipts-through | The integrating app's downstream propagation of receipts is a client-promise (\"my app inherits provability\") but no CI cell attests that receipts survive the integrator's downstream chain (this is outside our test surface). Doctrine journey step exists; enforcement is client-side after handoff. **[RULED · Q3-01-RECLASSIFIED 2026-07-11 · rulings/registry_findings_01_to_11.md §4 · narrowed-scope · integrator's-downstream-behavior-outside-platform-scope · platform's-obligation-is-that-receipts-arrive-machine-passable · envelope-completeness-such-that-pass-through-is-possible · envelope-completeness-cell-is-legitimate-future-check.]** | doctrine §Part II S1 journey | `[CLIENT-PROMISE · ESCALATE-AT-CLOSE]` — the promise is provable-envelope-inheritance; the gap is inherent to the API-boundary trust surface. Owner ruling on whether this is a Q3-real gap or an out-of-scope integrator-side item."
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q3-01-RECLASSIFIED 2026-07-11 · rulings/registry_findings_01_to_11.md §4 · narrowed-scope · integrator's-downstream-behavior-outside-platform-scope · platform's-obligation-is-that-receipts-arrive-machine-passable · envelope-completeness-such-that-pass-through-is-possible · envelope-completeness-cell-is-legitimate-future-check.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §4
+    owner_markers: []
+  - finding_id: Q3-02
+    subject: S2.onboard-context (organization context onboarding step)
+    source: "Doctrine §Part II S2 verbatim declares \"Onboard organization context\" as a named journey step (correction carried from Owner review). No CI cell today attests to that specific journey step; the closest surfaces are the Engineer onboarding flow (client-side) and the Extraction Console (data-side). Neither directly attests the \"organization context onboarded\" state. RP-E3 α-amended (i)∧¬(ii) landing: mandate-named behavior with no testable machine-enforceable surface. **[RULED · Q3-02-OPEN-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §5 · [OWNER: future phase] · never-retired · never-papered · real-journey-step-with-no-surface · doctrine-surfaced-this-gap-deliberately-at-Part-II.]**"
+    observation: "Q3-02 | S2.onboard-context (organization context onboarding step) | Doctrine §Part II S2 verbatim declares \"Onboard organization context\" as a named journey step (correction carried from Owner review). No CI cell today attests to that specific journey step; the closest surfaces are the Engineer onboarding flow (client-side) and the Extraction Console (data-side). Neither directly attests the \"organization context onboarded\" state. RP-E3 α-amended (i)∧¬(ii) landing: mandate-named behavior with no testable machine-enforceable surface. **[RULED · Q3-02-OPEN-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §5 · [OWNER: future phase] · never-retired · never-papered · real-journey-step-with-no-surface · doctrine-surfaced-this-gap-deliberately-at-Part-II.]** | doctrine §Part II S2 journey verbatim + Owner correction | `[CLIENT-PROMISE · ESCALATE-AT-CLOSE]` — S2 is Operator client-facing; onboarding step is load-bearing on the full commissioning journey."
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q3-02-OPEN-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §5 · [OWNER: future phase] · never-retired · never-papered · real-journey-step-with-no-surface · doctrine-surfaced-this-gap-deliberately-at-Part-II.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §5
+    owner_markers:
+      - "[OWNER: future phase]"
+  - finding_id: Q3-03
+    subject: S4.license (buyer licensing action)
+    source: "Buyer receives + verifies + licenses. Doctrine §Part II S4 journey verbatim. No CI cell attests the license-action transition (buyer commercial-cut struck the surface 2026-07-06; buyer §5 surface salvaged at `/app/salvage/commercial_cut_2026_07_06/`). Post-cut, this journey step has no live enforcement — S4 is registered but its license leg is unbuilt. RP-E3 α-amended (i)∧¬(ii). **[RULED · Q3-03-STAYS-IN-L0 2026-07-11 · rulings/registry_findings_01_to_11.md §6 · [OWNER: buyer-commercial-tier] · S4.license-stays-in-Layer-0 · commercial-cut-salvaged-the-buyer-surface-didn't-kill-the-service · data-sale-is-the-product-thesis · surface-restores-when-a-commercial-posture-is-ruled · retiring-would-let-implementation-event-edit-product-definition-exactly-backwards.]**"
+    observation: "Q3-03 | S4.license (buyer licensing action) | Buyer receives + verifies + licenses. Doctrine §Part II S4 journey verbatim. No CI cell attests the license-action transition (buyer commercial-cut struck the surface 2026-07-06; buyer §5 surface salvaged at `/app/salvage/commercial_cut_2026_07_06/`). Post-cut, this journey step has no live enforcement — S4 is registered but its license leg is unbuilt. RP-E3 α-amended (i)∧¬(ii). **[RULED · Q3-03-STAYS-IN-L0 2026-07-11 · rulings/registry_findings_01_to_11.md §6 · [OWNER: buyer-commercial-tier] · S4.license-stays-in-Layer-0 · commercial-cut-salvaged-the-buyer-surface-didn't-kill-the-service · data-sale-is-the-product-thesis · surface-restores-when-a-commercial-posture-is-ruled · retiring-would-let-implementation-event-edit-product-definition-exactly-backwards.]** | doctrine §Part II S4 journey + `docs/close_reports/commercial_cut_2026_07_06.md` | `[CLIENT-PROMISE · ESCALATE-AT-CLOSE]` — S4 buyer surface commercial-cut struck the surface; doctrine still names the journey step. Owner ruling on whether to formally retire S4.license from Layer 0 OR restore the surface OR mark as [OWNER: buyer-commercial-tier]."
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q3-03-STAYS-IN-L0 2026-07-11 · rulings/registry_findings_01_to_11.md §6 · [OWNER: buyer-commercial-tier] · S4.license-stays-in-Layer-0 · commercial-cut-salvaged-the-buyer-surface-didn't-kill-the-service · data-sale-is-the-product-thesis · surface-restores-when-a-commercial-posture-is-ruled · retiring-would-let-implementation-event-edit-product-definition-exactly-backwards.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §6
+    owner_markers:
+      - "[OWNER: buyer-commercial-tier]"
+      - "[OWNER: buyer-commercial-tier]"
+  - finding_id: Q3-04
+    subject: S5 (all journey steps)
+    source: "Doctrine §Part II S5 is \"Registered so nothing optimizes against it prematurely; explicitly not built; no function may cite S5 as its sole anchor without Owner ruling.\" Zero registered functions cite S5. This is expected per doctrine, not a defect — but per Q3 mechanical scan it registers as a gap. **[RULED · Q3-04-CONFIRMED-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §11 · S5-gaps-marked-by-design-per-doctrine · closed.]**"
+    observation: "Q3-04 | S5 (all journey steps) | Doctrine §Part II S5 is \"Registered so nothing optimizes against it prematurely; explicitly not built; no function may cite S5 as its sole anchor without Owner ruling.\" Zero registered functions cite S5. This is expected per doctrine, not a defect — but per Q3 mechanical scan it registers as a gap. **[RULED · Q3-04-CONFIRMED-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §11 · S5-gaps-marked-by-design-per-doctrine · closed.]** | doctrine §Part II S5 verbatim | NO (Owner-explicit \"not built\") — CLOSED per Owner ruling · intentional-per-doctrine confirmed."
+    escalation_marker: ""
+    ruling_tag: "[RULED · Q3-04-CONFIRMED-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §11 · S5-gaps-marked-by-design-per-doctrine · closed.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §11
+    owner_markers: []
+  - finding_id: Q3-05
+    subject: S1.scoped-key (external key issuance journey step)
+    source: "Doctrine journey S1 includes \"register (via engineer) → scoped key → call → pass receipts through.\" The scoped-key issuance is done via the engineer surface but the doctrine-level journey step is not directly attested by a function row citing it as its primary service_trace. Sub-covered by `mtafiti.extraction_console.registry_admin` + Engineer register surface but no direct S1.scoped-key cell. **[RULED · Q3-05-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §7 · candidate-direct-S1.scoped-key-cell · sub-coverage-via-Engineer-surface-real-but-indirect.]**"
+    observation: "Q3-05 | S1.scoped-key (external key issuance journey step) | Doctrine journey S1 includes \"register (via engineer) → scoped key → call → pass receipts through.\" The scoped-key issuance is done via the engineer surface but the doctrine-level journey step is not directly attested by a function row citing it as its primary service_trace. Sub-covered by `mtafiti.extraction_console.registry_admin` + Engineer register surface but no direct S1.scoped-key cell. **[RULED · Q3-05-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §7 · candidate-direct-S1.scoped-key-cell · sub-coverage-via-Engineer-surface-real-but-indirect.]** | doctrine §Part II S1 journey | `[CLIENT-PROMISE · ESCALATE-AT-CLOSE]` — scoped-key is the integration authority root."
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q3-05-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §7 · candidate-direct-S1.scoped-key-cell · sub-coverage-via-Engineer-surface-real-but-indirect.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §7
+    owner_markers: []
+  - finding_id: Q3-06
+    subject: "RP-E3 α-amended: mandate-named but no testable surface — `bookkeeping.audit_ledger` behavior (northena.md L~mid mentions ledger-audit walk)"
+    source: "Named in northena.md mandate but no CI cell attests the audit-walk specifically; audit-trail-view (`solva.master_admin.audit_trail_view`) covers view-side, not walk-side. Per RP-E3 α-amended: registers as Q3 gap, never dropped. **[RULED · Q3-06-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §8 · candidate-walk-side-audit-ledger-cell · view-side-covered · half-surface-tested-is-precisely-what-Q3-exists-to-show.]**"
+    observation: "Q3-06 | RP-E3 α-amended: mandate-named but no testable surface — `bookkeeping.audit_ledger` behavior (northena.md L~mid mentions ledger-audit walk) | Named in northena.md mandate but no CI cell attests the audit-walk specifically; audit-trail-view (`solva.master_admin.audit_trail_view`) covers view-side, not walk-side. Per RP-E3 α-amended: registers as Q3 gap, never dropped. **[RULED · Q3-06-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §8 · candidate-walk-side-audit-ledger-cell · view-side-covered · half-surface-tested-is-precisely-what-Q3-exists-to-show.]** | `docs/mandates/northena.md` mandate | `[CLIENT-PROMISE · ESCALATE-AT-CLOSE]` — audit-walk integrity is Compliance-facing."
+    escalation_marker: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    ruling_tag: "[RULED · Q3-06-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §8 · candidate-walk-side-audit-ledger-cell · view-side-covered · half-surface-tested-is-precisely-what-Q3-exists-to-show.]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §8
+    owner_markers: []
+
+findings_supersession_ledger:
+  - finding_id: Q2-01
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q2-01-CORRECTED 2026-07-11 · rulings/registry_findings_01_to_11.md §1 · attach to new PROM-S1-external-scoped-access (BCR §3.9 EE-R2 + EE-R4 verbatim); strike tentative PROM-S1-provable-envelope-inheritance; trace S1.register + S1.scoped-key confirmed.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §1
+    ruling_date: 2026-07-11
+  - finding_id: Q2-02
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q2-02-ACCEPTED 2026-07-11 · rulings/registry_findings_01_to_11.md §2 · correct promise, correct trace.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §2
+    ruling_date: 2026-07-11
+  - finding_id: Q2-03
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q2-03-ACCEPTED 2026-07-11 · rulings/registry_findings_01_to_11.md §3 · policy-prose-recovery-is-legitimate-archaeology · format-of-source-doesn't-diminish-the-promise.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §3
+    ruling_date: 2026-07-11
+  - finding_id: Q2-04
+    original_state: surfaced
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q2-04-ATTACHED-NOT-RETIRED 2026-07-11 · rulings/registry_findings_01_to_11.md §9 · attach to existing PROM-S1-frozen-wire-contract (frozen-wire-contract integrity, recovered from docstrings, load-bearing); Q1-candidate-flag-stands-for-future-automation.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §9
+    ruling_date: 2026-07-11
+  - finding_id: Q2-05
+    original_state: surfaced
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q2-05-HOLD 2026-07-11 · rulings/registry_findings_01_to_11.md §10 · no-bulk-disposition · individual-read-at-future-Registry-maintenance-turn · AF-G1-repointed-rows-keep-attachment · no-retirement-without-reading · archaeology-discipline-applies-to-endings-too.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §10
+    ruling_date: 2026-07-11
+  - finding_id: Q3-01
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q3-01-RECLASSIFIED 2026-07-11 · rulings/registry_findings_01_to_11.md §4 · narrowed-scope · integrator's-downstream-behavior-outside-platform-scope · platform's-obligation-is-that-receipts-arrive-machine-passable · envelope-completeness-such-that-pass-through-is-possible · envelope-completeness-cell-is-legitimate-future-check.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §4
+    ruling_date: 2026-07-11
+  - finding_id: Q3-02
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q3-02-OPEN-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §5 · [OWNER: future phase] · never-retired · never-papered · real-journey-step-with-no-surface · doctrine-surfaced-this-gap-deliberately-at-Part-II.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §5
+    ruling_date: 2026-07-11
+  - finding_id: Q3-03
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q3-03-STAYS-IN-L0 2026-07-11 · rulings/registry_findings_01_to_11.md §6 · [OWNER: buyer-commercial-tier] · S4.license-stays-in-Layer-0 · commercial-cut-salvaged-the-buyer-surface-didn't-kill-the-service · data-sale-is-the-product-thesis · surface-restores-when-a-commercial-posture-is-ruled · retiring-would-let-implementation-event-edit-product-definition-exactly-backwards.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §6
+    ruling_date: 2026-07-11
+  - finding_id: Q3-04
+    original_state: surfaced
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q3-04-CONFIRMED-BY-DESIGN 2026-07-11 · rulings/registry_findings_01_to_11.md §11 · S5-gaps-marked-by-design-per-doctrine · closed.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §11
+    ruling_date: 2026-07-11
+  - finding_id: Q3-05
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q3-05-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §7 · candidate-direct-S1.scoped-key-cell · sub-coverage-via-Engineer-surface-real-but-indirect.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §7
+    ruling_date: 2026-07-11
+  - finding_id: Q3-06
+    original_state: "[CLIENT-PROMISE · ESCALATE-AT-CLOSE]"
+    superseded_state: "[SUPERSEDED · RULED 2026-07-11 · [RULED · Q3-06-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §8 · candidate-walk-side-audit-ledger-cell · view-side-covered · half-surface-tested-is-precisely-what-Q3-exists-to-show.]]"
+    ruling_ref: rulings/registry_findings_01_to_11.md §8
+    ruling_date: 2026-07-11

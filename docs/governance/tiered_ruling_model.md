@@ -329,4 +329,12 @@ Artifact: `/app/docs/governance/registry_doctrine_v1.md` · SHA-256 `0bfe65c47e2
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10. On-disk canonical per Standing Rule v3.*
+## §14 · R4 reflexive placement standing consequence (Owner, 2026-07-11 · from MRR-E4 β)
+
+**§14 — R4 reflexive placement standing consequence (Owner, 2026-07-11 · from MRR-E4 β).** Future phases' R4 reflexive rows land as additive supplements beside a locked source, consolidated into the next Registry version at a future owner-dispatched maintenance turn. MRR-G3's round-trip operates over (v0.md + supplements) ↔ machine form as one set. Applies to any Stage-A → execution phase where a locked source-of-truth prevents in-place R4 row addition.
+
+Ruling ref: `/app/docs/rulings/machine_readable_registry_mrr_e1_to_e4.md`.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11. On-disk canonical per Standing Rule v3.*
