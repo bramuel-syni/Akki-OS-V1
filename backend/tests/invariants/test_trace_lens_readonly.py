@@ -122,7 +122,7 @@ async def test_trace_lens_known_trace_id_writes_zero():
     from pathlib import Path as _P
     fx = _json.loads((_P(__file__).parent.parent.parent
                       / "services" / "data_source" / "synthetic_assets"
-                      / "rms_adversarial_v1" / "fixture.json").read_text(encoding="utf-8"))
+                      / "instance_fixture_a" / "fixture.json").read_text(encoding="utf-8"))
     units = [NormalizedUnit.model_validate(u) for u in fx["units"][:2]]
     result = await service.run(
         units, objective_text="trace lens readonly test objective",

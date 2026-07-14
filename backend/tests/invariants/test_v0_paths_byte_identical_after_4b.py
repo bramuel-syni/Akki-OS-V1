@@ -47,7 +47,10 @@ PRE_PHASE_4B_SHA = {
         "bb8ec05d1e24fefe42c437e73c66a803c1ab3b712bdd983ffe5a44181c95228b"
     ),
     "services/outer_gate/mint.py": (
-        "01cfe0e0fe8762e4b4c0421db89668f7eb88e3a3caf9eae57719ad496129ebbf"
+        # Multi-Instance Capability MC-E6 β cutover 2026-07-14: env var
+        # RMS_G6_MINT_KEY_TEST_OVERRIDE → AKKI_G6_MINT_KEY_TEST_OVERRIDE
+        # per Owner ruling (docs/rulings/mc_e1_to_e6_2026-07-14.md).
+        "b1060035cd0926b80ea39dc94b8cd3c3352f35ef2d6013f10e99d4411d360fdb"
     ),
     "services/outer_gate/receipt.py": (
         "4591e5ff6834fc80e359a33b7ccd1faad88fa8980a62f687ad1976a0342e9348"

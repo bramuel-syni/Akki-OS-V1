@@ -19,8 +19,10 @@ supplements:
     sha256: 8d4cd2ed9c4e802944517908424ba2297ac3b4dd5e0d2a8e6d54f6042e64a8e4
   - path: docs/registry/function_promise_registry_v0.4_supplement.md
     sha256: d1fa1949a206d5fb73481864962f93efaa888a4ef4793efad82a53681fc3dc1b
+  - path: docs/registry/function_promise_registry_v0.5_supplement.md
+    sha256: d2d0c5f4c37dcbe525ff99a757687d7ae81446cd738719341e2b7884d4ac778f
 
-# Row totals: promises=47 · functions=118 · findings=11
+# Row totals: promises=47 · functions=139 · findings=11
 
 promises:
   - promise_id: PROM-S1-provable-envelope-inheritance
@@ -2196,6 +2198,321 @@ functions:
     ladder_rung: 1 · Deterministic
     owner: Owner
     source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: akki.data_source.structured_connector_base
+    governor: Named surfaces (data_source)
+    mandate: "Built to expose a generic tabular/DB ingest class that produces `NormalizedUnit` instances via the existing five_rings@v0 shape (modality=text, locator dict `{table, row, cols}`, extraction_params satisfying the text-modality catalogue). Zero contract mutation."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: services/data_source/structured_connector.py
+    enforcement: "pytest (test_instance_fixture_b_walkthrough::test_structured_connector_produces_valid_normalized_units)"
+    cost: 1 cell · µs class
+    dependencies: contracts/five_rings.py unchanged
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.data_source.tabular_ingest_normalizes_units_zero_contract_mutation
+    governor: Named surfaces (data_source · reflexive)
+    mandate: "Built to attest tabular rows map to NormalizedUnits without any mutation to `contracts/five_rings.py` or its snapshot. Parity 31 held byte-identical (contracts/ + snapshot diff-empty)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: tests/registry/test_instance_fixture_b_walkthrough.py + parity_31 gate
+    enforcement: pytest + fs-negative on contracts/ diff
+    cost: 1 cell · µs class
+    dependencies: "five_rings@v0 shape"
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.data_source.license_class_pairs_at_ingest
+    governor: Named surfaces (data_source)
+    mandate: "Built to attach `license_class` at the connector-registration layer (default `internal_only` per MC-E4 α fail-closed); riding receipts (Op. Values §7) rather than the frozen NormalizedUnit shape. Artifacts derived from default-classed units refuse the outer gate to S4 until operator explicitly upgrades."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S4.receive
+    surface: "services/data_source/structured_connector.py::license_class_permits_s4_egress"
+    enforcement: pytest (test_license_class_default_is_internal_only_fail_closed)
+    cost: 1 cell · µs class
+    dependencies: outer_gate/receipt.py contract unchanged
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.frontend.s2_onboard_public_route
+    governor: Named surfaces (frontend + backend)
+    mandate: "Built to expose the S2.onboard structured-intake surface at `POST /api/instance/{instance_id}/onboard` accepting the Op. Values §8 payload (estate inventory · org vocabulary · rights posture per source · DPO contact · five §6 seam values · objective priorities). Versioned `onboard_context_v0`."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: routers/s2_onboard.py + services/multi_instance/onboard_context.py
+    enforcement: "pytest (test_instance_fixture_b_walkthrough::test_s2_onboard_fixture_b_walkthrough)"
+    cost: 1 cell · ms class
+    dependencies: tenant_entities.py write-path seat
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.backend.s2_onboard_receiver_persists_instance_scoped
+    governor: Named surfaces (backend · reflexive)
+    mandate: "Built to attest S2.onboard writes land in `instance_onboard_context` collection scoped by `instance_id`; no cross-instance write leak."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: tests/registry/test_instance_fixture_b_walkthrough.py + scoped_accessor
+    enforcement: pytest cross-instance denial
+    cost: 1 cell · ms class
+    dependencies: scoped_accessor helpers
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.backend.s2_onboard_writes_five_seam_values_dual_control_adjacent
+    governor: Named surfaces (backend)
+    mandate: "Built to attest initial-set writes = single-operator (pre-birth defaults); every initial seam-value set writes a `northena_ledger` row with `initial_set: true` marker (ceremony waived, audit trail preserved). Subsequent changes to already-set values return 409 pending full §6 ceremony (dual-control for class-C deletion + rule-tightening delay)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: "routers/s2_onboard.py::_append_initial_set_ledger_row"
+    enforcement: pytest (409 on second onboard) + ledger-row shape assertion
+    cost: 1 cell · ms class
+    dependencies: northena_ledger append_only
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.backend.tenant_entities_populates_from_s2_onboard
+    governor: Named surfaces (SyniSense)
+    mandate: "Built to attest the IF-1-era empty-catalogue stub at `services/synisense/shield/tenant_entities.py` becomes the tenant-entity seat populated by S2.onboard's `org_vocabulary` field. Connector-registration output is also written here per Op. Values §8 line 89."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: services/synisense/shield/tenant_entities.py + routers/s2_onboard.py
+    enforcement: pytest (onboard walkthrough writes org_vocabulary ledger row)
+    cost: 1 cell · ms class
+    dependencies: Shield custody chain
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.instance.identity_from_config_only
+    governor: Named surfaces (instance)
+    mandate: "Built to expose `GET /api/instance/config` returning the per-instance config (instance_id · display_name · product_title). Public read (no auth). Frontend hydrates branding at boot. Instance identity lives in config, not code."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: routers/instance.py + config/instances/{instance_id}.json
+    enforcement: pytest + integration curl
+    cost: 1 cell · µs class
+    dependencies: config/instances/
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.instance.seams_scoped_by_instance_id
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest per-instance seam values, estate inventory, model-registry, connector registrations, and instance identity ride under `instance_id` scope; scoped_accessor helpers refuse unscoped queries via InstanceScopeError."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: services/multi_instance/scoped_accessor.py + tests/registry/test_instance_isolation.py
+    enforcement: pytest (5 isolation cells)
+    cost: 1 cell · µs class
+    dependencies: Motor client
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.instance.no_cross_instance_read_on_any_surface
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: Built to attest fixture-A auth-token cannot read fixture-B rows via scoped helpers across every persistent collection (registry · ledger · keys · census · connector · onboard). Adversarial cross-instance cells verify denial.
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "tests/registry/test_instance_isolation.py::test_cross_instance_read_denied"
+    enforcement: pytest adversarial cell
+    cost: 1 cell · µs class
+    dependencies: scoped_accessor.sfind
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.instance.backfill_migration_attests_zero_unscoped_rows
+    governor: Named surfaces (backend · reflexive)
+    mandate: "Built to attest all 8,657 pre-existing rows across 9 persistent collections were backfilled to `instance_id = \"instance_1\"` at commit-time; post-migration attestation returns 0 unscoped rows per collection."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: "tools/migrations/backfill_instance_id_2026_07_14.py + tests/registry/test_instance_isolation.py::test_backfill_attestation_no_unscoped_rows_remain"
+    enforcement: pytest re-run backfill + post-condition
+    cost: 1 cell · ms class
+    dependencies: Motor client
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.instance.compound_index_ensures_scoped_read_performance
+    governor: Named surfaces (backend · reflexive)
+    mandate: "Built to attest compound `(instance_id, ...)` indexes exist on 11 persistent collections (northena_ledger, northena_ledger_rows, objectives_async_state, targeta_mining_plans, mtafiti_registry_records, engineer_key_grants, wizard_sessions, wizard_session_bindings, users, checker_requests, engineer_invites). D-6 constraint architecture: persistence layer supports scoped reads efficiently."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "tools/migrations/backfill_instance_id_2026_07_14.py index creation + tests/registry/test_instance_isolation.py::test_ensure_instance_index_creates_compound_index"
+    enforcement: pytest index-shape assertion
+    cost: 1 cell · µs class
+    dependencies: Motor create_index
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.instance.scoped_accessor_refuses_unscoped_query
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `scoped_accessor.sfind_one`, `sfind`, `sinsert_one`, `scount_documents` raise `InstanceScopeError` when called with `instance_id=None` or empty string. Persistence layer refuses unscoped queries by design (D-6 \"correct behavior is the path of least resistance\")."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "tests/registry/test_instance_isolation.py::test_scoped_helper_refuses_unscoped_query"
+    enforcement: pytest exception assertion
+    cost: 1 cell · µs class
+    dependencies: InstanceScopeError
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.detune.contract_tier_rms_tokens_preserved_class_c_historical_by_ruling
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest all `RMS`-tokens inside `backend/contracts/*.py` (14 files) and `backend/tests/invariants/*.contract_snapshot.json` (2 files, 4 line hits) remain byte-identical per Owner ruling MC-E5 α: contract-tier tokens are class-(c) citations to the platform's own mandate filenames (`docs/mandates/archive/RMS_*.md`) — architectural history, not customer identity. Code shape already organization-agnostic."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "contracts/*.py + tests/invariants/*.contract_snapshot.json"
+    enforcement: fs-grep + Parity 31 seal
+    cost: 1 cell · µs class
+    dependencies: Standing Rule v3
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.detune.http_headers_renamed_hard_cutover_2026_07_14
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest HTTP headers `X-RMS-App-ID` and `X-RMS-Webhook-URL` renamed to `X-Akki-App-ID` and `X-Akki-Webhook-URL` at every read-site (routers/objectives.py + services/synisense/webhook_registration.py + backing tests). Hard cutover authorized by STEP 1 pre-flight guard result: 0 non-fixture external integrators (evidence-based ruling)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: routers/objectives.py + services/synisense/webhook_registration.py + tests/invariants/test_phase_5_stage_b_async_delivery.py
+    enforcement: "grep-negative `X-RMS-App-ID`, `X-RMS-Webhook-URL` on live tree"
+    cost: 1 cell · µs class
+    dependencies: STEP 1 guard AUTHORIZED
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.detune.env_vars_renamed_hard_cutover_2026_07_14
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest all live-code `RMS_*` env var reads renamed to `AKKI_*` at every `os.environ.get()` call site (139 occurrences across 26 files). Preserved: values byte-identical; only variable NAMES change. Deployment env files (.env) updated in lockstep."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "services/**/*.py + routers/**/*.py + tests/**/*.py + .env"
+    enforcement: "grep-negative `os.environ.get(['\"]RMS_` on live tree (excl. retired-token gate)"
+    cost: 1 cell · µs class
+    dependencies: STEP 1 guard AUTHORIZED
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.detune.db_name_preserved_config_resident
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `DB_NAME` variable name unchanged; instance-#1's VALUE stays `rms_intelligence` (data preserved — value is instance identity, config-resident). New instances mint new DB_NAME values. Zero migration risk on live deployment."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: backend/.env + backend/core.py
+    enforcement: fs-check DB_NAME=rms_intelligence unchanged
+    cost: 1 cell · µs class
+    dependencies: live Mongo topology
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.detune.retired_token_grep_negative_gates_preserved_verbatim
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `test_master_admin_auth_reconciliation.py` preserved BYTE-IDENTICAL — retired-token grep-negative gate (`RMS_MASTER_ADMIN_TOKEN` / `X-RMS-Master-Admin`) tests that RETIRED tokens are NOT emitted; renaming would defeat check semantics per Owner ruling."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: tests/invariants/test_master_admin_auth_reconciliation.py
+    enforcement: fs-grep + byte-identity check
+    cost: 1 cell · µs class
+    dependencies: Standing Rule v3
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.detune.fixture_dir_renamed_org_agnostic
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `rms_adversarial_v1` fixture directory renamed to `instance_fixture_a` (org-agnostic name). Downstream references updated across 12 files + 21 token occurrences. Fixture body preserved byte-identical (SHA `e4d147a8ad83c26502d1b85614f9b32ab427b1103a262546400d940612250b08` of the JSON content is unchanged; only the `_manifest.fixture` label updated from `rms_adversarial_synthetic_v1` to `instance_fixture_a_v1`)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: services/data_source/synthetic_assets/instance_fixture_a/ + all test refs
+    enforcement: git mv attest + reference-count
+    cost: 1 cell · µs class
+    dependencies: 47 test import updates
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.detune.branding_moved_to_instance_config
+    governor: Named surfaces (frontend · reflexive)
+    mandate: "Built to attest 20 class-(a) branding hits (\"RMS Intelligence\") moved from live frontend code to instance config accessor via `/api/instance/config` + `useInstanceConfig` hook. Instance-#1's config file at `backend/config/instances/instance_1.json` carries \"RMS Intelligence\" verbatim per Owner: \"instance #1's config carries 'RMS Intelligence'\"."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: frontend/src/hooks/useInstanceConfig.js + backend/config/instances/ + routers/instance.py
+    enforcement: "jest (Gate 3 Part A `zero_raw_fetch_calls_outside_apiClient`) + integration curl"
+    cost: 1 cell · µs class
+    dependencies: apiClient.instanceConfig
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
+    rulings: []
+  - function_id: akki.ci.fixture_b_walks_onboard_to_answer_e2e
+    governor: Named surfaces (CI · reflexive)
+    mandate: "Built to attest instance-fixture-B (generic tabular synthetic estate at `services/data_source/synthetic_assets/instance_fixture_b/fixture.json`, 3 rows) walks the full onboard → connect → census → brief → answer surface end-to-end, with isolation cells proving no cross-instance read on any surface (registry · ledger · keys · census · onboard)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S2.onboard-context
+    surface: tests/registry/test_instance_fixture_b_walkthrough.py
+    enforcement: pytest (9 cells) + AsyncClient httpx
+    cost: 1 cell · ms class
+    dependencies: scoped_accessor + s2_onboard + structured_connector
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.5_supplement.md
     rulings: []
 
 findings:

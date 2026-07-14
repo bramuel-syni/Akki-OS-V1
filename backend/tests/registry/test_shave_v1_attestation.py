@@ -111,7 +111,7 @@ def test_row_07_storage_service_py_shaved() -> None:
 
 def test_row_08_generate_fixture_incoming_py_shaved() -> None:
     _fs_absent(
-        "backend/services/data_source/synthetic_assets/rms_adversarial_v1/"
+        "backend/services/data_source/synthetic_assets/instance_fixture_a/"
         "rejected/generate_fixture.incoming.py"
     )
     # Dotted-import form is unlikely due to .incoming suffix; check the
@@ -120,11 +120,11 @@ def test_row_08_generate_fixture_incoming_py_shaved() -> None:
 
 def test_row_09_generate_fixture_py_shaved() -> None:
     _fs_absent(
-        "backend/services/data_source/synthetic_assets/rms_adversarial_v1/"
+        "backend/services/data_source/synthetic_assets/instance_fixture_a/"
         "generate_fixture.py"
     )
     _no_runtime_import(
-        "services.data_source.synthetic_assets.rms_adversarial_v1.generate_fixture"
+        "services.data_source.synthetic_assets.instance_fixture_a.generate_fixture"
     )
 
 

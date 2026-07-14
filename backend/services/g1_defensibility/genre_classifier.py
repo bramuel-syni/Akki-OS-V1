@@ -12,7 +12,7 @@ Approach survey:
     layer; rule decision wins on high-confidence cases, model is fallback
     on medium-confidence or ambiguous cases. Transparent default;
     falsifiable failure modes (rule mismatch is loud); model layer is
-    opt-in via `RMS_GENRE_MODEL=on` env, off by default at G1 (no model
+    opt-in via `AKKI_GENRE_MODEL=on` env, off by default at G1 (no model
     call until real Hour A arrives). This is the v0 stakeholder picked.
 
 Cousin: nothing direct. The pattern-match + light-heuristic shape
@@ -84,7 +84,7 @@ def classify(unit_or_provenance) -> GenreClassificationResult:
         return rule_result
 
     # Model layer is opt-in. At G1 we keep it OFF and emit unknown loudly.
-    if os.environ.get("RMS_GENRE_MODEL", "off").lower() == "on":
+    if os.environ.get("AKKI_GENRE_MODEL", "off").lower() == "on":
         # G2 wires a vision/text model behind perception_router. At G1 we don't
         # silently fall back to a model call — the env flag must be on AND a
         # provider must be available. For now the flag toggles intent only.

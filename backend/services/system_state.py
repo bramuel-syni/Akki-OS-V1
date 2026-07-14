@@ -14,13 +14,13 @@ from services.layer_b.factory import available_providers, list_provider_names
 from services.v1_harness import last_report
 
 
-def _rms_adversarial_v1_manifest() -> Dict:
+def _instance_fixture_a_manifest() -> Dict:
     """Read the regenerated adversarial fixture v1 manifest flags (post-HAZARD-STOP #1).
     Surfaced honestly so V1/V3 harnesses + audit lens see `v1_v3_valid=False`."""
     import json, os
     p = os.path.join(os.path.dirname(__file__), "..", "services",
                      "data_source", "synthetic_assets",
-                     "rms_adversarial_v1", "fixture.json")
+                     "instance_fixture_a", "fixture.json")
     try:
         with open(os.path.abspath(p)) as f:
             m = json.load(f).get("_manifest", {})
@@ -52,7 +52,7 @@ def current_system_state(data_source_name: str, data_source_mode: str) -> Dict:
             "name": data_source_name,
             "mode": data_source_mode,
             "running_on_synthetic": data_source_mode == "synthetic",
-            "rms_adversarial_v1": _rms_adversarial_v1_manifest(),
+            "instance_fixture_a": _instance_fixture_a_manifest(),
         },
         "synthetic_fixture_adversarial": True,
         "layer_a_handlers": handlers,
@@ -77,7 +77,7 @@ def current_system_state(data_source_name: str, data_source_mode: str) -> Dict:
         "extraction_params_rev": "v0",
         "northena_ledger_row_rev": "v0",
         "northena_ledger_retention_mode": __import__("os").environ.get(
-            "RMS_NORTHENA_LEDGER_RETENTION_MODE", "indefinite"),
+            "AKKI_NORTHENA_LEDGER_RETENTION_MODE", "indefinite"),
         "g2_components": {
             "northena_admit": "v0", "northena_gate": "v0",
             "northena_converge": "v0", "northena_ledger": "v0",
@@ -134,7 +134,7 @@ def current_system_state(data_source_name: str, data_source_mode: str) -> Dict:
             "cumulative_disclosure_ledger_contract": "v0 (CumulativeDisclosureLedger@v0 — FROZEN)",
         },
         "cumulative_arm_status": "built_closed_seam",
-        "cumulative_arm_config_unlock_path": "Set RMS_G6_K_ANONYMITY_THRESHOLD + RMS_G6_L_DIVERSITY_THRESHOLD + RMS_G6_DP_EPSILON_BUDGET env vars (DPO/Owner decision per Product v2.1 §32)",
+        "cumulative_arm_config_unlock_path": "Set AKKI_G6_K_ANONYMITY_THRESHOLD + AKKI_G6_L_DIVERSITY_THRESHOLD + AKKI_G6_DP_EPSILON_BUDGET env vars (DPO/Owner decision per Product v2.1 §32)",
         "engines_resolvable_by_trace_id": [
             "northena_ledger", "solva", "targeta", "mtafiti", "service_1",
         ],

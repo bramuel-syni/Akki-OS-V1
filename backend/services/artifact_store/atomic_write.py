@@ -23,7 +23,7 @@ Six steps (BCR §3.2:130-133 verbatim):
   Failure at step 6 => `reconcile_incomplete_write` (below) sweeps on schedule.
 
 Dev-tier tmp threshold: 300 seconds (env
-`RMS_ARTIFACT_STORE_TMP_THRESHOLD_SECONDS`).
+`AKKI_ARTIFACT_STORE_TMP_THRESHOLD_SECONDS`).
 """
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ TMP_THRESHOLD_SECONDS_DEFAULT = 300  # Tier-3 default: 5 minutes.
 
 
 def _tmp_threshold_seconds() -> int:
-    return int(os.environ.get("RMS_ARTIFACT_STORE_TMP_THRESHOLD_SECONDS",
+    return int(os.environ.get("AKKI_ARTIFACT_STORE_TMP_THRESHOLD_SECONDS",
                               str(TMP_THRESHOLD_SECONDS_DEFAULT)))
 
 

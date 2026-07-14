@@ -23,7 +23,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from typing import Deque, List, Literal, Optional
 
-_BUF_SIZE = int(os.environ.get("RMS_STAMP_AUDIT_BUFFER_SIZE", "1024"))
+_BUF_SIZE = int(os.environ.get("AKKI_STAMP_AUDIT_BUFFER_SIZE", "1024"))
 
 
 @dataclass

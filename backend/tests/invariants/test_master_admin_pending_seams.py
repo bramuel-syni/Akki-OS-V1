@@ -54,17 +54,17 @@ async def _login_admin(client: AsyncClient) -> str:
 async def test_pending_seams_endpoint_enumerates_all_five_seams_at_baseline(monkeypatch):
     """With no gating env vars set, all five seams are pending."""
     for env_var in (
-        "RMS_TARGETA_MIN_EFFICIENCY_GAIN",
-        "RMS_TARGETA_COVERAGE_ALPHA",
-        "RMS_TARGETA_HELD_OUT_SET_COMPOSITION",
-        "RMS_MTAFITI_V3_FACT_PRECISION",
-        "RMS_MTAFITI_V3_GENRE_ACCURACY",
-        "RMS_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
-        "RMS_NORTHENA_LEDGER_RETENTION_MODE",
-        "RMS_G6_K_ANONYMITY_THRESHOLD",
-        "RMS_G6_L_DIVERSITY_THRESHOLD",
-        "RMS_G6_DP_EPSILON_BUDGET",
-        "RMS_MEA_SOURCE_STANDING_TABLE_PATH",
+        "AKKI_TARGETA_MIN_EFFICIENCY_GAIN",
+        "AKKI_TARGETA_COVERAGE_ALPHA",
+        "AKKI_TARGETA_HELD_OUT_SET_COMPOSITION",
+        "AKKI_MTAFITI_V3_FACT_PRECISION",
+        "AKKI_MTAFITI_V3_GENRE_ACCURACY",
+        "AKKI_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
+        "AKKI_NORTHENA_LEDGER_RETENTION_MODE",
+        "AKKI_G6_K_ANONYMITY_THRESHOLD",
+        "AKKI_G6_L_DIVERSITY_THRESHOLD",
+        "AKKI_G6_DP_EPSILON_BUDGET",
+        "AKKI_MEA_SOURCE_STANDING_TABLE_PATH",
     ):
         monkeypatch.delenv(env_var, raising=False)
 
@@ -90,17 +90,17 @@ async def test_pending_seams_endpoint_enumerates_all_five_seams_at_baseline(monk
 def test_enumerate_pending_seams_pure_function_baseline(monkeypatch):
     """Pure-fn contract — five seams at baseline."""
     for env_var in (
-        "RMS_TARGETA_MIN_EFFICIENCY_GAIN",
-        "RMS_TARGETA_COVERAGE_ALPHA",
-        "RMS_TARGETA_HELD_OUT_SET_COMPOSITION",
-        "RMS_MTAFITI_V3_FACT_PRECISION",
-        "RMS_MTAFITI_V3_GENRE_ACCURACY",
-        "RMS_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
-        "RMS_NORTHENA_LEDGER_RETENTION_MODE",
-        "RMS_G6_K_ANONYMITY_THRESHOLD",
-        "RMS_G6_L_DIVERSITY_THRESHOLD",
-        "RMS_G6_DP_EPSILON_BUDGET",
-        "RMS_MEA_SOURCE_STANDING_TABLE_PATH",
+        "AKKI_TARGETA_MIN_EFFICIENCY_GAIN",
+        "AKKI_TARGETA_COVERAGE_ALPHA",
+        "AKKI_TARGETA_HELD_OUT_SET_COMPOSITION",
+        "AKKI_MTAFITI_V3_FACT_PRECISION",
+        "AKKI_MTAFITI_V3_GENRE_ACCURACY",
+        "AKKI_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
+        "AKKI_NORTHENA_LEDGER_RETENTION_MODE",
+        "AKKI_G6_K_ANONYMITY_THRESHOLD",
+        "AKKI_G6_L_DIVERSITY_THRESHOLD",
+        "AKKI_G6_DP_EPSILON_BUDGET",
+        "AKKI_MEA_SOURCE_STANDING_TABLE_PATH",
     ):
         monkeypatch.delenv(env_var, raising=False)
     seams = enumerate_pending_seams()
@@ -110,15 +110,15 @@ def test_enumerate_pending_seams_pure_function_baseline(monkeypatch):
 
 def test_enumerate_pending_seams_closes_targeta_when_all_three_env_vars_set(monkeypatch):
     """Setting the three targeta env vars removes the seam from pending."""
-    for env_var in ("RMS_MTAFITI_V3_FACT_PRECISION", "RMS_MTAFITI_V3_GENRE_ACCURACY",
-                    "RMS_MTAFITI_V3_INTER_ANNOTATOR_FLOOR", "RMS_G6_K_ANONYMITY_THRESHOLD",
-                    "RMS_G6_L_DIVERSITY_THRESHOLD", "RMS_G6_DP_EPSILON_BUDGET",
-                    "RMS_NORTHENA_LEDGER_RETENTION_MODE",
-                    "RMS_MEA_SOURCE_STANDING_TABLE_PATH"):
+    for env_var in ("AKKI_MTAFITI_V3_FACT_PRECISION", "AKKI_MTAFITI_V3_GENRE_ACCURACY",
+                    "AKKI_MTAFITI_V3_INTER_ANNOTATOR_FLOOR", "AKKI_G6_K_ANONYMITY_THRESHOLD",
+                    "AKKI_G6_L_DIVERSITY_THRESHOLD", "AKKI_G6_DP_EPSILON_BUDGET",
+                    "AKKI_NORTHENA_LEDGER_RETENTION_MODE",
+                    "AKKI_MEA_SOURCE_STANDING_TABLE_PATH"):
         monkeypatch.delenv(env_var, raising=False)
-    monkeypatch.setenv("RMS_TARGETA_MIN_EFFICIENCY_GAIN", "0.15")
-    monkeypatch.setenv("RMS_TARGETA_COVERAGE_ALPHA", "0.90")
-    monkeypatch.setenv("RMS_TARGETA_HELD_OUT_SET_COMPOSITION", "genre_stratified_10")
+    monkeypatch.setenv("AKKI_TARGETA_MIN_EFFICIENCY_GAIN", "0.15")
+    monkeypatch.setenv("AKKI_TARGETA_COVERAGE_ALPHA", "0.90")
+    monkeypatch.setenv("AKKI_TARGETA_HELD_OUT_SET_COMPOSITION", "genre_stratified_10")
     seams = enumerate_pending_seams()
     seam_ids = {s["seam_id"] for s in seams}
     assert "targeta_yield_thresholds" not in seam_ids, (
@@ -128,15 +128,15 @@ def test_enumerate_pending_seams_closes_targeta_when_all_three_env_vars_set(monk
 
 def test_enumerate_pending_seams_partial_env_keeps_seam_pending(monkeypatch):
     """If only some env vars land, seam stays pending (all-or-nothing)."""
-    for env_var in ("RMS_TARGETA_COVERAGE_ALPHA", "RMS_TARGETA_HELD_OUT_SET_COMPOSITION",
-                    "RMS_MTAFITI_V3_FACT_PRECISION", "RMS_MTAFITI_V3_GENRE_ACCURACY",
-                    "RMS_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
-                    "RMS_G6_K_ANONYMITY_THRESHOLD", "RMS_G6_L_DIVERSITY_THRESHOLD",
-                    "RMS_G6_DP_EPSILON_BUDGET",
-                    "RMS_NORTHENA_LEDGER_RETENTION_MODE",
-                    "RMS_MEA_SOURCE_STANDING_TABLE_PATH"):
+    for env_var in ("AKKI_TARGETA_COVERAGE_ALPHA", "AKKI_TARGETA_HELD_OUT_SET_COMPOSITION",
+                    "AKKI_MTAFITI_V3_FACT_PRECISION", "AKKI_MTAFITI_V3_GENRE_ACCURACY",
+                    "AKKI_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
+                    "AKKI_G6_K_ANONYMITY_THRESHOLD", "AKKI_G6_L_DIVERSITY_THRESHOLD",
+                    "AKKI_G6_DP_EPSILON_BUDGET",
+                    "AKKI_NORTHENA_LEDGER_RETENTION_MODE",
+                    "AKKI_MEA_SOURCE_STANDING_TABLE_PATH"):
         monkeypatch.delenv(env_var, raising=False)
-    monkeypatch.setenv("RMS_TARGETA_MIN_EFFICIENCY_GAIN", "0.15")
+    monkeypatch.setenv("AKKI_TARGETA_MIN_EFFICIENCY_GAIN", "0.15")
     seams = enumerate_pending_seams()
     seam_ids = {s["seam_id"] for s in seams}
     assert "targeta_yield_thresholds" in seam_ids, (
@@ -147,10 +147,10 @@ def test_enumerate_pending_seams_partial_env_keeps_seam_pending(monkeypatch):
 def test_enumerate_pending_seams_retention_mode_indefinite_stays_pending(monkeypatch):
     """The retention seam is pending when mode is `indefinite`
     (the current unset-decision default) and closed otherwise."""
-    monkeypatch.setenv("RMS_NORTHENA_LEDGER_RETENTION_MODE", "indefinite")
+    monkeypatch.setenv("AKKI_NORTHENA_LEDGER_RETENTION_MODE", "indefinite")
     seams = enumerate_pending_seams()
     assert "northena_retention_window" in {s["seam_id"] for s in seams}
-    monkeypatch.setenv("RMS_NORTHENA_LEDGER_RETENTION_MODE", "P30D")
+    monkeypatch.setenv("AKKI_NORTHENA_LEDGER_RETENTION_MODE", "P30D")
     seams = enumerate_pending_seams()
     assert "northena_retention_window" not in {s["seam_id"] for s in seams}
 
@@ -158,14 +158,14 @@ def test_enumerate_pending_seams_retention_mode_indefinite_stays_pending(monkeyp
 def test_enumerate_pending_seams_ordering_matches_mockup_precedent(monkeypatch):
     """Ordering: Targeta → Mtafiti → Retention → Cumulative-disclosure → MEA."""
     for env_var in (
-        "RMS_TARGETA_MIN_EFFICIENCY_GAIN", "RMS_TARGETA_COVERAGE_ALPHA",
-        "RMS_TARGETA_HELD_OUT_SET_COMPOSITION",
-        "RMS_MTAFITI_V3_FACT_PRECISION", "RMS_MTAFITI_V3_GENRE_ACCURACY",
-        "RMS_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
-        "RMS_NORTHENA_LEDGER_RETENTION_MODE",
-        "RMS_G6_K_ANONYMITY_THRESHOLD", "RMS_G6_L_DIVERSITY_THRESHOLD",
-        "RMS_G6_DP_EPSILON_BUDGET",
-        "RMS_MEA_SOURCE_STANDING_TABLE_PATH",
+        "AKKI_TARGETA_MIN_EFFICIENCY_GAIN", "AKKI_TARGETA_COVERAGE_ALPHA",
+        "AKKI_TARGETA_HELD_OUT_SET_COMPOSITION",
+        "AKKI_MTAFITI_V3_FACT_PRECISION", "AKKI_MTAFITI_V3_GENRE_ACCURACY",
+        "AKKI_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
+        "AKKI_NORTHENA_LEDGER_RETENTION_MODE",
+        "AKKI_G6_K_ANONYMITY_THRESHOLD", "AKKI_G6_L_DIVERSITY_THRESHOLD",
+        "AKKI_G6_DP_EPSILON_BUDGET",
+        "AKKI_MEA_SOURCE_STANDING_TABLE_PATH",
     ):
         monkeypatch.delenv(env_var, raising=False)
     seams = enumerate_pending_seams()

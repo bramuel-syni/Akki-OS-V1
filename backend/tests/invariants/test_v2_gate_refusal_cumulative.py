@@ -106,9 +106,9 @@ def test_cumulative_arm_closed_by_default():
     """At G6 v0, no DPO/Owner thresholds → arm CLOSED.
     This is the acceptance bar for Shape B.
     """
-    for k in ("RMS_G6_K_ANONYMITY_THRESHOLD",
-              "RMS_G6_L_DIVERSITY_THRESHOLD",
-              "RMS_G6_DP_EPSILON_BUDGET"):
+    for k in ("AKKI_G6_K_ANONYMITY_THRESHOLD",
+              "AKKI_G6_L_DIVERSITY_THRESHOLD",
+              "AKKI_G6_DP_EPSILON_BUDGET"):
         assert k not in os.environ or os.environ.get(k) is None, (
             f"config env {k} is set; test isolation broken"
         )
@@ -141,17 +141,17 @@ def test_cumulative_evaluate_short_circuits_when_closed():
 def test_cumulative_arm_opens_when_all_thresholds_configured(monkeypatch):
     """Config unlock path: setting all three env vars opens the arm.
     This asserts the arm is BUILT, not just declared."""
-    monkeypatch.setenv("RMS_G6_K_ANONYMITY_THRESHOLD", "5")
-    monkeypatch.setenv("RMS_G6_L_DIVERSITY_THRESHOLD", "3")
-    monkeypatch.setenv("RMS_G6_DP_EPSILON_BUDGET", "0.5")
+    monkeypatch.setenv("AKKI_G6_K_ANONYMITY_THRESHOLD", "5")
+    monkeypatch.setenv("AKKI_G6_L_DIVERSITY_THRESHOLD", "3")
+    monkeypatch.setenv("AKKI_G6_DP_EPSILON_BUDGET", "0.5")
     assert cumulative.cumulative_arm_admitted() is True
 
 
 def test_cumulative_arm_stays_closed_if_only_some_thresholds_set(monkeypatch):
     """All-or-nothing: partial config keeps the arm closed."""
-    monkeypatch.setenv("RMS_G6_K_ANONYMITY_THRESHOLD", "5")
-    monkeypatch.setenv("RMS_G6_L_DIVERSITY_THRESHOLD", "3")
-    # RMS_G6_DP_EPSILON_BUDGET NOT set
+    monkeypatch.setenv("AKKI_G6_K_ANONYMITY_THRESHOLD", "5")
+    monkeypatch.setenv("AKKI_G6_L_DIVERSITY_THRESHOLD", "3")
+    # AKKI_G6_DP_EPSILON_BUDGET NOT set
     assert cumulative.cumulative_arm_admitted() is False
 
 
@@ -161,9 +161,9 @@ def test_cumulative_evaluate_refuses_when_threshold_crossed(monkeypatch):
 
     This proves the arm is BUILT, not merely present as scaffolding.
     """
-    monkeypatch.setenv("RMS_G6_K_ANONYMITY_THRESHOLD", "3")
-    monkeypatch.setenv("RMS_G6_L_DIVERSITY_THRESHOLD", "2")
-    monkeypatch.setenv("RMS_G6_DP_EPSILON_BUDGET", "0.5")
+    monkeypatch.setenv("AKKI_G6_K_ANONYMITY_THRESHOLD", "3")
+    monkeypatch.setenv("AKKI_G6_L_DIVERSITY_THRESHOLD", "2")
+    monkeypatch.setenv("AKKI_G6_DP_EPSILON_BUDGET", "0.5")
     prior = CumulativeDisclosureLedger(
         mint_window_id="mint-1",
         egress_fingerprints=["fp1", "fp2"],  # 2 prior + 1 new = 3 = k

@@ -58,7 +58,7 @@ from services.artifact_store import orphan_scan as orphan_scan_mod  # noqa: E402
 @pytest.fixture(autouse=True)
 def _isolate_artifact_store_root(monkeypatch, tmp_path):
     """Every cell gets a fresh backing root under pytest's tmp_path."""
-    monkeypatch.setenv("RMS_ARTIFACT_STORE_ROOT", str(tmp_path / "artifact_store"))
+    monkeypatch.setenv("AKKI_ARTIFACT_STORE_ROOT", str(tmp_path / "artifact_store"))
     yield
 
 

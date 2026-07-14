@@ -16,7 +16,7 @@ from services.service_1 import service
 
 FIXTURE_PATH = (
     Path(__file__).parent.parent.parent / "services" / "data_source"
-    / "synthetic_assets" / "rms_adversarial_v1" / "fixture.json"
+    / "synthetic_assets" / "instance_fixture_a" / "fixture.json"
 )
 
 

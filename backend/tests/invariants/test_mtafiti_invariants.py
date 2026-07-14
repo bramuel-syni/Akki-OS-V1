@@ -269,7 +269,7 @@ def test_source_standing_covers_fixture_feed_ids():
     """Placeholder table must cover every fixture feed_id (else plumbing breaks)."""
     fixture_path = (Path(__file__).parent.parent.parent
                     / "services" / "data_source" / "synthetic_assets"
-                    / "rms_adversarial_v1" / "fixture.json")
+                    / "instance_fixture_a" / "fixture.json")
     fx = json.loads(fixture_path.read_text(encoding="utf-8"))
     fixture_feeds = set()
     for unit in fx["units"]:
@@ -289,7 +289,7 @@ def test_declaration_baseline_complete_alone_across_fixture():
     without any V3 overlay contribution. Run against the on-disk fixture."""
     fixture_path = (Path(__file__).parent.parent.parent
                     / "services" / "data_source" / "synthetic_assets"
-                    / "rms_adversarial_v1" / "fixture.json")
+                    / "instance_fixture_a" / "fixture.json")
     fx = json.loads(fixture_path.read_text(encoding="utf-8"))
     for u_dict in fx["units"][:5]:  # first 5 units — smoke coverage
         unit = NormalizedUnit.model_validate(u_dict)

@@ -5,7 +5,7 @@ Defines the `DataSource` Protocol with two implementations:
   * RealRmsDataSource           — placeholder, NotImplementedError today;
                                   flipped on once real RMS material arrives.
 
-Configurable via `RMS_DATA_SOURCE=synthetic|real` env var. The system_state
+Configurable via `AKKI_DATA_SOURCE=synthetic|real` env var. The system_state
 endpoint surfaces the active source so the G5 Engine console can render
 "running on synthetic / V-gates pending" when applicable.
 """
@@ -37,17 +37,17 @@ class DataSource(Protocol):
 
 
 from services.data_source.synthetic import SyntheticPlumbingDataSource  # noqa: E402
-from services.data_source.real_rms import RealRmsDataSource  # noqa: E402
+from services.data_source.real_estate_adapter import RealRmsDataSource  # noqa: E402
 
 
 def get_active_data_source() -> DataSource:
-    """Read `RMS_DATA_SOURCE` env (default `synthetic`) and return the source.
+    """Read `AKKI_DATA_SOURCE` env (default `synthetic`) and return the source.
 
     The real source raises NotImplementedError on construction today (it
     has nothing to read), so flipping to `real` before G2 fails loudly
     — that is intentional.
     """
-    mode = os.environ.get("RMS_DATA_SOURCE", "synthetic").strip().lower()
+    mode = os.environ.get("AKKI_DATA_SOURCE", "synthetic").strip().lower()
     if mode == "real":
         return RealRmsDataSource()
     return SyntheticPlumbingDataSource()

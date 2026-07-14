@@ -42,11 +42,11 @@ class MintWindow:
 def _new_key(nbytes: int = 32) -> bytes:
     """Generate a cryptographically strong key.
 
-    Test hook: `RMS_G6_MINT_KEY_TEST_OVERRIDE` env may inject a deterministic
+    Test hook: `AKKI_G6_MINT_KEY_TEST_OVERRIDE` env may inject a deterministic
     key for reproducible snapshot testing. In production the override MUST be
     unset — snapshot test asserts this.
     """
-    override = os.environ.get("RMS_G6_MINT_KEY_TEST_OVERRIDE")
+    override = os.environ.get("AKKI_G6_MINT_KEY_TEST_OVERRIDE")
     if override is not None:
         return override.encode("utf-8")
     return secrets.token_bytes(nbytes)

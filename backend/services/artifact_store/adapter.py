@@ -24,7 +24,7 @@ Landing:
   - `head(key)` — {exists, sha256, size}.
 
 Dev-tier backing: local filesystem at
-`os.environ.get('RMS_ARTIFACT_STORE_ROOT', '/tmp/rms_artifact_store')`.
+`os.environ.get('AKKI_ARTIFACT_STORE_ROOT', '/tmp/rms_artifact_store')`.
 Provider swap = env var change; call sites never change.
 """
 from __future__ import annotations
@@ -54,7 +54,7 @@ class ArtifactNotFoundError(Exception):
 
 # --- Tier-3 default: local FS at env-var-with-dev-default ---
 def _root() -> Path:
-    return Path(os.environ.get("RMS_ARTIFACT_STORE_ROOT", "/tmp/rms_artifact_store"))
+    return Path(os.environ.get("AKKI_ARTIFACT_STORE_ROOT", "/tmp/rms_artifact_store"))
 
 
 # --- Tier-3 default: ext whitelist (extractor output forms, per BCR §6) ---

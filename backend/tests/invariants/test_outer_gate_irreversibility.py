@@ -197,7 +197,7 @@ def test_transform_snapshot_stable_under_fixed_key(monkeypatch):
     """Deterministic-given-key freeze. Uses the test key override so the
     snapshot is reproducible; guards against silent transform changes.
     """
-    monkeypatch.setenv("RMS_G6_MINT_KEY_TEST_OVERRIDE", "deterministic-snapshot-key-v0")
+    monkeypatch.setenv("AKKI_G6_MINT_KEY_TEST_OVERRIDE", "deterministic-snapshot-key-v0")
     registry = MintRegistry()
     window = registry.open_window(timestamp="2026-07-02T00:00:00Z")
     canonical = {

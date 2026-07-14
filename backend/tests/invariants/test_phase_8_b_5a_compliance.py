@@ -56,9 +56,9 @@ from services.compliance.trust_receipt_allowlist import (
 @pytest.fixture
 def _clean_retention_env(monkeypatch):
     """Clear all retention env vars so a test starts from B5a-G3 unset."""
-    monkeypatch.delenv("RMS_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS", raising=False)
+    monkeypatch.delenv("AKKI_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS", raising=False)
     for cls in held_class_registry.HELD_CLASSES:
-        monkeypatch.delenv(f"RMS_COMPLIANCE_RETENTION_{cls.upper()}_DAYS", raising=False)
+        monkeypatch.delenv(f"AKKI_COMPLIANCE_RETENTION_{cls.upper()}_DAYS", raising=False)
     yield
 
 
@@ -182,7 +182,7 @@ async def test_retention_config_dpo_all_unset_states_honestly(_clean_retention_e
 
 @pytest.mark.anyio
 async def test_retention_config_dpo_global_default_inheritance(_clean_retention_env, monkeypatch):
-    monkeypatch.setenv("RMS_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS", "365")
+    monkeypatch.setenv("AKKI_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS", "365")
     token = await _make_token_for_roles(["dpo"])
     async with _client() as c:
         r = await c.get(
@@ -200,9 +200,9 @@ async def test_retention_config_dpo_global_default_inheritance(_clean_retention_
 @pytest.mark.anyio
 async def test_retention_config_dpo_full_split_all_three_classes(_clean_retention_env, monkeypatch):
     """DPO wizard_transcript §0.2 debt resolution gate (part 1)."""
-    monkeypatch.setenv("RMS_COMPLIANCE_RETENTION_LEDGER_ROW_DAYS", "730")
-    monkeypatch.setenv("RMS_COMPLIANCE_RETENTION_WIZARD_TRANSCRIPT_DAYS", "90")
-    monkeypatch.setenv("RMS_COMPLIANCE_RETENTION_DELIVERED_ARTIFACT_DAYS", "180")
+    monkeypatch.setenv("AKKI_COMPLIANCE_RETENTION_LEDGER_ROW_DAYS", "730")
+    monkeypatch.setenv("AKKI_COMPLIANCE_RETENTION_WIZARD_TRANSCRIPT_DAYS", "90")
+    monkeypatch.setenv("AKKI_COMPLIANCE_RETENTION_DELIVERED_ARTIFACT_DAYS", "180")
     token = await _make_token_for_roles(["dpo"])
     async with _client() as c:
         r = await c.get(
@@ -222,8 +222,8 @@ async def test_retention_config_dpo_full_split_all_three_classes(_clean_retentio
 
 @pytest.mark.anyio
 async def test_retention_config_dpo_partial_split_mixed_postures(_clean_retention_env, monkeypatch):
-    monkeypatch.setenv("RMS_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS", "365")
-    monkeypatch.setenv("RMS_COMPLIANCE_RETENTION_WIZARD_TRANSCRIPT_DAYS", "60")
+    monkeypatch.setenv("AKKI_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS", "365")
+    monkeypatch.setenv("AKKI_COMPLIANCE_RETENTION_WIZARD_TRANSCRIPT_DAYS", "60")
     token = await _make_token_for_roles(["dpo"])
     async with _client() as c:
         r = await c.get(

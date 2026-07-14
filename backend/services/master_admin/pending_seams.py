@@ -27,9 +27,9 @@ def _has_env(*var_names: str) -> bool:
 
 def _pending_targeta_yield_thresholds() -> Dict[str, str]:
     if _has_env(
-        "RMS_TARGETA_MIN_EFFICIENCY_GAIN",
-        "RMS_TARGETA_COVERAGE_ALPHA",
-        "RMS_TARGETA_HELD_OUT_SET_COMPOSITION",
+        "AKKI_TARGETA_MIN_EFFICIENCY_GAIN",
+        "AKKI_TARGETA_COVERAGE_ALPHA",
+        "AKKI_TARGETA_HELD_OUT_SET_COMPOSITION",
     ):
         return {}
     return {
@@ -42,9 +42,9 @@ def _pending_targeta_yield_thresholds() -> Dict[str, str]:
 
 def _pending_mtafiti_v3_thresholds() -> Dict[str, str]:
     if _has_env(
-        "RMS_MTAFITI_V3_FACT_PRECISION",
-        "RMS_MTAFITI_V3_GENRE_ACCURACY",
-        "RMS_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
+        "AKKI_MTAFITI_V3_FACT_PRECISION",
+        "AKKI_MTAFITI_V3_GENRE_ACCURACY",
+        "AKKI_MTAFITI_V3_INTER_ANNOTATOR_FLOOR",
     ):
         return {}
     return {
@@ -57,7 +57,7 @@ def _pending_mtafiti_v3_thresholds() -> Dict[str, str]:
 
 def _pending_retention_window() -> Dict[str, str]:
     # DPO decision — northena ledger retention window duration.
-    mode = os.environ.get("RMS_NORTHENA_LEDGER_RETENTION_MODE", "indefinite")
+    mode = os.environ.get("AKKI_NORTHENA_LEDGER_RETENTION_MODE", "indefinite")
     if mode != "indefinite":
         return {}
     return {
@@ -70,9 +70,9 @@ def _pending_retention_window() -> Dict[str, str]:
 
 def _pending_cumulative_disclosure_envs() -> Dict[str, str]:
     if _has_env(
-        "RMS_G6_K_ANONYMITY_THRESHOLD",
-        "RMS_G6_L_DIVERSITY_THRESHOLD",
-        "RMS_G6_DP_EPSILON_BUDGET",
+        "AKKI_G6_K_ANONYMITY_THRESHOLD",
+        "AKKI_G6_L_DIVERSITY_THRESHOLD",
+        "AKKI_G6_DP_EPSILON_BUDGET",
     ):
         return {}
     return {
@@ -86,7 +86,7 @@ def _pending_cumulative_disclosure_envs() -> Dict[str, str]:
 def _pending_mea_source_standing() -> Dict[str, str]:
     # MEA source-standing table — if env var pointing to a real table
     # is set, seam is open. Absent → pending.
-    if _has_env("RMS_MEA_SOURCE_STANDING_TABLE_PATH"):
+    if _has_env("AKKI_MEA_SOURCE_STANDING_TABLE_PATH"):
         return {}
     return {
         "seam_id": "mea_source_standing_table",

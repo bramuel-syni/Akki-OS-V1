@@ -1,0 +1,9 @@
+{
+  "instance_id": "instance_fixture_b",
+  "display_name": "Instance Fixture B",
+  "product_title": "Fixture B",
+  "product_title_full": "Instance Fixture B (synthetic estate)",
+  "seeded_at": "2026-07-14",
+  "authority": "Owner dispatch 2026-07-14 (Multi-Instance Capability MC-E1..MC-E6 close). Second synthetic instance stood up beside instance-#1 in CI per MC-E2 α proof shape.",
+  "notes": "Generic structured estate (tabular + small AV). No organization identity encoded."
+}

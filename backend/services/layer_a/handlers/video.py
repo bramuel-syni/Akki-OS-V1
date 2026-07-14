@@ -18,7 +18,7 @@ from typing import List, Optional
 
 from services.layer_a.types import RawAudioArtifact, RawVideoArtifact
 
-KEYFRAME_STRIDE_S = int(os.environ.get("RMS_VIDEO_KEYFRAME_STRIDE_S", "5"))
+KEYFRAME_STRIDE_S = int(os.environ.get("AKKI_VIDEO_KEYFRAME_STRIDE_S", "5"))
 
 
 def _ffprobe_duration_and_fps(path: str) -> tuple[int, float]:

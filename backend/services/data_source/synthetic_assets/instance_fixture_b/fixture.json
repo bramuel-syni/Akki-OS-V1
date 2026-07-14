@@ -1,0 +1,29 @@
+{
+  "_manifest": {
+    "fixture": "instance_fixture_b_v1",
+    "seeded_at": "2026-07-14",
+    "authority": "Owner dispatch 2026-07-14 (Multi-Instance Capability MC-E1..MC-E6 close). Second synthetic instance proof shape.",
+    "estate_kind": "tabular_synthetic",
+    "row_count": 3
+  },
+  "rows": [
+    {
+      "table": "revenue_ledger",
+      "row_index": 0,
+      "columns": {"quarter": "Q1", "revenue_usd": 125000, "region": "north"},
+      "primary_key_value": "q1-north"
+    },
+    {
+      "table": "revenue_ledger",
+      "row_index": 1,
+      "columns": {"quarter": "Q2", "revenue_usd": 140000, "region": "north"},
+      "primary_key_value": "q2-north"
+    },
+    {
+      "table": "revenue_ledger",
+      "row_index": 2,
+      "columns": {"quarter": "Q3", "revenue_usd": 155000, "region": "north"},
+      "primary_key_value": "q3-north"
+    }
+  ]
+}

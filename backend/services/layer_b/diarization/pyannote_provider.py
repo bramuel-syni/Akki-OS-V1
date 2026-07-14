@@ -34,8 +34,8 @@ class PyannoteProvider:
                 "Install with `pip install pyannote.audio` and set HUGGINGFACE_HUB_TOKEN."
             ) from e
         self._params: dict[str, Any] = {
-            "min_speakers": int(os.environ.get("RMS_DIA_MIN_SPEAKERS", "1")),
-            "max_speakers": int(os.environ.get("RMS_DIA_MAX_SPEAKERS", "8")),
+            "min_speakers": int(os.environ.get("AKKI_DIA_MIN_SPEAKERS", "1")),
+            "max_speakers": int(os.environ.get("AKKI_DIA_MAX_SPEAKERS", "8")),
         }
         self._pipeline = None
 

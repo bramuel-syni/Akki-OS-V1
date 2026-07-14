@@ -97,7 +97,7 @@ async def resolve_trace(trace_id: str) -> TraceLensEnvelope:
     ledger_docs = [
         r async for r in
         db[NORTHENA_LEDGER_COLLECTION]
-        .find({"trace_id": trace_id}, {"_id": 0})
+        .find({"trace_id": trace_id}, {"_id": 0, "instance_id": 0})
         .sort("at", 1)
     ]
     if not ledger_docs:
@@ -129,7 +129,7 @@ async def resolve_trace(trace_id: str) -> TraceLensEnvelope:
     mining_plans: List[MiningPlan] = []
     for pid in plan_ids:
         doc = await db[TARGETA_MINING_PLAN_COLLECTION].find_one(
-            {"plan_id": pid}, {"_id": 0}
+            {"plan_id": pid}, {"_id": 0, "instance_id": 0}
         )
         if doc is not None:
             mining_plans.append(MiningPlan(**doc))
@@ -141,7 +141,7 @@ async def resolve_trace(trace_id: str) -> TraceLensEnvelope:
     for plan in mining_plans:
         for target in plan.ordered_targets:
             reg_doc = await db[MTAFITI_REGISTRY_COLLECTION].find_one(
-                {"source_ref": target.source_ref}, {"_id": 0}
+                {"source_ref": target.source_ref}, {"_id": 0, "instance_id": 0}
             )
             if reg_doc is not None:
                 registry_records.append(MtafitiRegistryRecord(**reg_doc))

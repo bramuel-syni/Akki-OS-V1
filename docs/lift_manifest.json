@@ -447,7 +447,7 @@
       "notes": "G2a. Router boilerplate + audit_log's find_audit/find_receipt cursor shape (second lift added at shrink pass). \u00b7 IF-1 shave (2026-07-14): transitive_chain reference to shaved module removed; superseded by direct northena implementation."
     },
     {
-      "module": "backend/services/data_source/synthetic_assets/rms_adversarial_v1/fixture.json",
+      "module": "backend/services/data_source/synthetic_assets/instance_fixture_a/fixture.json",
       "cousin_citation": null,
       "shape_signature": "regenerated synthetic adversarial fixture v1 (19 NormalizedUnit-shaped units, 13 adversarial dimensions)",
       "resolves_by": [
@@ -458,7 +458,7 @@
       "notes": "Post-G2a ingest artifact per RMS Spec \u00a75 (Normalized Tier \u2014 synthetic plumbing labels are author-assigned + circular). Regenerated 2026-07-01T12:35Z to conform to frozen five_rings@v0 (HAZARD-STOP #1 closed via regenerate path). 19/19 units round-trip; 13/13 adversarial dimensions preserved."
     },
     {
-      "module": "backend/tests/test_rms_adversarial_v1_roundtrip.py",
+      "module": "backend/tests/test_instance_fixture_a_roundtrip.py",
       "cousin_citation": null,
       "shape_signature": "round-trip + adversarial-preservation + no-forbidden-fields-leak-through guard tests",
       "resolves_by": [

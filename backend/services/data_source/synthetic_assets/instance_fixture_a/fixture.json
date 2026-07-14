@@ -1,6 +1,6 @@
 {
   "_manifest": {
-    "fixture": "rms_adversarial_synthetic_v1",
+    "fixture": "instance_fixture_a_v1",
     "synthetic": true,
     "plumbing_only": true,
     "v1_v3_valid": false,

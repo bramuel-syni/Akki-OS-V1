@@ -34,8 +34,8 @@ from services.service_1.webhook import fire_webhook
 log = logging.getLogger("service_1.async_worker")
 
 # Bounded queue.
-_QUEUE_MAX = int(os.environ.get("RMS_ASYNC_QUEUE_MAX", "1000"))
-_WORKER_CONCURRENCY = int(os.environ.get("RMS_ASYNC_WORKER_CONCURRENCY", "4"))
+_QUEUE_MAX = int(os.environ.get("AKKI_ASYNC_QUEUE_MAX", "1000"))
+_WORKER_CONCURRENCY = int(os.environ.get("AKKI_ASYNC_WORKER_CONCURRENCY", "4"))
 
 _queue: Optional[asyncio.Queue] = None
 _workers: list = []

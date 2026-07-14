@@ -16,7 +16,7 @@ Standing Owner Dispositions applied here:
     (`NorthenaLedgerRow_v1` with `decision="terminate_cancelled"`).
 
 Auth (Phase 5 Stage B posture):
-  * `X-RMS-App-ID` header identifies the caller; used for webhook URL +
+  * `X-Akki-App-ID` header identifies the caller; used for webhook URL +
     sandbox-mode resolution + secret derivation. Full app registration
     surface lands at Phase 8; Stage B keeps the resolution surface thin.
 """
@@ -49,8 +49,8 @@ router = APIRouter(prefix="/objectives", tags=["objectives"])
 @router.post("")
 async def post_objective(
     request: Request,
-    x_rms_app_id: Optional[str] = Header(default=None, alias="X-RMS-App-ID"),
-    x_rms_webhook_url: Optional[str] = Header(default=None, alias="X-RMS-Webhook-URL"),
+    x_akki_app_id: Optional[str] = Header(default=None, alias="X-Akki-App-ID"),
+    x_akki_webhook_url: Optional[str] = Header(default=None, alias="X-Akki-Webhook-URL"),
 ):
     """Async admission endpoint — v3 §7 bullet 1.
 
@@ -112,8 +112,8 @@ async def post_objective(
     quote_dict = quote_or_refusal.model_dump(mode="json")
     delivery_estimate = quote_or_refusal.delivery_estimate
 
-    webhook_url = webhook_registration.resolve_webhook_url(x_rms_app_id, x_rms_webhook_url)
-    sandbox_mode = webhook_registration.sandbox_mode_default(x_rms_app_id) if x_rms_app_id else False
+    webhook_url = webhook_registration.resolve_webhook_url(x_akki_app_id, x_akki_webhook_url)
+    sandbox_mode = webhook_registration.sandbox_mode_default(x_akki_app_id) if x_akki_app_id else False
 
     doc = {
         "objective_id": objective_id,
@@ -130,8 +130,8 @@ async def post_objective(
         "trace_id": trace_id,
         "webhook_url": webhook_url,
         "webhook_secret_hex": (
-            webhook_registration.derive_app_webhook_secret(x_rms_app_id).hex()
-            if (x_rms_app_id and webhook_url) else None
+            webhook_registration.derive_app_webhook_secret(x_akki_app_id).hex()
+            if (x_akki_app_id and webhook_url) else None
         ),
         "sandbox_mode": sandbox_mode,
         "delivery_estimate": delivery_estimate,

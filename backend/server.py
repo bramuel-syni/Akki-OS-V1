@@ -155,6 +155,16 @@ app.include_router(transform_forms_router.router, prefix="/api")
 from routers import census_dimensions as census_dimensions_router  # noqa: E402
 app.include_router(census_dimensions_router.router, prefix="/api")
 
+# Multi-Instance Capability MC-E1..MC-E6 close 2026-07-14 · instance
+# config surface (MC-E6 β — class-(a) branding moved from live code to
+# config). Public read `/api/instance/config`.
+from routers import instance as instance_router  # noqa: E402
+app.include_router(instance_router.router, prefix="/api")
+
+# S2.onboard structured intake (MC-E3 α · initial-set ledgered).
+from routers import s2_onboard as s2_onboard_router  # noqa: E402
+app.include_router(s2_onboard_router.router, prefix="/api")
+
 # §3.4 Production Housing PH-R1 (Owner rulings 2026-07-10 · all α + build_info
 # enhancement promoted). Adds BCR §3.4 annex endpoints:
 #   /api/healthz  liveness  · no auth · no DB touch

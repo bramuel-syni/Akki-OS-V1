@@ -214,7 +214,7 @@ def test_fr_g5_adversarial_fixture_uses_neutralized_feed_ids():
     fx = (
         BACKEND_ROOT
         / "services" / "data_source" / "synthetic_assets"
-        / "rms_adversarial_v1" / "fixture.json"
+        / "instance_fixture_a" / "fixture.json"
     )
     corpus = json.loads(fx.read_text(encoding="utf-8"))
     assert corpus.get("_manifest", {}).get("synthetic") is True

@@ -36,13 +36,13 @@ HELD_CLASSES: Tuple[HeldClassName, ...] = (
 # Per-class explicit retention env-var pattern (dev default).
 # Master Admin / DPO would set these via a controlled write path at
 # B-5b (rulebook writes). At B-5a (read/prove), we READ them.
-_PER_CLASS_ENV_PATTERN = "RMS_COMPLIANCE_RETENTION_{class_upper}_DAYS"
+_PER_CLASS_ENV_PATTERN = "AKKI_COMPLIANCE_RETENTION_{class_upper}_DAYS"
 
 
 def global_default_days() -> Optional[int]:
     """Global retention default in days. Owner E5 inheritance-as-default:
     unless a class is explicitly split, it inherits from this."""
-    raw = os.environ.get("RMS_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS")
+    raw = os.environ.get("AKKI_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS")
     if not raw:
         return None
     try:

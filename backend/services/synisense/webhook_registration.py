@@ -12,7 +12,7 @@ Registration model — thin at Stage B:
         secret from the master secret, so a registered app has a stable
         key across restarts.
       - `sandbox_mode_default(app_id)` — key-mode toggle;
-        `RMS_APP_SANDBOX_MODE_<APP_ID>` env var switch (test-substrate
+        `AKKI_APP_SANDBOX_MODE_<APP_ID>` env var switch (test-substrate
         posture per Owner Ruling 1 / Standing Disposition).
 
 Doctrinal note:
@@ -47,11 +47,11 @@ def derive_app_webhook_secret(app_id: str) -> bytes:
 def sandbox_mode_default(app_id: str) -> bool:
     """Return the sandbox-mode flag for `app_id`.
 
-    Reads env var `RMS_APP_SANDBOX_MODE_<APP_ID_UPPER>`; truthy strings
+    Reads env var `AKKI_APP_SANDBOX_MODE_<APP_ID_UPPER>`; truthy strings
     (`1`, `true`, `yes`, `on`) mean sandbox=True; anything else False.
     Phase 8 registration UI will replace this with a per-app record read.
     """
-    key = f"RMS_APP_SANDBOX_MODE_{app_id.upper()}"
+    key = f"AKKI_APP_SANDBOX_MODE_{app_id.upper()}"
     raw = os.environ.get(key, "").strip().lower()
     return raw in {"1", "true", "yes", "on"}
 
@@ -60,14 +60,14 @@ def resolve_webhook_url(app_id: Optional[str], header_url: Optional[str]) -> Opt
     """Resolve the webhook URL for this admission.
 
     Precedence (Phase 5 Stage B; Phase 8 will replace with per-app record):
-      1. Explicit `X-RMS-Webhook-URL` header, if present.
-      2. Env var `RMS_APP_WEBHOOK_URL_<APP_ID_UPPER>`, if set.
+      1. Explicit `X-Akki-Webhook-URL` header, if present.
+      2. Env var `AKKI_APP_WEBHOOK_URL_<APP_ID_UPPER>`, if set.
       3. None → polling-only app.
     """
     if header_url:
         return header_url
     if app_id:
-        key = f"RMS_APP_WEBHOOK_URL_{app_id.upper()}"
+        key = f"AKKI_APP_WEBHOOK_URL_{app_id.upper()}"
         raw = os.environ.get(key, "").strip()
         return raw or None
     return None

@@ -655,13 +655,13 @@ async def test_sandbox_mode_serves_from_fixture_estate(monkeypatch):
     """G23 LOAD-BEARING (§7 bullet 8). Sandbox flag flows through admission
     to the async state document. Phase 8 UI reads this + fixture estate."""
     await _clear_state_collections()
-    monkeypatch.setenv("RMS_APP_SANDBOX_MODE_TESTAPP", "1")
+    monkeypatch.setenv("AKKI_APP_SANDBOX_MODE_TESTAPP", "1")
     transport = ASGITransport(app=app)
     async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
         r = await client.post(
             "/api/objectives",
             json=_valid_body(idempotency_key="idem-sandbox-1"),
-            headers={"X-RMS-App-ID": "testapp"},
+            headers={"X-Akki-App-ID": "testapp"},
         )
     assert r.status_code == 202
     obj_id = r.json()["objective_id"]

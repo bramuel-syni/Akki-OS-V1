@@ -40,18 +40,18 @@ def retention_mode() -> str:
     immutable can be narrowed later without data loss; a default deletion
     window cannot be undone.
 
-    Configuration surface: `RMS_NORTHENA_LEDGER_RETENTION_MODE` env var.
+    Configuration surface: `AKKI_NORTHENA_LEDGER_RETENTION_MODE` env var.
     Valid values: `'indefinite'` (default) | `'windowed'` (implementation
     LOCKED until DPO decision). If `'windowed'` is set without a matching
     DPO-authorised deletion code path, `record()` continues to append
     normally — the mode label alone does not enable deletion. See
     `test_northena_ledger_no_deletion_path` invariant.
     """
-    return os.environ.get("RMS_NORTHENA_LEDGER_RETENTION_MODE", "indefinite")
+    return os.environ.get("AKKI_NORTHENA_LEDGER_RETENTION_MODE", "indefinite")
 
 
 def retention_window_days() -> Optional[int]:
-    raw = os.environ.get("RMS_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS")
+    raw = os.environ.get("AKKI_NORTHENA_LEDGER_RETENTION_WINDOW_DAYS")
     if not raw:
         return None
     try:

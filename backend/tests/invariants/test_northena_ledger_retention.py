@@ -67,9 +67,9 @@ def test_retention_mode_defaults_to_indefinite():
     import os
     from services.northena.ledger import retention_mode
     # Preserve + clear
-    prior = os.environ.pop("RMS_NORTHENA_LEDGER_RETENTION_MODE", None)
+    prior = os.environ.pop("AKKI_NORTHENA_LEDGER_RETENTION_MODE", None)
     try:
         assert retention_mode() == "indefinite"
     finally:
         if prior is not None:
-            os.environ["RMS_NORTHENA_LEDGER_RETENTION_MODE"] = prior
+            os.environ["AKKI_NORTHENA_LEDGER_RETENTION_MODE"] = prior

@@ -1,7 +1,7 @@
 """Round-trip test for the regenerated adversarial fixture v1.
 
 Verifies all 19 units in
-`services/data_source/synthetic_assets/rms_adversarial_v1/fixture.json`
+`services/data_source/synthetic_assets/instance_fixture_a/fixture.json`
 construct as `NormalizedUnit` (frozen `five_rings@v0`) byte-identically
 after HAZARD-STOP #1 regenerate pass (2026-07-01T12:30Z).
 
@@ -17,7 +17,7 @@ import pytest
 from contracts.five_rings import NormalizedUnit
 
 FIXTURE_PATH = Path(__file__).resolve().parents[1] / "services" / "data_source" / \
-    "synthetic_assets" / "rms_adversarial_v1" / "fixture.json"
+    "synthetic_assets" / "instance_fixture_a" / "fixture.json"
 
 
 def _load():
@@ -28,7 +28,7 @@ def _load():
 def test_fixture_present_and_shaped():
     d = _load()
     assert "_manifest" in d and "units" in d
-    assert d["_manifest"]["fixture"] == "rms_adversarial_synthetic_v1"
+    assert d["_manifest"]["fixture"] == "instance_fixture_a_v1"
     assert len(d["units"]) == 19
 
 

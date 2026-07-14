@@ -28,18 +28,18 @@ def cumulative_arm_admitted() -> bool:
     """CLOSED SEAM guard. Returns True only when ALL three DPO/Owner-owned
     thresholds are present via config env vars (spec-anchored §32 pattern):
 
-    - RMS_G6_K_ANONYMITY_THRESHOLD (integer, k in k-anonymity, §21.2)
-    - RMS_G6_L_DIVERSITY_THRESHOLD (integer, l in l-diversity, §21.2)
-    - RMS_G6_DP_EPSILON_BUDGET (float, cumulative DP epsilon, §21.2)
+    - AKKI_G6_K_ANONYMITY_THRESHOLD (integer, k in k-anonymity, §21.2)
+    - AKKI_G6_L_DIVERSITY_THRESHOLD (integer, l in l-diversity, §21.2)
+    - AKKI_G6_DP_EPSILON_BUDGET (float, cumulative DP epsilon, §21.2)
 
     Any missing → arm closed. This is the acceptance bar for Shape B at G6.
     """
     return all(
         os.environ.get(k) is not None
         for k in (
-            "RMS_G6_K_ANONYMITY_THRESHOLD",
-            "RMS_G6_L_DIVERSITY_THRESHOLD",
-            "RMS_G6_DP_EPSILON_BUDGET",
+            "AKKI_G6_K_ANONYMITY_THRESHOLD",
+            "AKKI_G6_L_DIVERSITY_THRESHOLD",
+            "AKKI_G6_DP_EPSILON_BUDGET",
         )
     )
 

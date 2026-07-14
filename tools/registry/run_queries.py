@@ -34,6 +34,7 @@ def main() -> int:
         "v0.2_supplement.md": sha256_file(SUPPLEMENT_PATHS[1]),
         "v0.3_supplement.md": sha256_file(SUPPLEMENT_PATHS[2]),
         "v0.4_supplement.md": sha256_file(SUPPLEMENT_PATHS[3]),
+        "v0.5_supplement.md": sha256_file(SUPPLEMENT_PATHS[4]),
         "consolidation_log_v0.md": sha256_file(CONSOLIDATION_LOG_PATH),
     }
     outs = run_queries(write=not args.check)
@@ -43,6 +44,7 @@ def main() -> int:
         "v0.2_supplement.md": sha256_file(SUPPLEMENT_PATHS[1]),
         "v0.3_supplement.md": sha256_file(SUPPLEMENT_PATHS[2]),
         "v0.4_supplement.md": sha256_file(SUPPLEMENT_PATHS[3]),
+        "v0.5_supplement.md": sha256_file(SUPPLEMENT_PATHS[4]),
         "consolidation_log_v0.md": sha256_file(CONSOLIDATION_LOG_PATH),
     }
     for k, v in pre_shas.items():

@@ -56,6 +56,7 @@ export function formatApiErrorDetail(detail) {
 
 export const api = {
   health: () => client.get('/health').then(r => r.data),
+  instanceConfig: () => client.get('/instance/config').then(r => r.data),
   systemState: () => client.get('/system/state').then(r => r.data),
   northenaStatus: () => client.get('/northena/status').then(r => r.data),
   openRuns: () => client.get('/northena/ledger/open_runs').then(r => r.data),

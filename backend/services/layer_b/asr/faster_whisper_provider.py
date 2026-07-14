@@ -30,7 +30,7 @@ from services.layer_b.contracts import (
     ProviderUnavailable,
 )
 
-_MODEL_SIZE = os.environ.get("RMS_FASTER_WHISPER_MODEL", "tiny")
+_MODEL_SIZE = os.environ.get("AKKI_FASTER_WHISPER_MODEL", "tiny")
 
 
 class FasterWhisperProvider:

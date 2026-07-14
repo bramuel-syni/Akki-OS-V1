@@ -45,7 +45,7 @@ from tests.invariants._ep_v0_fixtures import ep_v0
 
 FIXTURE_PATH = (
     Path(__file__).parent.parent.parent / "services" / "data_source"
-    / "synthetic_assets" / "rms_adversarial_v1" / "fixture.json"
+    / "synthetic_assets" / "instance_fixture_a" / "fixture.json"
 )
 
 

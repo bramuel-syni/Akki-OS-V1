@@ -5,9 +5,9 @@ graceful unavailability if its heavy dep isn't installed. Mirrors the
 cousin's env-driven LLM model preference in `shield/llm_router.py`.
 
 Env knobs (G0.5):
-  * `RMS_ASR_PROVIDER`           default: "whisper"
-  * `RMS_DIARIZATION_PROVIDER`   default: "pyannote"
-  * `RMS_VISION_PROVIDER`        default: "emergent_vision"
+  * `AKKI_ASR_PROVIDER`           default: "whisper"
+  * `AKKI_DIARIZATION_PROVIDER`   default: "pyannote"
+  * `AKKI_VISION_PROVIDER`        default: "emergent_vision"
 """
 from __future__ import annotations
 
@@ -43,21 +43,21 @@ def _resolve(path: str) -> Type:
 
 
 def get_asr_provider(name: str | None = None) -> AsrProvider:
-    name = (name or os.environ.get("RMS_ASR_PROVIDER", "whisper")).lower()
+    name = (name or os.environ.get("AKKI_ASR_PROVIDER", "whisper")).lower()
     if name not in _ASR_REGISTRY:
         raise ValueError(f"unknown ASR provider {name!r}; available: {list(_ASR_REGISTRY)}")
     return _resolve(_ASR_REGISTRY[name])()
 
 
 def get_diarization_provider(name: str | None = None) -> DiarizationProvider:
-    name = (name or os.environ.get("RMS_DIARIZATION_PROVIDER", "pyannote")).lower()
+    name = (name or os.environ.get("AKKI_DIARIZATION_PROVIDER", "pyannote")).lower()
     if name not in _DIARIZATION_REGISTRY:
         raise ValueError(f"unknown diarization provider {name!r}")
     return _resolve(_DIARIZATION_REGISTRY[name])()
 
 
 def get_vision_provider(name: str | None = None) -> VisionProvider:
-    name = (name or os.environ.get("RMS_VISION_PROVIDER", "emergent_vision")).lower()
+    name = (name or os.environ.get("AKKI_VISION_PROVIDER", "emergent_vision")).lower()
     if name not in _VISION_REGISTRY:
         raise ValueError(f"unknown vision provider {name!r}")
     return _resolve(_VISION_REGISTRY[name])()
