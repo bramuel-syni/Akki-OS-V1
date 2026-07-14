@@ -337,4 +337,10 @@ Ruling ref: `/app/docs/rulings/machine_readable_registry_mrr_e1_to_e4.md`.
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11. On-disk canonical per Standing Rule v3.*
+## §15 · Operating Values v1.0 in force (Owner, 2026-07-11)
+
+Operating Values v1.0 in force; consumed by the de-risking sequence, 9.2b deployment, S2.onboard/S4 phases, and BM-C operations; DEFAULT-class values revise via dual-control config swap without reopening the artifact; artifact at `docs/requirements/operating_values_v1.md` SHA-256 `a6c4a455175ef37dc71362aea2e41b2ce406baaf9a1c77b3f0f1326e0aa608ee`.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11. On-disk canonical per Standing Rule v3.*
