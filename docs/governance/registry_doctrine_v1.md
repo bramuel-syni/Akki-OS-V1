@@ -94,6 +94,7 @@ These bind every actor in the build — Owner's ruling authority, builder, and a
 - D-8 · Reduction applies to its own output. Specs, trackers, and meta-artifacts are retired when they stop earning. The dead-tracker sweep is a standing pattern, not an event.
 - D-9 · Platform serves applications. No platform decision optimizes end-user UX directly; end-user experience is application territory (Part II).
 - D-10 · Builder conduct standard. Meticulousness is enforced by structure, not assumed: every proposal self-audits against defect classes D1–D7 before submission, and a proposal arriving with a defect the self-audit would have caught is itself a reportable finding.
+- D-11 · Canon before ruling. No ruling, audit, or characterization of an engine or spec surface proceeds from memory or summary. The on-disk documents are canon; unread canon is read before ruling; recalled content is never presented as fact. Binding on the ruling authority and the builder alike.
 
 # Part V — Cost architecture
 

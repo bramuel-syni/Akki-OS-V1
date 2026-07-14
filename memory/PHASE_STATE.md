@@ -190,3 +190,5 @@
 - [ ] MEA — real source-standing table.
 - [ ] Owner narrowing on `ObjectiveRequest_v2` HAZARD-STOP-NOTE fields.
 - [ ] **NEW at 7b-2:** Wizard session-ownership binding — lands with Phase 8 auth/key model (system-wide auth landing, not wizard-special).
+
+Outstanding-work register at docs/briefs/outstanding_work_and_gap_register_v1.md (SHA cce17296a70b46ae6e1a1c64be1e9e3f18ca3f86a716758899037cf31f4d63d4) — authoritative over any compacted context.
