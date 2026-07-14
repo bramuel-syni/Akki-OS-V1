@@ -1,38 +1,14 @@
 {
   "manifest_version": "v0",
   "manifest_semantics": "v0 = every lift_kind counts toward 'lifted'. v1 (Substrate-Drop v1, 2026-07-01) = only direct + transitive count toward 'lifted' in Rule-2 ratio computation; unverifiable-substrate-absent stays in the manifest for provenance but is EXCLUDED from the lifted total. See BUILD_JOURNAL Substrate-Drop v1 Reconciliation section for the accounting change and per-phase recomputation.",
-  "generated_at": "2026-07-02T02:15:00Z",
-  "generated_by": "e1_dev (A2 close housekeeping)",
+  "generated_at": "2026-07-14T08:00:00Z",
+  "generated_by": "e1_dev (IF-1 shave close housekeeping)",
   "discipline_ref": "BUILD_JOURNAL.md discipline-moment #7 (lift manifest as CI-enforced transitive-lift discipline)",
   "substrate_state": {
     "reference_akki_legacy_present": false,
     "note": "As of 2026-07-01, /reference/akki-legacy/ is architecturally unreachable from inside the container. Every entry citing a /reference/akki-legacy/ path is marked 'unverifiable-substrate-absent' honestly; the transitive_chain (when non-empty) still grep-resolves in /app."
   },
   "entries": [
-    {
-      "module": "backend/services/synisense/shield/purpose_validator.py",
-      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/purpose_validator.py",
-      "shape_signature": "purpose allow-list validator + structured refusal",
-      "resolves_by": [
-        "validate_purpose",
-        "PurposeRefusal"
-      ],
-      "lift_kind": "unverifiable-substrate-absent",
-      "transitive_chain": [],
-      "notes": "G0 LIFT_AS_IS Shield foundation. Cousin substrate lost 2026-07-01 per BUILD_JOURNAL discipline-moment #5; direct-cousin verification not possible in this pod."
-    },
-    {
-      "module": "backend/services/synisense/shield/audit_log.py",
-      "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/audit_log.py",
-      "shape_signature": "append-only audit writer (write_audit, AUDIT_COLLECTION const, find_audit cursor+project)",
-      "resolves_by": [
-        "write_audit",
-        "AUDIT_COLLECTION"
-      ],
-      "lift_kind": "unverifiable-substrate-absent",
-      "transitive_chain": [],
-      "notes": "G0 LIFT_AS_IS Shield audit substrate. Cousin unreachable in-pod."
-    },
     {
       "module": "backend/services/synisense/shield/llm_router.py",
       "cousin_citation": "/reference/akki-legacy/backend/services/synisense/shield/llm_router.py",
@@ -389,29 +365,24 @@
       "shape_signature": "AdmitOffender + AdmitValidation with .ok aggregator + refusal_reason()",
       "resolves_by": [
         "ValidatorOffender",
-        "ValidationResult",
-        "validate_purpose"
+        "ValidationResult"
       ],
       "lift_kind": "transitive",
       "transitive_chain": [
-        "backend/services/g1_defensibility/solva_depth/integrity_validators.py",
-        "backend/services/synisense/shield/purpose_validator.py"
+        "backend/services/g1_defensibility/solva_depth/integrity_validators.py"
       ],
-      "notes": "G2a-shrink Action 1 lift. Chain: cousin solva_v2/integrity_validators (unreachable) \u2192 G1's integrity_validators.py (in-pod, docstring L1-19 documents cousin shape) \u2192 Northena admit AdmitOffender+AdmitValidation. Also lifts allow-list refusal shape from purpose_validator.py."
+      "notes": "G2a-shrink Action 1 lift. Chain: cousin solva_v2/integrity_validators (unreachable) \u2192 G1's integrity_validators.py (in-pod, docstring L1-19 documents cousin shape) \u2192 Northena admit AdmitOffender+AdmitValidation. Also lifts allow-list refusal shape from purpose_validator.py. \u00b7 IF-1 shave (2026-07-14): transitive_chain reference to shaved module removed; superseded by direct northena implementation."
     },
     {
       "module": "backend/services/northena/gate.py",
-      "cousin_citation": "backend/services/synisense/shield/purpose_validator.py",
+      "cousin_citation": null,
       "shape_signature": "allow-list set-membership (sub_objective \u2208 scope) + structured refusal",
       "resolves_by": [
-        "validate_purpose",
-        "ALLOWED_PURPOSES"
+        "MANDATE_FORCED"
       ],
-      "lift_kind": "transitive",
-      "transitive_chain": [
-        "backend/services/synisense/shield/purpose_validator.py"
-      ],
-      "notes": "G2a Stage 2 (mandate \u00a75). Warm/fresh/refused triage."
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G2a Stage 2 (mandate \u00a75). Warm/fresh/refused triage. \u00b7 IF-1 shave (2026-07-14): transitive_chain reference to shaved module removed; superseded by direct northena implementation."
     },
     {
       "module": "backend/services/northena/converge.py",
@@ -427,17 +398,14 @@
     },
     {
       "module": "backend/services/northena/ledger.py",
-      "cousin_citation": "backend/services/synisense/shield/audit_log.py",
+      "cousin_citation": null,
       "shape_signature": "append-only insert (write pattern; write_audit shape)",
       "resolves_by": [
-        "write_audit",
-        "AUDIT_COLLECTION"
+        "MANDATE_FORCED"
       ],
-      "lift_kind": "transitive",
-      "transitive_chain": [
-        "backend/services/synisense/shield/audit_log.py"
-      ],
-      "notes": "G2a. write_audit pattern reshaped to run-level rows. absorb_stamp_audit + retention semantics are mandate \u00a77.3 / \u00a711 forced (partial net-new within this file \u2014 see notes on the mandate-forced portion in BUILD_JOURNAL 2026-07-01T07:10Z LoC ledger)."
+      "lift_kind": "mandate-forced-net-new",
+      "transitive_chain": [],
+      "notes": "G2a. write_audit pattern reshaped to run-level rows. absorb_stamp_audit + retention semantics are mandate \u00a77.3 / \u00a711 forced (partial net-new within this file \u2014 see notes on the mandate-forced portion in BUILD_JOURNAL 2026-07-01T07:10Z LoC ledger). \u00b7 IF-1 shave (2026-07-14): transitive_chain reference to shaved module removed; superseded by direct northena implementation."
     },
     {
       "module": "backend/services/northena/state_machine.py",
@@ -470,25 +438,13 @@
       "cousin_citation": "backend/routers/contracts.py",
       "shape_signature": "FastAPI router boilerplate + cursor-and-project read-side query pattern",
       "resolves_by": [
-        "APIRouter",
-        "find_audit"
+        "APIRouter"
       ],
       "lift_kind": "transitive",
       "transitive_chain": [
-        "backend/routers/contracts.py",
-        "backend/services/synisense/shield/audit_log.py"
+        "backend/routers/contracts.py"
       ],
-      "notes": "G2a. Router boilerplate + audit_log's find_audit/find_receipt cursor shape (second lift added at shrink pass)."
-    },
-    {
-      "module": "backend/services/data_source/synthetic_assets/rms_adversarial_v1/generate_fixture.py",
-      "cousin_citation": null,
-      "shape_signature": "fixture generator \u2014 stakeholder-authored synthetic asset generator (v1)",
-      "resolves_by": [
-        "generate_fixture"
-      ],
-      "lift_kind": "mandate-forced-net-new",
-      "notes": "Post-G2a ingest artifact. Stakeholder-authored per RMS Spec \u00a75 (Normalized Tier \u2014 synthetic plumbing must be author-labelled). Rewritten 2026-07-01T12:35Z to emit contract-shape NormalizedUnit natively (post-HAZARD-STOP #1). Fixture author's own manifest declares synthetic=true/plumbing_only=true/v1_v3_valid=false \u2014 labels are circular per spec discipline. Journal ref: BUILD_JOURNAL 2026-07-01T12:35Z."
+      "notes": "G2a. Router boilerplate + audit_log's find_audit/find_receipt cursor shape (second lift added at shrink pass). \u00b7 IF-1 shave (2026-07-14): transitive_chain reference to shaved module removed; superseded by direct northena implementation."
     },
     {
       "module": "backend/services/data_source/synthetic_assets/rms_adversarial_v1/fixture.json",

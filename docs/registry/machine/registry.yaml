@@ -15,8 +15,10 @@ supplements:
     sha256: 2822f99e0c20da6f8d02c1f33233965c90df37aeb6939e711da8df2ebd991092
   - path: docs/registry/function_promise_registry_v0.2_supplement.md
     sha256: 25c5dd5ac515b34a41584dd2b4ba4eab20eb0ae5d40d9022320761056555b79a
+  - path: docs/registry/function_promise_registry_v0.3_supplement.md
+    sha256: 8d4cd2ed9c4e802944517908424ba2297ac3b4dd5e0d2a8e6d54f6042e64a8e4
 
-# Row totals: promises=47 · functions=96 · findings=11
+# Row totals: promises=47 · functions=109 · findings=11
 
 promises:
   - promise_id: PROM-S1-provable-envelope-inheritance
@@ -1862,6 +1864,201 @@ functions:
     ladder_rung: 1 · Deterministic
     owner: Owner
     source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: synisense.shield.custody_chain_wired
+    governor: Named surfaces (Shield chokepoint · reflexive)
+    mandate: "Built to attest outbound text passes through `deidentifier.deidentify → llm_router.invoke_with_metering (litellm) → reidentifier.reidentify` in that exact order; a token in the outbound prompt is de-identified before reaching the LLM boundary; the reidentified response semantics match the pre-de-id token's contextual class per `reidentifier._VISIBLE_STRATEGY`."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shield_custody_chain.py::test_if1_g1_custody_chain_wired`"
+    enforcement: runtime check
+    cost: 1 cell · ms class
+    dependencies: shielded=True default + deidentifier + reidentifier module presence
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: synisense.shield.fail_closed_deidentify_blocks_llm
+    governor: Named surfaces (Shield chokepoint · reflexive)
+    mandate: "Built to attest that if `deidentifier.deidentify` raises `ServiceUnavailable` (spaCy-unloadable, tenant-lookup failure, or any other unrecoverable de-id failure), the LLM invocation does NOT occur AND the caller receives the ServiceUnavailable exception verbatim (fluency/brief synthesizers catch and route to mechanical arm per AF-E2 amended boundary; never a refusal envelope)."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/tests/registry/test_shield_custody_chain.py::test_if1_g2_fail_closed_deidentify_raise_blocks_llm`"
+    enforcement: runtime fail-closed cell
+    cost: 1 cell · µs class
+    dependencies: ServiceUnavailable → mechanical arm
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: synisense.shield.fail_closed_reidentify_blocks_response
+    governor: Named surfaces (Shield chokepoint · reflexive)
+    mandate: "Built to attest that if `reidentifier.reidentify` raises during the outbound seam (defence-in-depth; would be a bug given reidentify is pure regex), the LLM response is NOT returned to the caller — the exception surfaces via ServiceUnavailable at the chokepoint, preserving the never-return-raw-response guarantee."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/tests/registry/test_shield_custody_chain.py::test_if1_g3_fail_closed_reidentify_raise_blocks_response`"
+    enforcement: runtime fail-closed cell
+    cost: 1 cell · µs class
+    dependencies: reidentifier presence + exception propagation
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_01_client_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/synisense/shield/client.py` no longer exists AND no in-tree file imports it; superseded by chokepoint-at-`llm_router.invoke_with_metering` (IF-1)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_01_client_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 1
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_03_audit_log_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/synisense/shield/audit_log.py` no longer exists AND no in-tree file imports it; chain-dead behind row 1."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_03_audit_log_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 3
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_04_canonical_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/synisense/shield/canonical.py` no longer exists AND no in-tree file imports it; zero-caller observability tool retired."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_04_canonical_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 4
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_05_purpose_validator_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/synisense/shield/purpose_validator.py` no longer exists AND no in-tree file imports it; `ALLOWED_PURPOSES` + `INTERNAL_ONLY_PURPOSE_PREFIXES` also removed from `services/synisense/config.py` per the shave-with-citation branch."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_05_purpose_validator_py_shaved`"
+    enforcement: AST-negative + fs-negative + config-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 5
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_07_storage_service_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/storage_service.py` no longer exists AND no in-tree file imports it."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_07_storage_service_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 7
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_08_generate_fixture_incoming_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/data_source/synthetic_assets/rms_adversarial_v1/rejected/generate_fixture.incoming.py` no longer exists AND no in-tree file imports it."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_08_generate_fixture_incoming_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 8
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_09_generate_fixture_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/data_source/synthetic_assets/rms_adversarial_v1/generate_fixture.py` no longer exists AND no in-tree file imports it."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_09_generate_fixture_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 9
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_14_v1_harness_metrics_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/v1_harness/metrics.py` no longer exists AND no in-tree file imports it."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_14_v1_harness_metrics_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 14
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_15_purge_attestation_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/perception/purge_attestation.py` no longer exists AND no in-tree file imports it. Field access on `PerceptionResult.purge_attestation` (contract) is unaffected."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_15_purge_attestation_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 15
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: deviation.shave.row_16_telemetry_py
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `services/perception/telemetry.py` no longer exists AND no in-tree file imports it. Field access on `PerceptionResult.telemetry` (contract) is unaffected."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_shave_v1_attestation.py::test_row_16_telemetry_py_shaved`"
+    enforcement: AST-negative + fs-negative
+    cost: 1 cell · µs class
+    dependencies: audit table row 16
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.3_supplement.md
     rulings: []
 
 findings:

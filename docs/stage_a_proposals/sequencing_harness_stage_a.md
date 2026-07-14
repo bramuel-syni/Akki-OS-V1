@@ -1,3 +1,4 @@
+UNSANCTIONED PRE-WORK · D7 finding 2026-07-14 · no ruling status · consumable only as raw material under a future Owner-dispatched §8.1.b Stage A.
 # Stage A · Sequencing Harness (Registry Doctrine §8.1.b · §5.2)
 
 **Dispatch class:** Registry Doctrine v1.0 §8.1.b — the sequencing harness (per §5.2).

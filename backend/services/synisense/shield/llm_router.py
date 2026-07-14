@@ -116,15 +116,40 @@ async def invoke(
 
 
 async def invoke_with_metering(
-    de_id_content: str,
+    content: str,
     *,
     model_preference: ModelPreference = "balanced",
     timeout_seconds: float = 20.0,
     system_msg: Optional[str] = None,
+    tenant_id: str = "default",
+    _shielded: bool = True,
 ) -> Tuple[str, str, str, Dict[str, Any]]:
     """Same contract as `invoke()` but additionally returns a usage dict.
 
     Chunk 18 (Track 4 item 2, 2026-05-21) — token-accurate metering.
+
+    IF-1 chokepoint reconnection (2026-07-14) — this function now carries
+    the full custody chain: `deidentifier.deidentify(content, tenant_id)`
+    → LLM (with the de-identified `redacted_text`) → `reidentifier.reidentify`
+    on the response. Fail-closed per the deidentifier's own spec:
+    `ServiceUnavailable` from deidentify propagates without an LLM call
+    (raw `content` never reaches the outbound seam). Reidentify is
+    pure-regex and pipes the LLM response through the per-request
+    token_map before returning.
+
+    spaCy-unloadable fallback: `deidentifier._ensure_spacy()` returns
+    None → `ServiceUnavailable` → this function re-raises the same
+    `ServiceUnavailable` → `fluency_synthesizer._invoke_llm_raw`
+    catches and converts to `LLMUnavailableError` → service_1 routes
+    to the mechanical arm per AF-E2 amended boundary.
+
+    Tenant layer: `services.synisense.shield.tenant_entities.lookup_in_text`
+    returns an empty catalogue (S2.onboard-era seat); regex + spaCy layers
+    carry alone until estate vocabulary populates.
+
+    Bypass flag `_shielded=False` is test-only (e.g. tests that intentionally
+    exercise the mock/echo path with raw prompts). Production callers keep
+    the default.
 
     `usage` shape:
       - Live SDK call: `{"input_tokens": int, "output_tokens": int, "method": "exact"}`
@@ -139,13 +164,32 @@ async def invoke_with_metering(
     """
     provider, model = _provider_for(model_preference)
 
+    # ── IF-1 chokepoint · deidentify inbound ──
+    de_id = None
+    token_map: Dict[str, str] = {}
+    llm_input = content
+    if _shielded:
+        from services.synisense.shield import deidentifier, reidentifier
+        de_id = await deidentifier.deidentify(content, tenant_id=tenant_id)
+        llm_input = de_id.redacted_text
+        token_map = de_id.token_map
+
     # Mock mode — explicit opt-in OR no key configured.
     llm_mode = os.environ.get("SYNISENSE_LLM_MODE", "").lower()
     emergent_key = os.environ.get("EMERGENT_LLM_KEY", "").strip()
     if llm_mode == "mock" or not emergent_key:
         if not emergent_key and llm_mode != "mock":
             log.info("synisense.shield.llm_router: EMERGENT_LLM_KEY absent — using echo fallback")
-        return (_mock_invoke(de_id_content), provider + ":mock", model + ":mock", {})
+        mock_text = _mock_invoke(llm_input)
+        if _shielded:
+            from services.synisense.shield import reidentifier
+            try:
+                mock_text = reidentifier.reidentify(mock_text, token_map)
+            except Exception as exc:  # noqa: BLE001 — fail-closed: never return raw response
+                raise ServiceUnavailable(
+                    f"reidentifier failure at chokepoint: {type(exc).__name__}: {str(exc)[:200]}"
+                ) from exc
+        return (mock_text, provider + ":mock", model + ":mock", {})
 
     # Live mode — call litellm directly so we can keep the ModelResponse
     # and pull `usage.prompt_tokens` / `usage.completion_tokens`. Module-
@@ -158,7 +202,16 @@ async def invoke_with_metering(
             _EMERGENT_IMPORT_ERROR or "ok",
             _LITELLM_IMPORT_ERROR or "ok",
         )
-        return (_mock_invoke(de_id_content), provider + ":mock", model + ":mock", {})
+        mock_text = _mock_invoke(llm_input)
+        if _shielded:
+            from services.synisense.shield import reidentifier
+            try:
+                mock_text = reidentifier.reidentify(mock_text, token_map)
+            except Exception as exc:  # noqa: BLE001 — fail-closed
+                raise ServiceUnavailable(
+                    f"reidentifier failure at chokepoint: {type(exc).__name__}: {str(exc)[:200]}"
+                ) from exc
+        return (mock_text, provider + ":mock", model + ":mock", {})
 
     try:
         proxy_url = get_integration_proxy_url()
@@ -177,7 +230,7 @@ async def invoke_with_metering(
                         "verbatim. Do not invent meanings for them. Respond concisely."
                     ),
                 },
-                {"role": "user", "content": de_id_content},
+                {"role": "user", "content": llm_input},
             ],
             "api_key": emergent_key,
             "api_base": proxy_url + "/llm",
@@ -193,6 +246,13 @@ async def invoke_with_metering(
             text = response.choices[0].message.content or ""
         except Exception:  # noqa: BLE001
             text = str(response)
+        # ── IF-1 chokepoint · reidentify outbound ──
+        # Pure regex; hard-PII classes render as [LABEL_••••last4]
+        # or [LABEL_REDACTED], contextual classes rehydrate. See
+        # `reidentifier._VISIBLE_STRATEGY` for the mapping.
+        if _shielded:
+            from services.synisense.shield import reidentifier
+            text = reidentifier.reidentify(text, token_map)
         usage: Dict[str, Any] = {}
         try:
             u = getattr(response, "usage", None)
@@ -214,6 +274,10 @@ async def invoke_with_metering(
         raise ServiceUnavailable(
             f"LLM provider timeout after {timeout_seconds}s"
         ) from exc
+    except ServiceUnavailable:
+        # Deidentifier fail-closed already raised ServiceUnavailable;
+        # re-raise verbatim so caller sees the same exception surface.
+        raise
     except Exception as exc:  # noqa: BLE001
         log.warning("synisense.shield.llm_router: invoke failed (%s)", type(exc).__name__)
         raise ServiceUnavailable(

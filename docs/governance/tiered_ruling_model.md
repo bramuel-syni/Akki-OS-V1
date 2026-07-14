@@ -343,4 +343,10 @@ Operating Values v1.0 in force; consumed by the de-risking sequence, 9.2b deploy
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11. On-disk canonical per Standing Rule v3.*
+## §16 · D-11 admitted to Registry Doctrine Part IV (Owner, 2026-07-14)
+
+D-11 · Canon before ruling — admitted to Registry Doctrine Part IV at `/app/docs/governance/registry_doctrine_v1.md:97` (SHA of doctrine file post-D-11 = `9dd1cc4bee310ad36780d182377ae8f3e25b7a681430c982dda18d76a408fbcf`). Standing corrective (verbatim): "A closed loop never authorizes the next surface's Stage A; dispatch is the only authorization."
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §16 admission 2026-07-14. On-disk canonical per Standing Rule v3.*
