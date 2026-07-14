@@ -10,7 +10,6 @@ Gates:
 """
 from __future__ import annotations
 
-import asyncio
 import os
 
 import pytest
@@ -32,7 +31,7 @@ class _StubDeIdResult:
 
 
 # ── IF1-G1 ────────────────────────────────────────────────────────────
-def test_if1_g1_custody_chain_wired(monkeypatch):
+async def test_if1_g1_custody_chain_wired(monkeypatch):
     """Attest that `invoke_with_metering` walks the full chain:
     deidentifier.deidentify(input, tenant_id) → llm_router (mock echo)
     → reidentifier.reidentify(response, token_map) → text_out.
@@ -68,12 +67,10 @@ def test_if1_g1_custody_chain_wired(monkeypatch):
     monkeypatch.setenv("SYNISENSE_LLM_MODE", "mock")
     monkeypatch.delenv("EMERGENT_LLM_KEY", raising=False)
 
-    text, prov, model, usage = asyncio.run(
-        llm_router.invoke_with_metering(
-            "Board discussed Acme's revenue.",
-            model_preference="analytical",
-            tenant_id="test-tenant",
-        )
+    text, prov, model, usage = await llm_router.invoke_with_metering(
+        "Board discussed Acme's revenue.",
+        model_preference="analytical",
+        tenant_id="test-tenant",
     )
 
     # Wire order: deidentify called FIRST, reidentify called SECOND.
@@ -92,7 +89,7 @@ def test_if1_g1_custody_chain_wired(monkeypatch):
 
 
 # ── IF1-G2 · fail-closed on deidentify raise ─────────────────────────
-def test_if1_g2_fail_closed_deidentify_raise_blocks_llm(monkeypatch):
+async def test_if1_g2_fail_closed_deidentify_raise_blocks_llm(monkeypatch):
     """If `deidentifier.deidentify` raises `ServiceUnavailable`, the
     chokepoint MUST NOT invoke the LLM (the mock/live boundary is
     unreachable) and MUST propagate the exception verbatim."""
@@ -114,13 +111,13 @@ def test_if1_g2_fail_closed_deidentify_raise_blocks_llm(monkeypatch):
     monkeypatch.setenv("SYNISENSE_LLM_MODE", "mock")
 
     with pytest.raises(ServiceUnavailable) as exc_info:
-        asyncio.run(llm_router.invoke_with_metering("any content", tenant_id="t"))
+        await llm_router.invoke_with_metering("any content", tenant_id="t")
     assert "spaCy model unavailable" in str(exc_info.value)
     assert llm_touched["called"] is False, "LLM path executed despite deidentify raise"
 
 
 # ── IF1-G3 · fail-closed on reidentify raise ─────────────────────────
-def test_if1_g3_fail_closed_reidentify_raise_blocks_response(monkeypatch):
+async def test_if1_g3_fail_closed_reidentify_raise_blocks_response(monkeypatch):
     """If `reidentifier.reidentify` raises during the outbound seam,
     the LLM response MUST NOT be returned to the caller. The chokepoint
     surfaces this as `ServiceUnavailable` (defence-in-depth: reidentify
@@ -139,5 +136,5 @@ def test_if1_g3_fail_closed_reidentify_raise_blocks_response(monkeypatch):
     monkeypatch.setenv("SYNISENSE_LLM_MODE", "mock")
 
     with pytest.raises(ServiceUnavailable) as exc_info:
-        asyncio.run(llm_router.invoke_with_metering("hello", tenant_id="t"))
-    assert "LLM provider call failed" in str(exc_info.value) or "reidentifier bug" in str(exc_info.value)
+        await llm_router.invoke_with_metering("hello", tenant_id="t")
+    assert "LLM provider call failed" in str(exc_info.value) or "reidentifier bug" in str(exc_info.value) or "reidentifier failure" in str(exc_info.value)

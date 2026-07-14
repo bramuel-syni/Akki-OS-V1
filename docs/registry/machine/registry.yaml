@@ -17,8 +17,10 @@ supplements:
     sha256: 25c5dd5ac515b34a41584dd2b4ba4eab20eb0ae5d40d9022320761056555b79a
   - path: docs/registry/function_promise_registry_v0.3_supplement.md
     sha256: 8d4cd2ed9c4e802944517908424ba2297ac3b4dd5e0d2a8e6d54f6042e64a8e4
+  - path: docs/registry/function_promise_registry_v0.4_supplement.md
+    sha256: d1fa1949a206d5fb73481864962f93efaa888a4ef4793efad82a53681fc3dc1b
 
-# Row totals: promises=47 · functions=109 · findings=11
+# Row totals: promises=47 · functions=118 · findings=11
 
 promises:
   - promise_id: PROM-S1-provable-envelope-inheritance
@@ -2059,6 +2061,141 @@ functions:
     ladder_rung: 1 · Deterministic
     owner: Owner
     source: function_promise_registry_v0.3_supplement.md
+    rulings: []
+  - function_id: rms.frontend.trace_receipt_page_promoted_public_route
+    governor: Named surfaces (Frontend UI · reflexive)
+    mandate: "Built to attest the SolvaTrace three-lens rendering surface (§5 Spec) is a live-visible public route: `src/pages/trace/TraceReceiptPage.js` exists on-disk AND `src/App.js` imports it from `./pages/trace/TraceReceiptPage` AND declares both `<Route path=\"trace\">` and `<Route path=\"trace/:traceId\">`. The three-lens sections (`trace-ledger-section` · `trace-solva-section` · `trace-plans-section` · `trace-registry-section`) render the envelope returned by `GET /api/northena/trace/{traceId}`; back-link resolves to Ask Console at `/` (single-ingress per UI Spec §3.1)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` + `frontend/e2e/trace_smoke.spec.ts::trace_receipt_page_renders_three_lens_at_promoted_public_route`"
+    enforcement: jest static-grep + playwright DOM assertion
+    cost: 1 cell · ms class
+    dependencies: apiClient.traceLens + useApi hook + LedgerTable/ClassBadge/StatusBadge components
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: rms.frontend.legacy_shell_retired
+    governor: Named surfaces (Frontend UI · reflexive)
+    mandate: "Built to attest the archived `/legacy/*` tree and its AppShell chrome are gone: `src/legacy/` directory does NOT exist AND `src/components/AppShell.js` does NOT exist AND `src/App.js` no longer declares `<Route path=\"legacy\">` block AND no in-tree import references either `./legacy/pages/` or `./components/AppShell`. The G-10 disposition (\"evidence at IF-1 close → OWNER decision\") is discharged by this ruling."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js`"
+    enforcement: jest static-grep (fs-negative + import-negative + Route-block-negative)
+    cost: 1 cell · µs class
+    dependencies: frontend build clean · yarn build passes · legacy tree fully removed
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: deviation.shave.frontend_landing_page
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `frontend/src/legacy/pages/LandingPage.js` no longer exists AND `src/App.js` no longer imports it; nested `<Route index element={<LandingPage/>}>` under `/legacy/*` retired at G-10 close."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` (legacy dir absent · row 1)"
+    enforcement: fs-negative + import-negative
+    cost: 1 cell · µs class
+    dependencies: G-10 ruling row
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: deviation.shave.frontend_operator_dashboard
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `frontend/src/legacy/pages/OperatorDashboard.js` no longer exists AND `src/App.js` no longer imports it; nested `/legacy/operator` route retired."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` (legacy dir absent · row 2)"
+    enforcement: fs-negative + import-negative
+    cost: 1 cell · µs class
+    dependencies: G-10 ruling row
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: deviation.shave.frontend_runs_page
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `frontend/src/legacy/pages/RunsPage.js` no longer exists AND `src/App.js` no longer imports it; nested `/legacy/operator/runs` route retired."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` (legacy dir absent · row 3)"
+    enforcement: fs-negative + import-negative
+    cost: 1 cell · µs class
+    dependencies: G-10 ruling row
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: deviation.shave.frontend_run_detail_page
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `frontend/src/legacy/pages/RunDetailPage.js` no longer exists AND `src/App.js` no longer imports it; nested `/legacy/operator/runs/:runId` route retired."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` (legacy dir absent · row 4)"
+    enforcement: fs-negative + import-negative
+    cost: 1 cell · µs class
+    dependencies: G-10 ruling row
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: deviation.shave.frontend_discipline_page
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `frontend/src/legacy/pages/DisciplinePage.js` no longer exists AND `src/App.js` no longer imports it; nested `/legacy/operator/discipline` route retired."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` (legacy dir absent · row 5)"
+    enforcement: fs-negative + import-negative
+    cost: 1 cell · µs class
+    dependencies: G-10 ruling row
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: deviation.shave.frontend_engines_page
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `frontend/src/legacy/pages/EnginesPage.js` no longer exists AND `src/App.js` no longer imports it; nested `/legacy/operator/engines` route retired."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` (legacy dir absent · row 6)"
+    enforcement: fs-negative + import-negative
+    cost: 1 cell · µs class
+    dependencies: G-10 ruling row
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
+    rulings: []
+  - function_id: deviation.shave.frontend_compose_page
+    governor: Named surfaces (Deviation-audit reflexive)
+    mandate: "Built to attest `frontend/src/legacy/pages/ComposePage.js` no longer exists AND `src/App.js` no longer imports it; nested `/legacy/operator/compose` route retired."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`frontend/src/__tests__/ui_spec_v1/test_g5b_legacy_pages_archived_under_frontend_legacy_directory.test.js` (legacy dir absent · row 7)"
+    enforcement: fs-negative + import-negative
+    cost: 1 cell · µs class
+    dependencies: G-10 ruling row
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.4_supplement.md
     rulings: []
 
 findings:

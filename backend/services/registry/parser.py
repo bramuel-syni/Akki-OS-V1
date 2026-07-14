@@ -27,6 +27,7 @@ SUPPLEMENT_PATHS = [
     REPO_ROOT / "docs" / "registry" / "function_promise_registry_v0.1_supplement.md",
     REPO_ROOT / "docs" / "registry" / "function_promise_registry_v0.2_supplement.md",
     REPO_ROOT / "docs" / "registry" / "function_promise_registry_v0.3_supplement.md",
+    REPO_ROOT / "docs" / "registry" / "function_promise_registry_v0.4_supplement.md",
 ]
 DOCTRINE_PATH = REPO_ROOT / "docs" / "governance" / "registry_doctrine_v1.md"
 RULINGS_FINDINGS_PATH = REPO_ROOT / "docs" / "rulings" / "registry_findings_01_to_11.md"

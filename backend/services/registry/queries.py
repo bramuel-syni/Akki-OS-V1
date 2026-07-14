@@ -616,6 +616,7 @@ def run_queries(write: bool = True, run_timestamp: str | None = None) -> dict[st
         "docs/registry/function_promise_registry_v0.1_supplement.md": sha256_file(SUPPLEMENT_PATHS[0]),
         "docs/registry/function_promise_registry_v0.2_supplement.md": sha256_file(SUPPLEMENT_PATHS[1]),
         "docs/registry/function_promise_registry_v0.3_supplement.md": sha256_file(SUPPLEMENT_PATHS[2]),
+        "docs/registry/function_promise_registry_v0.4_supplement.md": sha256_file(SUPPLEMENT_PATHS[3]),
         "docs/registry/consolidation_log_v0.md": sha256_file(CONSOLIDATION_LOG_PATH),
     }
     if MACHINE_YAML_PATH.exists():

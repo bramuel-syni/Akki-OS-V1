@@ -11,9 +11,8 @@
  * Part B: trace_id retention — RTL DOM verification. Mount LedgerTable
  *         and TrustReceiptLink with synthetic payloads containing
  *         trace_id → assert the trace_id appears in rendered DOM and
- *         links resolve to the legacy trust-receipt surface at
- *         `/legacy/trace/:traceId` (kept reachable for Ask Console
- *         "Trust receipt" action link).
+ *         links resolve to the promoted trust-receipt surface at
+ *         `/trace/:traceId` (Owner ruling G-10/G-7 PROMOTE, 2026-07-14).
  *
  * Framework: Node fs (Part A) + React Testing Library (Part B).
  */
@@ -77,7 +76,7 @@ describe('Gate 3 (UI Spec v1): Single ingress + trace_id retention', () => {
     expect(violations).toEqual([]);
   });
 
-  test('Part B: LedgerTable renders trace_id as link in DOM (legacy trust-receipt route)', () => {
+  test('Part B: LedgerTable renders trace_id as link in DOM (promoted trust-receipt route)', () => {
     const rows = [
       {
         stage: 'admit',
@@ -96,11 +95,9 @@ describe('Gate 3 (UI Spec v1): Single ingress + trace_id retention', () => {
     );
     const link = screen.getByTestId('trace-link-trace-test-abc123');
     expect(link).toBeInTheDocument();
-    // LedgerTable resolves to `/trace/{traceId}` (legacy component preserved verbatim).
-    // The route `/trace/:traceId` remains reachable under the nested `/legacy` shell
-    // via the `/legacy/trace/:traceId` binding in `src/App.js` — this test asserts
-    // the raw component contract; the App-level route wiring is covered by the
-    // legacy-archival gate.
+    // LedgerTable resolves to `/trace/{traceId}` — the public route wired
+    // in `src/App.js` at Owner ruling G-10/G-7 PROMOTE (2026-07-14). The
+    // App-level route wiring is covered by the promotion gate.
     expect(link).toHaveAttribute('href', '/trace/trace-test-abc123');
     expect(link.textContent).toContain('trace-test-abc123');
   });

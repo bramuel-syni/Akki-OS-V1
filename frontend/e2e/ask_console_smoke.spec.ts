@@ -2,8 +2,8 @@
 //
 // Scope (per Stage A §3.2, refined at Owner dispatch to ~40 LoC):
 //   authenticated login → submit Ask → assert render → click Trust receipt →
-//   assert navigation to `/legacy/trace/{traceId}` (or `/trace/{id}` if B-5
-//   lands the in-pod route earlier — verify).
+//   assert navigation to `/trace/{traceId}` (promoted public route at
+//   Owner ruling G-10/G-7 PROMOTE, 2026-07-14).
 //
 // This smoke intercepts the network to keep the test hermetic; the surface
 // wiring (Auth + AskConsole + apiClient) is the target under test, not the
@@ -59,6 +59,6 @@ test('ask_console_smoke_authenticated_flow_end_to_end', async ({ page }) => {
   await expect(page.getByTestId('answer-headline')).toContainText('composed conclusion for the E2E');
   await expect(page.getByTestId('answer-trust-receipt')).toHaveAttribute(
     'href',
-    /\/legacy\/trace\/trace-e2e-b1-smoke-abc123/,
+    /\/trace\/trace-e2e-b1-smoke-abc123/,
   );
 });

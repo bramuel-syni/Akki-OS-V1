@@ -326,7 +326,7 @@ function AnswerView({ ask, conclusion, elapsedMs, onExport, onWhy, onTrustReceip
         </button>
         <a
           data-testid="answer-trust-receipt"
-          href={conclusion?.trace_id ? `/legacy/trace/${conclusion.trace_id}` : '#'}
+          href={conclusion?.trace_id ? `/trace/${conclusion.trace_id}` : '#'}
           onClick={onTrustReceipt}
           className="px-3 py-1.5 rounded-md border border-rms-line hover:bg-gray-50 text-rms-ink no-underline"
         >
@@ -477,7 +477,7 @@ function AcceptedView({ ask, accepted, elapsedMs, onReset }) {
         {traceId && (
           <a
             data-testid="accepted-trust-receipt"
-            href={`/legacy/trace/${traceId}`}
+            href={`/trace/${traceId}`}
             className="px-3 py-1.5 rounded-md border border-rms-line hover:bg-gray-50 text-rms-ink no-underline"
           >
             Trust receipt

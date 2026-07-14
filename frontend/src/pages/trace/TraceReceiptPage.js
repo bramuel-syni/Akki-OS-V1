@@ -1,3 +1,13 @@
+// Promoted from src/legacy/pages/TraceReceiptPage.js at Owner ruling
+// G-10/G-7 PROMOTE (docs/rulings/g10_g7_promote_2026-07-14.md, 2026-07-14).
+//
+// Public route: /trace and /trace/:traceId. Single ingress: back-link
+// returns to Ask Console at "/" (Op. Values §1 · UI Spec §3.1). The
+// three-lens (Solva reasoning · Mining plans · Registry records) UX is
+// the visible surface of G-7 (SolvaTrace three-lens commitment) and
+// resolves G-10 by promoting the last live legacy consumer out of the
+// archived /legacy/* tree; the rest of the tree is retired at the same
+// ruling.
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useApi } from '../../hooks/useApi';
@@ -132,7 +142,7 @@ export default function TraceReceiptPage() {
 
   if (!traceId) {
     return (
-      <div data-testid="trace-receipt-search" className="space-y-6">
+      <div data-testid="trace-receipt-search" className="space-y-6 max-w-3xl mx-auto p-6">
         <h2 className="text-lg font-semibold">Trust Receipt — Trace Lens</h2>
         <p className="text-sm text-rms-mute">Resolve a trace_id to its full cross-engine record.</p>
         <TraceSearch />
@@ -141,13 +151,13 @@ export default function TraceReceiptPage() {
   }
 
   return (
-    <div data-testid="trace-receipt-page" className="space-y-6">
+    <div data-testid="trace-receipt-page" className="space-y-6 max-w-4xl mx-auto p-6">
       <div className="flex items-center gap-3">
         <Link
-          to="/operator/runs"
+          to="/"
           data-testid="back-from-trace"
           className="p-1.5 rounded-md hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-rms-accent"
-          aria-label="Back"
+          aria-label="Back to Ask Console"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
@@ -194,14 +204,13 @@ export default function TraceReceiptPage() {
                 <dt className="text-xs text-rms-mute uppercase tracking-wide">Run IDs</dt>
                 <dd className="mt-0.5">
                   {envelope.run_ids?.map(rid => (
-                    <Link
+                    <span
                       key={rid}
-                      to={`/operator/runs/${rid}`}
-                      className="block font-mono text-xs text-rms-accent hover:underline"
-                      data-testid={`envelope-run-link-${rid}`}
+                      className="block font-mono text-xs text-rms-ink"
+                      data-testid={`envelope-run-id-${rid}`}
                     >
                       {rid}
-                    </Link>
+                    </span>
                   ))}
                 </dd>
               </div>
