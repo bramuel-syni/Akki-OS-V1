@@ -13,8 +13,10 @@ source_of_truth:
 supplements:
   - path: docs/registry/function_promise_registry_v0.1_supplement.md
     sha256: 2822f99e0c20da6f8d02c1f33233965c90df37aeb6939e711da8df2ebd991092
+  - path: docs/registry/function_promise_registry_v0.2_supplement.md
+    sha256: 25c5dd5ac515b34a41584dd2b4ba4eab20eb0ae5d40d9022320761056555b79a
 
-# Row totals: promises=47 · functions=86 · findings=11
+# Row totals: promises=47 · functions=96 · findings=11
 
 promises:
   - promise_id: PROM-S1-provable-envelope-inheritance
@@ -1710,6 +1712,156 @@ functions:
     ladder_rung: 1 · Deterministic
     owner: Owner
     source: function_promise_registry_v0.1_supplement.md
+    rulings: []
+  - function_id: registry.queries.q1_mechanical_correctness
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest Q1 (redundancy) mechanical scan emits every pair of function rows sharing PROM-token-set + surface equality; cost-ranking applies `unknown`-sorts-to-end."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/queries.py::scan_q1_redundancy` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: machine form · function-row iteration
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.q2_mechanical_correctness
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest Q2 (orphans) mechanical scan covers 4 sub-cases: (a) empty promise (b) no PROM-token resolves to promise_id (c) empty service_trace (d) service_trace step not in PART_II_JOURNEY_STEPS. READ-ONLY, never auto-retiring."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/queries.py::scan_q2_orphans` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: PART_II_JOURNEY_STEPS · promises array
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.q3_mechanical_correctness
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest Q3 (gaps) mechanical scan covers 2 sub-cases: (a) promise_id with zero citing functions (b) PART_II journey step with zero citing functions (alias-equivalence applied)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/queries.py::scan_q3_gaps` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: PART_II_JOURNEY_STEPS · promises array
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.baseline_reproduction
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest archaeological carry-over files reproduce v0.md §4 (5 Q2), v0.md §5 (6 Q3), and consolidation_log_v0.md (Q1 tie-broke/merge decisions) byte-identical with `[RULED · …]` tags + `[OWNER: …]` markers preserved. Fail-loud + HALT for Owner on any deviation."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/tests/registry/test_standing_queries_sq_g1_to_g10.py::test_sq_g_baseline`"
+    enforcement: byte-identity lock
+    cost: 1 cell · ms class
+    dependencies: rulings/registry_findings_01_to_11.md · consolidation_log_v0.md · v0.md §4/§5
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.cross_reference
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest zero mechanical entries whose subject overlaps an existing archaeological finding are emitted without `overlaps: <finding_id>` annotation. Cross-reference discipline is PERMANENT per Owner-explicit \"now or in any future run\"."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/registry/queries.py::annotate_mechanical_overlaps` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: archaeological-subjects index · mechanical scan output
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.no_retirement
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest zero writes to source-of-truth artifacts (v0.md · v0.1_supplement · v0.2_supplement · consolidation_log_v0.md) during query run. Registry.yaml is regenerated (machine form is derived, not source).
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_standing_queries_sq_g1_to_g10.py::test_sq_g_no_retirement`"
+    enforcement: byte-identity lock (pre/post SHA-diff)
+    cost: 1 cell · µs class
+    dependencies: source-of-truth SHAs · run_queries CLI
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.report_level
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest findings artifacts regenerate deterministically (byte-identical across successive runs) AND are report-level (never build-failing). Findings surface at `docs/registry/queries/` carrying `THIS ARTIFACT IS REPORT-LEVEL · NEVER BUILD-FAILING · RETIREMENT/MERGE REMAINS RULED ACTION` header."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_standing_queries_sq_g1_to_g10.py::test_sq_g_report_level`"
+    enforcement: runtime check + byte-identity
+    cost: 1 cell · ms class
+    dependencies: run_queries CLI · artifacts on disk
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.rung_1
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest query engine module has zero LLM imports; every query runs rung 1 · Deterministic pure-function per Owner-explicit \"Rung 1 throughout\"."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_standing_queries_sq_g1_to_g10.py::test_sq_g_rung1`"
+    enforcement: AST negative-scan
+    cost: 1 cell · µs class
+    dependencies: queries.py source
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.parity_31
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest V1-G7 parity 31/31 byte-identical is unaffected by this phase.
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_standing_queries_sq_g1_to_g10.py::test_sq_g_parity`"
+    enforcement: fs-count + hash-diff
+    cost: 1 cell · µs class
+    dependencies: existing V1-G7 gate
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
+    rulings: []
+  - function_id: registry.queries.data_blind
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest zero secrets/keys/tokens in the six findings artifacts (regex-negative on standard secret patterns).
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/tests/registry/test_standing_queries_sq_g1_to_g10.py::test_sq_g_data_blind`"
+    enforcement: grep-negative
+    cost: 1 cell · µs class
+    dependencies: governance §8 data-blind posture
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: function_promise_registry_v0.2_supplement.md
     rulings: []
 
 findings:

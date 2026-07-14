@@ -3,7 +3,30 @@
 ## Original problem statement
 Stakeholder-directed "Read-First, Reuse-Always" build of the RMS Intelligence System on top of the `Akki-Executive-New-Arch` legacy substrate (now `/reference/akki-legacy/`). Phases G0 → G6 with strict doctrine: frozen contracts via Pydantic + JSON snapshots, all LLM calls through the SyniSense Shield chokepoint, spike vs production hours kept distinct, Rule-2 STOP if net-new code outgrows lifted-substrate lines.
 
-## Current gate status (2026-07-11 · **MANDATE-COMPLETE held · Registry Doctrine §8.1.d Machine-Readable Registry SELF-RATIFIED via §12 · Governance §14 admitted**)
+## Current gate status (2026-07-11 · **MANDATE-COMPLETE held · Registry Doctrine §8.1.a Standing Queries as CI SELF-RATIFIED via §12 · Governance §14 extended to N supplements**)
+- **Latest gate:** **Registry Doctrine §8.1.a Standing Queries as CI CLOSED + SELF-RATIFIED (§12) 2026-07-11** — atomic doc + code commit per Owner ruling SQ-E1 γ + cross-reference condition (PERMANENT). Third Registry Doctrine additive-surface landing.
+- **Landed artifacts:**
+  - `/app/docs/rulings/standing_queries_sq_e1.md` (Owner rulings verbatim carrier · 74 LoC · SHA `705dc3df…`) — pins the doctrinal framing **"provenance-paired facts applied reflexively"** as canonical.
+  - `/app/docs/registry/function_promise_registry_v0.2_supplement.md` (R4 reflexive sidecar · 10 SQ-G# rows per §14 · 51 LoC · SHA `25c5dd5a…`).
+  - `/app/backend/services/registry/queries.py` (query engine · 645 LoC · SHA `a615e279…`).
+  - `/app/tools/registry/run_queries.py` (CLI · 57 LoC · SHA `355fba80…`).
+  - `/app/backend/tests/registry/test_standing_queries_sq_g1_to_g10.py` (15 pytest cells · 322 LoC · SHA `016728ff…`).
+  - Six findings artifacts under `/app/docs/registry/queries/` — `q{1,2,3}_archaeological.md` + `q{1,2,3}_mechanical.md` (161 LoC total).
+  - `/app/docs/close_reports/standing_queries_as_ci.md` (close report).
+- **Source-of-truth byte-identity attest:**
+  - v0.md @ SHA `598a7ad4d326dd5c0fc003fe8091a52fd215fb63e76d5c04befd1aa4c25584b0` **byte-identical throughout**.
+  - v0.1_supplement @ SHA `2822f99e0c20da6f8d02c1f33233965c90df37aeb6939e711da8df2ebd991092` **byte-identical throughout**.
+  - consolidation_log_v0 @ SHA `2c60425599afbd59cb083cc8a391a94b717598a796a8028ca28ca4176ab26062` **byte-identical throughout**.
+- **Gate roster GREEN (10/10):** SQ-G1 Q1-mech · SQ-G2 Q2-mech · SQ-G3 Q3-mech · SQ-G-Baseline (11/11 Q2/Q3 arch carry-over + 8/8 CL entries) · **SQ-G-CrossRef PERMANENT** (2 legitimate overlaps annotated · zero phantoms in new-candidates) · SQ-G-NoRetirement · SQ-G-ReportLevel · SQ-G-Rung1 · SQ-G-Parity · SQ-G-DataBlind.
+- **Test triad:** **Pytest 1,231 passed + 1 skipped** (+15 new SQ cells · zero regression) · Jest 151/151 · Playwright chromium 55/55 · Parity 31/31 byte-identical.
+- **Band actual:** Owner enumeration = **1,236 raw LoC · WITHIN band `[650, 1,400]`** by 164 LoC below ceiling.
+- **D-10 self-audit:** D1–D7 all PASS (close §8).
+- **§12 auto-ratification criteria met:** (a) 10 gates GREEN · (b) SQ-E1 γ + cross-ref condition + baseline failure mode + band + §14 attested as applied · (c) no new Tier-1 mid-execution (mechanical candidates are deliverables per γ, not escalations) → close ratifies on own text.
+- **Governance §14 extended:** MRR-G3 round-trip now operates over `(v0.md + v0.1_supplement + v0.2_supplement) ↔ registry.yaml` as one set. Path-list drives the check.
+- **Registry Doctrine additive surface progress:** **3 / 8 items landed** (§3.5 Registry Population · §8.1.d Machine-Readable Registry · **§8.1.a Standing Queries as CI**).
+- **Next candidate in sequence (orchestrator-dispatched):** §8.1.b Sequencing harness (logical dependency: needs the queries just landed).
+
+## Prior gate status (2026-07-11 · Machine-Readable Registry §8.1.d SELF-RATIFIED via §12)
 - **Latest gate:** **Registry Doctrine §8.1.d Machine-Readable Registry CLOSED + SELF-RATIFIED (§12) 2026-07-11** — atomic doc + code commit per Owner rulings MRR-E1 α (+ source-SHA condition) + MRR-E2 γ + MRR-E3 β+addition + MRR-E4 β. First code-adjacent Registry Doctrine additive-surface landing.
 - **Landed artifacts:**
   - `/app/docs/rulings/machine_readable_registry_mrr_e1_to_e4.md` (Owner rulings verbatim carrier · 92 LoC · SHA `1e30cac7…`).
