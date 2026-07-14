@@ -192,3 +192,4 @@
 - [ ] **NEW at 7b-2:** Wizard session-ownership binding — lands with Phase 8 auth/key model (system-wide auth landing, not wizard-special).
 
 Outstanding-work register at docs/briefs/outstanding_work_and_gap_register_v1.md (SHA cce17296a70b46ae6e1a1c64be1e9e3f18ca3f86a716758899037cf31f4d63d4) — authoritative over any compacted context.
+Outstanding-work register amended to v1.1 at docs/briefs/outstanding_work_and_gap_register_v1.1.md (SHA 01016e2f679064613f6290ee4f50bdaa9874fb2e6b3c3973ccad53d3339f3224) — supersedes v1.0 as reading target; v1.0 preserved as immutable predecessor. Ruling: docs/rulings/outstanding_register_v1_amendment_2026-07-12.md (SHA 06f51bf67d3c3b34024a814fd5d00bc6eb62c749181ac8945cf45f56f309ba27).
