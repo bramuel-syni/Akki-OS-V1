@@ -3,6 +3,11 @@
 Owner rulings 2026-07-11 · MRR-E1 α · MRR-E4 β · governance §14:
 regeneration is automated ONLY. Machine form must never be hand-edited.
 
+G-2 · 2026-07-14 (docs/rulings/g2_rm_e1_to_e3_2026-07-14.md): after v1
+consolidation lands, v1 becomes the single active source; parse_v1_source()
+runs the machine form. v0.md + v0.1..v0.5 supplements remain readable +
+archaeological (path/SHA preserved in supplements metadata).
+
 Usage:
     python -m tools.registry.regenerate                # write to default path
     python -m tools.registry.regenerate --check        # regenerate + gates; no write
@@ -16,8 +21,10 @@ from pathlib import Path
 from backend.services.registry.parser import (
     REPO_ROOT,
     V0_PATH,
+    V1_PATH,
     SUPPLEMENT_PATHS,
     parse_source,
+    parse_v1_source,
     render_yaml,
 )
 from backend.services.registry.validator import run_all_gates
@@ -27,7 +34,11 @@ MACHINE_PATH = REPO_ROOT / "docs" / "registry" / "machine" / "registry.yaml"
 
 
 def regenerate(write: bool = True) -> str:
-    model = parse_source(V0_PATH, SUPPLEMENT_PATHS)
+    # G-2 · 2026-07-14: v1 is the single active source when present.
+    if V1_PATH.exists():
+        model = parse_v1_source(V1_PATH, SUPPLEMENT_PATHS)
+    else:
+        model = parse_source(V0_PATH, SUPPLEMENT_PATHS)
     yaml_text = render_yaml(model)
     if write:
         MACHINE_PATH.parent.mkdir(parents=True, exist_ok=True)

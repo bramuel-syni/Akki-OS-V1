@@ -40,9 +40,12 @@ from backend.services.registry.parser import (
 #   S5 · … Registered so nothing optimizes against it prematurely; explicitly not built;
 #          no function may cite S5 as its sole anchor without Owner ruling.
 #
-# Also enrolled: v0.md canonical short forms `S3.prove` (= `prove-end-to-end`)
-# and `S4.verify` (= `verify-receipt`), sanctioned equivalents observed in
-# source-of-truth. Both governance-amendment-only.
+# G-2 Registry Maintenance Turn (2026-07-14) · alias canonicalization:
+# Owner ruling `docs/rulings/g2_rm_e1_to_e3_2026-07-14.md` canonicalizes to
+# SHORT forms (`S3.prove`, `S4.verify`) matching v0.md §3 rows verbatim.
+# Legacy aliases (`S3.prove-end-to-end`, `S4.verify-receipt`) REJECTED —
+# validators MUST NOT accept the long forms as valid service_trace tokens.
+# Governance-amendment-only clause satisfied by that dispatch.
 # ---------------------------------------------------------------------------
 PART_II_JOURNEY_STEPS: frozenset[str] = frozenset({
     # S1
@@ -59,16 +62,23 @@ PART_II_JOURNEY_STEPS: frozenset[str] = frozenset({
     "S2.commit",
     # S3
     "S3.pick-run",
-    "S3.prove-end-to-end",
-    "S3.prove",  # v0.md canonical short form for prove-end-to-end
+    "S3.prove",  # canonical (G-2 · 2026-07-14 · legacy alias S3.prove-end-to-end retired)
     "S3.see-retention",
     "S3.change-rules-with-ceremony",
     # S4
     "S4.receive",
-    "S4.verify-receipt",
-    "S4.verify",  # v0.md canonical short form for verify-receipt
+    "S4.verify",  # canonical (G-2 · 2026-07-14 · legacy alias S4.verify-receipt retired)
     "S4.license",
     # S5 (registered, not built · no journey steps land as service_trace)
+})
+
+
+# G-2 · retired legacy aliases (post-canonicalization · governance-amendment-only).
+# Kept as a defensive negative-set for test assertions; NOT part of the
+# validator-accepted set. Any service_trace token in this set fails validation.
+_RETIRED_JOURNEY_STEP_ALIASES: frozenset[str] = frozenset({
+    "S3.prove-end-to-end",
+    "S4.verify-receipt",
 })
 
 # Governor taxonomy per Registry Doctrine v1.0 §3.1 verbatim.

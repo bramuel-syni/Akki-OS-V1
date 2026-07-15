@@ -7,8 +7,8 @@ schema_version: "machine_registry_v0"
 generated_by: "backend/services/registry/parser.py"
 
 source_of_truth:
-  path: docs/registry/function_promise_registry_v0.md
-  sha256: 598a7ad4d326dd5c0fc003fe8091a52fd215fb63e76d5c04befd1aa4c25584b0
+  path: docs/registry/function_promise_registry_v1.md
+  sha256: d6ad136f65426c0f86df2227a540aac8142b24dd0cbb015b71ef2991a7a6718a
 
 supplements:
   - path: docs/registry/function_promise_registry_v0.1_supplement.md
@@ -22,7 +22,7 @@ supplements:
   - path: docs/registry/function_promise_registry_v0.5_supplement.md
     sha256: d2d0c5f4c37dcbe525ff99a757687d7ae81446cd738719341e2b7884d4ac778f
 
-# Row totals: promises=47 · functions=139 · findings=11
+# Row totals: promises=47 · functions=147 · findings=12
 
 promises:
   - promise_id: PROM-S1-provable-envelope-inheritance
@@ -382,7 +382,7 @@ functions:
     dependencies: Contract-immutability at frozen envelope
     ladder_rung: 1 · Deterministic (AST walk)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.grounding_gate_answer_fluency
     governor: SyniSense
@@ -398,7 +398,7 @@ functions:
     dependencies: AF-G-Grounding-Fail (green) · AF-G-E1-No-Semantic-Scoring
     ladder_rung: 1 · Deterministic + rung-4 upstream synthesis
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.grounding_gate_opportunity_briefs
     governor: SyniSense
@@ -414,7 +414,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic + rung-4 upstream
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.fluency_synthesizer
     governor: SyniSense
@@ -430,7 +430,7 @@ functions:
     dependencies: ""
     ladder_rung: 4 · Frontier LLM (with mechanical fallback per AF-E2 amended)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.brief_synthesizer
     governor: SyniSense
@@ -446,7 +446,7 @@ functions:
     dependencies: ""
     ladder_rung: 4 · Frontier LLM (Registry-anchor grounding gate mechanically fallback)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.per_sentence_anchor_map
     governor: SyniSense
@@ -461,7 +461,7 @@ functions:
     dependencies: ""
     ladder_rung: 4 · Frontier LLM (structured output)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.data_blind_prompt_template
     governor: SyniSense
@@ -477,7 +477,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.advisory_marker_write_time_attach
     governor: SyniSense
@@ -493,7 +493,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.advisory_marker_render_time_visible
     governor: SyniSense (render surface class)
@@ -508,7 +508,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.class_honesty_governed_response_boundary
     governor: SyniSense
@@ -523,7 +523,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.fluency_mode_telemetry_sidecar
     governor: SyniSense
@@ -539,7 +539,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.brief_telemetry_sidecar
     governor: SyniSense
@@ -554,7 +554,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.mechanical_composer_baseline
     governor: SyniSense
@@ -569,7 +569,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.brief_id_namespace_boundary
     governor: SyniSense
@@ -584,7 +584,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.refusal_taxonomy_closed
     governor: SyniSense
@@ -600,7 +600,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.contracts.frozen_31
     governor: SyniSense
@@ -617,7 +617,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: synisense.contracts.parity_counter_shared
     governor: SyniSense
@@ -633,7 +633,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: northena.ledger.append_only_gate
     governor: Northena
@@ -648,7 +648,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: northena.artifact.outer_gate_receipt_v1
     governor: Northena
@@ -666,7 +666,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: northena.artifact.orphan_prohibition_as_b2
     governor: Northena
@@ -682,7 +682,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: northena.artifact.signature_bound
     governor: Northena
@@ -697,7 +697,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: northena.retention.held_class_no_delete
     governor: Northena
@@ -712,7 +712,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: northena.retention.seam3_authorized_deletion
     governor: Northena
@@ -728,7 +728,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic + type-level wall
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: northena.audit_trail.master_admin_immutable
     governor: Northena
@@ -743,7 +743,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.perception.pinned_model_provenance
     governor: Mtafiti
@@ -760,7 +760,7 @@ functions:
     dependencies: ""
     ladder_rung: 3 · Owned model (real workers) OR 1 · Deterministic (fixture)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.perception.mode_selection_evident_at_read
     governor: Mtafiti
@@ -776,7 +776,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.perception.first_contact_reverification
     governor: Mtafiti
@@ -791,7 +791,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.perception.raw_bytes_no_long_lived_ref
     governor: Mtafiti
@@ -807,7 +807,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.extraction_console.slice_scoped_intel
     governor: Mtafiti
@@ -823,7 +823,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic (render)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.extraction_console.registry_admin
     governor: Mtafiti
@@ -839,7 +839,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings:
       - finding_id: Q3-05
         tag: "[RULED · Q3-05-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §7 · candidate-direct-S1.scoped-key-cell · sub-coverage-via-Engineer-surface-real-but-indirect.]"
@@ -858,7 +858,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.census.sidecar_record_shape
     governor: Mtafiti
@@ -873,7 +873,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: mtafiti.census.no_fabricated_content_surface
     governor: Mtafiti
@@ -889,7 +889,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: targeta.commission_wizard.slice_freeze
     governor: Targeta
@@ -905,7 +905,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: targeta.commission_wizard.mandatory_fields
     governor: Targeta
@@ -920,7 +920,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: targeta.commission_wizard.shape_as_objective_prefill
     governor: Targeta
@@ -935,7 +935,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: targeta.commission_wizard.commit_review
     governor: Targeta
@@ -950,7 +950,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: targeta.transform_form.per_call_provisioning
     governor: Targeta
@@ -966,7 +966,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: targeta.transform_form.class_registry_additive
     governor: Targeta
@@ -982,7 +982,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: targeta.transform_form.frozen_wire_contract
     governor: Targeta
@@ -997,7 +997,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: solva.trace.receipt_resolution
     governor: Solva
@@ -1012,7 +1012,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: solva.trace.brief_id_exclusion
     governor: Solva
@@ -1028,7 +1028,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: solva.compliance.prove_one_run
     governor: Solva
@@ -1043,7 +1043,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: solva.compliance.retention_ui
     governor: Solva
@@ -1058,7 +1058,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: solva.compliance.rulebook_write
     governor: Solva
@@ -1073,7 +1073,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: solva.master_admin.change_a_rule
     governor: Solva
@@ -1088,7 +1088,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: solva.master_admin.audit_trail_view
     governor: Solva
@@ -1103,7 +1103,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings:
       - finding_id: Q3-06
         tag: "[RULED · Q3-06-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §8 · candidate-walk-side-audit-ledger-cell · view-side-covered · half-surface-tested-is-precisely-what-Q3-exists-to-show.]"
@@ -1121,7 +1121,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: ui.ask_console.console_nav_menu
     governor: "(named surface: UI Spec)"
@@ -1137,7 +1137,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: ui.opportunity_briefs.render_surface
     governor: "(named surface: UI Spec v2.2 §3.7)"
@@ -1154,7 +1154,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: ui.compliance_console.home
     governor: "(named surface: UI Spec Phase 8 B-5a)"
@@ -1169,7 +1169,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: ui.extraction_console.home
     governor: "(named surface: SM-E1)"
@@ -1186,7 +1186,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: ui.engineer.onboarding
     governor: "(named surface: 8-EXT dual-actor)"
@@ -1203,7 +1203,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: production_housing.dockerfile_multi_stage
     governor: "(named surface: PH-R1)"
@@ -1220,7 +1220,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: production_housing.env_findings_audit
     governor: "(named surface: PH-R1)"
@@ -1235,7 +1235,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: production_housing.healthz_liveness
     governor: "(named surface: PH-R1)"
@@ -1251,7 +1251,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: production_housing.readyz_readiness
     governor: "(named surface: PH-R1)"
@@ -1267,7 +1267,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: production_housing.build_info
     governor: "(named surface: PH-R1 · Owner enhancement 2026-07-10)"
@@ -1283,7 +1283,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: production_housing.llm_swap_seam_doc
     governor: "(named surface: PH-R1)"
@@ -1299,7 +1299,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: production_housing.promotion_audit
     governor: "(named surface: PH-R1 STAKED)"
@@ -1314,7 +1314,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.doctrine_v1_reference
     governor: "(named surface: Registry Doctrine)"
@@ -1329,7 +1329,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.reflexive_gates
     governor: "(named surface: Registry)"
@@ -1345,7 +1345,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: governance.tiered_ruling_model
     governor: "(named surface: governance)"
@@ -1360,7 +1360,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: governance.standing_rule_v3
     governor: "(named surface: governance)"
@@ -1375,7 +1375,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: governance.registry_doctrine_v1
     governor: "(named surface: governance §13)"
@@ -1391,7 +1391,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.g1_promise_set_completeness
     governor: "(named surface: Registry)"
@@ -1406,7 +1406,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.g2_function_attachment_completeness
     governor: "(named surface: Registry)"
@@ -1422,7 +1422,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.g3_schema_conformance
     governor: "(named surface: Registry)"
@@ -1437,7 +1437,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.g4_service_trace_integrity
     governor: "(named surface: Registry)"
@@ -1453,7 +1453,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.g5_q2_orphan_coverage
     governor: "(named surface: Registry)"
@@ -1468,7 +1468,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.g6_q3_gap_coverage
     governor: "(named surface: Registry)"
@@ -1484,7 +1484,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.promise_consolidation_judgment
     governor: "(named surface: Registry)"
@@ -1500,7 +1500,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic (token-overlap check)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.q2_q3_client_promise_escalation
     governor: "(named surface: Registry)"
@@ -1518,7 +1518,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.governor_scope_boundary_ruling
     governor: "(named surface: Registry)"
@@ -1534,7 +1534,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic (mandate-clause match)
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.ladder_rung_unknown_honesty
     governor: "(named surface: Registry)"
@@ -1550,7 +1550,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.gaux_parity_31_preserved
     governor: "(named surface: Registry · SyniSense)"
@@ -1566,7 +1566,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.gaux_data_blind
     governor: "(named surface: Registry)"
@@ -1582,7 +1582,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.gaux_docs_on_disk
     governor: "(named surface: Registry · Standing Rule v3)"
@@ -1597,7 +1597,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.population.gaux_doctrine_ref
     governor: "(named surface: Registry)"
@@ -1612,7 +1612,7 @@ functions:
     dependencies: ""
     ladder_rung: 1 · Deterministic
     owner: builder-Tier-3
-    source: v0.md
+    source: v1.md
     rulings: []
   - function_id: registry.machine_form.schema_conformance
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1627,7 +1627,7 @@ functions:
     dependencies: v0.md source · v0.1_supplement · schema formalization per doctrine §3.2
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.1_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.machine_form.vocabulary_lock
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1642,7 +1642,7 @@ functions:
     dependencies: v0.md §2 promises · doctrine Part II lines 32-36 verbatim · governance-amendment-only
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.1_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.machine_form.round_trip
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1657,7 +1657,7 @@ functions:
     dependencies: parser · MRR-E1 α direction
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.1_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.machine_form.findings_coverage
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1672,7 +1672,7 @@ functions:
     dependencies: "`rulings/registry_findings_01_to_11.md` · v0.md §4/§5/§7 · MRR-E2 γ ruling"
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.1_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.machine_form.parity_31
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1687,7 +1687,7 @@ functions:
     dependencies: "existing V1-G7 parity gate · `backend/contracts/` · `backend/tests/invariants/`"
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.1_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.machine_form.data_blind
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1702,7 +1702,7 @@ functions:
     dependencies: governance §8 data-blind posture · v0.md convention
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.1_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.machine_form.source_sha_pin
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1717,7 +1717,7 @@ functions:
     dependencies: MRR-E1 α condition · parser embed-sha logic
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.1_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.q1_mechanical_correctness
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1732,7 +1732,7 @@ functions:
     dependencies: machine form · function-row iteration
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.q2_mechanical_correctness
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1747,7 +1747,7 @@ functions:
     dependencies: PART_II_JOURNEY_STEPS · promises array
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.q3_mechanical_correctness
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1762,7 +1762,7 @@ functions:
     dependencies: PART_II_JOURNEY_STEPS · promises array
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.baseline_reproduction
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1777,7 +1777,7 @@ functions:
     dependencies: rulings/registry_findings_01_to_11.md · consolidation_log_v0.md · v0.md §4/§5
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.cross_reference
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1792,7 +1792,7 @@ functions:
     dependencies: archaeological-subjects index · mechanical scan output
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.no_retirement
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1807,7 +1807,7 @@ functions:
     dependencies: source-of-truth SHAs · run_queries CLI
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.report_level
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1822,7 +1822,7 @@ functions:
     dependencies: run_queries CLI · artifacts on disk
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.rung_1
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1837,7 +1837,7 @@ functions:
     dependencies: queries.py source
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.parity_31
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1852,7 +1852,7 @@ functions:
     dependencies: existing V1-G7 gate
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: registry.queries.data_blind
     governor: Named surfaces (Registry infrastructure · reflexive)
@@ -1867,7 +1867,7 @@ functions:
     dependencies: governance §8 data-blind posture
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.2_supplement.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.custody_chain_wired
     governor: Named surfaces (Shield chokepoint · reflexive)
@@ -1882,7 +1882,7 @@ functions:
     dependencies: shielded=True default + deidentifier + reidentifier module presence
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.fail_closed_deidentify_blocks_llm
     governor: Named surfaces (Shield chokepoint · reflexive)
@@ -1897,7 +1897,7 @@ functions:
     dependencies: ServiceUnavailable → mechanical arm
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: synisense.shield.fail_closed_reidentify_blocks_response
     governor: Named surfaces (Shield chokepoint · reflexive)
@@ -1912,7 +1912,7 @@ functions:
     dependencies: reidentifier presence + exception propagation
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_01_client_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -1927,7 +1927,7 @@ functions:
     dependencies: audit table row 1
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_03_audit_log_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -1942,7 +1942,7 @@ functions:
     dependencies: audit table row 3
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_04_canonical_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -1957,7 +1957,7 @@ functions:
     dependencies: audit table row 4
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_05_purpose_validator_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -1972,7 +1972,7 @@ functions:
     dependencies: audit table row 5
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_07_storage_service_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -1987,7 +1987,7 @@ functions:
     dependencies: audit table row 7
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_08_generate_fixture_incoming_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2002,7 +2002,7 @@ functions:
     dependencies: audit table row 8
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_09_generate_fixture_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2017,7 +2017,7 @@ functions:
     dependencies: audit table row 9
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_14_v1_harness_metrics_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2032,7 +2032,7 @@ functions:
     dependencies: audit table row 14
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_15_purge_attestation_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2047,7 +2047,7 @@ functions:
     dependencies: audit table row 15
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.row_16_telemetry_py
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2062,7 +2062,7 @@ functions:
     dependencies: audit table row 16
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.3_supplement.md
+    source: v1.md
     rulings: []
   - function_id: rms.frontend.trace_receipt_page_promoted_public_route
     governor: Named surfaces (Frontend UI · reflexive)
@@ -2077,7 +2077,7 @@ functions:
     dependencies: apiClient.traceLens + useApi hook + LedgerTable/ClassBadge/StatusBadge components
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: rms.frontend.legacy_shell_retired
     governor: Named surfaces (Frontend UI · reflexive)
@@ -2092,7 +2092,7 @@ functions:
     dependencies: frontend build clean · yarn build passes · legacy tree fully removed
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.frontend_landing_page
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2107,7 +2107,7 @@ functions:
     dependencies: G-10 ruling row
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.frontend_operator_dashboard
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2122,7 +2122,7 @@ functions:
     dependencies: G-10 ruling row
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.frontend_runs_page
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2137,7 +2137,7 @@ functions:
     dependencies: G-10 ruling row
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.frontend_run_detail_page
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2152,7 +2152,7 @@ functions:
     dependencies: G-10 ruling row
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.frontend_discipline_page
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2167,7 +2167,7 @@ functions:
     dependencies: G-10 ruling row
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.frontend_engines_page
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2182,7 +2182,7 @@ functions:
     dependencies: G-10 ruling row
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: deviation.shave.frontend_compose_page
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2197,7 +2197,7 @@ functions:
     dependencies: G-10 ruling row
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.4_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.data_source.structured_connector_base
     governor: Named surfaces (data_source)
@@ -2212,7 +2212,7 @@ functions:
     dependencies: contracts/five_rings.py unchanged
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.data_source.tabular_ingest_normalizes_units_zero_contract_mutation
     governor: Named surfaces (data_source · reflexive)
@@ -2227,7 +2227,7 @@ functions:
     dependencies: "five_rings@v0 shape"
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.data_source.license_class_pairs_at_ingest
     governor: Named surfaces (data_source)
@@ -2242,7 +2242,7 @@ functions:
     dependencies: outer_gate/receipt.py contract unchanged
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.frontend.s2_onboard_public_route
     governor: Named surfaces (frontend + backend)
@@ -2257,7 +2257,7 @@ functions:
     dependencies: tenant_entities.py write-path seat
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.backend.s2_onboard_receiver_persists_instance_scoped
     governor: Named surfaces (backend · reflexive)
@@ -2272,7 +2272,7 @@ functions:
     dependencies: scoped_accessor helpers
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.backend.s2_onboard_writes_five_seam_values_dual_control_adjacent
     governor: Named surfaces (backend)
@@ -2287,7 +2287,7 @@ functions:
     dependencies: northena_ledger append_only
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.backend.tenant_entities_populates_from_s2_onboard
     governor: Named surfaces (SyniSense)
@@ -2302,7 +2302,7 @@ functions:
     dependencies: Shield custody chain
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.instance.identity_from_config_only
     governor: Named surfaces (instance)
@@ -2317,7 +2317,7 @@ functions:
     dependencies: config/instances/
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.instance.seams_scoped_by_instance_id
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2332,7 +2332,7 @@ functions:
     dependencies: Motor client
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.instance.no_cross_instance_read_on_any_surface
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2347,7 +2347,7 @@ functions:
     dependencies: scoped_accessor.sfind
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.instance.backfill_migration_attests_zero_unscoped_rows
     governor: Named surfaces (backend · reflexive)
@@ -2362,7 +2362,7 @@ functions:
     dependencies: Motor client
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.instance.compound_index_ensures_scoped_read_performance
     governor: Named surfaces (backend · reflexive)
@@ -2377,7 +2377,7 @@ functions:
     dependencies: Motor create_index
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.instance.scoped_accessor_refuses_unscoped_query
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2392,7 +2392,7 @@ functions:
     dependencies: InstanceScopeError
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.detune.contract_tier_rms_tokens_preserved_class_c_historical_by_ruling
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2407,7 +2407,7 @@ functions:
     dependencies: Standing Rule v3
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.detune.http_headers_renamed_hard_cutover_2026_07_14
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2422,7 +2422,7 @@ functions:
     dependencies: STEP 1 guard AUTHORIZED
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.detune.env_vars_renamed_hard_cutover_2026_07_14
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2437,7 +2437,7 @@ functions:
     dependencies: STEP 1 guard AUTHORIZED
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.detune.db_name_preserved_config_resident
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2452,7 +2452,7 @@ functions:
     dependencies: live Mongo topology
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.detune.retired_token_grep_negative_gates_preserved_verbatim
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2467,7 +2467,7 @@ functions:
     dependencies: Standing Rule v3
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.detune.fixture_dir_renamed_org_agnostic
     governor: Named surfaces (Deviation-audit reflexive)
@@ -2482,7 +2482,7 @@ functions:
     dependencies: 47 test import updates
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.detune.branding_moved_to_instance_config
     governor: Named surfaces (frontend · reflexive)
@@ -2497,7 +2497,7 @@ functions:
     dependencies: apiClient.instanceConfig
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
     rulings: []
   - function_id: akki.ci.fixture_b_walks_onboard_to_answer_e2e
     governor: Named surfaces (CI · reflexive)
@@ -2512,7 +2512,127 @@ functions:
     dependencies: scoped_accessor + s2_onboard + structured_connector
     ladder_rung: 1 · Deterministic
     owner: Owner
-    source: function_promise_registry_v0.5_supplement.md
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.q4_standing_query_run
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest Q4 (behavioral-rule attestation) mechanical scan runs at every close: for every behavioral-rule row in v1, verify the row names its evidencing telemetry-or-gate, or mark UNVERIFIED. Two-file archaeological/mechanical pattern per SQ-E1 γ."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/queries.py::run_q4` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · ms class
+    dependencies: machine form · function-row iteration
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.q4_archaeological_byte_identical_reproduction
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest Q4 archaeological carry-over file reproduces byte-identical on successive runs (SQ-G-Baseline pattern extended). Fail-loud + HALT for Owner on any deviation.
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/tests/registry/test_q4_gates.py::test_q4_archaeological_reproduction_byte_identical`"
+    enforcement: byte-identity lock
+    cost: 1 cell · ms class
+    dependencies: q4_archaeological.md source
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.q4_mechanical_scan_reports_unverified_rules
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest Q4 mechanical scan enumerates every behavioral-rule row lacking a named telemetry/gate reference, emits `[CLIENT-PROMISE · UNVERIFIED · ESCALATE-AT-CLOSE]` flag per RM-E3 α when on a client-promise surface, and lands report-level artifact (NEVER build-failing)."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/services/registry/queries.py::scan_q4_behavioral_rules` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: v1.md rows · machine form
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.q4_cross_reference_condition_holds
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest zero Q4 mechanical entries whose subject overlaps an existing archaeological finding are emitted without `overlaps: <finding_id>` annotation. SQ-G-CrossRef pattern extended to Q4. Permanent discipline."
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/services/registry/queries.py::annotate_q4_mechanical_overlaps` + test cell"
+    enforcement: runtime check
+    cost: 1 cell · µs class
+    dependencies: archaeological-subjects index · Q4 mechanical output
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.v1_consolidated_body_preserves_supplement_row_texts_byte_identical
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest v1 body preserves every promise-text field from v0.md + v0.1..v0.5 supplements byte-identical (RM-E1 α HARD GATE). Any drift = HALT + logged in v1 §D-drift for future ruled amendment turn (never edited in-flight).
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_registry_v1_consolidation_byte_identity.py::test_v1_promise_text_byte_identical_to_source`"
+    enforcement: byte-identity lock
+    cost: 1 cell · ms class
+    dependencies: v0.md + supplement source files · v1.md target file
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.q4_parity_gate
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest Parity 31 held byte-identical during Q4 run (contracts/ + snapshots diff-empty). Q4 execution is doc-only + query-engine additive; contract touches forbidden.
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_q4_gates.py::test_q4_run_holds_parity_31`"
+    enforcement: fs-count + hash-diff
+    cost: 1 cell · µs class
+    dependencies: existing V1-G7 gate + SQ-G-Parity
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.q4_data_blind_gate
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: Built to attest zero secrets/keys/tokens in the Q4 artifacts (regex-negative on standard secret patterns; governance §8 data-blind extended to Q4).
+    promise:
+      - PROM-S3-audit-trail-immutable
+    service_trace:
+      - S3.prove
+    surface: "`backend/tests/registry/test_q4_gates.py::test_q4_artifacts_data_blind`"
+    enforcement: grep-negative
+    cost: 1 cell · µs class
+    dependencies: q4_archaeological.md + q4_mechanical.md
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
+    rulings: []
+  - function_id: akki.registry.part_ii_journey_steps_alias_canonicalization_completed
+    governor: Named surfaces (Registry infrastructure · reflexive)
+    mandate: "Built to attest `PART_II_JOURNEY_STEPS` frozenset in `backend/services/registry/validator.py` canonicalizes to short forms (`S3.prove`, `S4.verify`); legacy aliases (`S3.prove-end-to-end`, `S4.verify-receipt`) rejected. Governance-amendment-only clause per Owner ruling."
+    promise:
+      - PROM-S1-frozen-wire-contract
+    service_trace:
+      - S1.call
+    surface: "`backend/tests/registry/test_part_ii_journey_steps_alias_canonicalization.py::test_canonical_forms_present_legacy_aliases_rejected`"
+    enforcement: frozenset-membership check
+    cost: 1 cell · µs class
+    dependencies: validator.py PART_II_JOURNEY_STEPS constant
+    ladder_rung: 1 · Deterministic
+    owner: Owner
+    source: v1.md
     rulings: []
 
 findings:
@@ -2607,6 +2727,15 @@ findings:
     ruling_tag: "[RULED · Q3-06-RECORDED 2026-07-11 · rulings/registry_findings_01_to_11.md §8 · candidate-walk-side-audit-ledger-cell · view-side-covered · half-surface-tested-is-precisely-what-Q3-exists-to-show.]"
     ruling_ref: rulings/registry_findings_01_to_11.md §8
     owner_markers: []
+  - finding_id: Q3-02
+    subject: "`[RULED · Q3-02-OPEN-BY-DESIGN 2026-07-11 · [OWNER: future phase]]`"
+    source: "**`[RE-RULED · Q3-02-BUILT 2026-07-14 · MC-E3 α close]`**"
+    observation: "`docs/rulings/mc_e1_to_e6_2026-07-14.md` (Multi-Instance Capability MC-E3 α ruling)"
+    escalation_marker: ""
+    ruling_tag: ""
+    ruling_ref: ""
+    owner_markers:
+      - "[OWNER: future phase]"
 
 findings_supersession_ledger:
   - finding_id: Q2-01

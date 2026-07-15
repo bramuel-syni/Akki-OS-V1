@@ -23,6 +23,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 V0_PATH = REPO_ROOT / "docs" / "registry" / "function_promise_registry_v0.md"
+V1_PATH = REPO_ROOT / "docs" / "registry" / "function_promise_registry_v1.md"
 SUPPLEMENT_PATHS = [
     REPO_ROOT / "docs" / "registry" / "function_promise_registry_v0.1_supplement.md",
     REPO_ROOT / "docs" / "registry" / "function_promise_registry_v0.2_supplement.md",
@@ -375,6 +376,68 @@ def parse_source(v0_path: Path, supplements: list[Path]) -> RegistryModel:
         findings=findings,
         findings_supersession_ledger=ledger,
         source_of_truth={"path": str(v0_path.relative_to(REPO_ROOT)), "sha256": v0_sha},
+        supplements=supplements_meta,
+    )
+
+
+def parse_v1_source(v1_path: Path, archaeological_supplements: list[Path]) -> RegistryModel:
+    """G-2 · 2026-07-14: parse v1 consolidated Registry as the single active source.
+
+    v1 contains v0.md body + all supplement bodies + §Q3-Amendments +
+    §Conformance-Evidence-Registry + §M (Q4 R4 rows) — all consolidated by the
+    G-2 mechanical fold (RM-E1 α byte-carriage).
+
+    `archaeological_supplements` are recorded in metadata (`supplements` field)
+    for archaeological continuity but NOT re-parsed (their content is already
+    inside v1). This is the "v1 as single active source" posture per Owner
+    ruling `docs/rulings/g2_rm_e1_to_e3_2026-07-14.md`.
+    """
+    v1_text = v1_path.read_text(encoding="utf-8")
+    tables = _iter_pipe_tables(v1_text)
+
+    promises: list[Promise] = []
+    functions: list[Function] = []
+    for table in tables:
+        promises.extend(parse_promise_table(table))
+        functions.extend(parse_function_table(table, source_label="v1.md"))
+
+    # Deduplicate promises by promise_id (v1 body contains v0.md §2 verbatim;
+    # supplements do not restate promises so no dupes expected — defensive).
+    seen: set[str] = set()
+    deduped: list[Promise] = []
+    for p in promises:
+        if p.promise_id in seen:
+            continue
+        seen.add(p.promise_id)
+        deduped.append(p)
+    promises = deduped
+
+    # Deduplicate functions by function_id.
+    seen_fids: set[str] = set()
+    deduped_funcs: list[Function] = []
+    for f in functions:
+        if f.function_id in seen_fids:
+            continue
+        seen_fids.add(f.function_id)
+        deduped_funcs.append(f)
+    functions = deduped_funcs
+
+    findings = parse_findings_from_v0(v1_text)
+    attach_rulings_to_functions(functions, findings)
+    ledger = build_supersession_ledger(findings)
+
+    v1_sha = sha256_file(v1_path)
+    supplements_meta = [
+        {"path": str(p.relative_to(REPO_ROOT)), "sha256": sha256_file(p), "role": "archaeological"}
+        for p in archaeological_supplements
+    ]
+
+    return RegistryModel(
+        promises=promises,
+        functions=functions,
+        findings=findings,
+        findings_supersession_ledger=ledger,
+        source_of_truth={"path": str(v1_path.relative_to(REPO_ROOT)), "sha256": v1_sha},
         supplements=supplements_meta,
     )
 

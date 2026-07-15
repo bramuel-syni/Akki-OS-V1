@@ -305,11 +305,17 @@ def test_sq_g_data_blind():
 
 
 # ---------------------------------------------------------------------------
-# End-to-end: run_queries writes six files at expected paths
+# End-to-end: run_queries writes eight files at expected paths
+# (G-2 · 2026-07-14: Q4 standing query added — two new artifacts)
 # ---------------------------------------------------------------------------
 
 
-def test_run_queries_emits_six_artifacts(tmp_path, monkeypatch):
+def test_run_queries_emits_eight_artifacts(tmp_path, monkeypatch):
+    """run_queries emits Q1..Q4 archaeological + mechanical (8 files total).
+
+    Q4 landing per Owner ruling docs/rulings/g2_rm_e1_to_e3_2026-07-14.md
+    (RM-E3 α + advisory annotation).
+    """
     outputs = run_queries(write=False, run_timestamp=FIXED_TS)
     expected = {
         "q1_archaeological.md",
@@ -318,5 +324,7 @@ def test_run_queries_emits_six_artifacts(tmp_path, monkeypatch):
         "q2_mechanical.md",
         "q3_archaeological.md",
         "q3_mechanical.md",
+        "q4_archaeological.md",
+        "q4_mechanical.md",
     }
     assert set(outputs.keys()) == expected

@@ -64,7 +64,14 @@ def test_mrr_g2_vocabulary_lock(model):
 
 
 def test_mrr_g2_part_ii_journey_constant_present():
-    """Sanity: verifiy PART_II_JOURNEY_STEPS carries S1..S4 doctrine-Part-II steps."""
+    """Sanity: verifiy PART_II_JOURNEY_STEPS carries S1..S4 doctrine-Part-II steps.
+
+    G-2 · 2026-07-14 (docs/rulings/g2_rm_e1_to_e3_2026-07-14.md · RM-E3 α
+    canonicalization ruling): S3.prove and S4.verify are the canonical short
+    forms; legacy long-form aliases (S3.prove-end-to-end, S4.verify-receipt)
+    are RETIRED and MUST NOT be present in the frozenset (verified by
+    test_part_ii_journey_steps_alias_canonicalization).
+    """
     required_seed = {
         "S1.register",
         "S1.scoped-key",
@@ -77,11 +84,11 @@ def test_mrr_g2_part_ii_journey_constant_present():
         "S2.sample",
         "S2.commit",
         "S3.pick-run",
-        "S3.prove-end-to-end",
+        "S3.prove",   # G-2 canonical (was S3.prove-end-to-end pre-2026-07-14)
         "S3.see-retention",
         "S3.change-rules-with-ceremony",
         "S4.receive",
-        "S4.verify-receipt",
+        "S4.verify",  # G-2 canonical (was S4.verify-receipt pre-2026-07-14)
         "S4.license",
     }
     missing = required_seed - PART_II_JOURNEY_STEPS
