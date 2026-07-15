@@ -355,4 +355,10 @@ EAB Tier-1 Adoption Spec v1.0 in force as requirements canon; build phases EAB-1
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14. On-disk canonical per Standing Rule v3.*
+## §18 · Critic Seam Spec v1.0 in force (Owner, 2026-07-15)
+
+§18 · Critic Seam Spec v1.0 in force as requirements canon; QA-1..QA-6 bind behaviorally on landing; Tier-1 RV cells ride the EAB phases; the critic pass enters as its own phase through the standard loop; QA-2's format gate applies to all subsequent Stage A and close submissions.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15. On-disk canonical per Standing Rule v3.*
