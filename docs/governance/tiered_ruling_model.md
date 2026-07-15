@@ -349,4 +349,10 @@ D-11 · Canon before ruling — admitted to Registry Doctrine Part IV at `/app/d
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §16 admission 2026-07-14. On-disk canonical per Standing Rule v3.*
+## §17 · EAB Tier-1 Adoption Spec v1.0 in force (Owner, 2026-07-14)
+
+EAB Tier-1 Adoption Spec v1.0 in force as requirements canon; build phases EAB-1/2/3 dispatch on Owner-lane sequencing after G-2 and G-3 close; Part VII folds into Operating Values v1.1 at G-3; boundary clauses §1.2 binding on all future Stage As (batch-subordination · no-scheduler-beside-Targeta). Artifact at `docs/requirements/eab_tier1_adoption_spec_v1.md` SHA-256 `6f3052ea22536643af62251f5dac166dd6c33fc0247acb66f1abd7fdfa5ab738`.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §16 admission 2026-07-14 + §17 admission 2026-07-14. On-disk canonical per Standing Rule v3.*
