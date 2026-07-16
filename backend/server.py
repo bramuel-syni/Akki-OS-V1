@@ -177,6 +177,12 @@ app.include_router(health_router.router, prefix="/api")
 from routers import system_info as system_info_router  # noqa: E402
 app.include_router(system_info_router.router, prefix="/api")
 
+# Owner Ops · Docs bundle download (2026-02-14). Read-only tar.gz snapshot
+# of /app/docs/ served from /app/backend/data/bundles/. Zero mutation of
+# docs/ or contracts/. No secrets in payload.
+from routers import docs_bundle as docs_bundle_router  # noqa: E402
+app.include_router(docs_bundle_router.router, prefix="/api")
+
 
 @app.on_event("startup")
 async def _startup() -> None:
