@@ -33,7 +33,14 @@ class EstateSource(BaseModel):
 
 
 class SeamValues(BaseModel):
-    """The five §6 seam values, per-instance."""
+    """The §6 seam values, per-instance.
+
+    G-3 (2026-07-15 · Owner ruling `docs/rulings/g3_operating_values_v1_1_2026-07-15.md`):
+    additive extension to a SIXTH field per G3-E1 α (non-breaking, no new contract
+    version, no Parity 31 contact — class NOT in `backend/contracts/`).
+    Sixth field: `quarantine_systemic_halt_threshold` (F2 · 2% DEFAULT per-instance ·
+    S2.onboard-set per MC-E3 α · dual-control on change per §6).
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -44,6 +51,21 @@ class SeamValues(BaseModel):
     objection_escalation_days: int = Field(default=7)
     suspension_re_review_days: int = Field(default=30)
     outer_gate_manual_review_threshold: str = Field(default=">10000_units_or_1gb_per_artifact")
+
+    # G-3 additive · sixth seam value · Op. Values v1.1 §6.6 · EAB v1.1 F2
+    # Value stored as fractional rate (0.02 = 2%); range-checked [0,1].
+    # DEFAULT = 0.02 per Owner ruling; dual-control-on-change per §6 discipline.
+    quarantine_systemic_halt_threshold: float = Field(
+        default=0.02,
+        ge=0.0,
+        le=1.0,
+        description=(
+            "F2 sixth seam value · 2% DEFAULT · per-instance quarantine-rate "
+            "threshold above which run halts systemically (per EAB v1.1 R-A4.2). "
+            "Set at S2.onboard per MC-E3 α initial-set/ledger semantics; "
+            "dual-control on change per §6."
+        ),
+    )
 
 
 class OnboardContextV0(BaseModel):

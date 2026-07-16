@@ -341,6 +341,8 @@ Ruling ref: `/app/docs/rulings/machine_readable_registry_mrr_e1_to_e4.md`.
 
 Operating Values v1.0 in force; consumed by the de-risking sequence, 9.2b deployment, S2.onboard/S4 phases, and BM-C operations; DEFAULT-class values revise via dual-control config swap without reopening the artifact; artifact at `docs/requirements/operating_values_v1.md` SHA-256 `a6c4a455175ef37dc71362aea2e41b2ce406baaf9a1c77b3f0f1326e0aa608ee`.
 
+**§15.1 · Amendment (Owner, 2026-07-15) — Operating Values v1.1 sibling landing:** v1.1 sibling in force alongside v1.0 (v1.0 preserved byte-identical per Standing Rule v3). v1.1 lands Part VII absorption (F1/F2/F3), conformance corrections (spaCy NER · diarization triple · Solva Bayesian seat), sixth seam value (§6.6 quarantine systemic-halt threshold · 2% DEFAULT · per-instance · S2.onboard-set per MC-E3 α), and TQ §5.1 speech values + TQ §6 MOAC absorbed by citation (zero verbatim duplication). Artifact at `docs/requirements/operating_values_v1_1.md` SHA-256 `3a3cff3be0cb59d28cd06a7e25123155d6984323f78e386687ee05c20f2d9c5b`. Ruling: `docs/rulings/g3_operating_values_v1_1_2026-07-15.md`.
+
 ═══════════════════════════════════════════════════════════════════
 
 ## §16 · D-11 admitted to Registry Doctrine Part IV (Owner, 2026-07-14)
@@ -361,4 +363,10 @@ EAB Tier-1 Adoption Spec v1.0 in force as requirements canon; build phases EAB-1
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15. On-disk canonical per Standing Rule v3.*
+## §19 · Transformation Quality & Output Acceptance Spec v1.0 in force (Owner, 2026-07-15)
+
+§19 · Transformation Quality & Output Acceptance Spec v1.0 in force as requirements canon for transformation quality; TQ-1..TQ-6 bind behaviorally on landing; §4–§5 Quality Matrix rows activate per census (TQ-1); §6 MOAC (M-a..M-f) binds as the output-side twin of Op. Values §2 C1–C4 acquisition criteria; §7 production QA machinery is the Critic Seam's Part B (same three tiers, second domain); QA-7 custody boundary applies. Op. Values v1.1 absorbs §5.1 speech values and §6 MOAC by citation; Critic Seam v1.1 sibling carries the one-line Part B pointer to §7; de-risking spec re-scoped by pointer as §5.1's instantiation. Artifact at `docs/requirements/transformation_quality_spec_v1.md` SHA-256 `78af90cf64409364c9b9d97bbc2b7f0507f6b824ee1bc41bd610a79f1a44967e`.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §15.1 amendment 2026-07-15 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15 + §19 admission 2026-07-15. On-disk canonical per Standing Rule v3.*

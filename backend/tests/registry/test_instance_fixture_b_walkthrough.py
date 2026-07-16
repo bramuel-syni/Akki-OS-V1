@@ -138,7 +138,8 @@ async def test_s2_onboard_fixture_b_walkthrough(db_client):
         assert body["outcome"] == "onboarded"
         assert body["instance_id"] == "instance_fixture_b"
         assert body["initial_set"] is True
-        assert body["seam_values_ledgered"] == 5
+        assert body["seam_values_ledgered"] == 6  # G-3 · 5→6 additive per Op. Values v1.1 §6.6
+        assert body["total_initial_set_rows"] == 8  # 6 seams + estate_inventory + org_vocabulary_seat
 
         # STEP B: read-back
         resp2 = await client.get("/api/instance/instance_fixture_b/onboard")

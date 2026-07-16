@@ -88,7 +88,7 @@ async def s2_onboard(
     doc["at"] = datetime.now(timezone.utc).isoformat()
     await db[ONBOARD_COLLECTION].insert_one(doc)
 
-    # Initial-set ledger rows for each seam value (5 seams).
+    # Initial-set ledger rows for each seam value (6 seams post-G-3 · sixth added).
     submitted_by = payload.submitted_by or "unknown_operator"
     for k in [
         "deletion_consequence_classes",
@@ -96,6 +96,7 @@ async def s2_onboard(
         "objection_escalation_days",
         "suspension_re_review_days",
         "outer_gate_manual_review_threshold",
+        "quarantine_systemic_halt_threshold",  # G-3 · sixth seam value · Op. Values v1.1 §6.6
     ]:
         await _append_initial_set_ledger_row(
             db, instance_id, k, getattr(payload.seam_values, k), submitted_by
@@ -114,12 +115,53 @@ async def s2_onboard(
         "outcome": "onboarded",
         "instance_id": instance_id,
         "initial_set": True,
-        "seam_values_ledgered": 5,
+        "seam_values_ledgered": 6,  # G-3 · 5→6 additive per Op. Values v1.1 §6.6
+        "total_initial_set_rows": 8,  # 6 seams + estate_inventory + org_vocabulary_seat
         "estate_source_count": len(payload.estate_inventory),
         "org_vocabulary_categories": list(payload.org_vocabulary.keys()),
         "onboard_version": payload.onboard_version,
         "at": doc["at"],
     }
+
+
+async def backfill_g3_sixth_seam_value(db, instance_id: str) -> Dict[str, Any]:
+    """G-3 backfill (Owner ruling `docs/rulings/g3_operating_values_v1_1_2026-07-15.md`
+    constraint (a)): for an existing instance whose onboard context predates the
+    sixth seam value (`quarantine_systemic_halt_threshold`), write an `initial_set`
+    ledger row for the sixth field with the 2% DEFAULT per MC-E3 α semantics.
+    Idempotent: skips if the initial_set row already exists for this instance +
+    seam_key pair.
+    """
+    seam_key = "quarantine_systemic_halt_threshold"
+    default_value = 0.02  # 2% DEFAULT per Op. Values v1.1 §6.6 + EAB v1.1 F2
+
+    existing = await db["northena_ledger"].find_one({
+        "instance_id": instance_id,
+        "seam_key": seam_key,
+        "initial_set": True,
+    })
+    if existing is not None:
+        return {"outcome": "already_backfilled", "instance_id": instance_id, "seam_key": seam_key}
+
+    await _append_initial_set_ledger_row(
+        db, instance_id, seam_key, default_value, submitted_by="g3_backfill_2026_07_15"
+    )
+    return {
+        "outcome": "backfilled",
+        "instance_id": instance_id,
+        "seam_key": seam_key,
+        "value": default_value,
+        "authority": "docs/rulings/g3_operating_values_v1_1_2026-07-15.md · MC-E3 α semantics",
+    }
+
+
+@router.post("/{instance_id}/backfill_g3_sixth_seam_value")
+async def s2_onboard_backfill_g3(instance_id: str) -> Dict[str, Any]:
+    """G-3 backfill endpoint · idempotent · writes initial_set ledger row for
+    the sixth seam value on pre-G-3 onboarded instances. Owner ruling
+    `docs/rulings/g3_operating_values_v1_1_2026-07-15.md` constraint (a)."""
+    db = _db()
+    return await backfill_g3_sixth_seam_value(db, instance_id)
 
 
 @router.get("/{instance_id}/onboard")
