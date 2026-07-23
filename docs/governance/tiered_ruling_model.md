@@ -381,4 +381,10 @@ EAB Tier-1 Adoption Spec v1.0 in force as requirements canon; build phases EAB-1
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §15.1 amendment 2026-07-15 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15 + §19 admission 2026-07-15 + §20 admission 2026-07-15 + §21 admission 2026-07-15. On-disk canonical per Standing Rule v3.*
+## §22 · Product & System Document v3.0 admitted as descriptive canon (Owner, 2026-07-15)
+
+§22 · Product & System Document v3.0 is descriptive canon for product, commercial, and diligence readers. It is subordinate to the Product & Engineering Specification and the engine mandates on every technical point; where it and engineering canon differ, engineering canon governs and the divergence is a finding.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §15.1 amendment 2026-07-15 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15 + §19 admission 2026-07-15 + §20 admission 2026-07-15 + §21 admission 2026-07-15 + §22 admission 2026-07-15. On-disk canonical per Standing Rule v3.*

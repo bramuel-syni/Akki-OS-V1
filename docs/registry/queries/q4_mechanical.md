@@ -30,7 +30,7 @@ THIS ARTIFACT IS REPORT-LEVEL · NEVER BUILD-FAILING · RETIREMENT/MERGE REMAINS
 | `targeta.transform_form.class_registry_additive` | `PROM-tf-class-with-claim-invariant` | yes | [CLIENT-PROMISE · UNVERIFIED · ESCALATE-AT-CLOSE] | — | enforcement field 'Versioned-registry load + additive-only gate' lacks testable telemetry/gate reference |
 | `governance.tiered_ruling_model` | `PROM-S3-governance-doc-on-disk` | yes | [CLIENT-PROMISE · UNVERIFIED · ESCALATE-AT-CLOSE] | — | enforcement field 'On-disk canonical + append-only amendments' lacks testable telemetry/gate reference |
 | `governance.standing_rule_v3` | `PROM-S3-governance-doc-on-disk` | yes | [CLIENT-PROMISE · UNVERIFIED · ESCALATE-AT-CLOSE] | — | enforcement field 'Standing convention + reply-body SHA discipline' lacks testable telemetry/gate reference |
-| `governance.registry_doctrine_v1` | `PROM-S3-governance-doc-on-disk`, `PROM-registry-rent-paying` | yes | [CLIENT-PROMISE · UNVERIFIED · ESCALATE-AT-CLOSE] | — | enforcement field 'On-disk canonical + doctrine-ratification' lacks testable telemetry/gate reference |
+| `governance.registry_doctrine_v1` | `PROM-registry-rent-paying`, `PROM-S3-governance-doc-on-disk` | yes | [CLIENT-PROMISE · UNVERIFIED · ESCALATE-AT-CLOSE] | — | enforcement field 'On-disk canonical + doctrine-ratification' lacks testable telemetry/gate reference |
 | `registry.population.gaux_docs_on_disk` | `PROM-S3-governance-doc-on-disk` | yes | [CLIENT-PROMISE · UNVERIFIED · ESCALATE-AT-CLOSE] | remedy-candidate: P4 | enforcement field 'file-existence' lacks testable telemetry/gate reference |
 
 ## Overlaps with archaeological subjects (SQ-E1 γ)
