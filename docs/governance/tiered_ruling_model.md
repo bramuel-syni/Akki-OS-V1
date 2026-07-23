@@ -369,4 +369,16 @@ EAB Tier-1 Adoption Spec v1.0 in force as requirements canon; build phases EAB-1
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §15.1 amendment 2026-07-15 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15 + §19 admission 2026-07-15. On-disk canonical per Standing Rule v3.*
+## §20 · Training & Optimization Techniques Specification v1.0 in force (Owner, 2026-07-15)
+
+§20 · Training & Optimization Techniques Specification v1.0 (docs/requirements/training_techniques_spec_v1.md) is in force as requirements canon. It governs the training-recipe seat (training_params@v0), optimizer selection (two-arm measured comparison, Owner-ruled verdicts), ensemble-critic deployment (repair-first, findings-only, genuine independence), and cascade offload (trigger-only, double-pay kill metric). R4 rows ride carrying phases per its §6: T-1/T-2 with the first training phase, T-3 with the Critic-pass phase, T-4 only on trigger.
+
+═══════════════════════════════════════════════════════════════════
+
+## §21 · S1 Memory Model & Integration Wizard Spec v1.0 in force (Owner, 2026-07-15)
+
+§21 · S1 Memory Model & Integration Wizard Spec v1.0 in force as requirements canon on landing; carrying phase UI-2 per the ratified sequence — R4 rows, the app_contributed quality-matrix row, plane-lifecycle cells, and wizard surface land with UI-2's execution; this landing satisfies the sequence's owner-side dependency ahead of UI-2's Stage A.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §15.1 amendment 2026-07-15 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15 + §19 admission 2026-07-15 + §20 admission 2026-07-15 + §21 admission 2026-07-15. On-disk canonical per Standing Rule v3.*

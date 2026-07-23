@@ -72,7 +72,7 @@
 | G-13 · Registry Doctrine §8.1 completion | defined-undispatched | `docs/governance/registry_doctrine_v1.md` §8.1 · `b42317239067d303` (post-D-12) | Remaining 5 of 8 additive surfaces: sequencing harness (execution) · worker context-harnessing · far-endpoint mandates-as-specs · Instance Replication Playbook · Commercial Thesis. ITEM 7 sequence position 5 (single phase per Owner ratification). |
 | UI-1 · Extraction Console to Designer Brief depth | defined-undispatched | `docs/mandates/RMS_UI_Specification_v2_2.md` §2.1 · `d681c6cd399dd569` + surface_journey_map (this dispatch) | Owner-verbatim: "Extraction Console to Designer Brief depth". ITEM 7 sequence position 6. |
 | UI-2 · Integration Console + S1 memory plane | defined-undispatched | `docs/mandates/RMS_UI_Specification_v2_2.md` §2.1 · `d681c6cd399dd569` + surface_journey_map (this dispatch) | Carries the S1 Memory Model & Integration Wizard Spec. ITEM 7 sequence position 7. |
-| S1 Memory Model & Integration Wizard Spec | defined-undispatched | *owner-side landing · target: `docs/requirements/` at Owner-authored dispatch time* | **Owner-side spec landing scheduled before UI-2's Stage A** (per Owner-verbatim "scheduled, not deferred"). Precondition for UI-2. |
+| S1 Memory Model & Integration Wizard Spec | **CLEARED 2026-07-15** (owner-side dependency for UI-2 discharged; not a phase closure — Part A figure unchanged) | `docs/requirements/s1_memory_model_spec_v1.md` · SHA-16 `0866d5ca6460da9d` · governance pointer at `tiered_ruling_model.md` §21 · MRR-verbatim conversion from Owner attachment (SHA `a6df697ab1830efe…`) · token-identity MATCH. | **Owner-side spec landing was scheduled before UI-2's Stage A** (per Owner-verbatim "scheduled, not deferred"). Precondition for UI-2 — **now cleared**. Doc landing, not a phase closure — denominator unchanged. Full row-lifecycle carried in §6 Part B row B-5. |
 
 ---
 
@@ -102,7 +102,7 @@ Verbatim Owner text from Gap-Closure + Sequence Ratification dispatch:
 4. **Critic-pass phase** — Tier-2 harness · CR-7 checklist amendment · CIF manifest schema fields and archive ledger ride as cells
 5. **G-13** — Registry Doctrine §8.1 additive-surface completion (remaining 5 of 8, single phase)
 6. **UI-1** — Extraction Console to Designer Brief depth
-7. **UI-2** — Integration Console + S1 memory plane (S1 Memory Model & Integration Wizard Spec lands owner-side before UI-2 Stage A · scheduled, not deferred)
+7. **UI-2** — Integration Console + S1 memory plane (S1 Memory Model & Integration Wizard Spec lands owner-side before UI-2 Stage A · scheduled, not deferred). **Owner-side dependency: CLEARED 2026-07-15** — S1 Memory Model Spec v1.0 landed at `docs/requirements/s1_memory_model_spec_v1.md` (SHA `0866d5ca6460da9d0f238cbac32a46182e2d2f16ba28d297c60c03bf7c899a95` · 121 LoC · governance pointer at `tiered_ruling_model.md` §21).
 
 **Engine-seats note:** Solva Probability weighting · Targeta yield layer · rung-3 owned text models remain designed-empty per outstanding-work register v1.5 §5. Per D-12, seats fill at their evidence events, not through staged proving — the engine seats are **not gaps** and do not enter this ledger's denominator.
 
@@ -110,4 +110,34 @@ Verbatim Owner text from Gap-Closure + Sequence Ratification dispatch:
 
 ---
 
-*End of phase ledger v1.0 · 2026-07-15 · maintained at each close · Owner-ruled option b · under D-12.*
+## §6 · PART B — Owner-side deliverables (tracked, not divided-in)
+
+Owner-verbatim (2026-07-15): *"Phase ledger gains Part B — owner-side deliverables, same states and per-close maintenance as Part A. ... Completion figure remains Part A-only; Part B is tracked, not divided-in."*
+
+**States:** `closed` / `open` / `defined-undispatched` / `defined-blocked-on-<trigger>` (sub-state · precedent language) / external annotation permitted at row level.
+
+**Per-close-maintenance rule:** every future close report updates BOTH Part A and Part B rows as their states change. Part B row transitions are ledger events; row additions are ledger events.
+
+| # | Row | State | Notes |
+|---:|---|---|---|
+| B-1 | EAB-02 Part XI disposition | open | Owner-side ruling required on EAB-02 Part XI scope/content before EAB-2 Tier-1 relay. |
+| B-2 | Moat ruling | open | Owner-side ruling; blocks B-3 and B-4. |
+| B-3 | Product Brief rebuild | defined-blocked-on-moat | Blocked on B-2 moat ruling. |
+| B-4 | Product Document rebuild | defined-blocked-on-moat | Blocked on B-2 moat ruling. |
+| B-5 | S1 Memory Model & Integration Wizard Spec landing | **CLEARED 2026-07-15** | Landed at `docs/requirements/s1_memory_model_spec_v1.md` · SHA `0866d5ca6460da9d0f238cbac32a46182e2d2f16ba28d297c60c03bf7c899a95` · governance pointer at `tiered_ruling_model.md` §21 · Part A UI-2 dependency also marked CLEARED. |
+| B-6 | Designer walkthrough OD-3 | open · external | Owner-side external work; not builder-executable. |
+| B-7 | OD-4 disposition | open | Owner-side ruling required. |
+| B-8 | OD-5 disposition | open | Owner-side ruling required. |
+| B-9 | G-9 disposition | open | Owner-side ruling required. |
+| B-10 | AISCA VM creation | external | External infrastructure work; not builder-executable. |
+
+**Part B structural discipline attest:**
+
+- Part A completion figure **REMAINS 37/46 = 80.4%** (verified: closed 37 · open 1 · defined-undispatched 8 · denominator 46 · unchanged this turn).
+- Part B is TRACKED, not divided-in. **No Part B figure is computed.** No combined figure is computed. Part A and Part B are structurally separate.
+- Row additions to Part B do not affect Part A's denominator.
+- Per-close-maintenance applies to Part B rows going forward.
+
+---
+
+*End of phase ledger v1.0 · 2026-07-15 · Part A maintained at each close · Part B maintained at each close · Owner-ruled option b (Part A) + Owner-ruled Part B (2026-07-15) · under D-12.*
