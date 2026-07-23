@@ -53,19 +53,22 @@
 
 ---
 
-## §2 · Open phases (Stage A landed · close absent · N=1)
+## §2 · Open phases (Stage A landed · close absent · N=2)
 
 | Phase name | Class | Evidence path + SHA-16 | Notes |
 |---|---|---|---|
 | sequencing_harness | open | `docs/stage_a_proposals/sequencing_harness_stage_a.md` · `95f9274edad69d3a` | Stage A landed; no matching close report; Registry Doctrine §5.2 harness spec landed, execution phase pending. |
+| EAB-1 | open | `docs/stage_a_proposals/eab_1_stage_a.md` · `d5231d93c303ce2b` · 265 LoC | Stage A landed 2026-07-15 under D-9 auto-proceed. Sequence position 1 of 7. Tier-1 escalation E1 pending Owner ruling; E2 downgraded to Tier-3. Row also carried in §3 defined-undispatched schema for row-lifecycle traceability (see note). |
+
+*Row-schema note (Owner-ruled 2026-07-15 following EAB-1 Stage A landing):* EAB-1 physically appears in both §2 (open) and §3 (defined-undispatched with row-lifecycle annotation) so the ratified 7-phase sequence stays enumerable in §3; the terminal-figure denominator counts EAB-1 in §2 only (as `open`), not double-counted. Same schema convention will apply to EAB-2 · EAB-3 · Critic-pass · G-13 · UI-1 · UI-2 upon their Stage A landings.
 
 ---
 
-## §3 · Defined-undispatched phases (named in ratified sequence · N=8)
+## §3 · Defined-undispatched phases (named in ratified sequence · N=7 · row-lifecycle carrier for sequence traceability)
 
 | Phase name | Class | Evidence path + SHA-16 | Notes |
 |---|---|---|---|
-| EAB-1 | defined-undispatched | `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | Dispatch-only next; ITEM 7 sequence position 1. Tier-1 RV cells ride at Critic Seam §18. |
+| EAB-1 | **open** (Stage A landed 2026-07-15 · close absent) | `docs/stage_a_proposals/eab_1_stage_a.md` · SHA-16 `d5231d93c303ce2b` · 265 LoC · Registry v1 (`d6ad136f65426c0f`) + EAB v1.1 (`312427c672e9db8a`) cited | Stage A landed under D-9 auto-proceed following S1 Memory Model atomic close. Sequence position 1 of 7. Tier-1 relays open for Owner ruling: E1 · occurrence-unit locator vocabulary. Downstream close event triggers next D-9 evaluation for EAB-2 auto-proceed. |
 | EAB-2 | defined-undispatched | `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | Parity 31→32 seal event via Service1Refusal@v1 at Tier-1 relay; ITEM 7 sequence position 2. |
 | EAB-3 | defined-undispatched | `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | ITEM 7 sequence position 3. |
 | Critic-pass | defined-undispatched | `docs/requirements/critic_seam_spec_v1.md` · `110a0d0448f66f44`; `..._v1_1.md` · `ad4529b9462cf789`; TQ §7 pointer via `..._v1.md` · `78af90cf64409364` | Tier-2 harness · CR-7 checklist amendment · CIF §6 A5 rubric cell · CIF manifest schema fields and archive ledger ride as cells; ITEM 7 sequence position 4. |
@@ -79,9 +82,9 @@
 ## §4 · Terminal figure
 
 - **Closed:** 37
-- **Open:** 1
-- **Defined-undispatched:** 8
-- **Denominator:** 37 + 1 + 8 = **46**
+- **Open:** 2 (`sequencing_harness` + `EAB-1` Stage A landed 2026-07-15)
+- **Defined-undispatched:** 7 (EAB-2, EAB-3, Critic-pass, G-13, UI-1, UI-2, S1-Memory-Model — the last marked CLEARED in §3 row lifecycle as owner-side dependency, retained in row-count denominator per prior turn's schema)
+- **Denominator:** 37 + 2 + 7 = **46**
 - **Figure:** `closed / (closed + open + defined-undispatched) = 37 / 46 = 80.4%`
 
 Denominator growth is information, never a defect (per Owner-verbatim standing rule).
@@ -133,7 +136,7 @@ Owner-verbatim (2026-07-15): *"Phase ledger gains Part B — owner-side delivera
 
 **Part B structural discipline attest:**
 
-- Part A completion figure **REMAINS 37/46 = 80.4%** (verified: closed 37 · open 1 · defined-undispatched 8 · denominator 46 · unchanged this turn).
+- Part A completion figure **REMAINS 37/46 = 80.4%** (verified: closed 37 · open 2 · defined-undispatched 7 · denominator 46 · figure unchanged; EAB-1 transitioned §3 → §2 same-turn under D-9 auto-proceed with no denominator delta).
 - Part B is TRACKED, not divided-in. **No Part B figure is computed.** No combined figure is computed. Part A and Part B are structurally separate.
 - Row additions to Part B do not affect Part A's denominator.
 - Per-close-maintenance applies to Part B rows going forward.
