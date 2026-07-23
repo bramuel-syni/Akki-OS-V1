@@ -15,5 +15,56 @@
       "hf_snapshot_revision": "d90ca5fe260221311c53c58e660288d3deb8d356",
       "purpose": "CI CPU-mode ASR fixture model. NOT for production use. Production model lands additively at 9.2b via v0 -> v1 registry bump per Owner ruling."
     }
+  },
+  "c1_candidates": {
+    "authority_source": "Owner ruling 2026-07-15 (Gap-Closure + Sequence Ratification dispatch · ITEM 6). C1-only candidate rows for modality symmetry. License verification only — zero download, zero compute. Class rows register a candidate class with known parameters; specific candidates for open classes are named at first census activation. Under D-12: this is spec landing, not staged proving.",
+    "qwen3_family": {
+      "class": "C1",
+      "family": "Qwen3 / Qwen3.5 (Alibaba Cloud)",
+      "modality": "text",
+      "role": "text_generation_candidate",
+      "license": "Apache-2.0",
+      "license_verification_url": "https://huggingface.co/Qwen",
+      "license_verification_note": "Apache-2.0 disclosed on Qwen model cards at Hugging Face (Alibaba Cloud release convention for Qwen2/Qwen2.5 family; Qwen3/3.5 family registration pins the family's canonical license; per-member checksum pins at first census activation).",
+      "checksum_policy": "SHA-256 pinned per member at acquisition; canonical publisher is the official HF model card weights.sha256 disclosure.",
+      "specific_members": "Named at first census activation (Owner-ruled)",
+      "purpose": "C1 candidate row for the Qwen3/3.5 family; parameters known; no download, no compute."
+    },
+    "llama_family": {
+      "class": "C1",
+      "family": "Llama (Meta)",
+      "modality": "text",
+      "role": "text_generation_comparison_arm",
+      "license": "verify_at_acquisition",
+      "license_verification_url": "https://ai.meta.com/llama/license/",
+      "license_verification_note": "Llama license has commercial-use gates that require attestation at acquisition (per Owner-verbatim). No checksum pin at class registration; license verification and checksum pin both execute at acquisition-time by the Owner-dispatched acquisition harness. Registration here is the modality-symmetry marker only.",
+      "checksum_policy": "Deferred to acquisition-time (verify_at_acquisition flag supersedes checksum pin per Owner ruling).",
+      "specific_members": "Named at first census activation (Owner-ruled)",
+      "purpose": "C1 candidate row as text-generation comparison arm to Qwen. Modality-symmetric registration only."
+    },
+    "document_ocr_class": {
+      "class": "C1",
+      "family": "document_ocr_candidate_class",
+      "modality": "document",
+      "role": "document_ocr_candidate",
+      "license": "per_member",
+      "license_verification_url": null,
+      "license_verification_note": "Class-level row; specific candidates named at first census activation. License verification occurs per member at that time.",
+      "checksum_policy": "SHA-256 pinned per member at acquisition.",
+      "specific_members": "Named at first census activation (Owner-ruled)",
+      "purpose": "C1 candidate class registration for document/OCR modality. Modality-symmetric marker; specific model selection deferred to census-driven acquisition."
+    },
+    "vision_class": {
+      "class": "C1",
+      "family": "vision_candidate_class",
+      "modality": "vision",
+      "role": "vision_perception_candidate",
+      "license": "per_member",
+      "license_verification_url": null,
+      "license_verification_note": "Class-level row; specific candidates named at first census activation. License verification occurs per member at that time.",
+      "checksum_policy": "SHA-256 pinned per member at acquisition.",
+      "specific_members": "Named at first census activation (Owner-ruled)",
+      "purpose": "C1 candidate class registration for vision modality. Modality-symmetric marker; specific model selection deferred to census-driven acquisition."
+    }
   }
 }

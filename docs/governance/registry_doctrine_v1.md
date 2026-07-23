@@ -95,6 +95,9 @@ These bind every actor in the build — Owner's ruling authority, builder, and a
 - D-9 · Platform serves applications. No platform decision optimizes end-user UX directly; end-user experience is application territory (Part II).
 - D-10 · Builder conduct standard. Meticulousness is enforced by structure, not assumed: every proposal self-audits against defect classes D1–D7 before submission, and a proposal arriving with a defect the self-audit would have caught is itself a reportable finding.
 - D-11 · Canon before ruling. No ruling, audit, or characterization of an engine or spec surface proceeds from memory or summary. The on-disk documents are canon; unread canon is read before ruling; recalled content is never presented as fact. Binding on the ruling authority and the builder alike.
+- D-12 · Experimentation exists at system level only. The architecture — the assembled operating system delivering the enterprise promise — is the sole object under test; it is the novel invention, and deployment is its experiment. Every component mechanic is known and parameterizable: it deploys in force with its conditions of success strictly implemented and its quality measured, or its parameters are undefined — a specification gap to close, never a reason to run tentatively. Gates in this platform bind spend, quality of output, or claims — never existence or force. No capability with defined parameters is gated on demonstration, observation, trial modes, or staged proving. A Stage A proposing pilot flags, shadow phases, or "observe-first" sequencing for known mechanics is a D-12 finding on sight. Construction order of phases carries no epistemic weight.
+
+*Part IV amendment record: D-11 admission 2026-07-14 · D-12 admission 2026-07-15.*
 
 # Part V — Cost architecture
 
