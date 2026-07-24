@@ -146,4 +146,12 @@ Owner-verbatim (2026-07-15): *"Phase ledger gains Part B — owner-side delivera
 
 ---
 
-*End of phase ledger v1.0 · 2026-07-15 · Part A maintained at each close · Part B maintained at each close · Owner-ruled option b (Part A) + Owner-ruled Part B (2026-07-15) · under D-12.*
+## §7 · Owner Configuration Dispatches (append-only · governance-tier ruling tracking)
+
+| # | Row | State | Notes |
+|---|---|---|---|
+| L-1 | Owner Configuration Dispatch 2026-07-24 | ACTIVE (5 close-criteria pending) | `docs/rulings/owner_configuration_2026-07-24.md` · SHA `ec95a0acec13d81b2fd5f1b1da04c83d2991f3876c795c8266a96eaef1230f52` · §0-CAL amendment · Substrate-Drop v3 sanction · STEP 1..6 sequence. Close criteria per §5 of dispatch: (a) STEP 1 reply on-disk · (b) `make ci` attested green · (c) Substrate-Drop v3 close report + MANIFEST rows + CONFLICT/OD-8/9/10 rows on-disk · (d) §0-CAL amendment landed as governance sibling · (e) EAB-2 sealed or HAZARD-STOP (a) surfaced with shape-mismatch evidence. |
+
+---
+
+*End of phase ledger v1.0 · 2026-07-15 · Part A maintained at each close · Part B maintained at each close · Owner-ruled option b (Part A) + Owner-ruled Part B (2026-07-15) · under D-12. §7 appended 2026-07-24 per Owner Configuration Dispatch L-1.*
