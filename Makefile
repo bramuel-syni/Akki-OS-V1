@@ -56,8 +56,8 @@ g1_stamper:
 lift_manifest:
 	cd backend && $(PYTEST) -q tests/test_lift_manifest.py
 
-rms_adversarial_v1:
-	cd backend && $(PYTEST) -q tests/test_rms_adversarial_v1_roundtrip.py
+instance_fixture_a:
+	cd backend && $(PYTEST) -q tests/test_instance_fixture_a_roundtrip.py
 
 test:
 	cd backend && $(PYTEST) -q
@@ -65,7 +65,7 @@ test:
 snapshot-bless:
 	cd backend && $(PYTHON) scripts/bless_snapshots.py
 
-ci: invariants chokepoint smoke layer_a layer_b layer_c v1 perception extraction_params northena g1_stamper lift_manifest rms_adversarial_v1
+ci: invariants chokepoint smoke layer_a layer_b layer_c v1 perception extraction_params northena g1_stamper lift_manifest instance_fixture_a
 	@echo "\nG2a CI gate PASSED."
 
 frontend-install:

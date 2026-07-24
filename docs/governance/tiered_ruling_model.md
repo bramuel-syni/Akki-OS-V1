@@ -387,4 +387,21 @@ EAB Tier-1 Adoption Spec v1.0 in force as requirements canon; build phases EAB-1
 
 ═══════════════════════════════════════════════════════════════════
 
-*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §15.1 amendment 2026-07-15 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15 + §19 admission 2026-07-15 + §20 admission 2026-07-15 + §21 admission 2026-07-15 + §22 admission 2026-07-15. On-disk canonical per Standing Rule v3.*
+## §23 · §0-CAL · Calibrated Discretionary Enumeration (Owner, 2026-07-24)
+
+§23 · §0-CAL (calibrated discretionary enumeration) · ratified 2026-07-24
+
+§23.1 — Bright line by path, not judgment:
+Per-line discretionary enumeration remains MANDATORY for: backend/contracts/**, backend/services/**, backend/routers/**, any migration/tool that touches persistent state, and any test file asserting an invariant (AST cells, snapshot cells, gate cells, isolation cells).
+Component-level enumeration applies to frontend presentation files (frontend/src/** excluding test files): one enumeration row per component — (a) what it renders, (b) which spec § it serves, (c) which gate cell covers it. Icon choices, utility-class strings, testid names, copy strings are covered by the component row, not per-line.
+Exception clause: any frontend line implementing a gate-asserted behavior (refusal rendering, class badges, trace-link retention, receipt-safe-field filtering, and equivalents) reverts to per-line.
+
+§23.2 — The substitution (load-bearing, not optional): every UI-bearing phase must land its gate-cell roster at Stage A — named, testable invariants of the G5b Gate 1/2/3 class — before execution is sanctioned. A UI phase with component-level enumeration and no gate roster is incomplete at Stage A; do not proceed to execution. Enumeration is being re-pointed at the mechanism with a catch-record, not relaxed.
+
+§23.3 — Nothing else moves. Frozen contracts + snapshots + Parity, AST hard-fail cells, HAZARD-STOP taxonomy, closed seams, D-11, verbatim carriers, R4 sidecars, D-10 tables, Standing Rule v3, make ci step zero, Rule 2 band-relative trichotomy: all retained verbatim at all scales.
+
+§23.4 — Effective for all phases dispatched after this ruling; no retroactive recount.
+
+═══════════════════════════════════════════════════════════════════
+
+*End of standing governance record. Effective 2026-07-08 forward + §8 amendment 2026-07-09 + §9 + §10 amendments 2026-07-10 + §11 amendment 2026-07-10 + §12 + §12.1 amendments 2026-07-10 + §13 admission 2026-07-10 + §14 admission 2026-07-11 + §15 admission 2026-07-11 + §15.1 amendment 2026-07-15 + §16 admission 2026-07-14 + §17 admission 2026-07-14 + §17 amendment 2026-07-14 + §18 admission 2026-07-15 + §19 admission 2026-07-15 + §20 admission 2026-07-15 + §21 admission 2026-07-15 + §22 admission 2026-07-15 + §23 admission 2026-07-24. On-disk canonical per Standing Rule v3.*

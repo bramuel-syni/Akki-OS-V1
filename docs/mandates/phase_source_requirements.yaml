@@ -109,3 +109,24 @@ Phase_8:
   - RMS_UI_Specification_v2_1.md
   - RMS_UX_Architecture_v2.md
   - RMS_Product_Engineering_Spec_v3.md
+
+# Substrate-Drop v3 · Module Specs Landing (Owner Configuration 2026-07-24 §4.STEP-3)
+# 9 landed .md files under docs/mandates/module_specs/ · .md-canonical per Owner standing inversion.
+# Sanction: docs/rulings/owner_configuration_2026-07-24.md · SHA ec95a0acec13d81b...
+# Reconciliation audit: docs/audits/substrate_drop_v3_reconciliation_2026_07_24.md
+# Close report: docs/close_reports/substrate_drop_v3.md
+# MANIFEST rows: docs/mandates/MANIFEST.md § "Substrate-Drop v3 · Module Specs Landing"
+#
+# Per-file metadata (SHA-256 · source URL · role) landed in MANIFEST.md;
+# YAML shape below is flat list-of-strings (relative to docs/mandates/)
+# per phase_source_requirements.yaml parser convention (substrate_drop_gate).
+substrate_drop_v3:
+  - module_specs/akki_product_system_document.md
+  - module_specs/01_connect_module.md
+  - module_specs/02_registry_module.md
+  - module_specs/03_extract_module.md
+  - module_specs/04_govern_module.md
+  - module_specs/05_prove_module.md
+  - module_specs/06_team_module.md
+  - module_specs/07_shared_components.md
+  - module_specs/08_user_stories.md
