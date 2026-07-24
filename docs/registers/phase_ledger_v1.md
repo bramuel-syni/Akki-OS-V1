@@ -54,11 +54,11 @@
 
 ---
 
-## §2 · Open phases (Stage A landed · close absent · N=2)
+## §2 · Open phases (Stage A landed · close absent · N=1)
 
 | Phase name | Class | Evidence path + SHA-16 | Notes |
 |---|---|---|---|
-| sequencing_harness | open | `docs/stage_a_proposals/sequencing_harness_stage_a.md` · `95f9274edad69d3a` | Stage A landed; no matching close report; Registry Doctrine §5.2 harness spec landed, execution phase pending. |
+| sequencing_harness | **HELD-D7** (Owner-ruled 2026-07-24 · Surface 2 (a) retained-evidentiary) | `docs/stage_a_proposals/sequencing_harness_stage_a.md` · `ae3b2b3056477fa3` (post line-1 annotation · body byte-identical) | held-D7 per `docs/audits/lt2_sequencing_harness_provenance_d7_2026_07_24.md` · sequencing-harness surface authored fresh from Registry Doctrine §8.1 when sequence-G-13 opens · lifting from the held file without a ruling is a new D7. Denominator arithmetic: sub-state HELD-D7 · not counted in Open per Owner ruling "open count 1→0". |
 | EAB-2 | **OPEN 2026-07-15** (Stage A landed · execution atomic pending) | `docs/stage_a_proposals/eab_2_stage_a.md` · `60a49c47e95cf6d7` · source of truth `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | A3 (coverage-gap refusal class) + A4 (per-batch quarantine + systemic-halt threshold) as one seam. Tier-1 E1 pre-named: Parity 31→32 seal via `Service1Refusal@v1` at execution atomic. Sequence position 2 of 7. |
 
 *Row-schema note (Owner-ruled 2026-07-15):* EAB-1 transitioned open→closed 2026-07-15 in one atomic (Stage A landing + Owner E1 ruling + execution atomic close in a single D-9 sequence). It appears in §1 (closed · row above) and its lifecycle annotation is preserved in §3 (defined-undispatched · row-lifecycle carrier for sequence traceability) with `CLOSED 2026-07-15` marker. The terminal-figure denominator counts EAB-1 in §1 only (as `closed`), not double-counted. Same schema convention applies to EAB-2 · EAB-3 · Critic-pass · G-13 · UI-1 · UI-2 upon their Stage A landings and closes. **EAB-2 Stage A landed 2026-07-15**: row moves defined-undispatched → open (§3 → §2) with row-lifecycle marker preserved in §3 for sequence traceability; denominator arithmetic counts EAB-2 in §2 only.
@@ -83,12 +83,13 @@
 ## §4 · Terminal figure
 
 - **Closed:** 38 (unchanged · EAB-1 baseline)
-- **Open:** 2 (was 1 · EAB-2 Stage A landed 2026-07-15 · was defined-undispatched)
-- **Defined-undispatched:** 6 (was 7 · EAB-2 subtracted — 5 phase slots EAB-3/Critic-pass/G-13/UI-1/UI-2 + 1 row-lifecycle carrier S1 Memory Model per prior turn's schema; EAB-1 remains row-lifecycle-annotated in §3 as closed-carrier; EAB-2 remains row-lifecycle-annotated in §3 as open-carrier)
-- **Denominator:** 38 + 2 + 6 = **46** (unchanged per Owner-verbatim: Stage A landings shift open/defined-undispatched inside the denominator; denominator preserved)
-- **Figure:** `closed / (closed + open + defined-undispatched) = 38 / 46 = 82.6%`
+- **Open:** 1 (was 2 · Owner-ruled 2026-07-24 Surface 2 (a): `sequencing_harness` moves open → HELD-D7 sub-state per Owner-verbatim "open count 1→0" for that row · EAB-2 remains open · row-lifecycle carrier discipline preserved in §3)
+- **Defined-undispatched:** 6 (unchanged — 5 phase slots EAB-3/Critic-pass/G-13/UI-1/UI-2 + 1 row-lifecycle carrier S1 Memory Model per prior turn's schema; EAB-1 remains row-lifecycle-annotated in §3 as closed-carrier; EAB-2 remains row-lifecycle-annotated in §3 as open-carrier)
+- **HELD (D7 sub-state):** 1 (`sequencing_harness` · not counted in Open · not counted in Closed · not counted in Defined-undispatched · sub-state carrier per Owner ruling 2026-07-24)
+- **Denominator:** 38 + 1 + 6 + 1 = **46** (unchanged · HELD-D7 sub-state carried inside denominator per row-lifecycle carrier discipline; Owner-ruled "open count 1→0" moves the row within the denominator, does not remove it)
+- **Figure:** `closed / (closed + open + defined-undispatched + held-d7) = 38 / 46 = 82.6%`
 
-Growth attest (Owner-verbatim standing rule · "*denominator growth is information, never a defect · figure growth via closure ALSO information*"): figure holds at 38/46 = 82.6% (baseline post-EAB-1 close). Denominator preserved at 46; the EAB-2 Stage A landing is a class shift inside the denominator (defined-undispatched → open), not a closure — figure unchanged, correctly.
+Growth attest (Owner-verbatim standing rule · "*denominator growth is information, never a defect · figure growth via closure ALSO information*"): figure holds at 38/46 = 82.6% (baseline post-EAB-1 close). Denominator preserved at 46; the Owner ruling 2026-07-24 Surface 2 (a) is a class shift inside the denominator (open → HELD-D7 sub-state), not a closure — figure unchanged, correctly.
 
 Denominator growth is information, never a defect (per Owner-verbatim standing rule).
 
@@ -151,6 +152,7 @@ Owner-verbatim (2026-07-15): *"Phase ledger gains Part B — owner-side delivera
 | # | Row | State | Notes |
 |---|---|---|---|
 | L-1 | Owner Configuration Dispatch 2026-07-24 | ACTIVE (5 close-criteria pending) | `docs/rulings/owner_configuration_2026-07-24.md` · SHA `ec95a0acec13d81b2fd5f1b1da04c83d2991f3876c795c8266a96eaef1230f52` · §0-CAL amendment · Substrate-Drop v3 sanction · STEP 1..6 sequence. Close criteria per §5 of dispatch: (a) STEP 1 reply on-disk · (b) `make ci` attested green · (c) Substrate-Drop v3 close report + MANIFEST rows + CONFLICT/OD-8/9/10 rows on-disk · (d) §0-CAL amendment landed as governance sibling · (e) EAB-2 sealed or HAZARD-STOP (a) surfaced with shape-mismatch evidence. |
+| L-2 | Owner Step-2 Surfaces Ruling 2026-07-24 | FINAL (non-re-openable) | docs/rulings/owner_step2_surfaces_ruling_2026-07-24.md · SHA 2e11c7ea864a940d64b1a438b7bf1f0f5fd6e77b12aeb816d9bfad640779d178 · Surface 1 (b)-modified HALT LIFTS · Surface 2 (a) retained-evidentiary · phase-ledger sequencing_harness open→HELD-D7 · Surface 3 dropped · STEP 3 carries Makefile repair Tier-3 riders |
 
 ---
 
