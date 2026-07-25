@@ -60,6 +60,7 @@ CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "quote_envelope.py":              "quote_envelope.contract_snapshot.json",
     "service_1_refusal.py":           "service_1_refusal.contract_snapshot.json",
     "service_1_refusal_v1.py":        "service_1_refusal_v1.contract_snapshot.json",
+    "partition_schema.py":            "partition_schema_v0.contract_snapshot.json",
     "signal_ring.py":                 "signal_ring.contract_snapshot.json",
     "targeta_plan.py":                "targeta_mining_plan.contract_snapshot.json",
     "trace_lens.py":                  "trace_lens_envelope.contract_snapshot.json",

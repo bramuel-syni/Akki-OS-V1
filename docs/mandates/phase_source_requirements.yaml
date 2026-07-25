@@ -130,3 +130,17 @@ substrate_drop_v3:
   - module_specs/06_team_module.md
   - module_specs/07_shared_components.md
   - module_specs/08_user_stories.md
+
+# Owner Change Order · 2026-07-25 (docs/rulings/owner_change_order_2026-07-25.md · SHA 33b16441025ac0bc757fd92f770252d30f0e63de4e4609c635be3ce9252fa568)
+# 7 amendment sibling files (A1, A2, A3, A4, A5, A7, A8) · A6 = cross-reference only · NO FILE.
+# Predecessor byte-identity attest throughout (see MANIFEST rows).
+# Interpretation rule: amendment wins where in conflict; pre-amendment canon stands where amendment is silent.
+change_order_2026_07_25:
+  - module_specs/use_data_module_v1_2026_07_25.md
+  - module_specs/approval_inversion_v1_2026_07_25.md
+  - ../governance/rules_taxonomy_v1.md
+  - module_specs/govern_module_amendments_v1_2026_07_25.md
+  - module_specs/connect_module_amendments_v1_2026_07_25.md
+  # A6 · Prove module (cross-reference only) · NO FILE · already-landed at docs/mandates/module_specs/05_prove_module_step4_amendment_2026_07_24.md
+  - module_specs/user_stories_delta_v1_2026_07_25.md
+  - module_specs/cross_cutting_record_v1_2026_07_25.md

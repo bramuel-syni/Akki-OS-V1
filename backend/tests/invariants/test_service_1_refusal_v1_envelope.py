@@ -87,11 +87,18 @@ def test_cal_23_1_enumeration_present_on_v1_contract():
 # ---------------------------------------------------------------------------
 
 def test_parity_32_contracts_and_snapshots():
-    """Parity 31→32 sealed: 32 contract .py files + 32 snapshot .json files."""
+    """Parity 32 baseline attest · post-EAB-2 seal · superseded by EAB-3 seal.
+
+    Post-EAB-3 (2026-07-24 · Owner ruling (a1)), parity moves 32→33. This cell
+    retains its historical name for lineage but asserts against the live post-
+    EAB-3 count of 33 (Owner ITEM 1 seal). The Parity 32→33 authoritative attest
+    is at `tests/invariants/test_partition_schema_v0_envelope.py::
+    test_parity_33_contracts_and_snapshots`.
+    """
     contract_files = sorted(CONTRACTS_DIR.glob("*.py"))
     snapshot_files = sorted(INVARIANTS_DIR.glob("*.contract_snapshot.json"))
-    assert len(contract_files) == 32, f"expected 32 contracts, got {len(contract_files)}"
-    assert len(snapshot_files) == 32, f"expected 32 snapshots, got {len(snapshot_files)}"
+    assert len(contract_files) == 33, f"expected 33 contracts, got {len(contract_files)}"
+    assert len(snapshot_files) == 33, f"expected 33 snapshots, got {len(snapshot_files)}"
 
 
 def test_service_1_refusal_v0_byte_identity_under_eab2():

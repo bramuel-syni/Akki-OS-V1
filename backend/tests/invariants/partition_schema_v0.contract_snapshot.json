@@ -1,0 +1,79 @@
+{
+  "additionalProperties": false,
+  "description": "Versioned columnar memory-mappable partition schema \u00b7 single-contract landing per Owner ruling (a1).\n\nEmitted by the partition-refresh cold-path batch job at atomic promotion.\nRead by session-working-set service at session-open (partition-version\nbinding \u00b7 promotion invalidates dependents per R-A5.4).",
+  "properties": {
+    "instance_id": {
+      "description": "Multi-instance scope key. Partitions do not cross instance boundary (MC-E2 \u03b1 reflexive discipline extended from seam-values to partitions per Registry v1 \u00a7S1 `akki.instance.seams_scoped_by_instance_id`). Session-working-set reads filter by `instance_id` at session-open.",
+      "title": "Instance Id",
+      "type": "string"
+    },
+    "key_dimensions": {
+      "description": "Keys the partition is keyed on. Per-surface configuration per R-A5.1 verbatim (*'keys are per-surface configuration'*). List of dimension names (registry-vocabulary per `PROM-S1-honesty-grammar-source-labels`). Extension only via schema_version bump.",
+      "items": {
+        "type": "string"
+      },
+      "title": "Key Dimensions",
+      "type": "array"
+    },
+    "partition_id": {
+      "description": "Partition family identifier. Groups all versions of a partition across time. Same `partition_id` across promotions represents the same logical partition; distinct `partition_id` values represent distinct partitions. Per-surface configuration per R-A5.1 (*'keys are per-surface configuration; extension only via schema versioning'*).",
+      "title": "Partition Id",
+      "type": "string"
+    },
+    "partition_shape_kind": {
+      "const": "columnar_memmap",
+      "default": "columnar_memmap",
+      "description": "Storage shape discriminator. Initial landing is single-value `columnar_memmap` per R-A5.1 verbatim (*'versioned, columnar, memory-mappable partitions'*). Future variants (e.g., `row_hash_index`, `reference_tree`) via schema versioning per R-A5.1 (*'extension only via schema versioning'*) \u2014 land as `PartitionSchema_v1` following the `Service1Refusal_v1` additive-versioning pattern. Class E engine parameter under Rules Taxonomy A3.4 (Owner ITEM 1 forward-binding annotation) \u00b7 pinned per engine version \u00b7 changed only via version bumps with evaluation verdicts \u00b7 runtime tunability requires E\u2192O promotion path per A3.2.",
+      "enum": [
+        "columnar_memmap"
+      ],
+      "title": "Partition Shape Kind",
+      "type": "string"
+    },
+    "promoted_at": {
+      "description": "ISO-8601 UTC timestamp of atomic promotion (R-A5.3 verbatim: *'the previous version serves until the new version is atomically promoted; promotion is ledgered'*). Emitted at the moment the partition becomes read-authoritative. Immutable post-write per `PROM-S3-append-only-ledger`.",
+      "title": "Promoted At",
+      "type": "string"
+    },
+    "receipt_set_ref": {
+      "description": "Lineage FK \u00b7 partition version records the receipt set it was built from per R-A5.5 verbatim. Walkable chain: number \u2192 partition \u2192 receipts \u2192 operations \u00b7 zero additional retrieval at request time. `receipt_set_ref` is the identifier the request touched (per R-A5.5: *'the citation IS the identifier the request touched'*). Registry attachment: `PROM-S3-audit-trail-immutable` + `PROM-S3-append-only-ledger`.",
+      "title": "Receipt Set Ref",
+      "type": "string"
+    },
+    "schema_version": {
+      "description": "Partition schema version identifier. Extension via schema versioning per R-A5.1 verbatim. Extension = new schema_version value (semantic version string). Same schema_version across promotions means field-set and key-dimensions are unchanged.",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "size_bytes": {
+      "description": "Materialized partition size in bytes. Reported at promotion time for latency-telemetry and load-test-at-10x-concurrency planning (AC-A5.b + AC-A5.c). Non-negative invariant enforced at contract boundary.",
+      "minimum": 0,
+      "title": "Size Bytes",
+      "type": "integer"
+    },
+    "superseded_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ISO-8601 UTC timestamp of supersession (when a later PartitionSchema@v0 with the same partition_id was atomically promoted). None on the current-authoritative partition version. Immutable once set per `PROM-S3-append-only-ledger`. Preserves historical readability (previous-version-serves-until-atomic-promotion trail is walkable via superseded_at chain).",
+      "title": "Superseded At"
+    }
+  },
+  "required": [
+    "partition_id",
+    "schema_version",
+    "key_dimensions",
+    "receipt_set_ref",
+    "promoted_at",
+    "size_bytes",
+    "instance_id"
+  ],
+  "title": "PartitionSchema_v0",
+  "type": "object"
+}

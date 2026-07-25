@@ -43,7 +43,7 @@ test.describe('§3.4 Production Housing PH-R1 · /api/system/build_info smoke', 
     expect(typeof body.build_timestamp).toBe('string');
     expect(body.build_timestamp.length).toBeGreaterThan(0);
     // Same authoritative counter as PH-E3 · /api/readyz.
-    expect(body.parity_count).toBe(32);
+    expect(body.parity_count).toBe(33);
   });
 
   test('build_info payload carries no secrets (Owner explicit)', async ({ page }) => {

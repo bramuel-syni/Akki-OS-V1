@@ -252,6 +252,8 @@ reason: Literal[
 
 **Owner ruling required on:** role-literal canonicalization + landing sequence (which role lands at which module dispatch).
 
+**RESOLVED by `docs/rulings/owner_change_order_2026-07-25.md` · SHA `33b16441025ac0bc757fd92f770252d30f0e63de4e4609c635be3ce9252fa568` — Amendment A1 §A1.5 (Role gating: Model Acceptance decisions and A2 hold-resolution are approver/DPO-role surfaces · Govern remains DPO-scoped · Public Receipt generation remains DPO-only) + Amendment A5 §1-2 (Connect Step 3 seventh rule + Class D registries declaration). Analyst-role literal resolved at Amendment A1 §A1.5 (approver/DPO nav absence). Data Engineer / Sponsor / Co-Signer role literals: pre-amendment canon stands per change order interpretation rule ("where an amendment is silent, pre-amendment canon stands"). Any residual role-literal canonicalization for Data Engineer / Sponsor / Co-Signer surfaces at Lane 2b module dispatch (Connect + Team + Govern) per post-amendment banding.**
+
 **No auto-supersession.**
 
 ### §B.C-3 · Console-vs-Module naming taxonomy divergence
@@ -273,6 +275,8 @@ reason: Literal[
 
 **Owner ruling required on:** taxonomy convergence — either (a) module-spec taxonomy supersedes UI Spec v2.2 §2.1, or (b) UI Spec v2.2 taxonomy supersedes module specs, or (c) taxonomies coexist with an explicit mapping table.
 
+**RESOLVED by `docs/rulings/owner_change_order_2026-07-25.md` · SHA `33b16441025ac0bc757fd92f770252d30f0e63de4e4609c635be3ce9252fa568` — Amendment A1 §A1.1 (Nav restructure: Connect · Registry · **Use Data** · Govern · Prove · Team · Extract renamed to Use Data) + Amendment A4 §3 (Govern UI names confirmed: Rails · Rules · Engine settings · Registries). Console-vs-Module taxonomy: module-spec taxonomy is canonical for landing dispatch per Amendment A1 nav restructure (posture (a) with A1-authored replacement for Extract). Any remaining UI Spec v2.2 §2.1 Console names (Compliance Console · Ask Console · TraceReceipt public page) coexist as UI-surface labels under UI-1/UI-2 Stage A; module-spec names dominate at Lane 2b dispatch.**
+
 **No auto-supersession.**
 
 ### §B.C-4 · "Analyst" role usage divergence
@@ -283,6 +287,8 @@ reason: Literal[
 
 **Ruling required:** is Analyst a first-class role (Extract Module) or sub-taxonomy under Business user (Product Doc §21)?
 
+**RESOLVED by `docs/rulings/owner_change_order_2026-07-25.md` · SHA `33b16441025ac0bc757fd92f770252d30f0e63de4e4609c635be3ce9252fa568` — Amendment A1 §A1.5 (Role gating: Model Acceptance decisions and A2 hold-resolution are approver/DPO-role surfaces · absent from general-user nav) + Amendment A7 (User Stories Delta: Analyst shaping stories → conversational-wizard phrasing). Analyst-role usage clarified at A1.5: Analyst is a general-user role for the Use Data conversational wizard (posture (a) first-class at Extract → Use Data surface); Product Doc §21 Business-user umbrella taxonomy preserved for taxonomy-level classification per change order interpretation rule ("where an amendment is silent, pre-amendment canon stands"). Both usages coexist: Analyst first-class at Use Data · Analyst sub-taxonomy under Business user at Product Doc §21.**
+
 **No auto-supersession.**
 
 ### §B.C-5 · Waiting-period constants (Change-a-Rule 72h · Destroy-Data 24h) not in engineering canon
@@ -292,6 +298,8 @@ reason: Literal[
 **Conflict target:** No 72h / 24h constants in engineering canon. `docs/requirements/operating_values_v1_1.md` §6 seam values do not include these two constants.
 
 **Ruling required:** admit as new seam values (F-class fold in Operating Values v1.2)?
+
+**PRE-AMENDMENT CANON STANDS per `docs/rulings/owner_change_order_2026-07-25.md` interpretation rule + Amendment A3.4 (Rules (O) classification: "the six Connect rules · both waiting periods · the A2.3 ceiling · admissibility thresholds"). Change order classifies waiting periods as Class O rules but does NOT set the 72h/24h numeric constants. Original CONFLICT ruling requirement (admit as F-class fold in Operating Values v1.2) remains OPEN — Owner ruling required at future Operating Values v1.2 landing OR at Lane 2b Govern module dispatch (post-amendment canon rides A3.4 classification with pre-amendment 72h/24h numeric constants).**
 
 **No auto-supersession.**
 
@@ -313,6 +321,8 @@ reason: Literal[
 
 **Ruling required:** admit as a new frozen enum (contract additive · Parity additive). Module spec does not enumerate the 4 values literally; Owner may need to author the 4 literal values.
 
+**PARTIALLY-RESOLVED by `docs/rulings/owner_change_order_2026-07-25.md` · SHA `33b16441025ac0bc757fd92f770252d30f0e63de4e4609c635be3ce9252fa568` — Amendment A2 §A2.2.1 (Rights compatibility · admissibility gate: requested delivery/output rights vs. source usage rights; Internal-Only scope cannot feed a licensable output; trained model inherits its training-data rights). Rights posture semantics now Owner-authored at A2.2.1; enum shape (4 values literal) remains pre-amendment canon per change order interpretation rule ("where an amendment is silent, pre-amendment canon stands"). Frozen-enum landing at Lane 2b module dispatch (Connect + Use Data) rides post-amendment canon.**
+
 **No auto-supersession.**
 
 ### §B.C-8 · Succession 3-party Sponsor incl. CEO not in engineering canon
@@ -322,6 +332,8 @@ reason: Literal[
 **Conflict target:** No 3-party succession primitive on-disk. `services/checker/**` (checker/countersign flow at `routers/checker.py`) supports 2-party countersign patterns but not 3-party attestation with a named CEO seat.
 
 **Ruling required:** admit as extension of checker with 3-party primitive + CEO seat as new role literal.
+
+**PRE-AMENDMENT CANON STANDS per `docs/rulings/owner_change_order_2026-07-25.md` interpretation rule ("where an amendment is silent, pre-amendment canon stands"). Amendment A4 (Govern Module Amendments) does not amend succession primitive; Amendment A7 (User Stories Delta) does not amend succession stories. Frozen-primitive landing at Lane 2b Govern module dispatch rides pre-amendment canon.**
 
 **No auto-supersession.**
 
@@ -333,6 +345,8 @@ reason: Literal[
 
 **Ruling required:** rides OD-8 · already surfaced as Owner-decision register row.
 
+**PRE-AMENDMENT CANON STANDS per `docs/rulings/owner_change_order_2026-07-25.md` interpretation rule + Amendment A2.1 (Approval Queue notification category dropped) + Amendment A8.3 (OD-8 mail provider carried undischarged by this order). Notification-category taxonomy: Approval Queue category removed (A2.1); remaining categories (Connect DPO sign-off · Govern approvals · Extract/Use Data approvals · Team promotion · Prove Release Review) rebased to A2.2 admissibility verdicts (receipted · feeds DPO Estate enforcement counts). Original CONFLICT ruling requirement (rides OD-8 · Notification Center backend + email fanout) remains OPEN — sequence-blocking on Lane 2b Connect · Govern · Use Data · Team · Prove module dispatches.**
+
 **No auto-supersession.**
 
 ### §B.C-10 · Ask Akki Drawer + Answer Card single-shell (Owner STEP 5 structural directive)
@@ -342,6 +356,8 @@ reason: Literal[
 **Conflict target:** Currently `AskConsolePage.js` and `TraceReceiptPage.js` are separate implementations at separate routes. No shared shell exists.
 
 **Class:** D-12 (component-family drift) · UI-1/UI-2 execution scope · Owner-verbatim structural directive.
+
+**PRE-AMENDMENT CANON STANDS per `docs/rulings/owner_change_order_2026-07-25.md` interpretation rule (change order silent on Ask Akki Drawer + Answer Card single-shell). Owner STEP 5 structural directive (Configuration Dispatch 2026-07-24 §4.STEP-5 verbatim: "the Answer Card + refusal-shape component family is built once in the shared shell and consumed by both Prove and the Ask Akki drawer — the spec declares them the same structure; two implementations is self-inflicted drift and will be treated as a D-class finding") preserved. Original CONFLICT ruling requirement (UI-1/UI-2 Stage A gate-cell attest for single-shell landing) remains OPEN — attested at UI-1/UI-2 Stage A per Owner STEP 5 structural directive.**
 
 **Ruling required (at UI-1/UI-2 Stage A per §0-CAL.2 gate-cell roster):** shared-shell factoring must land as a gate-cell-asserted invariant (Ask Akki Drawer + Answer Card + refusal shapes = single component-family shell). Any Stage A that would land two implementations = D-class finding per Owner directive.
 
