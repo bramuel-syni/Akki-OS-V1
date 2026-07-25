@@ -47,6 +47,44 @@ class TargetaFloorSpec(BaseModel):
     minimum_class: DefensibilityClass = Field(...)
 
 
+class ManifestEntry(BaseModel):
+    """CIF §12 line 152 verbatim manifest entry — shared additive substructure.
+
+    Landed at Critic-pass execution atomic under Owner ruling
+    `docs/rulings/critic_pass_e1_2026_07_25.md` (SHA
+    `42ca9e0f4605b497394772c83572b1e7c5469e17b2c6f7fa39452ec45992c80a`)
+    posture (a1): additive fields on existing frozen contracts.
+
+    ManifestEntry is FROZEN on landing; evolution is additive
+    (`ManifestEntry_v1` at future seal, same as any contract).
+
+    §0-CAL §23.1 per-line enumeration:
+      * `assumption_text: str`         · rung 1 · deterministic
+      * `evidence_class: Literal[...]` · rung 1 · deterministic
+      * `flip_condition: str`          · rung 1 · deterministic
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    assumption_text: str = Field(
+        ...,
+        min_length=1,
+        description="The load-bearing assumption text carried on the verdict.",
+    )
+    evidence_class: Literal["fact", "recalled", "inferred"] = Field(
+        ...,
+        description="Honesty-grammar source label per PROM-S1-honesty-grammar-source-labels.",
+    )
+    flip_condition: str = Field(
+        ...,
+        min_length=1,
+        description=(
+            "The counterfactual probe per CIF §4 verbatim: 'what, if false, "
+            "flips this?'"
+        ),
+    )
+
+
 class MiningPlan(BaseModel):
     """Mandate §8 verbatim shape."""
 
@@ -66,3 +104,13 @@ class MiningPlan(BaseModel):
         description="'core-only' when yield closed; version string when admitted (mandate §7 + §17 #7).",
     )
     generated_at: str = Field(..., description="ISO-8601 UTC.")
+    manifest_entries: List[ManifestEntry] = Field(
+        default_factory=list,
+        description=(
+            "CIF §12 schema-required verdict manifest · load-bearing "
+            "assumptions evidence-classed · unmanifested verdict rejects at "
+            "submission per B-1 (Owner ruling "
+            "docs/rulings/critic_pass_e1_2026_07_25.md · additive-versioning "
+            "per PROM-S1-additive-versioning)."
+        ),
+    )

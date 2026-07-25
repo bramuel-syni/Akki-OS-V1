@@ -38,6 +38,41 @@
       ],
       "title": "Freshness",
       "type": "string"
+    },
+    "ManifestEntry": {
+      "additionalProperties": false,
+      "description": "CIF \u00a712 line 152 verbatim manifest entry \u2014 shared additive substructure.\n\nLanded at Critic-pass execution atomic under Owner ruling\n`docs/rulings/critic_pass_e1_2026_07_25.md` (SHA\n`42ca9e0f4605b497394772c83572b1e7c5469e17b2c6f7fa39452ec45992c80a`)\nposture (a1): additive fields on existing frozen contracts.\n\nManifestEntry is FROZEN on landing; evolution is additive\n(`ManifestEntry_v1` at future seal, same as any contract).",
+      "properties": {
+        "assumption_text": {
+          "description": "The load-bearing assumption text carried on the verdict.",
+          "minLength": 1,
+          "title": "Assumption Text",
+          "type": "string"
+        },
+        "evidence_class": {
+          "description": "Honesty-grammar source label per PROM-S1-honesty-grammar-source-labels.",
+          "enum": [
+            "fact",
+            "recalled",
+            "inferred"
+          ],
+          "title": "Evidence Class",
+          "type": "string"
+        },
+        "flip_condition": {
+          "description": "The counterfactual probe per CIF \u00a74 verbatim: 'what, if false, flips this?'",
+          "minLength": 1,
+          "title": "Flip Condition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "assumption_text",
+        "evidence_class",
+        "flip_condition"
+      ],
+      "title": "ManifestEntry",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -64,6 +99,14 @@
     "freshness": {
       "$ref": "#/$defs/Freshness",
       "description": "v3 \u00a75 three-value freshness signal. Load-bearing for honesty-under-absence."
+    },
+    "manifest_entries": {
+      "description": "CIF \u00a712 schema-required verdict manifest \u00b7 load-bearing assumptions evidence-classed \u00b7 unmanifested verdict rejects at submission per B-1 (Owner ruling docs/rulings/critic_pass_e1_2026_07_25.md \u00b7 additive-versioning per PROM-S1-additive-versioning).",
+      "items": {
+        "$ref": "#/$defs/ManifestEntry"
+      },
+      "title": "Manifest Entries",
+      "type": "array"
     },
     "qualifying_volume": {
       "anyOf": [
