@@ -307,7 +307,7 @@ def test_v1_g7_attestation_parity_31_byte_identical_at_transform_forms_close() -
     """V1-G7 at Transform Forms close: 29 pre-TF + KA v0 + CallableSkillProvisioning v0 = 31."""
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 33, (
+    assert len(snapshots) == 34, (
         f"V1-G7 Transform Forms: expected 31 snapshots. Actual: {len(snapshots)}."
     )
     v1_names = [s.name for s in snapshots]
@@ -328,6 +328,7 @@ def test_v0_paths_byte_identical_at_transform_forms_close() -> None:
         "callable_skill_provisioning_v0.contract_snapshot.json",
         "service_1_refusal_v1.contract_snapshot.json",  # EAB-2 seal · Parity 31→32 · 2026-07-24
         "partition_schema_v0.contract_snapshot.json",   # EAB-3 seal · Parity 32→33 · 2026-07-24
+        "mandate_spec_v0.contract_snapshot.json",       # G-13 seal · Parity 33→34 · 2026-07-25
     }
     pre_tf = [
         s for s in invariants_dir.glob("*.contract_snapshot.json")

@@ -1,0 +1,17 @@
+# GENERATED · DO NOT EDIT
+# Source: docs/mandates/RMS_SyniSense_Specification.md
+# Source SHA-256: 8778b9e3ef632e67329dbb0bf0f925367e977e44c1af1be58838f4ec214fc52d
+# Generator: backend/services/far_endpoint/mandate_spec_emitter.py
+# Regenerate: python -m services.far_endpoint.mandate_spec_emitter
+spec_id: "RMS_SyniSense_Specification"
+source_mandate_path: "docs/mandates/RMS_SyniSense_Specification.md"
+source_mandate_sha_256: "8778b9e3ef632e67329dbb0bf0f925367e977e44c1af1be58838f4ec214fc52d"
+mandate_title: "Part I — Shield: role, promise, and boundary"
+generated_at: "generation-deterministic-per-source-sha"
+generator_version: "mandate-spec-emitter-v0"
+gates:
+  - gate_id: "RMS_SyniSense_Specification_gate_000"
+    gate_kind: "rail"
+    condition_expr: "This document is binding on ratification. Part I states what SyniSense must do and why; Part II specifies how it is built — modules, typed contracts, the chokepoint algorithm, the custody chain, the de-identification pipeline, the purpose-validation contract, key custody, and test obligations; Part III states governance and invariants. It is a forward specification: it defines what must be true of any correct implementation."
+    refusal_reason: "Mandate gate 000 from docs/mandates/RMS_SyniSense_Specification.md · Part I — Shield: role, promise, and boundary"
+    source_line_anchor: "docs/mandates/RMS_SyniSense_Specification.md#stanza-000"

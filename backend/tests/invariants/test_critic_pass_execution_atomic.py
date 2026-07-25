@@ -82,23 +82,20 @@ def test_cal_23_1_enumeration_present_on_manifest_entry():
 # ---------------------------------------------------------------------------
 
 def test_parity_33_held_post_critic_pass():
-    """Parity 33 held · 33 contract .py files + 33 snapshot .json files (unchanged count).
+    """Parity 33 held at Critic-pass close; 33→34 sealed at G-13 (MandateSpec@v0).
 
-    Owner ruling verbatim: 'Parity 33 held'. (a1) additive-field expansion
-    on existing contracts adds fields without adding new contract files.
-
-    Count matches EAB-3 convention: `*.py` glob includes __init__.py + 32
-    contract modules = 33 total.
+    Post-G-13 execution atomic (2026-07-25): count is 34 contract .py + 34 snapshots.
+    Owner ruling verbatim (Critic-pass): 'Parity 33 held' — count preserved AT Critic-pass.
+    Owner ruling verbatim (G-13): 'composition (b · a · a) · Net one seal, MandateSpec@v0, Parity 33→34'.
     """
     contract_files = sorted(CONTRACTS_DIR.glob("*.py"))
     snapshot_files = sorted(INVARIANTS_DIR.glob("*.contract_snapshot.json"))
-    assert len(contract_files) == 33, (
-        f"Parity 33 breach: expected 33 contract .py files "
-        f"(matching EAB-3 convention: __init__.py + 32 modules), "
-        f"got {len(contract_files)}"
+    assert len(contract_files) == 34, (
+        f"Parity 34 breach: expected 34 contract .py files post-G-13 "
+        f"MandateSpec@v0 seal, got {len(contract_files)}"
     )
-    assert len(snapshot_files) == 33, (
-        f"Parity 33 breach: expected 33 contract snapshot .json files, "
+    assert len(snapshot_files) == 34, (
+        f"Parity 34 breach: expected 34 contract snapshot .json files, "
         f"got {len(snapshot_files)}"
     )
 

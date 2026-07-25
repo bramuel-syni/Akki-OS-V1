@@ -1,0 +1,12 @@
+# GENERATED · DO NOT EDIT
+# Source: docs/mandates/MANIFEST.md
+# Source SHA-256: c11af311b23b1251e5c7a4c7a93abfd6068fb8082bc70f6b5397365ce2752bce
+# Generator: backend/services/far_endpoint/mandate_spec_emitter.py
+# Regenerate: python -m services.far_endpoint.mandate_spec_emitter
+spec_id: "MANIFEST"
+source_mandate_path: "docs/mandates/MANIFEST.md"
+source_mandate_sha_256: "c11af311b23b1251e5c7a4c7a93abfd6068fb8082bc70f6b5397365ce2752bce"
+mandate_title: "Mandates Manifest — Substrate-Drop v2 (post-A2, post-v3 supersession)"
+generated_at: "generation-deterministic-per-source-sha"
+generator_version: "mandate-spec-emitter-v0"
+gates: []

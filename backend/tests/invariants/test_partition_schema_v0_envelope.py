@@ -87,11 +87,16 @@ def test_cal_23_1_enumeration_present_on_partition_schema_v0():
 # ---------------------------------------------------------------------------
 
 def test_parity_33_contracts_and_snapshots():
-    """Parity 32→33 sealed: 33 contract .py files + 33 snapshot .json files."""
+    """Parity 32→33 sealed (EAB-3) · 33→34 sealed (G-13 MandateSpec@v0).
+
+    Post-G-13 execution atomic (2026-07-25): 34 contract .py files +
+    34 snapshot .json files. Prior Parity 33 seal held; MandateSpec@v0
+    landed additively under Owner ruling G-13 §5.2 (a).
+    """
     contract_files = sorted(CONTRACTS_DIR.glob("*.py"))
     snapshot_files = sorted(INVARIANTS_DIR.glob("*.contract_snapshot.json"))
-    assert len(contract_files) == 33, f"expected 33 contracts, got {len(contract_files)}"
-    assert len(snapshot_files) == 33, f"expected 33 snapshots, got {len(snapshot_files)}"
+    assert len(contract_files) == 34, f"expected 34 contracts, got {len(contract_files)}"
+    assert len(snapshot_files) == 34, f"expected 34 snapshots, got {len(snapshot_files)}"
 
 
 # Byte-identity SHAs for the two headline prior-frozen contracts under EAB-2

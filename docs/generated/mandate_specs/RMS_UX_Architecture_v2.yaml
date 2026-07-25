@@ -1,0 +1,37 @@
+# GENERATED · DO NOT EDIT
+# Source: docs/mandates/RMS_UX_Architecture_v2.md
+# Source SHA-256: e072fd307e00b207cd2a451791bc3650ad59f5f71b28ac5d4c04b1144b841d59
+# Generator: backend/services/far_endpoint/mandate_spec_emitter.py
+# Regenerate: python -m services.far_endpoint.mandate_spec_emitter
+spec_id: "RMS_UX_Architecture_v2"
+source_mandate_path: "docs/mandates/RMS_UX_Architecture_v2.md"
+source_mandate_sha_256: "e072fd307e00b207cd2a451791bc3650ad59f5f71b28ac5d4c04b1144b841d59"
+mandate_title: "RMS Intelligence System — UX Architecture Specification"
+generated_at: "generation-deterministic-per-source-sha"
+generator_version: "mandate-spec-emitter-v0"
+gates:
+  - gate_id: "RMS_UX_Architecture_v2_gate_000"
+    gate_kind: "rail"
+    condition_expr: "## 1. What the experience must deliver"
+    refusal_reason: "Mandate gate 000 from docs/mandates/RMS_UX_Architecture_v2.md · RMS Intelligence System — UX Architecture Specification"
+    source_line_anchor: "docs/mandates/RMS_UX_Architecture_v2.md#stanza-000"
+  - gate_id: "RMS_UX_Architecture_v2_gate_001"
+    gate_kind: "rail"
+    condition_expr: "The system produces governed intelligence — claims honest about how defensibly they may be asserted. The experience must make that intelligence usable by people who are not analysts, and make the governance **felt as trust, not operated as machinery**. No surface mirrors the system's internals; every surface is designed from its user's promise inward. An interface that renders the build (engines, gates, phases) instead of the product is a defect regardless of how faithfully it renders."
+    refusal_reason: "Mandate gate 001 from docs/mandates/RMS_UX_Architecture_v2.md · RMS Intelligence System — UX Architecture Specification"
+    source_line_anchor: "docs/mandates/RMS_UX_Architecture_v2.md#stanza-001"
+  - gate_id: "RMS_UX_Architecture_v2_gate_002"
+    gate_kind: "rail"
+    condition_expr: "1. **Entry point** — internal work-order (Day Zero, shaped through the wizard) or external request (Day-to-Day, arrives complete through the API or is refused at admission)."
+    refusal_reason: "Mandate gate 002 from docs/mandates/RMS_UX_Architecture_v2.md · RMS Intelligence System — UX Architecture Specification"
+    source_line_anchor: "docs/mandates/RMS_UX_Architecture_v2.md#stanza-002"
+  - gate_id: "RMS_UX_Architecture_v2_gate_003"
+    gate_kind: "rail"
+    condition_expr: "3. **Output** — four declared fields: **form** (qualified data · knowledge artifact · model · callable skill · composed conclusion), **consumer** (person · system · training pipeline), **grain** (per-claim · aggregated · synthesized-whole), **standard** (the defensibility floor the output must meet)."
+    refusal_reason: "Mandate gate 003 from docs/mandates/RMS_UX_Architecture_v2.md · RMS Intelligence System — UX Architecture Specification"
+    source_line_anchor: "docs/mandates/RMS_UX_Architecture_v2.md#stanza-003"
+  - gate_id: "RMS_UX_Architecture_v2_gate_004"
+    gate_kind: "rail"
+    condition_expr: "Two stages: **mine** (extraction to qualified intelligence, sized by reach) then **transform** (qualified intelligence into the declared output, inside the system). **Provenance bound:** the transform produces the shaped output only where the declared standard survives it; an output whose form or grain would destroy required provenance is refused at shaping time with a path forward. Surfaces **render** outputs; they never re-shape them — a different form or grain is a new objective (no micro-analytics drift through export)."
+    refusal_reason: "Mandate gate 004 from docs/mandates/RMS_UX_Architecture_v2.md · RMS Intelligence System — UX Architecture Specification"
+    source_line_anchor: "docs/mandates/RMS_UX_Architecture_v2.md#stanza-004"

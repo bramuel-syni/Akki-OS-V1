@@ -97,8 +97,8 @@ def test_parity_32_contracts_and_snapshots():
     """
     contract_files = sorted(CONTRACTS_DIR.glob("*.py"))
     snapshot_files = sorted(INVARIANTS_DIR.glob("*.contract_snapshot.json"))
-    assert len(contract_files) == 33, f"expected 33 contracts, got {len(contract_files)}"
-    assert len(snapshot_files) == 33, f"expected 33 snapshots, got {len(snapshot_files)}"
+    assert len(contract_files) == 34, f"expected 34 contracts, got {len(contract_files)}"
+    assert len(snapshot_files) == 34, f"expected 34 snapshots, got {len(snapshot_files)}"
 
 
 def test_service_1_refusal_v0_byte_identity_under_eab2():

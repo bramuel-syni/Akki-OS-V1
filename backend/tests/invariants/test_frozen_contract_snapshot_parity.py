@@ -68,6 +68,7 @@ CONTRACT_TO_SNAPSHOT: Dict[str, str] = {
     "wizard_commit_state.py":         "wizard_commit_state.contract_snapshot.json",
     "knowledge_artifact_v0.py":       "knowledge_artifact_v0.contract_snapshot.json",
     "callable_skill_provisioning_v0.py": "callable_skill_provisioning_v0.contract_snapshot.json",
+    "mandate_spec_v0.py":             "mandate_spec_v0.contract_snapshot.json",
 }
 
 

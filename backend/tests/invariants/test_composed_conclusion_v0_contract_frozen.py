@@ -58,7 +58,7 @@ def test_composed_conclusion_snapshot_parity_at_18():
     """
     invariants_dir = Path(__file__).parent
     snapshots = list(invariants_dir.glob("*.contract_snapshot.json"))
-    assert len(snapshots) == 33, (
+    assert len(snapshots) == 34, (
         f"Post-Artifact-Store snapshot count must be exactly 29 "
         f"(28 pre-existing + OuterGateReceipt_v1 additive per AS-E1 α). "
         f"Actual: {len(snapshots)}.\nSnapshots: {sorted(p.name for p in snapshots)}"

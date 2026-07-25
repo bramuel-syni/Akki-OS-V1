@@ -306,14 +306,14 @@ def check_mrr_g4_findings_coverage(model: Any) -> tuple[bool, list[str]]:
 
 
 def check_mrr_g_parity(model: Any) -> tuple[bool, list[str]]:
-    """MRR-G-Parity : V1-G7 parity 33/33 byte-identical post EAB-3 seal (2026-07-24)."""
+    """MRR-G-Parity : V1-G7 parity 34/34 byte-identical post G-13 seal (2026-07-25 · MandateSpec@v0)."""
     errs: list[str] = []
     contract_count = len(list(CONTRACTS_DIR.glob("*.py")))
     snapshot_count = len(list(SNAPSHOTS_DIR.glob("*.contract_snapshot.json")))
-    if contract_count != 33:
-        errs.append(f"contract count {contract_count} ≠ 33")
-    if snapshot_count != 33:
-        errs.append(f"snapshot count {snapshot_count} ≠ 33")
+    if contract_count != 34:
+        errs.append(f"contract count {contract_count} ≠ 34")
+    if snapshot_count != 34:
+        errs.append(f"snapshot count {snapshot_count} ≠ 34")
     return (len(errs) == 0), errs
 
 
