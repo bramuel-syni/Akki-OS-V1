@@ -29,7 +29,7 @@ import httpx
 import pytest
 from httpx import ASGITransport
 
-from contracts.service_1_refusal import Service1Refusal as Service1RefusalContract
+from contracts.service_1_refusal_v1 import Service1Refusal_v1 as Service1RefusalContract
 from server import app
 
 
@@ -95,8 +95,13 @@ def _write_delta(before: dict, after: dict) -> int:
 
 
 REFUSAL_ENVELOPE_KEYS = {
+    # v0-preserved keys (7)
     "outcome", "reason", "run_id", "trace_id",
     "asked", "supported_class", "what_would_raise_it",
+    # v1 additive keys (4 · EAB-2 seal 2026-07-24 · Owner ruling Locus 2 = α + Locus 3 = γ posture)
+    # Populated on `reason == "coverage_gap"` · None on evidential-family refusals per
+    # single-writer end-state (Owner ruling composition ε + α + γ).
+    "estate_region", "period", "source_class", "filed_candidate_id",
 }
 
 
@@ -371,7 +376,7 @@ def test_service_1_refusal_schema_frozen():
     review artifact (mirrors Operating Protocol §1.7 discipline).
     """
     snapshot_path = (
-        Path(__file__).parent / "service_1_refusal.contract_snapshot.json"
+        Path(__file__).parent / "service_1_refusal_v1.contract_snapshot.json"
     )
     expected = snapshot_path.read_text(encoding="utf-8").rstrip("\n")
     actual = json.dumps(

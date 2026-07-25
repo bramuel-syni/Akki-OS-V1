@@ -1,0 +1,132 @@
+{
+  "$defs": {
+    "DefensibilityClass": {
+      "description": "Spec \u00a75.6: `fact | utterance | non_factual`.\n\n*fact*        \u2014 the unit asserts something the matrix permits as fact.\n*utterance*   \u2014 someone said it; the system stands by the saying, not\n                the substance.\n*non_factual* \u2014 opinion / interpretation / rhetorical content.",
+      "enum": [
+        "fact",
+        "utterance",
+        "non_factual"
+      ],
+      "title": "DefensibilityClass",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Superset governed-refusal envelope emitted by `POST /api/service_1/run` post-EAB-2 seal.\n\nSingle-writer end-state under Owner ruling composition \u03b5 + \u03b1 + \u03b3.\nv0 remains registered (`contracts/service_1_refusal.py`) at byte-identity;\nv0-emitting call-sites transition to v1 same commit as this landing.",
+  "properties": {
+    "asked": {
+      "description": "Plain-language objective + required floor. See RMS_Interface_Specification.md \u00a7201.",
+      "title": "Asked",
+      "type": "string"
+    },
+    "estate_region": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Mtafiti registry vocabulary \u2014 estate region descriptor for coverage-gap refusals. None on evidential-family refusals (single-writer end-state \u00b7 Prove suppresses gap render on None). Values MUST draw from the Mtafiti census-dimension vocabulary per PROM-S2-census-dimension-integrity + PROM-S1-honesty-grammar-source-labels; hard-coded values not in the registry are honesty violations.",
+      "title": "Estate Region"
+    },
+    "filed_candidate_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Targeta gap-candidate FK \u2014 referential to the demand-signal-side record on Targeta's planning inputs (filed by A3.4 gap-candidate filer; idempotent per (estate_region, period, source_class) tuple). None on evidential-family refusals. Per Owner ruling Locus 2 = \u03b1: `estimated_effort` is derived at Prove render via companion GET against this FK. Per Owner ruling Locus 3 = \u03b3: the Extract Shape-Objective queue-action URL is derived at Prove render from this FK. Companion-channel failure NEVER converts the refusal into a fault render (Owner ruling \u00a72 failure-mode binding \u00b7 asserted at Prove module phase Lane 2b as DB-2 gate-cell).",
+      "title": "Filed Candidate Id"
+    },
+    "outcome": {
+      "const": "refused",
+      "default": "refused",
+      "description": "Discriminator: distinguishes a governed refusal from a validation-422 body (which has detail: list, no outcome). Frontend keys on body.outcome === 'refused'. NEVER assigned on fault-family responses (HTTP 503 fault envelope routes on `PROM-S1-config-defect-fail-loud` and carries structured detail with no `outcome`). R-A3.3 fault-never-dressed-as-refusal preserved verbatim from v0.",
+      "enum": [
+        "refused"
+      ],
+      "title": "Outcome",
+      "type": "string"
+    },
+    "period": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Mtafiti registry vocabulary \u2014 period descriptor for coverage-gap refusals. None on evidential-family refusals. Same registry-vocabulary discipline as `estate_region`.",
+      "title": "Period"
+    },
+    "reason": {
+      "description": "Refusal reason code. Exactly 4 members per Owner ruling Locus 1 = \u03b5: 3 v0 evidential reasons preserved + coverage_gap additive. Option \u03b7 (adding `something_broke`) rejected per R-A3.3 + v0 doctrinal note L18-22 \u2014 faults MUST NOT enter this envelope; they surface via HTTP 5xx + structured detail.",
+      "enum": [
+        "no_defensibility_floor",
+        "no_lawful_basis",
+        "composition_below_floor",
+        "coverage_gap"
+      ],
+      "title": "Reason",
+      "type": "string"
+    },
+    "run_id": {
+      "description": "Run correlation ID.",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "source_class": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Mtafiti registry vocabulary \u2014 source-class descriptor for coverage-gap refusals. None on evidential-family refusals. Same registry-vocabulary discipline as `estate_region`.",
+      "title": "Source Class"
+    },
+    "supported_class": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/DefensibilityClass"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Highest defensibility class the input evidence supports (max over per-unit Ring-5-governed defensibility_class values). None for pre-composition refusals AND coverage-gap refusals where no aggregate has been computed. See RMS_Interface_Specification.md \u00a7186-190, \u00a7202-203."
+    },
+    "trace_id": {
+      "description": "Trace correlation ID.",
+      "title": "Trace Id",
+      "type": "string"
+    },
+    "what_would_raise_it": {
+      "description": "Actor-appropriate hint on what would raise support to the requested floor. Category anchors: corroboration / accountable source (evidential family) OR gap-close-via-extraction (coverage_gap family). See RMS_Interface_Specification.md \u00a7204-205, RMS_UX_Architecture_Specification.md \u00a7247.",
+      "title": "What Would Raise It",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reason",
+    "run_id",
+    "trace_id",
+    "asked",
+    "what_would_raise_it"
+  ],
+  "title": "Service1Refusal_v1",
+  "type": "object"
+}

@@ -116,16 +116,28 @@ async def test_v0_run_route_still_returns_governed_refusal_envelope():
         )
     assert resp.status_code == 422, f"expected 422 refusal; got {resp.status_code}"
     body = resp.json()
-    # Canonical field-set of Service1Refusal@v0.
+    # Canonical field-set post-EAB-2 seal (2026-07-24): Service1Refusal_v1
+    # 11-field superset (7 v0-preserved + 4 v1 additive). Single-writer
+    # end-state posture per Owner ruling ε + α + γ. On evidential-family
+    # refusals the 4 additive fields are None. v0 CONTRACT FILE bytes
+    # remain identical (Standing Rule v3 attested this atomic).
     expected_fields = {
+        # v0-preserved (7)
         "outcome", "reason", "run_id", "trace_id",
         "asked", "supported_class", "what_would_raise_it",
+        # v1 additive (4 · None on evidential-family)
+        "estate_region", "period", "source_class", "filed_candidate_id",
     }
     assert set(body.keys()) == expected_fields, (
-        f"v0 Service1Refusal envelope field-set drift.\n"
+        f"v1 Service1Refusal envelope field-set drift.\n"
         f"  expected: {sorted(expected_fields)}\n"
         f"  actual:   {sorted(body.keys())}"
     )
     assert body["outcome"] == "refused"
     assert body["reason"] == "composition_below_floor"
     assert body["asked"] == "regression probe"
+    # Evidential-family refusal: 4 additive fields MUST be None (Locus 2 = α + Locus 3 = γ).
+    assert body["estate_region"] is None
+    assert body["period"] is None
+    assert body["source_class"] is None
+    assert body["filed_candidate_id"] is None

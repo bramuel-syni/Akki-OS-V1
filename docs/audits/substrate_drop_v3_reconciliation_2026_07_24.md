@@ -231,6 +231,8 @@ reason: Literal[
 
 **HAZARD-STOP surfaced here as pre-EAB-2 signal · not blocking Substrate-Drop v3 close · Owner may address at EAB-2 Stage-A refresh atomic.**
 
+**RESOLVED by `docs/rulings/eab_2_hazard_stop_a_ruling_2026_07_24.md` · SHA `8b074dc152b41ed300d5a7626a2a1bd5aa1213371f6eeeac0a096e12f2d6d4a5` · Prove Step 4 amended in sibling file · Owner ruled Locus 1 = ε with Owner-authored Prove-spec amendment (ζ-equivalent posture · Owner-authored not builder-authored). Composition ε + α + γ. Service1Refusal@v1 reason enum = exactly 4 members (3 v0 evidential + coverage_gap); `something-broke` routes on fault channel (HTTP 503 + PROM-S1-config-defect-fail-loud). No `estimated_effort` field on envelope (Locus 2 = α · Targeta companion-read). No `queue_action_url` field on envelope (Locus 3 = γ · Prove-side derivation from `filed_candidate_id`). Prove Step 4 sibling amendment at `docs/mandates/module_specs/05_prove_module_step4_amendment_2026_07_24.md` (SHA `2c3526aa739868afebff2a495adc7083eebb3d0023ad59cc62abb394c8ac963d`); original `05_prove_module.md` byte-identical.**
+
 ### §B.C-2 · Role taxonomy divergence · Connect Module vs on-disk auth vocabulary
 
 **Conflict source:** `01_connect_module.md § Users Involved` — introduces **DPO**, **Data Engineer**, **Governance Sponsor**, **Governance Co-Signer** as first-class roles.

@@ -9,7 +9,7 @@
 
 ---
 
-## §1 · Closed phases (close on disk · N=38)
+## §1 · Closed phases (close on disk · N=39)
 
 | Phase name | Class | Evidence path + SHA-16 | Notes |
 |---|---|---|---|
@@ -51,17 +51,17 @@
 | standing_queries_as_ci | closed | `docs/close_reports/standing_queries_as_ci.md` · `800457c7c8a7f6a4` | SQ-E1 |
 | EAB-1 | closed | `docs/close_reports/eab_1.md` · Stage A: `docs/stage_a_proposals/eab_1_stage_a.md` (SHA-16 `d5231d93c303ce2b`) · R4 sidecar: `docs/registry/function_promise_registry_v1_eab1_sidecar.md` (SHA-16 `8437894f7c72143b`) · E1 ruling: `docs/rulings/eab_1_e1_2026-07-15.md` | EAB-1 execution atomic closed 2026-07-15 under D-9 auto-proceed. A1+A2 landed as one seam (~1173 LoC, within Stage A band upper margin). Parity 31 held; five_rings@v0 zero-mutation AST-attested (load-bearing per Owner E1 α). |
 | transform_forms | closed | `docs/close_reports/transform_forms.md` · `54c9d3c1bfb1ad4a` | TF-E1..E4 |
+| EAB-2 | closed | `docs/close_reports/eab_2.md` · `0de07b1727c7b5a8` · Stage A: `docs/stage_a_proposals/eab_2_stage_a.md` (SHA-16 `60a49c47e95cf6d7`) · refresh: `docs/stage_a_proposals/eab_2_stage_a_refresh_2026_07_24.md` (SHA-16 `5dfea8e08f295e2a`) · Owner ruling: `docs/rulings/eab_2_hazard_stop_a_ruling_2026_07_24.md` (SHA-16 `8b074dc152b41ed3`) · R4 sidecar: `docs/registry/function_promise_registry_v1_eab2_sidecar.md` (SHA-16 `ddf89929ee072f7c`) · Prove Step 4 amendment: `docs/mandates/module_specs/05_prove_module_step4_amendment_2026_07_24.md` (SHA-16 `2c3526aa739868af`) | EAB-2 execution atomic closed 2026-07-24 under Owner ruling composition ε + α + γ (Locus 1 = ε · Locus 2 = α · Locus 3 = γ). Parity 31→32 sealed via `Service1Refusal@v1` at `backend/contracts/service_1_refusal_v1.py` (SHA-16 `3d5d9845e03d8419`); v0 byte-identical (Standing Rule v3 held). 11-field superset envelope · 4-reason enum · 4-tuple additive set matches Stage A §5.1 sub-option (a1) declaration. Owner §2 failure-mode binding (companion-channel-down refusal render) test cell landed and PASSED. Full sweep 1,526 cells green (1,315 pytest · 154 Jest · 57 Playwright). D-1..D-12 self-audit PASS. |
 
 ---
 
-## §2 · Open phases (Stage A landed · close absent · N=1)
+## §2 · Open phases (Stage A landed · close absent · N=0)
 
 | Phase name | Class | Evidence path + SHA-16 | Notes |
 |---|---|---|---|
 | sequencing_harness | **HELD-D7** (Owner-ruled 2026-07-24 · Surface 2 (a) retained-evidentiary) | `docs/stage_a_proposals/sequencing_harness_stage_a.md` · `ae3b2b3056477fa3` (post line-1 annotation · body byte-identical) | held-D7 per `docs/audits/lt2_sequencing_harness_provenance_d7_2026_07_24.md` · sequencing-harness surface authored fresh from Registry Doctrine §8.1 when sequence-G-13 opens · lifting from the held file without a ruling is a new D7. Denominator arithmetic: sub-state HELD-D7 · not counted in Open per Owner ruling "open count 1→0". |
-| EAB-2 | **OPEN 2026-07-15** (Stage A landed · execution atomic pending) | `docs/stage_a_proposals/eab_2_stage_a.md` · `60a49c47e95cf6d7` · source of truth `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | A3 (coverage-gap refusal class) + A4 (per-batch quarantine + systemic-halt threshold) as one seam. Tier-1 E1 pre-named: Parity 31→32 seal via `Service1Refusal@v1` at execution atomic. Sequence position 2 of 7. |
 
-*Row-schema note (Owner-ruled 2026-07-15):* EAB-1 transitioned open→closed 2026-07-15 in one atomic (Stage A landing + Owner E1 ruling + execution atomic close in a single D-9 sequence). It appears in §1 (closed · row above) and its lifecycle annotation is preserved in §3 (defined-undispatched · row-lifecycle carrier for sequence traceability) with `CLOSED 2026-07-15` marker. The terminal-figure denominator counts EAB-1 in §1 only (as `closed`), not double-counted. Same schema convention applies to EAB-2 · EAB-3 · Critic-pass · G-13 · UI-1 · UI-2 upon their Stage A landings and closes. **EAB-2 Stage A landed 2026-07-15**: row moves defined-undispatched → open (§3 → §2) with row-lifecycle marker preserved in §3 for sequence traceability; denominator arithmetic counts EAB-2 in §2 only.
+*Row-schema note (Owner-ruled 2026-07-24 · EAB-2 close 2026-07-24):* EAB-2 transitioned open → closed on 2026-07-24 in the EAB-2 execution atomic (Stage A landed 2026-07-15 + Stage A refresh 2026-07-24 + Owner HAZARD-STOP (a) ruling 2026-07-24 + execution atomic close 2026-07-24). Row appears in §1 (closed) and its lifecycle annotation is preserved in §3 (defined-undispatched) with `CLOSED 2026-07-24` marker for sequence traceability. Denominator arithmetic counts EAB-2 in §1 only.
 
 ---
 
@@ -70,7 +70,7 @@
 | Phase name | Class | Evidence path + SHA-16 | Notes |
 |---|---|---|---|
 | EAB-1 | **CLOSED 2026-07-15** (close report at `docs/close_reports/eab_1.md` · row-lifecycle carrier for sequence traceability) | `docs/close_reports/eab_1.md` · `docs/stage_a_proposals/eab_1_stage_a.md` · `docs/registry/function_promise_registry_v1_eab1_sidecar.md` · `docs/rulings/eab_1_e1_2026-07-15.md` | EAB-1 executed under D-9 auto-proceed following S1 Memory Model close. A1+A2 landed as one seam. Denominator arithmetic: counted in §1 (closed) only. Sequence position 1 of 7 · **NEXT: EAB-2 auto-proceeds**. |
-| EAB-2 | **OPEN 2026-07-15** (Stage A landed · row-lifecycle carrier for sequence traceability) | `docs/stage_a_proposals/eab_2_stage_a.md` · `60a49c47e95cf6d7` · source of truth `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | EAB-2 Stage A landed 2026-07-15 under D-9 auto-proceed following EAB-1 close. A3 + A4 as one seam. Denominator arithmetic: counted in §2 (open) only. Sequence position 2 of 7 · **NEXT: Owner rules Tier-1 E1 Parity 31→32 seal**. |
+| EAB-2 | **CLOSED 2026-07-24** (Stage A landed 2026-07-15 · Stage A refresh 2026-07-24 · Owner HAZARD-STOP (a) ruling 2026-07-24 · execution atomic close 2026-07-24 · row-lifecycle carrier for sequence traceability) | `docs/close_reports/eab_2.md` · `0de07b1727c7b5a8` · `docs/stage_a_proposals/eab_2_stage_a.md` · `60a49c47e95cf6d7` · `docs/stage_a_proposals/eab_2_stage_a_refresh_2026_07_24.md` · `5dfea8e08f295e2a` · `docs/rulings/eab_2_hazard_stop_a_ruling_2026_07_24.md` · `8b074dc152b41ed3` · source of truth `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | EAB-2 execution atomic closed 2026-07-24 under Owner ruling composition ε + α + γ. Parity 31→32 sealed; A3 (coverage-gap refusal class · Service1Refusal@v1 · 11-field superset · 4-reason enum · 4-tuple additive set) + A4 (per-batch quarantine + systemic-halt threshold + remediation-to-new-version) landed as one seam. Full sweep 1,526 cells green (1,315 pytest · 154 Jest · 57 Playwright · `make ci` GREEN). Denominator arithmetic: counted in §1 (closed) only. Sequence position 2 of 7 · **NEXT: EAB-3 auto-proceeds under D-9**. |
 | EAB-3 | defined-undispatched | `docs/requirements/eab_tier1_adoption_spec_v1.1.md` · `312427c672e9db8a` | ITEM 7 sequence position 3. |
 | Critic-pass | defined-undispatched | `docs/requirements/critic_seam_spec_v1.md` · `110a0d0448f66f44`; `..._v1_1.md` · `ad4529b9462cf789`; TQ §7 pointer via `..._v1.md` · `78af90cf64409364` | Tier-2 harness · CR-7 checklist amendment · CIF §6 A5 rubric cell · CIF manifest schema fields and archive ledger ride as cells; ITEM 7 sequence position 4. |
 | G-13 · Registry Doctrine §8.1 completion | defined-undispatched | `docs/governance/registry_doctrine_v1.md` §8.1 · `b42317239067d303` (post-D-12) | Remaining 5 of 8 additive surfaces: sequencing harness (execution) · worker context-harnessing · far-endpoint mandates-as-specs · Instance Replication Playbook · Commercial Thesis. ITEM 7 sequence position 5 (single phase per Owner ratification). |
@@ -82,14 +82,14 @@
 
 ## §4 · Terminal figure
 
-- **Closed:** 38 (unchanged · EAB-1 baseline)
-- **Open:** 1 (was 2 · Owner-ruled 2026-07-24 Surface 2 (a): `sequencing_harness` moves open → HELD-D7 sub-state per Owner-verbatim "open count 1→0" for that row · EAB-2 remains open · row-lifecycle carrier discipline preserved in §3)
-- **Defined-undispatched:** 6 (unchanged — 5 phase slots EAB-3/Critic-pass/G-13/UI-1/UI-2 + 1 row-lifecycle carrier S1 Memory Model per prior turn's schema; EAB-1 remains row-lifecycle-annotated in §3 as closed-carrier; EAB-2 remains row-lifecycle-annotated in §3 as open-carrier)
+- **Closed:** 39 (was 38 · EAB-2 close 2026-07-24 · Parity 31→32 sealed under Owner ruling composition ε + α + γ)
+- **Open:** 0 (was 1 · EAB-2 transitioned open → closed this atomic · `sequencing_harness` remains HELD-D7 sub-state per Owner ruling 2026-07-24 Surface 2 (a) · not counted in Open)
+- **Defined-undispatched:** 6 (unchanged — 5 phase slots EAB-3/Critic-pass/G-13/UI-1/UI-2 + 1 row-lifecycle carrier S1 Memory Model per prior turn's schema; EAB-1 and EAB-2 remain row-lifecycle-annotated in §3 as closed-carriers)
 - **HELD (D7 sub-state):** 1 (`sequencing_harness` · not counted in Open · not counted in Closed · not counted in Defined-undispatched · sub-state carrier per Owner ruling 2026-07-24)
-- **Denominator:** 38 + 1 + 6 + 1 = **46** (unchanged · HELD-D7 sub-state carried inside denominator per row-lifecycle carrier discipline; Owner-ruled "open count 1→0" moves the row within the denominator, does not remove it)
-- **Figure:** `closed / (closed + open + defined-undispatched + held-d7) = 38 / 46 = 82.6%`
+- **Denominator:** 39 + 0 + 6 + 1 = **46** (unchanged · closure moves inside the denominator per Owner-verbatim standing rule)
+- **Figure:** `closed / (closed + open + defined-undispatched + held-d7) = 39 / 46 = 84.8%` (was 82.6%)
 
-Growth attest (Owner-verbatim standing rule · "*denominator growth is information, never a defect · figure growth via closure ALSO information*"): figure holds at 38/46 = 82.6% (baseline post-EAB-1 close). Denominator preserved at 46; the Owner ruling 2026-07-24 Surface 2 (a) is a class shift inside the denominator (open → HELD-D7 sub-state), not a closure — figure unchanged, correctly.
+Growth attest (Owner-verbatim standing rule · "*denominator growth is information, never a defect · figure growth via closure ALSO information*"): figure grows from 38/46 = 82.6% → 39/46 = 84.8% (closure-driven growth · EAB-2 execution atomic close 2026-07-24). Denominator preserved at 46.
 
 Denominator growth is information, never a defect (per Owner-verbatim standing rule).
 
@@ -143,7 +143,7 @@ Owner-verbatim (2026-07-15): *"Phase ledger gains Part B — owner-side delivera
 
 **Part B structural discipline attest:**
 
-- Part A completion figure now **38/46 = 82.6%** (was 37/46 = 80.4% pre-EAB-1 close; EAB-1 closure this atomic). Denominator preserved at 46; growth is closure-driven per Owner-verbatim standing rule.
+- Part A completion figure now **39/46 = 84.8%** (was 38/46 = 82.6% pre-EAB-2 close; EAB-2 closure this atomic). Denominator preserved at 46; growth is closure-driven per Owner-verbatim standing rule.
 - Part B is TRACKED, not divided-in. **No Part B figure is computed.** No combined figure is computed. Part A and Part B are structurally separate.
 - Row additions to Part B do not affect Part A's denominator.
 - Per-close-maintenance applies to Part B rows going forward.
@@ -157,6 +157,7 @@ Owner-verbatim (2026-07-15): *"Phase ledger gains Part B — owner-side delivera
 | L-1 | Owner Configuration Dispatch 2026-07-24 | ACTIVE (5 close-criteria pending) | `docs/rulings/owner_configuration_2026-07-24.md` · SHA `ec95a0acec13d81b2fd5f1b1da04c83d2991f3876c795c8266a96eaef1230f52` · §0-CAL amendment · Substrate-Drop v3 sanction · STEP 1..6 sequence. Close criteria per §5 of dispatch: (a) STEP 1 reply on-disk · (b) `make ci` attested green · (c) Substrate-Drop v3 close report + MANIFEST rows + CONFLICT/OD-8/9/10 rows on-disk · (d) §0-CAL amendment landed as governance sibling · (e) EAB-2 sealed or HAZARD-STOP (a) surfaced with shape-mismatch evidence. |
 | L-2 | Owner Step-2 Surfaces Ruling 2026-07-24 | FINAL (non-re-openable) | docs/rulings/owner_step2_surfaces_ruling_2026-07-24.md · SHA 2e11c7ea864a940d64b1a438b7bf1f0f5fd6e77b12aeb816d9bfad640779d178 · Surface 1 (b)-modified HALT LIFTS · Surface 2 (a) retained-evidentiary · phase-ledger sequencing_harness open→HELD-D7 · Surface 3 dropped · STEP 3 carries Makefile repair Tier-3 riders |
 | L-3 | Substrate-Drop v3 · STEP 3 close 2026-07-24 | CLOSED (governance-tier landing · row-lifecycle carrier per Registry v1 §M · Part A denominator preserved · default posture pending Owner ruling at §6.Part-A-treatment of close report) | `docs/close_reports/substrate_drop_v3.md` · SHA `f909e9629499cd65ed65f63bb39dab294935915cdad5dad2ebc48615fb5f8b1c` · 9 module-spec .md landed under `docs/mandates/module_specs/` · MANIFEST + phase_source_requirements.yaml extended · §0-CAL §23 sibling landed at `docs/governance/tiered_ruling_model.md` (predecessor §§1..22 byte-identical) · Makefile Tier-3 repair discharged (`instance_fixture_a` rename · chain re-composed · `make ci` green) · reconciliation audit at `docs/audits/substrate_drop_v3_reconciliation_2026_07_24.md` (SHA `33f20261c6a2b9ce` · 91 CODE_IMPACT rows · 10 CONFLICT rows · 3 OD rows minted) · zero-loss attest carried · **HAZARD-STOP surface pre-named at audit §B.C-1** for STEP 4 EAB-2 Stage-A refresh (refusal-shape taxonomy mismatch · pre-Parity-32-seal) · 3 new OD rows added to Part B (B-11/B-12/B-13) · Standing Rule v3 held · Parity 31 held. |
+| L-4 | EAB-2 · HAZARD-STOP (a) ruling + execution atomic close 2026-07-24 | CLOSED (Parity 31→32 sealed · full-sweep 1,526 cells green · Standing Rule v3 held · Owner ruling composition ε + α + γ · v0 byte-identity preserved) | Owner HAZARD-STOP (a) ruling: `docs/rulings/eab_2_hazard_stop_a_ruling_2026_07_24.md` · SHA `8b074dc152b41ed300d5a7626a2a1bd5aa1213371f6eeeac0a096e12f2d6d4a5` (Owner-authored 2026-07-24 · FINAL). Prove Step 4 sibling amendment: `docs/mandates/module_specs/05_prove_module_step4_amendment_2026_07_24.md` · SHA `2c3526aa739868afebff2a495adc7083eebb3d0023ad59cc62abb394c8ac963d`. Close report: `docs/close_reports/eab_2.md` · SHA `0de07b1727c7b5a8f333e3b6b4c79b1cea94efebfd9ed00e5e9f715c08c1578e`. Contract landing: `backend/contracts/service_1_refusal_v1.py` · SHA `3d5d9845e03d841916e8ce47733710bc490585681fe5b1e8350243875a631fad` (32nd frozen contract · Parity 31→32) + snapshot `backend/tests/invariants/service_1_refusal_v1.contract_snapshot.json` · SHA `b0695338edb633eeafa315bc9c1d146586db8c0d9e1932f743c68c3217702335`. R4 sidecar: `docs/registry/function_promise_registry_v1_eab2_sidecar.md` · SHA `ddf89929ee072f7c06436c34de5c9c34d8a274c9715f98f96492ef2c7fb067c9` · 14 rows · zero new promises. Substrate-Drop v3 CONFLICT §B.C-1 annotated RESOLVED at audit file. DB-1 + DB-2 record-carried for Prove module phase Lane 2b (not landed early per D-5 discipline). Sequence position 2 of 7 closed · D-9 auto-proceed next: EAB-3. |
 
 ---
 

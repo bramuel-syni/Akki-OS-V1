@@ -31,6 +31,7 @@ from contracts.composed_conclusion import ComposedConclusion_v0
 from contracts.five_rings import DefensibilityClass, NormalizedUnit
 from contracts.objective_request_v2 import ObjectiveRequest_v2
 from contracts.service_1_refusal import Service1Refusal as Service1RefusalContract
+from contracts.service_1_refusal_v1 import Service1Refusal_v1 as Service1RefusalContract_v1
 from services.auth import auth_refusal, key_grants
 from services.auth.dependencies import get_current_identity_or_none
 from services.service_1 import async_worker as async_worker_module
@@ -103,11 +104,15 @@ async def status() -> dict:
     responses={
         200: {"model": Service1RunSummary},
         422: {
-            "model": Service1RefusalContract,
+            "model": Service1RefusalContract_v1,
             "description": (
                 "Governed refusal (outcome='refused'). Frontend keys on "
                 "body.outcome === 'refused'. Distinct from FastAPI's "
-                "validation-422 which has detail: list and no outcome field."
+                "validation-422 which has detail: list and no outcome field. "
+                "Post-EAB-2 seal (2026-07-24): envelope is Service1Refusal_v1 "
+                "(11-field superset · 4-reason enum incl. coverage_gap · "
+                "single-writer end-state per Owner ruling ε + α + γ · "
+                "docs/rulings/eab_2_hazard_stop_a_ruling_2026_07_24.md)."
             ),
         },
     },
@@ -124,7 +129,13 @@ async def run_endpoint(req: Service1RunRequest):
             scope_key=req.scope_key,
         )
     except service.Service1Refusal as e:
-        refusal = Service1RefusalContract(
+        # EAB-2 single-writer end-state: v0-emitting call-site transitions
+        # to v1 envelope same commit as Parity 31→32 seal. Additive fields
+        # (estate_region/period/source_class/filed_candidate_id) default
+        # to None on evidential-family refusals per Owner ruling composition
+        # ε + α + γ. v0 contract file (contracts/service_1_refusal.py)
+        # remains byte-identical (Standing Rule v3 attested this atomic).
+        refusal = Service1RefusalContract_v1(
             reason=e.reason,
             run_id=e.run_id,
             trace_id=e.trace_id,
@@ -268,7 +279,9 @@ async def v2_dispatch_endpoint(request: ObjectiveRequest_v2, http_request: Reque
     try:
         result = await dispatch_module.dispatch(request)
     except composed_conclusion_module.Service1Refusal as e:
-        refusal = Service1RefusalContract(
+        # EAB-2 single-writer end-state: v2/dispatch call-site also
+        # transitions to v1 envelope same commit as Parity 31→32 seal.
+        refusal = Service1RefusalContract_v1(
             reason=e.reason,
             run_id=e.run_id,
             trace_id=e.trace_id,

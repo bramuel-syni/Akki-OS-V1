@@ -26,7 +26,7 @@ from contracts.admission_refusal import AdmissionRefusal_v0
 from contracts.composed_conclusion import ComposedConclusion_v0
 from contracts.mtafiti_registry import MTAFITI_REGISTRY_COLLECTION
 from contracts.northena_ledger import NORTHENA_LEDGER_COLLECTION
-from contracts.service_1_refusal import Service1Refusal
+from contracts.service_1_refusal_v1 import Service1Refusal_v1 as Service1Refusal
 from core import db
 from server import app
 
