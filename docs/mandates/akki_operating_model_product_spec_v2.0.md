@@ -1,3 +1,5 @@
+> Derived searchable mirror. The .docx is canonical.
+
 AKKI · GOVERNED ARTIFACT · PRODUCT SPECIFICATION
 
 Operating Model & Product Specification v2.0

@@ -1,3 +1,5 @@
+> Derived searchable mirror. The .docx is canonical.
+
 AKKI · GOVERNED ARTIFACT · CODEBASE ACQUISITION
 
 Analyze: Codebase Acquisition v1.0

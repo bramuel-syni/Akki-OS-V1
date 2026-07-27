@@ -1,3 +1,5 @@
+> Derived searchable mirror. The .docx is canonical.
+
 AKKI · GOVERNED ARTIFACT · ROLE REGISTER
 
 Role Register & User Journeys v1.0
