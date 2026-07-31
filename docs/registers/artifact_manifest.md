@@ -17,6 +17,8 @@ Owner ruling 2026-07-27: registers belong in the registers directory. One row pe
 | 9 | `docs/mandates/akki_source_condition_spec.md` | NOT PRESENT | NOT PRESENT | NOT PRESENT | pending | orchestrator dispatch d9jre5cem9is739rsen0 · pending .docx move + python-docx conversion + header prepend | Mandate · derived mirror (pending) |
 | 10 | `docs/mandates/akki_condition_coverage_amendment_v1.0.docx` | NOT PRESENT | NOT PRESENT | NOT PRESENT | pending | orchestrator dispatch d9jre7r6622c73d31khg · fetch not initiated | Mandate · canonical (pending) |
 | 11 | `docs/mandates/akki_condition_coverage_amendment_v1.0.md` | NOT PRESENT | NOT PRESENT | NOT PRESENT | pending | orchestrator dispatch d9jre7r6622c73d31khg · pending full pipeline | Mandate · derived mirror (pending) |
+| 12 | `docs/handoff/frontend_uiux_brief_v1_2026-07-27.docx` | `2242631548ae5f6edc9401d8470ab61567aa88ba3c9d4ca11f01b5f1e7a11b08` | 60723 | (N/A — binary) | 2026-07-27 | Frontend UI/UX brief v1 · doc-only atomic · orchestrator dispatch d9mb-uiux-brief-v1-2026-07-27 | Handoff · canonical |
+| 13 | `docs/handoff/frontend_uiux_brief_v1_2026-07-27.md` | `4cae46edb9b2e2ed4da2364154c344abf835bae3a0d49fa3e430ec34e07f7001` | 52346 | 721 | 2026-07-27 | Frontend UI/UX brief v1 · doc-only atomic · orchestrator dispatch d9mb-uiux-brief-v1-2026-07-27 | Handoff · derived mirror |
 
 ## Backfill · SHAs harvested from close reports
 
